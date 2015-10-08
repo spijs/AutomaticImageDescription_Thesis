@@ -1,0 +1,22 @@
+<annotation>
+	<filename>2389107995.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>365</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>45768</name>
+		<bndbox>
+			<xmin>60</xmin>
+			<ymin>72</ymin>
+			<xmax>434</xmax>
+			<ymax>221</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>45769</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>

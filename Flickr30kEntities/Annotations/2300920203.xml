@@ -1,0 +1,31 @@
+<annotation>
+	<filename>2300920203.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>354</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>39978</name>
+		<bndbox>
+			<xmin>117</xmin>
+			<ymin>31</ymin>
+			<xmax>350</xmax>
+			<ymax>330</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>39979</name>
+		<bndbox>
+			<xmin>299</xmin>
+			<ymin>159</ymin>
+			<xmax>381</xmax>
+			<ymax>213</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>39980</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>

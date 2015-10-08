@@ -1,0 +1,31 @@
+<annotation>
+	<filename>15305247.jpg</filename>
+	<size>
+		<width>375</width>
+		<height>500</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>15742</name>
+		<bndbox>
+			<xmin>2</xmin>
+			<ymin>169</ymin>
+			<xmax>347</xmax>
+			<ymax>497</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>15743</name>
+		<bndbox>
+			<xmin>143</xmin>
+			<ymin>111</ymin>
+			<xmax>321</xmax>
+			<ymax>343</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>15744</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>

@@ -1,0 +1,36 @@
+<annotation>
+	<filename>3667781063.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>334</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>135444</name>
+		<bndbox>
+			<xmin>183</xmin>
+			<ymin>163</ymin>
+			<xmax>223</xmax>
+			<ymax>225</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>135446</name>
+		<bndbox>
+			<xmin>2</xmin>
+			<ymin>133</ymin>
+			<xmax>421</xmax>
+			<ymax>249</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>135445</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+	<object>
+		<name>135448</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>
