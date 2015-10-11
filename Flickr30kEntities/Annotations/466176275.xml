@@ -1,0 +1,33 @@
+<annotation>
+	<filename>466176275.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>481</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>188014</name>
+		<name>188017</name>
+		<bndbox>
+			<xmin>61</xmin>
+			<ymin>40</ymin>
+			<xmax>207</xmax>
+			<ymax>329</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>188015</name>
+		<name>188017</name>
+		<bndbox>
+			<xmin>158</xmin>
+			<ymin>233</ymin>
+			<xmax>363</xmax>
+			<ymax>425</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>188018</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>

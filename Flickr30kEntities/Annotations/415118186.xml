@@ -1,0 +1,36 @@
+<annotation>
+	<filename>415118186.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>375</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>157118</name>
+		<bndbox>
+			<xmin>199</xmin>
+			<ymin>158</ymin>
+			<xmax>255</xmax>
+			<ymax>333</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>157121</name>
+		<bndbox>
+			<xmin>203</xmin>
+			<ymin>175</ymin>
+			<xmax>258</xmax>
+			<ymax>304</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>157119</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+	<object>
+		<name>157120</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>

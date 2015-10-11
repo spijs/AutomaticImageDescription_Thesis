@@ -1,0 +1,37 @@
+<annotation>
+	<filename>1778020185.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>400</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>20301</name>
+		<name>20302</name>
+		<bndbox>
+			<xmin>1</xmin>
+			<ymin>116</ymin>
+			<xmax>307</xmax>
+			<ymax>394</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>20302</name>
+		<name>20303</name>
+		<bndbox>
+			<xmin>183</xmin>
+			<ymin>25</ymin>
+			<xmax>396</xmax>
+			<ymax>344</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>20304</name>
+		<bndbox>
+			<xmin>6</xmin>
+			<ymin>4</ymin>
+			<xmax>499</xmax>
+			<ymax>396</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,31 @@
+<annotation>
+	<filename>791338571.jpg</filename>
+	<size>
+		<width>500</width>
+		<height>305</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>276497</name>
+		<bndbox>
+			<xmin>318</xmin>
+			<ymin>86</ymin>
+			<xmax>465</xmax>
+			<ymax>247</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>276498</name>
+		<bndbox>
+			<xmin>38</xmin>
+			<ymin>103</ymin>
+			<xmax>296</xmax>
+			<ymax>280</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>276499</name>
+		<scene>0</scene>
+		<nobndbox>1</nobndbox>
+	</object>
+</annotation>
