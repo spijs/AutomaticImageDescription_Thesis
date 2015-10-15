@@ -2,3 +2,4 @@
 cv/*.p
 data/
 .idea
+status/*.json
