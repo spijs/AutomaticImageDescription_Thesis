@@ -1,4 +1,4 @@
-function annotations = getAnnotations(fn)
+function getAnnotations(fn)
 %GETANNOTATIONS Flickr30k Entities annotation parser
 %    This function returns an structure containing the information
 %    stored in the txt files for the Flickr30k Entities dataset
@@ -58,6 +58,7 @@ function annotations = getAnnotations(fn)
         annotations(i).labels = labels;
         annotations(i).idToLabel = idToLabelMap;
     end
+    save('annotations.mat','annotations')
 end
 
 function [id,labels] = sortLabels(inputID,inputLabels,annoElement)
