@@ -3,12 +3,15 @@ import code
 from imagernn.utils import merge_init_structs, initw, accumNpDicts
 from imagernn.lstm_generator import LSTMGenerator
 from imagernn.rnn_generator import RNNGenerator
+from imagernn.fsmn_generator import FSMNGenerator
 
 def decodeGenerator(generator):
   if generator == 'lstm':
     return LSTMGenerator
   if generator == 'rnn':
     return RNNGenerator
+  if generator == 'fsmn':
+    return FSMNGenerator
   else:
     raise Exception('generator %s is not yet supported' % (base_generator_str,))
 
@@ -45,7 +48,11 @@ class GenericBatchGenerator:
 
     # descend into the specific Generator and initialize it
     Generator = decodeGenerator(generator)
-    generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
+    #ADDED
+    if(generator != 'fsmn'):
+        generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
+    else:
+        generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size,params.get('layers'))
     merge_init_structs(init_struct, generator_init_struct)
     return init_struct
 
@@ -149,5 +156,4 @@ class GenericBatchGenerator:
       gen_Y = Generator.predict(Xe[i, :], model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
-
 

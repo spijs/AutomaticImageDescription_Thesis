@@ -285,6 +285,9 @@ if __name__ == "__main__":
   # rnn-specific params
   parser.add_argument('--rnn_relu_encoders', dest='rnn_relu_encoders', type=int, default=0, help='relu encoders before going to RNN?')
   parser.add_argument('--rnn_feed_once', dest='rnn_feed_once', type=int, default=0, help='feed image to the rnn only single time?')
+  #fsmn-specific params
+  parser.add_argument('--layers', dest='layers', type=int, default='2', help = 'number of hidden layers and memory cells.')
+
 
   # optimization parameters
   parser.add_argument('-c', '--regc', dest='regc', type=float, default=1e-8, help='regularization strength')

@@ -31,7 +31,8 @@ class Solver:
     if not (solver == 'vanilla' and momentum == 0):
       # lazily make sure we initialize step cache if needed
       for u in update:
-        if not u in self.step_cache_: 
+        if not u in self.step_cache_:
+      #    print('U in solver: %s' % (u)) TODO remove
           self.step_cache_[u] = np.zeros(model[u].shape)
           if solver == 'adadelta':
             self.step_cache2_[u] = np.zeros(model[u].shape) # adadelta needs one more cache
