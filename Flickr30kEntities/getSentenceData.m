@@ -1,4 +1,17 @@
-function sentenceData = getSentenceData(fn)
+function getSentenceData(dir_in)
+%This function loops over all xml files in the directory (dir)
+% and creates a .mat file containing the information
+directory = dir(dir_in);
+filenames = {directory.name};
+filenames = filenames(3:length(filenames));
+
+for i = 1:1
+    getSentenceDataSingle('Sentences/116569042.txt')
+end
+
+end
+
+function getSentenceDataSingle(fn)
 %GETSENTENCEDATA Flickr30k Entities sentence parser
 %    This function returns an array structure containing the
 %    information stored in the txt files for the Flickr30k Entities
@@ -19,7 +32,6 @@ function sentenceData = getSentenceData(fn)
 %            phraseID - the annotation id of the phrase
 %            phraseType - any course categories associated with the
 %                         phrase
-
 
     if ~exist(fn,'file')
         error('file not found');
@@ -54,6 +66,8 @@ function sentenceData = getSentenceData(fn)
     % Remove forward brackets and format the data for output
     sentences = cellfun(@(f)strrep(f,'[',''),sentences,'UniformOutput',false);    
     sentenceData = struct('sentence',sentences,'phrases',annotatedPhrases,'phraseFirstWordIdx',startPosition,'phraseID',entityID,'phraseType',entityType);
+    savename = strcat('sentenceMatFiles/',fn(11:(length(fn)-4)));
+    save(savename,'sentenceData');
 end
 
 function [entityID,entityType] = parseEntityInfo(entityInfo)

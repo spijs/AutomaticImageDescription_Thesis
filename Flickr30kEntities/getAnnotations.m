@@ -1,4 +1,17 @@
-function annotations = getAnnotations(fn)
+function getAnnotations(dir_in)
+%This function loops over all xml files in the directory (dir)
+% and creates a .mat file containing the information
+directory = dir(dir_in);
+filenames = {directory.name};
+filenames = filenames(3:length(filenames));
+
+for i = 1:length(filenames)
+    getAnnotationsSingle(char(strcat(dir_in,'/',filenames(i))))
+end
+
+end
+
+function getAnnotationsSingle(fn)
 %GETANNOTATIONS Flickr30k Entities annotation parser
 %    This function returns an structure containing the information
 %    stored in the txt files for the Flickr30k Entities dataset
@@ -58,6 +71,8 @@ function annotations = getAnnotations(fn)
         annotations(i).labels = labels;
         annotations(i).idToLabel = idToLabelMap;
     end
+    savename = strcat('matFiles/',fn(13:(length(fn)-4)));
+    save(savename,'annotations');
 end
 
 function [id,labels] = sortLabels(inputID,inputLabels,annoElement)
