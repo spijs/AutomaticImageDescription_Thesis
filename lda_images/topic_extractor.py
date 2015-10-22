@@ -3,7 +3,8 @@ __author__ = 'Thijs'
 import lda
 from nltk.corpus import stopwords
 from imagernn.data_provider import getDataProvider
-from numpy import zeros,sum
+import numpy as np
+from nltk.stem.porter import *
 
 class TopicExtractor:
 
@@ -30,14 +31,13 @@ class TopicExtractor:
                 current_sentence=sentence
             output[image] = current_sentence
         return output
-    
-    #TODO misschien stemming?
+
     def remove_common_words(self,sentence):
         s=set(stopwords.words('english'))
         s.update(' ') #add spaces to stopwords
         result = []
         for word in sentence:
-            if not word in s:
+            if not word in s and len(word)>2:
                 result.append(word)
         return result
 
@@ -45,6 +45,10 @@ class TopicExtractor:
         model = lda.LDA(self.nbOfTopics, n_iter=self.iterations, random_state=1)
         model.fit(document_term_matrix)
         return model
+
+    def stem(self, word):
+        stemmer = PorterStemmer()
+        return stemmer.stem(word)
 
     def extract_model(self):
         print('Concatening sentences')
@@ -58,7 +62,7 @@ class TopicExtractor:
         #self.printMatrix(matrix) #Prints the document-term matrix
         print('Creating model')
         model = self.model(matrix)
-        return model
+        return model,vocabulary
 
     def printMatrix(self, matrix):
         f = open('matrixFile.txt','w')
@@ -68,17 +72,18 @@ class TopicExtractor:
             f.write('\n')
 
     def create_document_term_matrix(self, documents, vocabulary):
-        result = zeros([len(documents),len(vocabulary)])
+        result = np.zeros([len(documents),len(vocabulary)])
         j=0
         for document in documents:
-            row = zeros(len(vocabulary))
+            row = np.zeros(len(vocabulary))
             for word in document:
-                if word in vocabulary:
-                    i = vocabulary.index(word)
-                    row[i] += 1.0
+                if self.stem(word) in vocabulary:
+                    i = vocabulary.index(self.stem(word))
+                    row[i] += 1
             result[j] = row
             j+=1
-        return result
+        print('type' +str(result.dtype))
+        return result.astype(np.int32) #convert to 32bit
 
     def get_vocabulary(self,documents):
     # count up all word counts so that we can threshold
@@ -87,6 +92,7 @@ class TopicExtractor:
         result = {}
         for document in documents:
             for word in document:
+                word = self.stem(word)
                 if(not word in dict):
                     dict[word]=1
                 else:
