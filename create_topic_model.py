@@ -1,7 +1,7 @@
 __author__ = 'Thijs'
 
 import argparse
-from lda.topic_extractor import TopicExtractor
+from lda_images.topic_extractor import TopicExtractor
 
 def main(params):
     iterations = params['iterations']
