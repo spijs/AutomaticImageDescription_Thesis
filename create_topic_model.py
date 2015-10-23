@@ -13,7 +13,6 @@ def main(params):
     test_topic(model,vocabulary)
     save_image_topic_distribution(model,images,dataset,topics)
     print('finished')
-
 def test_topic(model,vocabulary):
     n = 10
     topic_word = model.topic_word_

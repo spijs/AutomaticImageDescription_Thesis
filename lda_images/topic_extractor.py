@@ -1,10 +1,10 @@
 __author__ = 'Thijs'
 
 import lda
-from nltk.corpus import stopwords
 from imagernn.data_provider import getDataProvider
 import numpy as np
 from nltk.stem.porter import *
+
 
 class TopicExtractor:
 
@@ -13,6 +13,13 @@ class TopicExtractor:
         self.iterations=iterations
         self.dataprovider = getDataProvider(dataset)
         self.nbOfWordOccurences = 5
+
+    def stopwords(self):
+        stopwords = set()
+        file=open('lda_images/english')
+        for line in file:
+            stopwords.update(line)
+        return stopwords
 
     def concatenate_sentences(self):
         current_image=''
@@ -33,7 +40,7 @@ class TopicExtractor:
         return output
 
     def remove_common_words(self,sentence):
-        s=set(stopwords.words('english'))
+        s=self.stopwords()
         s.update(' ') #add spaces to stopwords
         result = []
         for word in sentence:
