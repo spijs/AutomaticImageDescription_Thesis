@@ -62,7 +62,7 @@ class TopicExtractor:
         #self.printMatrix(matrix) #Prints the document-term matrix
         print('Creating model')
         model = self.model(matrix)
-        return model,vocabulary
+        return model,vocabulary,image_document_pairs.keys()
 
     def printMatrix(self, matrix):
         f = open('matrixFile.txt','w')
