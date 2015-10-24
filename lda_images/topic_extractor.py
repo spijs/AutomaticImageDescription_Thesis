@@ -4,7 +4,7 @@ import lda
 from imagernn.data_provider import getDataProvider
 import numpy as np
 from nltk.stem.porter import *
-
+from nltk.corpus import stopwords
 
 class TopicExtractor:
 
@@ -17,17 +17,18 @@ class TopicExtractor:
     def stopwords(self):
         stopwords = set()
         file=open('lda_images/english')
-        for line in file:
-            stopwords.update(line)
+        for line in file.readlines():
+            stopwords.add(line[:-1])
         return stopwords
 
     def concatenate_sentences(self):
         current_image=''
         current_sentence=''
         image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
+        s=self.stopwords()
         output = {}
         for pair in image_sentence_pair_generator:
-            sentence = self.remove_common_words(pair['sentence']['tokens'])
+            sentence = self.remove_common_words(pair['sentence']['tokens'],s)
             #print sentence
             image = pair['image']['filename']
             #print('image: '+str(pair['image']['filename']))
@@ -39,13 +40,13 @@ class TopicExtractor:
             output[image] = current_sentence
         return output
 
-    def remove_common_words(self,sentence):
-        s=self.stopwords()
-        s.update(' ') #add spaces to stopwords
+    def remove_common_words(self,sentence,stopwords):
+        #s = set(stopwords.words('english'))
+        stopwords.add(' ') #add spaces to stopwords
         result = []
         for word in sentence:
-            if not word in s and len(word)>2:
-                result.append(word)
+            if not word.lower() in stopwords and len(word)>2:
+                result.append(word.lower())
         return result
 
     def model(self, document_term_matrix):
