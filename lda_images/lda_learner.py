@@ -2,6 +2,7 @@ __author__ = 'Wout'
 
 from imagernn.data_provider import getDataProvider
 from lda_images.ff_nn import *
+import sys
 
 class LDANetworkLearner:
 
@@ -17,11 +18,14 @@ class LDANetworkLearner:
     # First creates a dictionary to map the image names onto the topic distributions,
     # then samples random images from the dataprovider, and perform a forward and backward step
     def learnNetwork(self, iterations):
-        filename = 'lda_images/image_topic_distribution_' + self.dataset + 'top' + str(self.nbOfTopics) + '.txt'
+        filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(self.nbOfTopics) + '.txt'
         self.dictionary = self.create_dist_dict(filename)
         image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
+        validationset = self.dataprovider.iterImageSentencePair(split = 'validation')
+        validationError = sys.maxint
 
         for i in range(iterations):
+            print 'Iteration', i+1, 'of', iterations
             pair = self.dataprovider.sampleImageSentencePair()
             # if(pair['image']['filename']!=last_img):
             features = pair['image']['feat']
@@ -31,10 +35,23 @@ class LDANetworkLearner:
             # print 'DIST', dist
             self.network.forward(features)
             self.network.backward(dist)
+            if i % 100 == 0 :
+                last_img = ''
+                intermediate_error = 0
+                for validationPair in validationset:
+                    if(validationPair['image']['filename']!=last_img):
+                        prediction = self.network.predict(validationPair['image']['feat'])
+                        correct = self.dictionary[validationPair['image']['filename']]
+                        err = sum(correct - prediction)
+                        intermediate_error += err
+                if intermediate_error > validationError:
+                    print 'No more improvement'
+                    break;
+
 
 
         filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics) + '.txt'
-        self.network.writeResults(filename)
+        # self.network.writeResults(filename)
 
 
 
