@@ -24,20 +24,22 @@ class TopicExtractor:
     def concatenate_sentences(self):
         current_image=''
         current_sentence=''
-        image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
         s=self.stopwords()
         output = {}
-        for pair in image_sentence_pair_generator:
-            sentence = self.remove_common_words(pair['sentence']['tokens'],s)
-            #print sentence
-            image = pair['image']['filename']
-            #print('image: '+str(pair['image']['filename']))
-            if(image is current_image):
-                current_sentence=current_sentence+sentence
-            else:
-                current_image=image
-                current_sentence=sentence
-            output[image] = current_sentence
+        splits = ['train','test','val']
+        for split in splits:
+            image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = split)
+            for pair in image_sentence_pair_generator:
+                sentence = self.remove_common_words(pair['sentence']['tokens'],s)
+                #print sentence
+                image = pair['image']['filename']
+                #print('image: '+str(pair['image']['filename']))
+                if(image is current_image):
+                    current_sentence=current_sentence+sentence
+                else:
+                    current_image=image
+                    current_sentence=sentence
+                output[image] = current_sentence
         return output
 
     def remove_common_words(self,sentence,stopwords):
