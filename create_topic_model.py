@@ -21,7 +21,7 @@ def test_topic(model,vocabulary):
         print('*Topic {}\n- {}'.format(i, ' '.join(topic_words)))
 
 def save_image_topic_distribution(model,images,dataset,topics):
-    f = open('lda_images/image_topic_distribution_'+dataset+'top'+str(topics)+'.txt','w')
+    f = open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'.txt','w')
     doc_topic = model.doc_topic_
     for n in range(len(doc_topic)):
         dist = doc_topic[n,:]
