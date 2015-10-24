@@ -1,23 +1,24 @@
 __author__ = 'Wout'
 
 from numpy import *
-from imagernn.utils import initw
-import topic_rnn
+
 
 class FeedForwardNetwork:
 
-    def __init__(self, nIn, nHidden, nOut):
+    def __init__(self, nIn, nHidden, nOut, rate = 0.001):
         # learning rate
-        self.alpha = 0.1
+        self.alpha = rate
 
         # number of neurons in each layer
         self.nIn = nIn
         self.nHidden = nHidden
         self.nOut = nOut
 
+        self.correct = zeros((self.nOut, 1), dtype=float)
+
         # initialize weights randomly (+1 for bias)
-        self.hWeights = random.random((self.nHidden, self.nIn+1))
-        self.oWeights = random.random((self.nOut, self.nHidden+1))
+        self.hWeights = zeros((self.nHidden, self.nIn+1))
+        self.oWeights = zeros((self.nOut, self.nHidden+1))
 
         # activations of neurons (sum of inputs)
         self.hActivation = zeros((self.nHidden, 1), dtype=float)
@@ -40,6 +41,7 @@ class FeedForwardNetwork:
         # hidden layer
         self.hActivation = dot(self.hWeights, self.iOutput)
         self.hOutput[:-1, :] = tanh(self.hActivation)
+        # self.hOutput[:-1, :] = self.hActivation
 
         # set bias neuron in hidden layer to 1.0
         self.hOutput[-1:, :] = 1.0
@@ -49,16 +51,24 @@ class FeedForwardNetwork:
         # print 'hOut size', self.hOutput.shape
 
         self.oActivation = dot(self.oWeights, self.hOutput)
+        # print self.oActivation
         self.oOutput = tanh(self.oActivation)
+        # self.oOutput = self.oActivation
+        # print 'oOut size', self.oOutput.shape
 
     def backward(self, teach):
-        error = self.oOutput - array(teach, dtype=float)
-
+        self.correct[:, 0] = teach
+        error = self.oOutput - self.correct
+        sum_error = sum(error)
+        # print 'out', self.oOutput
+        print 'ERROR size', sum_error
         # deltas of output neurons
-        self.oDelta = (1 - tanh(self.oActivation)) * tanh(self.oActivation) * error
+        self.oDelta = (1 - tanh(self.oActivation)* tanh(self.oActivation)) * error
+        # self.oDelta = error
 
         # deltas of hidden neurons
-        self.hDelta = (1 - tanh(self.hActivation)) * tanh(self.hActivation) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
+        self.hDelta = (1 - tanh(self.hActivation) * tanh(self.hActivation)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
+        # self.hDelta = dot(self.oWeights[:,:-1].transpose(), self.oDelta)
 
         # apply weight changes
         self.hWeights = self.hWeights - self.alpha * dot(self.hDelta, self.iOutput.transpose())
@@ -75,6 +85,7 @@ class FeedForwardNetwork:
         # hidden layer
         self.hActivation = dot(self.hWeights, self.iOutput)
         self.hOutput[:-1, :] = tanh(self.hActivation)
+        # self.hOutput[:-1, :] = self.hActivation
 
         # set bias neuron in hidden layer to 1.0
         self.hOutput[-1:, :] = 1.0
@@ -85,27 +96,48 @@ class FeedForwardNetwork:
 
         self.oActivation = dot(self.oWeights, self.hOutput)
         self.oOutput = tanh(self.oActivation)
+        # self.oOutput = self.oActivation
 
         return self.oOutput
 
+    def writeResults(self, filename):
+        results = file(filename, 'a')
+        savetxt(filename, self.hWeights)
+        # results.write('oWeights\n')
+        # results.write(str(self.oWeights)+'\n')
+def func(a,b,c):
+    return 3 * a - 2*b + 6*c - 3
+
+
 if __name__ == '__main__':
     '''
-    XOR test example for usage of ffn
+    Tests the network on a simple linear function with 3 variables
     '''
-
     # define training set
     xorSet = [[0, 0], [0, 1], [1, 0], [1, 1]]
     xorTeach = [[0], [1], [1], [0]]
 
     # create network
-    ffn = FeedForwardNetwork(2, 2, 1)
+    ffn = FeedForwardNetwork(3, 5, 1, )
 
-    for i in range(10000000):
-        rnd = random.randint(0,4)
+    for i in range(10000):
+        a = random.rand()*2 - 1
+        b = random.rand()*2 - 1
+        c = random.rand()*2 - 1
+        d = random.rand()*2 - 1
+        e = random.rand()*2 - 1
         # forward and backward pass
-        ffn.forward(xorSet[rnd])
-        ffn.backward(xorTeach[rnd])
+        ffn.forward([a,b,c])
+        ffn.backward([func(a,b,c)])
 
-    for i in range(len(xorSet)):
-        print 'prediction', xorSet[i], ffn.predict(xorSet[i])
+    for i in range(10):
+        a = random.rand()*2 - 1
+        b = random.rand()*2 - 1
+        c = random.rand()*2 - 1
+        d = random.rand()*2 - 1
+        e = random.rand()*2 - 1
+        print 'prediction', func(a,b,c), ffn.predict([a,b,c])
+        print 'ERROR', func(a,b,c) - ffn.predict([a,b,c])
+
+    ffn.writeResults('Simplefuncweights.txt')
 
