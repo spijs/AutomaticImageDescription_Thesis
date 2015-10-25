@@ -21,11 +21,13 @@ class LDANetworkLearner:
         filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(self.nbOfTopics) + '.txt'
         self.dictionary = self.create_dist_dict(filename)
         image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
-        validationset = self.dataprovider.iterImageSentencePair(split = 'validation')
+        validationset = self.dataprovider.iterImageSentencePair(split = 'val')
+        print sum(1 for x in validationset)
         validationError = sys.maxint
 
         for i in range(iterations):
-            print 'Iteration', i+1, 'of', iterations
+            if i % 100 == 0:
+                print 'Iteration', i+1, 'of', iterations
             pair = self.dataprovider.sampleImageSentencePair()
             # if(pair['image']['filename']!=last_img):
             features = pair['image']['feat']
@@ -35,23 +37,29 @@ class LDANetworkLearner:
             # print 'DIST', dist
             self.network.forward(features)
             self.network.backward(dist)
-            if i % 100 == 0 :
+            if i % 10000  == 1 :
                 last_img = ''
-                intermediate_error = 0
-                for validationPair in validationset:
-                    if(validationPair['image']['filename']!=last_img):
-                        prediction = self.network.predict(validationPair['image']['feat'])
-                        correct = self.dictionary[validationPair['image']['filename']]
-                        err = sum(correct - prediction)
-                        intermediate_error += err
+                intermediate_error = 0.0
+                for j in range(1000):
+                    validationPair = self.dataprovider.sampleImageSentencePair('val')
+                    #print 'VALIDATING'
+                    prediction = self.network.predict(validationPair['image']['feat'])
+                    correct = self.dictionary[validationPair['image']['filename']]
+                    err = sum(square(correct - prediction))
+                    #print 'single error', err
+                    intermediate_error += err
                 if intermediate_error > validationError:
+                    print intermediate_error
                     print 'No more improvement'
                     break;
+                else: 
+                    print 'Validation Error', intermediate_error
+                    validationError = intermediate_error
 
 
-
+        print 'Writing results'
         filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics) + '.txt'
-        # self.network.writeResults(filename)
+        self.network.writeResults(filename)
 
 
 

@@ -17,8 +17,8 @@ class FeedForwardNetwork:
         self.correct = zeros((self.nOut, 1), dtype=float)
 
         # initialize weights randomly (+1 for bias)
-        self.hWeights = zeros((self.nHidden, self.nIn+1))
-        self.oWeights = zeros((self.nOut, self.nHidden+1))
+        self.hWeights = random.random((self.nHidden, self.nIn+1))
+        self.oWeights = random.random((self.nOut, self.nHidden+1))
 
         # activations of neurons (sum of inputs)
         self.hActivation = zeros((self.nHidden, 1), dtype=float)
@@ -61,7 +61,7 @@ class FeedForwardNetwork:
         error = self.oOutput - self.correct
         sum_error = sum(error)
         # print 'out', self.oOutput
-        print 'ERROR size', sum_error
+        # print 'ERROR size', sum_error
         # deltas of output neurons
         self.oDelta = (1 - tanh(self.oActivation)* tanh(self.oActivation)) * error
         # self.oDelta = error
@@ -101,9 +101,8 @@ class FeedForwardNetwork:
         return self.oOutput
 
     def writeResults(self, filename):
-        results = file(filename, 'a')
-        savetxt(filename, self.hWeights)
-        # results.write('oWeights\n')
+        savetxt(filename+'_hweights', self.hWeights)
+        savetxt(filename+'_oweights', self.oWeights)
         # results.write(str(self.oWeights)+'\n')
 def func(a,b,c):
     return 3 * a - 2*b + 6*c - 3
@@ -118,26 +117,33 @@ if __name__ == '__main__':
     xorTeach = [[0], [1], [1], [0]]
 
     # create network
-    ffn = FeedForwardNetwork(3, 5, 1, )
+    ffn = FeedForwardNetwork(2, 2, 1 )
+
 
     for i in range(10000):
-        a = random.rand()*2 - 1
-        b = random.rand()*2 - 1
-        c = random.rand()*2 - 1
-        d = random.rand()*2 - 1
-        e = random.rand()*2 - 1
+        j = random.randint(0,4)
+	ffn.forward(xorSet[j])
+        ffn.backward(xorTeach[j])
+    for i in xorSet:
+        print 'pred',i, ffn.predict(i)
+   # for i in range(10000):
+    #    a = random.rand()*2 - 1
+     #   b = random.rand()*2 - 1
+      #  c = random.rand()*2 - 1
+       # d = random.rand()*2 - 1
+       # e = random.rand()*2 - 1
         # forward and backward pass
-        ffn.forward([a,b,c])
-        ffn.backward([func(a,b,c)])
+      #  ffn.forward([a,b,c])
+      #  ffn.backward([func(a,b,c)])
 
-    for i in range(10):
-        a = random.rand()*2 - 1
-        b = random.rand()*2 - 1
-        c = random.rand()*2 - 1
-        d = random.rand()*2 - 1
-        e = random.rand()*2 - 1
-        print 'prediction', func(a,b,c), ffn.predict([a,b,c])
-        print 'ERROR', func(a,b,c) - ffn.predict([a,b,c])
+   # for i in range(10):
+   #     a = random.rand()*2 - 1
+   #     b = random.rand()*2 - 1
+   #     c = random.rand()*2 - 1
+   #     d = random.rand()*2 - 1
+   #     e = random.rand()*2 - 1
+   #     print 'prediction', func(a,b,c), ffn.predict([a,b,c])
+   #     print 'ERROR', func(a,b,c) - ffn.predict([a,b,c])
 
-    ffn.writeResults('Simplefuncweights.txt')
+   # ffn.writeResults('Simplefuncweights.txt')
 
