@@ -20,9 +20,11 @@ class LDANetworkLearner:
     def learnNetwork(self, iterations):
         filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(self.nbOfTopics) + '.txt'
         self.dictionary = self.create_dist_dict(filename)
-        image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
-        validationset = self.dataprovider.iterImageSentencePair(split = 'val')
-        print sum(1 for x in validationset)
+        # image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
+        # validationset = self.dataprovider.iterImageSentencePair(split = 'val')
+        self.topicnetworks = []
+        for i in range(iterations):
+            self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, rate)])
         validationError = sys.maxint
 
         for i in range(iterations):
@@ -35,21 +37,28 @@ class LDANetworkLearner:
             # print 'FEATURES', len(features)
             # print 'DIST', len(dist)
             # print 'DIST', dist
-            self.network.forward(features)
-            self.network.backward(dist)
+            # for networkID in len(self.topicnetworks):
+            for networkID in [10]:
+                network = self.topicnetworks[networkID]
+                network.forward(features)
+                network.backward(dist[networkID])
             if i % 1000  == 1 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):
                     validationPair = self.dataprovider.sampleImageSentencePair('val')
                     #print 'VALIDATING'
-                    prediction = self.network.predict(validationPair['image']['feat'])
+                    for networkID in [10]:
+                        network = self.topicnetworks[networkID]
+                        # network.forward(features)
+                        # network.backward(dist[networkID])
+                        prediction = network.predict(validationPair['image']['feat'])
                     #prediction = random.random((self.nbOfTopics,1))		
-                    correct = self.dictionary[validationPair['image']['filename']]
-                    err = sum(square(correct - prediction))
+                        correct = self.dictionary[validationPair['image']['filename']][networkID]
+                        err = sum(square(correct - prediction))
                     #print 'prediction', prediction
 		    #print 'correct', correct
-                    intermediate_error += err
+                        intermediate_error += err
                 if intermediate_error > validationError:
                     print intermediate_error
                     print 'No more improvement'
@@ -68,15 +77,17 @@ class LDANetworkLearner:
     def testNetwork(self):
         topicnamelist = self.createTopicList()
         for i in range(10):
+            network = self.topicnetworks[10]
             testPair = self.dataprovider.sampleImageSentencePair('test')
-            prediction = self.network.predict(testPair['image']['feat'])
-            sortedpred = prediction.sort()
-            sortedpred = sortedpred[::-1]
-            dict = dict(zip(prediction, topicnamelist))
-            print testPair['image']['filename']+ '\n'
-            print 'Best topics\n'
-            for j in range(5):
-                print dict[sortedpred[j]]
+            prediction = network.predict(testPair['image']['feat'])
+            # sortedpred = prediction.sort()
+            # sortedpred = sortedpred[::-1]
+            # dict = dict(zip(prediction, topicnamelist))
+            print testPair['image']['filename']
+            print prediction
+            # print 'Best topics\n'
+            # for j in range(5):
+            #     print dict[sortedpred[j]]
 
     def createTopiclist(self):
         file = open('lda_images/models/topicnames.txt')
