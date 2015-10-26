@@ -78,7 +78,6 @@ class LDANetworkLearner:
         for i in range(10):
             network = self.topicnetworks[10]
             testPair = self.dataprovider.sampleImageSentencePair('test')
-<<<<<<< HEAD
             prediction = network.predict(testPair['image']['feat'])
             # sortedpred = prediction.sort()
             # sortedpred = sortedpred[::-1]
@@ -88,21 +87,7 @@ class LDANetworkLearner:
             # print 'Best topics\n'
             # for j in range(5):
             #     print dict[sortedpred[j]]
-=======
-            prediction = self.network.predict(testPair['image']['feat'])
-	    prediction = prediction.flatten()	    
-	    # print 'prediction', prediction
-	    #print type(prediction)
-            sortedpred = sorted(prediction)
-	    #print 'sortedpred', sortedpred
-            sortedpred = sortedpred[::-1]
-            dictionary = dict(zip(prediction, topicnamelist))
-            print testPair['image']['filename']+ '\n'
-            print 'Best topics\n'
-            for j in range(5):
-		print sortedpred[j]
-                print dictionary[sortedpred[j]]
->>>>>>> 7b94a867494ac4c31403750130a21129d9177561
+
 
     def createTopicList(self):
         file = open('lda_images/models/topicnames.txt')
