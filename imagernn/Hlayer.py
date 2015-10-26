@@ -20,27 +20,30 @@ class HLayer:
         H2 = np.zeros((n, self.d))
         A = model['A'+str(self.id)]
         M = fillMMatrix(A, n ,self.N)
-        U2=0
+        M = np.zeros((n,n))
+        #U2=0
+        '''
         if self.drop_prob_decoder > 0: # if we want dropout on the decoder
             if not self.predict_mode: # and we are in training mode
                 scale2 = 1.0 / (1.0 - self.drop_prob_decoder)
                 U2 = (np.random.rand(*(H.shape)) < (1 - self.drop_prob_decoder)) * scale2 # generate scaled mask
                 H *= U2 # drop!
-
+        '''
         # Update Hmem
         Hmem = np.maximum(M.dot(H), 0)
 
         # Hidden Layer 2
         for t in xrange(n):
             mem = Hmem[t - 1]
-            H2[t] = np.maximum(H[t].dot(model['Whh'+str(self.id)]) + H[t].dot(mem), 0)
+            H2[t] = np.maximum(H[t].dot(model['Whh'+str(self.id)]) + H[t].dot(mem) + model['bhh'+str(self.id)], 0)
 
-        cache['Whh'+str(self.id)] = model['Whh'+str(self.id)]
-        cache['H'+str(self.id)] = H2
-        #cache['bhh'+str(self.id)] = model['bhh'+str(self.id)]
-        cache['M'+str(self.id)] = M
-        cache['Hmem'+str(self.id)] = Hmem
-        cache['U2']= U2
+        if not self.predict_mode:
+            cache['Whh'+str(self.id)] = model['Whh'+str(self.id)]
+            cache['H'+str(self.id)] = H2
+            cache['bhh'+str(self.id)] = model['bhh'+str(self.id)]
+            cache['M'+str(self.id)] = M
+            cache['Hmem'+str(self.id)] = Hmem
+            #cache['U2']= U2
         return H2,cache,M
 
     def backward(self,cache,D):
@@ -49,7 +52,7 @@ class HLayer:
         H = cache['H'+Hid]
         Whh = cache['Whh'+str(self.id)]
         M = cache['M'+str(self.id)]
-        drop_prob_decoder = cache['drop_prob_decoder']
+        '''drop_prob_decoder = cache['drop_prob_decoder']'''
 
         dWhh = H.transpose().dot(D)
         dHmem = D
@@ -59,15 +62,16 @@ class HLayer:
         #print('Shape van dM', dM.shape)
         #print('dM:', dM)
         dA = fromMtoA(dM,self.N)
-        print(dA)
+        #print(dA)
+
         # backprop H
         dH = D.dot(Whh.transpose()) + M.transpose().dot(D)
-
+        dbhh = np.sum(D, axis=0, keepdims = True)
         # backprop dropout, if it was applied
-        if drop_prob_decoder > 0:
+        '''if drop_prob_decoder > 0:
             dH *= cache['U2']
-
-        return{'Whh'+str(self.id):dWhh, 'A'+str(self.id):dA}, dH
+        '''
+        return{'Whh'+str(self.id):dWhh, 'A'+str(self.id):dA, 'bhh'+str(self.id):dbhh}, dH
 
 
 def fromMtoA(M,N):
