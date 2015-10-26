@@ -5,9 +5,9 @@ from numpy import *
 
 class FeedForwardNetwork:
 
-    def __init__(self, nIn, nHidden, nOut):
+    def __init__(self, nIn, nHidden, nOut, rate = 0.001):
         # learning rate
-        self.alpha = 0.1
+        self.alpha = rate
                                                  
         # number of neurons in each layer
         self.nIn = nIn
@@ -50,7 +50,7 @@ class FeedForwardNetwork:
         self.oOutput = tanh(self.oActivation)
      
     def backward(self, teach):
-        self.correct[:, 0] = teach
+        self.correct[:,0] = teach
         error = self.oOutput - self.correct
         error = self.oOutput - array(teach, dtype=float) 
          
@@ -58,8 +58,10 @@ class FeedForwardNetwork:
         self.oDelta = (1 - tanh(self.oActivation) * tanh(self.oActivation)) * error
                  
         # deltas of hidden neurons
-        self.hDelta = (1 - tanh(self.hActivation) * tanh(self.hActivation)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
-                 
+        self.hDelta = (1 - tanh(self.hActivation)) * tanh(self.hActivation) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
+        print 'HDELTA SHAPE', self.hDelta.shape
+	print 'iOut shape', self.iOutput.shape
+	print 'hWeight shape', self.hWeights.shape         
         # apply weight changes
         self.hWeights = self.hWeights - self.alpha * dot(self.hDelta, self.iOutput.transpose()) 
         self.oWeights = self.oWeights - self.alpha * dot(self.oDelta, self.hOutput.transpose())
@@ -106,7 +108,7 @@ if __name__ == '__main__':
     xorTeach = [[0], [1], [1], [0]]
 
     # create network
-    ffn = FeedForwardNetwork(2,2,1, )
+    ffn = FeedForwardNetwork(2,2,1,0.1 )
 
     for i in range(10000):
         r = random.randint(0,4)
