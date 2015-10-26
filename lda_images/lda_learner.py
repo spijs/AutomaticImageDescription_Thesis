@@ -37,21 +37,23 @@ class LDANetworkLearner:
             # print 'DIST', dist
             self.network.forward(features)
             self.network.backward(dist)
-            if i % 10000  == 1 :
+            if i % 1000  == 1 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):
                     validationPair = self.dataprovider.sampleImageSentencePair('val')
                     #print 'VALIDATING'
                     prediction = self.network.predict(validationPair['image']['feat'])
+                    #prediction = random.random((self.nbOfTopics,1))		
                     correct = self.dictionary[validationPair['image']['filename']]
                     err = sum(square(correct - prediction))
-                    #print 'single error', err
+                    #print 'prediction', prediction
+		    #print 'correct', correct
                     intermediate_error += err
                 if intermediate_error > validationError:
                     print intermediate_error
                     print 'No more improvement'
-                    break;
+                    
                 else: 
                     print 'Validation Error', intermediate_error
                     validationError = intermediate_error
