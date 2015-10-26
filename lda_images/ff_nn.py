@@ -76,7 +76,8 @@ class FeedForwardNetwork:
         self.correct[:,0] = teach
         # print 'corrects shape', self.correct.shape
         error = self.oOutput - self.correct
-
+        #error = 10*error
+	#error = power(error, 3)/100 
         # print 'error shape', error.shape
          
         # deltas of output neurons
@@ -131,7 +132,7 @@ class FeedForwardNetwork:
         return map((1/(1+exp(-x))),array)
 
     def writeResults(self, filename):
-        savetxt(filename+'_hweights', self.hWeights)
+        savetxt(filename+'_hweights', self.hWeights1)
         savetxt(filename+'_oweights', self.oWeights)
         # results.write('oWeights\n')
         # results.write(str(self.oWeights)+'\n')

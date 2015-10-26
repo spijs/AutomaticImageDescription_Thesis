@@ -11,7 +11,7 @@ class LDANetworkLearner:
         self.nbOfTopics=nbOfTopics
         self.dataset = dataset
         self.dataprovider = getDataProvider(dataset)
-        self.network = FeedForwardNetwork(4096, 256, nbOfTopics, rate)
+        self.network = FeedForwardNetwork(4096,512 , nbOfTopics, rate)
 
 
     # Train a simple FF neural network based on the topic distributions that were calculated earlier
@@ -23,7 +23,7 @@ class LDANetworkLearner:
         image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
         validationset = self.dataprovider.iterImageSentencePair(split = 'val')
         print sum(1 for x in validationset)
-        validationError = sys.maxint
+        validationError = (-sys.maxint-1)
 
         for i in range(iterations):
             if i % 100 == 0:
@@ -43,25 +43,27 @@ class LDANetworkLearner:
                 for j in range(1000):
                     validationPair = self.dataprovider.sampleImageSentencePair('val')
                     #print 'VALIDATING'
-                    prediction = self.network.predict(validationPair['image']['feat'])
-                    #prediction = random.random((self.nbOfTopics,1))		
+                    # prediction = full((120,1),0.01)
+		    prediction = multiply(100,self.network.predict(validationPair['image']['feat']))
+                    #print 'prediction', prediction
+		    #prediction = random.random((self.nbOfTopics,1))		
                     correct = self.dictionary[validationPair['image']['filename']]
-                    err = sum(square(correct - prediction))
+                    err = sum((-1)*log10(abs(correct - prediction)))
                     #print 'prediction', prediction
 		    #print 'correct', correct
                     intermediate_error += err
-                if intermediate_error > validationError:
+                if intermediate_error < validationError:
                     print intermediate_error
-                    print 'No more improvement'
-                    print 'testing'
-                    self.testNetwork()
-                    break
+                    #print 'No more improvement'
+                    #print 'testing'
                 else: 
                     print 'Validation Error', intermediate_error
                     validationError = intermediate_error
 
 
-        print 'Writing results'
+        print 'testing'
+	self.testNetwork()
+	print 'Writing results'
         filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics) + '.txt'
         self.network.writeResults(filename)
 
@@ -70,15 +72,20 @@ class LDANetworkLearner:
         for i in range(10):
             testPair = self.dataprovider.sampleImageSentencePair('test')
             prediction = self.network.predict(testPair['image']['feat'])
-            sortedpred = prediction.sort()
+	    prediction = prediction.flatten()	    
+	    # print 'prediction', prediction
+	    #print type(prediction)
+            sortedpred = sorted(prediction)
+	    #print 'sortedpred', sortedpred
             sortedpred = sortedpred[::-1]
-            dict = dict(zip(prediction, topicnamelist))
+            dictionary = dict(zip(prediction, topicnamelist))
             print testPair['image']['filename']+ '\n'
             print 'Best topics\n'
             for j in range(5):
-                print dict[sortedpred[j]]
+		print sortedpred[j]
+                print dictionary[sortedpred[j]]
 
-    def createTopiclist(self):
+    def createTopicList(self):
         file = open('lda_images/models/topicnames.txt')
         list = []
         line = file.readline()
