@@ -12,6 +12,7 @@ class LDANetworkLearner:
         self.dataset = dataset
         self.dataprovider = getDataProvider(dataset)
         self.network = FeedForwardNetwork(4096,512 , nbOfTopics, rate)
+	self.rate = rate
 
 
     # Train a simple FF neural network based on the topic distributions that were calculated earlier
@@ -23,8 +24,8 @@ class LDANetworkLearner:
         # image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
         # validationset = self.dataprovider.iterImageSentencePair(split = 'val')
         self.topicnetworks = []
-        for i in range(iterations):
-            self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, rate)])
+        for i in range(12):
+            self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, self.rate)])
         # validationError = sys.maxint
         validationError = (-sys.maxint-1)
 
@@ -60,8 +61,9 @@ class LDANetworkLearner:
                         intermediate_error += err
                 if intermediate_error < validationError:
                     print intermediate_error
-                    #print 'No more improvement'
-                    #print 'testing'
+                    print 'No more improvement'
+             	    break    
+		    #print 'testing'
                 else: 
                     print 'Validation Error', intermediate_error
                     validationError = intermediate_error
