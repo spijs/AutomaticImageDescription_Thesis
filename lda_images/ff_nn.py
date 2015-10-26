@@ -27,7 +27,7 @@ class FeedForwardNetwork:
         # outputs of neurons (after sigmoid function)
         self.iOutput = zeros((self.nIn+1, 1), dtype=float)      # +1 for bias
         self.hOutput = zeros((self.nHidden+1, 1), dtype=float)  # +1 for bias
-        self.oOutput = zeros((self.nOut), dtype=float)
+        self.oOutput = zeros((self.nOut,1), dtype=float)
          
         # deltas for hidden and output layer
         self.hDelta = zeros((self.nHidden), dtype=float)
@@ -51,17 +51,20 @@ class FeedForwardNetwork:
      
     def backward(self, teach):
         self.correct[:,0] = teach
+        # print 'corrects shape', self.correct.shape
         error = self.oOutput - self.correct
-        error = self.oOutput - array(teach, dtype=float) 
+
+        # print 'error shape', error.shape
          
         # deltas of output neurons
         self.oDelta = (1 - tanh(self.oActivation) * tanh(self.oActivation)) * error
                  
         # deltas of hidden neurons
         self.hDelta = (1 - tanh(self.hActivation)) * tanh(self.hActivation) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
-        print 'HDELTA SHAPE', self.hDelta.shape
-	print 'iOut shape', self.iOutput.shape
-	print 'hWeight shape', self.hWeights.shape         
+        # print 'oDelta', self.oDelta.shape
+        # print 'HDELTA SHAPE', self.hDelta.shape
+        # print 'iOut shape', self.iOutput.shape
+        # print 'hWeight shape', self.hWeights.shape
         # apply weight changes
         self.hWeights = self.hWeights - self.alpha * dot(self.hDelta, self.iOutput.transpose()) 
         self.oWeights = self.oWeights - self.alpha * dot(self.oDelta, self.hOutput.transpose())
@@ -105,12 +108,12 @@ if __name__ == '__main__':
     '''
     # define training set
     xorSet = [[0, 0], [0, 1], [1, 0], [1, 1]]
-    xorTeach = [[0], [1], [1], [0]]
+    xorTeach = [[0,0], [1,1], [1,1], [0,0]]
 
     # create network
-    ffn = FeedForwardNetwork(2,2,1,0.1 )
+    ffn = FeedForwardNetwork(2,2,2,0.01 )
 
-    for i in range(10000):
+    for i in range(100000):
         r = random.randint(0,4)
         ffn.forward(xorSet[r])
         ffn.backward(xorTeach[r])
