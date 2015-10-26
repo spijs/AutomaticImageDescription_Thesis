@@ -12,26 +12,36 @@ class FeedForwardNetwork:
         # number of neurons in each layer
         self.nIn = nIn
         self.nHidden = nHidden
+        self.nHidden2 = nHidden
+        self.nHidden3 = nHidden
         self.nOut = nOut
 
         self.correct = zeros((self.nOut,1), dtype=float)
          
         # initialize weights randomly (+1 for bias)
-        self.hWeights = random.random((self.nHidden, self.nIn+1)) 
+        self.hWeights1 = random.random((self.nHidden, self.nIn+1))
+        self.hWeights2 = random.random((self.nHidden, self.nHidden+1))
+        self.hWeights3 = random.random((self.nHidden, self.nHidden+1))
 	# print 'HWEIGHT', self.hWeights
         self.oWeights = random.random((self.nOut, self.nHidden+1))
          
         # activations of neurons (sum of inputs)
-        self.hActivation = zeros((self.nHidden, 1), dtype=float)
+        self.hActivation1 = zeros((self.nHidden, 1), dtype=float)
+        self.hActivation2 = zeros((self.nHidden, 1), dtype=float)
+        self.hActivation3 = zeros((self.nHidden, 1), dtype=float)
         self.oActivation = zeros((self.nOut, 1), dtype=float)
          
         # outputs of neurons (after sigmoid function)
         self.iOutput = zeros((self.nIn+1, 1), dtype=float)      # +1 for bias
-        self.hOutput = zeros((self.nHidden+1, 1), dtype=float)  # +1 for bias
+        self.hOutput1 = zeros((self.nHidden+1, 1), dtype=float)  # +1 for bias
+        self.hOutput2 = zeros((self.nHidden+1, 1), dtype=float)  # +1 for bias
+        self.hOutput3 = zeros((self.nHidden+1, 1), dtype=float)  # +1 for bias
         self.oOutput = zeros((self.nOut,1), dtype=float)
          
         # deltas for hidden and output layer
-        self.hDelta = zeros((self.nHidden), dtype=float)
+        self.hDelta1 = zeros((self.nHidden), dtype=float)
+        self.hDelta2 = zeros((self.nHidden), dtype=float)
+        self.hDelta3 = zeros((self.nHidden), dtype=float)
         self.oDelta = zeros((self.nOut), dtype=float)   
      
     def forward(self, input):
@@ -42,15 +52,24 @@ class FeedForwardNetwork:
 	# print 'iOutput', self.iOutput
  
         # hidden layer
-        self.hActivation = dot(self.hWeights, self.iOutput)/self.nHidden
-        self.hOutput[:-1, :] = tanh(self.hActivation)
+        self.hActivation1 = dot(self.hWeights1, self.iOutput)/self.nHidden
+        self.hOutput1[:-1, :] = tanh(self.hActivation1)
+        self.hOutput1[-1:, :] = 1.0
+
+        self.hActivation2 = dot(self.hWeights2, self.hOutput1)/self.nHidden
+        self.hOutput2[:-1, :] = tanh(self.hActivation2)
+        self.hOutput2[-1:, :] = 1.0
+
+        self.hActivation3 = dot(self.hWeights3, self.hOutput2)/self.nHidden
+        self.hOutput3[:-1, :] = tanh(self.hActivation3)
+        self.hOutput3[-1:, :] = 1.0
 	#print 'hOutput', self.hOutput
          
         # set bias neuron in hidden layer to 1.0
-        self.hOutput[-1:, :] = 1.0
+        # self.hOutput[-1:, :] = 1.0
          
         # output layer
-        self.oActivation = dot(self.oWeights, self.hOutput)/self.nOut
+        self.oActivation = dot(self.oWeights, self.hOutput3)/self.nOut
         self.oOutput = tanh(self.oActivation)
      
     def backward(self, teach):
@@ -65,14 +84,18 @@ class FeedForwardNetwork:
 	#print 'oDelta', self.oDelta
                  
         # deltas of hidden neurons
-        self.hDelta = (1 - tanh(self.hActivation)* tanh(self.hActivation)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
+        self.hDelta3 = (1 - tanh(self.hActivation3)* tanh(self.hActivation3)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
+        self.hDelta2 = (1 - tanh(self.hActivation2)* tanh(self.hActivation2)) * dot(self.hWeights3[:,:-1].transpose(), self.hDelta3)
+        self.hDelta1 = (1 - tanh(self.hActivation1)* tanh(self.hActivation1)) * dot(self.hWeights2[:,:-1].transpose(), self.hDelta2)
         # print 'oDelta', self.oDelta.shape
         # print 'HDELTA SHAPE', self.hDelta.shape
         # print 'iOut shape', self.iOutput.shape
         # print 'hWeight shape', self.hWeights.shape
         # apply weight changes
-        self.hWeights = self.hWeights - self.alpha * dot(self.hDelta, self.iOutput.transpose()) 
-        self.oWeights = self.oWeights - self.alpha * dot(self.oDelta, self.hOutput.transpose())
+        self.hWeights1 = self.hWeights1 - self.alpha * dot(self.hDelta1, self.iOutput.transpose())
+        self.hWeights2 = self.hWeights2 - self.alpha * dot(self.hDelta2, self.hOutput1.transpose())
+        self.hWeights3 = self.hWeights3 - self.alpha * dot(self.hDelta3, self.hOutput2.transpose())
+        self.oWeights = self.oWeights - self.alpha * dot(self.oDelta, self.hOutput3.transpose())
 
     
     def predict(self, Sample):
@@ -81,19 +104,24 @@ class FeedForwardNetwork:
 
         self.iOutput[-1:, 0] = 1.0
 
-        # hidden layer
-        self.hActivation = dot(self.hWeights, self.iOutput)/self.nHidden
-        self.hOutput[:-1, :] = tanh(self.hActivation)
-        # self.hOutput[:-1, :] = self.hActivation
+        self.hActivation1 = dot(self.hWeights1, self.iOutput)/self.nHidden
+        self.hOutput1[:-1, :] = tanh(self.hActivation1)
+        self.hOutput1[-1:, :] = 1.0
+
+        self.hActivation2 = dot(self.hWeights2, self.hOutput1)/self.nHidden
+        self.hOutput2[:-1, :] = tanh(self.hActivation2)
+        self.hOutput2[-1:, :] = 1.0
+
+        self.hActivation3 = dot(self.hWeights3, self.hOutput2)/self.nHidden
+        self.hOutput3[:-1, :] = tanh(self.hActivation3)
+        self.hOutput3[-1:, :] = 1.0
+	#print 'hOutput', self.hOutput
 
         # set bias neuron in hidden layer to 1.0
-        self.hOutput[-1:, :] = 1.0
+        # self.hOutput[-1:, :] = 1.0
 
         # output layer
-        # print 'oWEIGHT size', self.oWeights.shape
-        # print 'hOut size', self.hOutput.shape
-
-        self.oActivation = dot(self.oWeights, self.hOutput)/self.nOut
+        self.oActivation = dot(self.oWeights, self.hOutput3)/self.nOut
         self.oOutput = tanh(self.oActivation)
         # self.oOutput = self.oActivation
 
@@ -103,12 +131,12 @@ class FeedForwardNetwork:
         return map((1/(1+exp(-x))),array)
 
     def writeResults(self, filename):
-        results = file(filename, 'a')
-        savetxt(filename, self.hWeights)
+        savetxt(filename+'_hweights', self.hWeights)
+        savetxt(filename+'_oweights', self.oWeights)
         # results.write('oWeights\n')
         # results.write(str(self.oWeights)+'\n')
 def func(a):
-    return abs(cos(a))
+    return [abs(cos(a)), abs(sin(a))]
 
 
 if __name__ == '__main__':
@@ -120,16 +148,16 @@ if __name__ == '__main__':
     xorTeach = [[0,0], [1,1], [1,1], [0,0]]
 
     # create network
-    ffn = FeedForwardNetwork(2,2,2,0.01 )
+    ffn = FeedForwardNetwork(1,2,2,0.01 )
 
     for i in range(100000):
         r = random.random()
         ffn.forward(r)
         ffn.backward(func(r))
 
-    for i in range(100):
+    for i in range(10):
        	r = random.random()
-        print 'prediction', r, ffn.predict(r), 'error', func(r) - ffn.predict(r)
+        print 'prediction', r, ffn.predict(r), 'correct', func(r)
         # print 'ERROR', func(a,b,c) - ffn.predict([a,b,c])
 
     # ffn.writeResults('Simplefuncweights.txt')
