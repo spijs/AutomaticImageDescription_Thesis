@@ -42,7 +42,7 @@ class FeedForwardNetwork:
         self.hDelta1 = zeros((self.nHidden), dtype=float)
         self.hDelta2 = zeros((self.nHidden), dtype=float)
         self.hDelta3 = zeros((self.nHidden), dtype=float)
-        self.oDelta = zeros((self.nOut), dtype=float)   
+        self.oDelta = zeros((self.nOut,1), dtype=float)
      
     def forward(self, input):
         # set input as output of first layer (bias neuron = 1.0)
@@ -63,25 +63,55 @@ class FeedForwardNetwork:
         self.hActivation3 = dot(self.hWeights3, self.hOutput2)/self.nHidden
         self.hOutput3[:-1, :] = tanh(self.hActivation3)
         self.hOutput3[-1:, :] = 1.0
-	#print 'hOutput', self.hOutput
          
         # set bias neuron in hidden layer to 1.0
         # self.hOutput[-1:, :] = 1.0
          
         # output layer
+        print 'oweight', self.oWeights.shape
+        print 'houtput3', self.hOutput3.shape
         self.oActivation = dot(self.oWeights, self.hOutput3)/self.nOut
+        print'oact', self.oActivation.shape
         self.oOutput = tanh(self.oActivation)
      
     def backward(self, teach):
-        self.correct[:,0] = teach
+        print'backward'
+        loss_cost = 0.0
+        dYs = []
+        logppl = 0.0
+        logppln = 0
+        img = self.iOutput
+        gtix = teach
+        # fetch the predicted probabilities, as rows
+        Y = self.oOutput
+        maxes = amax(Y, axis=1, keepdims=True)
+        e = exp(Y - maxes) # for numerical stability shift into good numerical range
+        P = e / sum(e, axis=1, keepdims=True)
+        loss_cost += - sum(log(1e-20 + P[range(len(gtix)),gtix])) # note: add smoothing to not get infs
+        logppl += - sum(log2(1e-20 + P[range(len(gtix)),gtix])) # also accumulate log2 perplexities
+        logppln += len(gtix)
+
+        # lets be clever and optimize for speed here to derive the gradient in place quickly
+        for iy,y in enumerate(gtix):
+          print 'in gtix enum'
+          P[iy,y] -= 1 # softmax derivatives are pretty simple
+        dYs.append(P)
+
+        # dYs = dYs.flatten()
+        print 'dYs', dYs[0].flatten()
+
+
+        # self.correct[:,0] = teach
         # print 'corrects shape', self.correct.shape
-        error = self.oOutput - self.correct
+        # error = self.oOutput - self.correct
+        # print len(dYs)
+        # print 'odelta', self.oDelta.shape
         #error = 10*error
-	#error = power(error, 3)/100 
+	    #error = power(error, 3)/100
         # print 'error shape', error.shape
          
         # deltas of output neurons
-        self.oDelta = (1 - tanh(self.oActivation) * tanh(self.oActivation)) * error
+        # self.oDelta = (1 - tanh(self.oActivation) * tanh(self.oActivation)) * error
 	#print 'oDelta', self.oDelta
                  
         # deltas of hidden neurons
@@ -89,7 +119,7 @@ class FeedForwardNetwork:
         self.hDelta2 = (1 - tanh(self.hActivation2)* tanh(self.hActivation2)) * dot(self.hWeights3[:,:-1].transpose(), self.hDelta3)
         self.hDelta1 = (1 - tanh(self.hActivation1)* tanh(self.hActivation1)) * dot(self.hWeights2[:,:-1].transpose(), self.hDelta2)
         # print 'oDelta', self.oDelta.shape
-        # print 'HDELTA SHAPE', self.hDelta.shape
+        # print 'HDELTA1 SHAPE', self.hDelta3.shape
         # print 'iOut shape', self.iOutput.shape
         # print 'hWeight shape', self.hWeights.shape
         # apply weight changes
@@ -151,7 +181,7 @@ if __name__ == '__main__':
     # create network
     ffn = FeedForwardNetwork(1,2,2,0.01 )
 
-    for i in range(100000):
+    for i in range(10):
         r = random.random()
         ffn.forward(r)
         ffn.backward(func(r))
