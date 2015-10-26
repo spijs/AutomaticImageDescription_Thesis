@@ -10,15 +10,16 @@ def main(params):
     topics = params['topics']
     topic_extractor = TopicExtractor(dataset,topics,iterations)
     model,vocabulary,images = topic_extractor.extract_model()
-    test_topic(model,vocabulary)
+    test_topic(model,vocabulary,dataset,topics)
     save_image_topic_distribution(model,images,dataset,topics)
     print('finished')
-def test_topic(model,vocabulary):
+def test_topic(model,vocabulary,dataset,topics):
+    f= open('lda_images/models/topic_word_distribution_'+dataset+'top'+str(topics)+'.txt','w')
     n = 10
     topic_word = model.topic_word_
     for i, topic_dist in enumerate(topic_word):
         topic_words = numpy.array(vocabulary)[numpy.argsort(topic_dist)][:-(n+1):-1]
-        print('*Topic {}\n- {}'.format(i, ' '.join(topic_words)))
+        f.write('*Topic {}\n- {}'.format(i, ' '.join(topic_words)))
 
 def save_image_topic_distribution(model,images,dataset,topics):
     f = open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'.txt','w')
