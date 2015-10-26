@@ -53,6 +53,8 @@ class LDANetworkLearner:
                 if intermediate_error > validationError:
                     print intermediate_error
                     print 'No more improvement'
+                    print 'testing'
+                    self.testNetwork()
                     break
                 else: 
                     print 'Validation Error', intermediate_error
@@ -63,8 +65,27 @@ class LDANetworkLearner:
         filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics) + '.txt'
         self.network.writeResults(filename)
 
+    def testNetwork(self):
+        topicnamelist = self.createTopicList()
+        for i in range(10):
+            testPair = self.dataprovider.sampleImageSentencePair('test')
+            prediction = self.network.predict(testPair['image']['feat'])
+            sortedpred = prediction.sort()
+            sortedpred = sortedpred[::-1]
+            dict = dict(zip(prediction, topicnamelist))
+            print testPair['image']['filename']+ '\n'
+            print 'Best topics\n'
+            for j in range(5):
+                print dict[sortedpred[j]]
 
-
+    def createTopiclist(self):
+        file = open('lda_images/models/topicnames.txt')
+        list = []
+        line = file.readline()
+        while line != '':
+            list.extend([line])
+            line = file.readline()
+        return list
 
     def create_dist_dict(self, filename):
         dict = {}
