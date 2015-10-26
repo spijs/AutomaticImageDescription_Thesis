@@ -53,7 +53,7 @@ class LDANetworkLearner:
                 if intermediate_error > validationError:
                     print intermediate_error
                     print 'No more improvement'
-                    
+                    break
                 else: 
                     print 'Validation Error', intermediate_error
                     validationError = intermediate_error
