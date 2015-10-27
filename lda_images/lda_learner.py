@@ -42,7 +42,7 @@ class LDANetworkLearner:
             # for networkID in len(self.topicnetworks):
             self.network.forward(features)
             self.network.backward(dist)
-            if i % 1000  == 1 :
+            if i % 5000  == 1 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):

@@ -76,7 +76,6 @@ class FeedForwardNetwork:
         # Compute softmax on output activation
         e = exp(self.oActivation)
         self.oOutput = e / sum(e)
-        print self.oOutput
 
     def backward(self, teach):
         self.correct[:,0] = teach
@@ -86,8 +85,6 @@ class FeedForwardNetwork:
         cost2 = 0.0
         for i in range(len(teach)):
             cost2-= teach[i]*log(self.oActivation[i])
-        print 'Cost1', cost
-        print 'Cost2 met for', cost2
         # print len(dYs)
         # print 'odelta', self.oDelta.shape
         #error = 10*error
