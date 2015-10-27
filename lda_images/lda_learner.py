@@ -53,7 +53,7 @@ class LDANetworkLearner:
                     prediction = self.network.predict(validationPair['image']['feat'])
                     #prediction = random.random((self.nbOfTopics,1))		
                     correct = self.dictionary[validationPair['image']['filename']]
-                    err = sum((-1)*log10(abs(correct - prediction)))
+                    err = self.network.cost()
                     intermediate_error += err
                 if intermediate_error < validationError:
                     print intermediate_error
@@ -73,18 +73,25 @@ class LDANetworkLearner:
 
     def testNetwork(self):
         topicnamelist = self.createTopicList()
-        for i in range(10):
-            network = self.topicnetworks[10]
+	for i in range(10):
             testPair = self.dataprovider.sampleImageSentencePair('test')
-            prediction = network.predict(testPair['image']['feat'])
+            prediction = self.network.predict(testPair['image']['feat'])
+	    print prediction
+	    print type(prediction)
             # sortedpred = prediction.sort()
             # sortedpred = sortedpred[::-1]
-            # dict = dict(zip(prediction, topicnamelist))
+            #dictionary = dict(zip(prediction, topicnamelist))
             print testPair['image']['filename']
-            print prediction
-            # print 'Best topics\n'
-            # for j in range(5):
-            #     print dict[sortedpred[j]]
+            sortedpred = sorted(prediction)
+	    
+	    
+	    sortedpred = sortedpred[::-1]
+	    prediction = prediction.tolist()
+	    print 'sorted', sortedpred
+            print 'Best topics\n'
+            for j in range(5):
+		index = prediction.index(sortedpred[j])
+                print topicnamelist[index]
 
 
     def createTopicList(self):
