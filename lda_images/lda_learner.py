@@ -23,10 +23,10 @@ class LDANetworkLearner:
         self.dictionary = self.create_dist_dict(filename)
         # image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
         # validationset = self.dataprovider.iterImageSentencePair(split = 'val')
-        self.topicnetworks = []
-        for i in range(12):
-            self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, self.rate)])
-        # validationError = sys.maxint
+        # self.topicnetworks = []
+        # for i in range(12):
+        #     self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, self.rate)])
+        # # validationError = sys.maxint
         validationError = (-sys.maxint-1)
 
         for i in range(iterations):
@@ -40,25 +40,21 @@ class LDANetworkLearner:
             # print 'DIST', len(dist)
             # print 'DIST', dist
             # for networkID in len(self.topicnetworks):
-            for networkID in [10]:
-                network = self.topicnetworks[networkID]
-                network.forward(features)
-                network.backward(dist[networkID])
+            self.network.forward(features)
+            self.network.backward(dist)
             if i % 1000  == 1 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):
                     validationPair = self.dataprovider.sampleImageSentencePair('val')
                     #print 'VALIDATING'
-                    for networkID in [10]:
-                        network = self.topicnetworks[networkID]
-                        # network.forward(features)
-                        # network.backward(dist[networkID])
-                        prediction = network.predict(validationPair['image']['feat'])
+                    self.network.forward(features)
+                    self.network.backward(dist)
+                    prediction = self.network.predict(validationPair['image']['feat'])
                     #prediction = random.random((self.nbOfTopics,1))		
-                        correct = self.dictionary[validationPair['image']['filename']][networkID]
-                        err = sum((-1)*log10(abs(correct - prediction)))
-                        intermediate_error += err
+                    correct = self.dictionary[validationPair['image']['filename']]
+                    err = sum((-1)*log10(abs(correct - prediction)))
+                    intermediate_error += err
                 if intermediate_error < validationError:
                     print intermediate_error
                     print 'No more improvement'
