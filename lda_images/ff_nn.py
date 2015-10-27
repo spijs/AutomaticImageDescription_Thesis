@@ -68,42 +68,26 @@ class FeedForwardNetwork:
         # self.hOutput[-1:, :] = 1.0
          
         # output layer
-        print 'oweight', self.oWeights.shape
-        print 'houtput3', self.hOutput3.shape
+        # print 'oweight', self.oWeights.shape
+        # print 'houtput3', self.hOutput3.shape
         self.oActivation = dot(self.oWeights, self.hOutput3)/self.nOut
-        print'oact', self.oActivation.shape
-        self.oOutput = tanh(self.oActivation)
-     
+        # print'oact', self.oActivation.shape
+        # self.oOutput = tanh(self.oActivation)
+        # Compute softmax on output activation
+        e = exp(self.oActivation)
+        self.oOutput = e / sum(e)
+        print self.oOutput
+
     def backward(self, teach):
-        print'backward'
-        loss_cost = 0.0
-        dYs = []
-        logppl = 0.0
-        logppln = 0
-        img = self.iOutput
-        gtix = teach
-        # fetch the predicted probabilities, as rows
-        Y = self.oOutput
-        maxes = amax(Y, axis=1, keepdims=True)
-        e = exp(Y - maxes) # for numerical stability shift into good numerical range
-        P = e / sum(e, axis=1, keepdims=True)
-        loss_cost += - sum(log(1e-20 + P[range(len(gtix)),gtix])) # note: add smoothing to not get infs
-        logppl += - sum(log2(1e-20 + P[range(len(gtix)),gtix])) # also accumulate log2 perplexities
-        logppln += len(gtix)
-
-        # lets be clever and optimize for speed here to derive the gradient in place quickly
-        for iy,y in enumerate(gtix):
-          print 'in gtix enum'
-          P[iy,y] -= 1 # softmax derivatives are pretty simple
-        dYs.append(P)
-
-        # dYs = dYs.flatten()
-        print 'dYs', dYs[0].flatten()
-
-
-        # self.correct[:,0] = teach
+        self.correct[:,0] = teach
         # print 'corrects shape', self.correct.shape
-        # error = self.oOutput - self.correct
+        cost = -sum(self.correct*(log(self.oActivation)))
+        error = self.oOutput - self.correct
+        cost2 = 0.0
+        for i in range(len(teach)):
+            cost2-= teach[i]*log(self.oActivation[i])
+        print 'Cost1', cost
+        print 'Cost2 met for', cost2
         # print len(dYs)
         # print 'odelta', self.oDelta.shape
         #error = 10*error
@@ -111,7 +95,7 @@ class FeedForwardNetwork:
         # print 'error shape', error.shape
          
         # deltas of output neurons
-        # self.oDelta = (1 - tanh(self.oActivation) * tanh(self.oActivation)) * error
+        self.oDelta = error
 	#print 'oDelta', self.oDelta
                  
         # deltas of hidden neurons
@@ -153,7 +137,8 @@ class FeedForwardNetwork:
 
         # output layer
         self.oActivation = dot(self.oWeights, self.hOutput3)/self.nOut
-        self.oOutput = tanh(self.oActivation)
+        e = exp(self.oActivation)
+        self.oOutput = e / sum(e)
         # self.oOutput = self.oActivation
 
         return self.oOutput
