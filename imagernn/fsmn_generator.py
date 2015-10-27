@@ -34,8 +34,7 @@ class FSMNGenerator:
         for l in range(layers):
             model['Whh'+str(l)] = initw(hidden_size, hidden_size)
             model['bhh'+str(l)] = np.zeros((1, hidden_size))
-            model['A'+str(l)] = np.random.rand(1,N)
-            print(str(model['A'+str(l)]))
+            model['A'+str(l)] = initw(1,N)
             update.append('Whh'+str(l))
             update.append('bhh'+str(l))
             update.append('A'+str(l))
@@ -51,23 +50,40 @@ class FSMNGenerator:
     sentence with 10 words will be of size 11xD2 in Xs.
     """
         predict_mode = kwargs.get('predict_mode', False)
-        '''
+
         # options
         drop_prob_encoder = params.get('drop_prob_encoder', 0.0)
         drop_prob_decoder = params.get('drop_prob_decoder', 0.0)
+
         relu_encoders = params.get('rnn_relu_encoders', 0)
+        '''
         rnn_feed_once = params.get('rnn_feed_once', 0)
         '''
+
+        if drop_prob_encoder > 0: # if we want dropout on the encoder
+      # inverted version of dropout here. Suppose the drop_prob is 0.5, then during training
+      # we are going to drop half of the units. In this inverted version we also boost the activations
+      # of the remaining 50% by 2.0 (scale). The nice property of this is that during prediction time
+      # we don't have to do any scaling, since all 100% of units will be active, but at their base
+      # firing rate, giving 100% of the "energy". So the neurons later in the pipeline dont't change
+      # their expected firing rate magnitudes
+            if not predict_mode: # and we are in training mode
+                scale = 1.0 / (1.0 - drop_prob_encoder)
+                Us = (np.random.rand(*(Xs.shape)) < (1 - drop_prob_encoder)) * scale # generate scaled mask
+                Xs *= Us # drop!
+                Ui = (np.random.rand(*(Xi.shape)) < (1 - drop_prob_encoder)) * scale
+                Xi *= Ui # drop!
+
         # encode input vectors
         Wxh = model['Wxh']
         bxh = model['bxh']
         bhh = model ['bhh']
         Xsh = Xs.dot(Wxh) + bxh
-        '''
+
         if relu_encoders:
             Xsh = np.maximum(Xsh, 0)
             Xi = np.maximum(Xi, 0)
-        '''
+
         # recurrence iteration for the Multimodal RNN similar to one described in Karpathy et al.
         d = model['Wd'].shape[0]  # size of hidden layer
         n = Xs.shape[0]
@@ -90,10 +106,16 @@ class FSMNGenerator:
             L = HLayer(d,None,predict_mode,l)
             finalH, cache,M = L.forward(finalH,n,model,cache)
 
+        if drop_prob_decoder > 0: # if we want dropout on the decoder
+            if not predict_mode: # and we are in training mode
+                scale2 = 1.0 / (1.0 - drop_prob_decoder)
+                U2 = (np.random.rand(*(H.shape)) < (1 - drop_prob_decoder)) * scale2 # generate scaled mask
+                H *= U2 # drop!
+
+
         # decoder at the end
         Wd = model['Wd']
         bd = model['bd']
-        #Y = finalH.dot(Wd) + bd
         Y = finalH.dot(Wd) + bd
 
         if not predict_mode:
@@ -104,12 +126,15 @@ class FSMNGenerator:
             cache['Xsh'] = Xsh
             cache['Wxh'] = Wxh
             cache['Xi'] = Xi
-            '''cache['Ui'] = Ui
-            cache['Us'] = Us
             cache['relu_encoders'] = relu_encoders
-            cache['rnn_feed_once'] = rnn_feed_once
+            cache['drop_prob_encoder'] = drop_prob_encoder
+            cache['drop_prob_decoder'] = drop_prob_decoder
+            #cache['rnn_feed_once'] = rnn_feed_once
+            if drop_prob_encoder > 0:
+                cache['Us'] = Us # keep the dropout masks around for backprop
+                cache['Ui'] = Ui
+            if drop_prob_decoder > 0: cache['U2'] = U2
 
-            '''
             cache['layers'] = params.get('layers')
         return Y, cache
 
@@ -122,9 +147,11 @@ class FSMNGenerator:
         Wxh = cache['Wxh']
         Xi = cache['Xi']
         layers = cache['layers']
-        Hfinal = cache['H'+str(layers-1)]
-        '''
+        drop_prob_encoder = cache['drop_prob_encoder']
+        drop_prob_decoder = cache['drop_prob_decoder']
+        #rnn_feed_once = cache['rnn_feed_once']
         relu_encoders = cache['relu_encoders']
+        '''
         rnn_feed_once = cache['rnn_feed_once']
         '''
         n, d = H.shape
@@ -132,6 +159,11 @@ class FSMNGenerator:
         dWd = H.transpose().dot(dY)
         dbd = np.sum(dY, axis=0, keepdims = True)
         D = dY.dot(Wd.transpose())
+
+        # backprop dropout, if it was applied
+        if drop_prob_decoder > 0:
+            D*= cache['U2']
+
         dict = {}
 
         for l in reversed(range(layers)):
@@ -149,13 +181,15 @@ class FSMNGenerator:
         for i in range(n):
             dXi += D[i]
 
-
-        '''
         if relu_encoders:
             # backprop relu
             dXs[Xsh <= 0] = 0
             dXi[Xi <= 0] = 0
-        '''
+
+        if drop_prob_encoder > 0: # backprop encoder dropout
+            dXi *= cache['Ui']
+            dXs *= cache['Us']
+
         dict.update({'bhh': dbhh, 'Wd': dWd, 'bd': dbd, 'Wxh': dWxh, 'bxh': dbxh, 'dXs': dXs, 'dXi': dXi})
         #for key in (dict.keys()):
         #    print(key + ' :' + str(dict[key].shape))
@@ -170,7 +204,6 @@ class FSMNGenerator:
         rnn_feed_once = params.get('rnn_feed_once', 0)
 
         d = model['Wd'].shape[0]  # size of hidden layer
-        Whh = model['Whh']
         bhh = model['bhh']
         Wd = model['Wd']
         bd = model['bd']
@@ -198,9 +231,9 @@ class FSMNGenerator:
                     # tick the RNN for this beam
                     Xsh = Ws[ixprev].dot(Wxh) + bxh
                     if (not rnn_feed_once) or (not b[1]):
-                        '''if relu_encoders:
+                        if relu_encoders:
                             Xsh = np.maximum(Xsh, 0)
-                        '''
+
                     h1 = np.maximum(Xi + Xsh  + bhh, 0)
                     '''else:
                         h1 = np.maximum(Xsh + b[2].dot(Whh) + bhh, 0)

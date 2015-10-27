@@ -17,10 +17,13 @@ class HLayer:
         self.N = 8  # TODO wijzigen zodat niet gehardcodeded
 
     def forward(self,H,n,model,cache):
-        H2 = np.zeros((n, self.d))
+        H2 = initw(n, self.d)
         A = model['A'+str(self.id)]
+       # print(A)
+       # print(str(A.size))
         M = fillMMatrix(A, n ,self.N)
-        M = np.zeros((n,n))
+        #M = np.zeros((n,n))
+        #print(M)
         #U2=0
         '''
         if self.drop_prob_decoder > 0: # if we want dropout on the decoder
@@ -35,7 +38,7 @@ class HLayer:
         # Hidden Layer 2
         for t in xrange(n):
             mem = Hmem[t - 1]
-            H2[t] = np.maximum(H[t].dot(model['Whh'+str(self.id)]) + H[t].dot(mem) + model['bhh'+str(self.id)], 0)
+            H2[t] = np.maximum(H[t].dot(model['Whh'+str(self.id)]) + mem + model['bhh'+str(self.id)], 0)
 
         if not self.predict_mode:
             cache['Whh'+str(self.id)] = model['Whh'+str(self.id)]
@@ -61,7 +64,7 @@ class HLayer:
         dM = dHmem.dot(H.transpose())
         #print('Shape van dM', dM.shape)
         #print('dM:', dM)
-        dA = fromMtoA(dM,self.N)
+        dA = fromMtoA(dM,self.N,M.shape[0])
         #print(dA)
 
         # backprop H
@@ -74,12 +77,12 @@ class HLayer:
         return{'Whh'+str(self.id):dWhh, 'A'+str(self.id):dA, 'bhh'+str(self.id):dbhh}, dH
 
 
-def fromMtoA(M,N):
+def fromMtoA(M,N,n):
     A = np.zeros((1,N))
-    for i in range(N):
-       d = np.diag(M,i)
-       avg = np.mean(d)
-       A[0,i] = avg
+    for i in range(0,min(N,n)):
+        d = np.diag(M,i)
+        avg = np.mean(d)
+        A[0,i] = avg
     return A
 
 
