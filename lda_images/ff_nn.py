@@ -124,7 +124,7 @@ class FeedForwardNetwork:
         # self.oWeights = self.oWeights - dot(self.oDelta, self.hOutput2.transpose())
 
     def cost(self):
-	act = self.oActivation + 0.0000001
+	act = self.activation + 0.0000001
 	cost = -sum(self.correct*log(act))
 	return cost
 
@@ -152,11 +152,11 @@ class FeedForwardNetwork:
     #
      #    # output layer
      #    self.oActivation = dot(self.oWeights, self.hOutput2)/self.nOut
-        self.iOutput[:-1, 0] = input
+        self.iOutput[:-1, 0] = Sample
         self.iOutput[-1:, 0] = 1.0
 
         self.activation = dot(self.weights, self.iOutput)
-        e = exp(self.oActivation)
+        e = exp(self.activation)
         self.oOutput = e / sum(e)
         # self.oOutput = self.oActivation
 
