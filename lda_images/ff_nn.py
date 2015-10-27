@@ -100,7 +100,11 @@ class FeedForwardNetwork:
         # deltas of hidden neurons
         #self.hDelta3 = (1 - tanh(self.hActivation3)* tanh(self.hActivation3)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
         self.hDelta2 = (1 - tanh(self.hActivation2)* tanh(self.hActivation2)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
+        print 'DELTA2'
+        print self.hDelta2
         self.hDelta1 = (1 - tanh(self.hActivation1)* tanh(self.hActivation1)) * dot(self.hWeights2[:,:-1].transpose(), self.hDelta2)
+        print 'DELTA1'
+        print self.hDelta1
         # print 'oDelta', self.oDelta.shape
         # print 'HDELTA1 SHAPE', self.hDelta3.shape
         # print 'iOut shape', self.iOutput.shape
