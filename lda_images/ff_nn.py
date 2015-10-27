@@ -94,7 +94,7 @@ class FeedForwardNetwork:
         # print 'error shape', error.shape
          
         # deltas of output neurons
-        self.oDelta = error
+        self.oDelta = self.alpha * error
 	#print 'oDelta', self.oDelta
                  
         # deltas of hidden neurons
@@ -110,10 +110,10 @@ class FeedForwardNetwork:
         # print 'iOut shape', self.iOutput.shape
         # print 'hWeight shape', self.hWeights.shape
         # apply weight changes
-        self.hWeights1 = self.hWeights1 - self.alpha * dot(self.hDelta1, self.iOutput.transpose())
-        self.hWeights2 = self.hWeights2 - self.alpha * dot(self.hDelta2, self.hOutput1.transpose())
+        self.hWeights1 = self.hWeights1 - dot(self.hDelta1, self.iOutput.transpose())
+        self.hWeights2 = self.hWeights2 - dot(self.hDelta2, self.hOutput1.transpose())
         #self.hWeights3 = self.hWeights3 - self.alpha * dot(self.hDelta3, self.hOutput2.transpose())
-        self.oWeights = self.oWeights - self.alpha * dot(self.oDelta, self.hOutput2.transpose())
+        self.oWeights = self.oWeights - dot(self.oDelta, self.hOutput2.transpose())
 
     def cost(self):
 	act = self.oActivation + 0.0000001
