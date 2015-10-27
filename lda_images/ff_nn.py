@@ -1,7 +1,7 @@
 __author__ = 'Wout'
 
 from numpy import *
-
+from imagernn.utils import initw
 
 class FeedForwardNetwork:
 
@@ -19,11 +19,11 @@ class FeedForwardNetwork:
         self.correct = zeros((self.nOut,1), dtype=float)
          
         # initialize weights randomly (+1 for bias)
-        self.hWeights1 = random.random((self.nHidden, self.nIn+1))
-        self.hWeights2 = random.random((self.nHidden, self.nHidden+1))
+        self.hWeights1 = initw(self.nHidden, self.nIn+1)
+        self.hWeights2 = initw(self.nHidden, self.nHidden+1)
         #self.hWeights3 = random.random((self.nHidden, self.nHidden+1))
 	# print 'HWEIGHT', self.hWeights
-        self.oWeights = random.random((self.nOut, self.nHidden+1))
+        self.oWeights = initw(self.nOut, self.nHidden+1)
          
         # activations of neurons (sum of inputs)
         self.hActivation1 = zeros((self.nHidden, 1), dtype=float)
@@ -54,6 +54,7 @@ class FeedForwardNetwork:
         # hidden layer
         self.hActivation1 = dot(self.hWeights1, self.iOutput)/self.nHidden
         self.hOutput1[:-1, :] = tanh(self.hActivation1)
+	#print 'input eerste layer', self.hActivation1
         self.hOutput1[-1:, :] = 1.0
 
         self.hActivation2 = dot(self.hWeights2, self.hOutput1)/self.nHidden
@@ -100,18 +101,19 @@ class FeedForwardNetwork:
         # deltas of hidden neurons
         #self.hDelta3 = (1 - tanh(self.hActivation3)* tanh(self.hActivation3)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
         self.hDelta2 = (1 - tanh(self.hActivation2)* tanh(self.hActivation2)) * dot(self.oWeights[:,:-1].transpose(), self.oDelta)
-        print 'DELTA2'
-        print self.hDelta2
+        #print 'DELTA2'
+        #print self.hDelta2
         self.hDelta1 = (1 - tanh(self.hActivation1)* tanh(self.hActivation1)) * dot(self.hWeights2[:,:-1].transpose(), self.hDelta2)
-        print 'DELTA1'
-        print self.hDelta1
+        #print 'DELTA1'
+        #print self.hDelta1
         # print 'oDelta', self.oDelta.shape
         # print 'HDELTA1 SHAPE', self.hDelta3.shape
         # print 'iOut shape', self.iOutput.shape
         # print 'hWeight shape', self.hWeights.shape
         # apply weight changes
         self.hWeights1 = self.hWeights1 - dot(self.hDelta1, self.iOutput.transpose())
-        self.hWeights2 = self.hWeights2 - dot(self.hDelta2, self.hOutput1.transpose())
+        #print 'weights layer1', self.hWeights1
+	self.hWeights2 = self.hWeights2 - dot(self.hDelta2, self.hOutput1.transpose())
         #self.hWeights3 = self.hWeights3 - self.alpha * dot(self.hDelta3, self.hOutput2.transpose())
         self.oWeights = self.oWeights - dot(self.oDelta, self.hOutput2.transpose())
 
