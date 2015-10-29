@@ -1,16 +1,16 @@
 football
-hiking
+hiking (mountain backpack)
 cowboy
-arms
-clothing
+holding (arm, hand,finger)
+clothing+white/black
 trees
-happiness
-containers
+posing for camera
+carry bag
 numbers of ppl
-snow
+snow+ski
 dog, grass, field
 military
-phones
+phone
 clothing
 clothing
 summer clothing
@@ -23,12 +23,12 @@ things in the air
 science, lab stuff
 crowds in the city
 shops
-dark males
+male+smoke(+dark skin)
 music
 bikes
 clothing
 drinking
-floor + getting down
+floor + cleaning
 young girls
 sunny
 stage performance
@@ -37,26 +37,26 @@ toys
 rainy + heads
 vreemd (person someon leav ground fall cover anoth pile background larg)
 surfing
-markt
-boats
-loading trucks
-vreemd (kerstmis?)
-clothing
+market/shop
+boats+water
+trucks
+vreemd (hang open christma cloth color hous insid trampolin around fron)
+clothing+colors
 reading (books, magazine)
-colors + nations? 
+colors + flag?
 interaction between people
 speaking + listening
-toddlers (smaller kids)
+mother+child
 rock climbing
-looking + watching
+looking + spectating +people
 kids
-city stuff
+city stuff(street)
 groups of people
 cooking
 signs + protesting
 groups , amounts of people
-benches + parks
-chairs
+benches + parks + sitting
+chairs + sitting
 concrete walls + buildings
 photograhpy
 guitars
@@ -64,7 +64,7 @@ couples
 landmarks (statue, bridge, fence)
 roads
 snowboarding 
-eating 
+eating (restaurant)
 dogs
 running
 jumping
@@ -93,27 +93,27 @@ clothing (red + brown)
 looking at stuff
 small children
 asians
-fires
-girl/women
+fires+night
+girl/women together
 blue outfits
-headgear
+hat,cap,sunglasses
 women heads
 scarfs + women heads
 sports (baseball + hockey)
-police + guards
+(stand behind) + police + guards
 dogs
 two men
 suited up
 horse (racing)
 sleeping
 grouping people
-male hairstyles
+male hairstyles+glass
 male clothing
-topless people
+topless male(s)
 metal- and woodworking
-positions
+standing somewhere
 walking on the street
-looking
+looking+window+pointing
 buildings
 old men
 motorcycling

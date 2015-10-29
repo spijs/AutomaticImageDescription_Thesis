@@ -92,7 +92,7 @@ class LDANetworkLearner:
 
 
     def createTopicList(self):
-        file = open('lda_images/models/topicnames.txt')
+        file = open('lda_images/models/'+self.nbOfTopics+'.txt')
         list = []
         line = file.readline()
         while line != '':
