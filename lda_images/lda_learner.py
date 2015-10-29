@@ -7,13 +7,12 @@ import sys
 class LDANetworkLearner:
 
 
-    def __init__(self, dataset, nbOfTopics, rate,hidden):
+    def __init__(self, dataset, nbOfTopics, rate,hidden,layers):
         self.nbOfTopics=nbOfTopics
         self.dataset = dataset
         self.dataprovider = getDataProvider(dataset)
-        self.network = FeedForwardNetwork(4096,hidden , nbOfTopics, rate)
+        self.network = FeedForwardNetwork(4096,hidden , nbOfTopics, layers-1, rate)
         self.rate = rate
-
 
     # Train a simple FF neural network based on the topic distributions that were calculated earlier
     # First creates a dictionary to map the image names onto the topic distributions,
@@ -92,7 +91,7 @@ class LDANetworkLearner:
 
 
     def createTopicList(self):
-        file = open('lda_images/models/'+self.nbOfTopics+'.txt')
+        file = open('lda_images/models/topicnames'+str(self.nbOfTopics)+'.txt')
         list = []
         line = file.readline()
         while line != '':
@@ -128,8 +127,6 @@ class LDANetworkLearner:
             if modifiedNumber!= '':
                 m = float(modifiedNumber)
                 distribution.extend([m])
-        if len(distribution) != 120:
-            print 'LENGTH', len(distribution)
         return imgname, distribution
     def learnOneStep(self, image, distribution):
         self.network.forward(image)

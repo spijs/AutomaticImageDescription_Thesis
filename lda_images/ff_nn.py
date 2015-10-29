@@ -5,16 +5,26 @@ from imagernn.utils import initw
 
 class FeedForwardNetwork:
 
-    def __init__(self, nIn, nHidden, nOut, rate = 0.001):
+    def __init__(self, nIn, nHidden, nOut, layers, rate = 0.001):
         # learning rate
         self.alpha = rate
-
+        self.layers = layers
         # number of neurons in each layer
         self.nIn = nIn
         self.nHidden = nHidden
         self.nOut = nOut
 
         self.correct = zeros((self.nOut,1), dtype=float)
+
+        #Extra layers
+        self.layerweights = {}
+        self.layeractivations={}
+        self.layerOutput={}
+        for l in range (layers):
+            self.layerweights[str(l)]= initw(self.nHidden,self.nHidden+1)
+            self.layeractivations[str(l)] = zeros((self.nHidden,1), dtype=float)
+            self.layerOutput[str(l)] = zeros((self.nHidden+1,1),dtype=float)
+
         self.hweights = initw(self.nHidden,self.nIn+1)
         self.weights = initw(self.nOut, self.nHidden+1)
         self.iOutput = zeros((self.nIn+1, 1), dtype=float)
@@ -34,24 +44,37 @@ class FeedForwardNetwork:
         self.hOutput[:-1, :] = self.hactivation
         self.hOutput[-1:,0] = 1.0
 
+        currentOutput = self.hOutput
+        for l in range(self.layers):
+            self.layeractivations[l] = dot(self.layerweights[str(l)],self.hOutput)
+            self.layerOutput[str(l)][:-1, :] = self.layeractivations[str(l)]
+            self.layerOutput[str(l)][-1:,0] = 1.0
+            currentOutput = self.layerOutput[str(l)]
+
         #Single layer
-        self.activation = dot(self.weights, self.hOutput)
+        self.activation = dot(self.weights, currentOutput)
         e = exp(self.activation)
         self.oOutput = e / sum(e)
 
     def backward(self, teach):
         self.correct[:,0] = teach
         error = self.oOutput - self.correct
-        self.oDelta = self.alpha * error
+        oDelta = self.alpha * error
 
         # deltas of hidden neurons
-        #self.hDelta = (1 - tanh(self.hactivation)) * tanh(self.hactivation) * dot(self.weights[:,:-1].transpose(), self.oDelta)
-        self.hDelta = dot(self.weights[:,:-1].transpose(),self.oDelta)
+        hDelta = dot(self.weights[:,:-1].transpose(),oDelta)
+        self.weights = self.weights - dot(oDelta, self.hOutput.transpose())
+        #extra layers
+        previousDelta = hDelta
 
-        self.weights = self.weights - dot(self.oDelta, self.hOutput.transpose())
+        for l in reversed(range(self.layers)):
+            lDelta = dot(self.layerweights[str(l)][:,:-1].transpose(),previousDelta)
+            self.layerweights[str(l)] = self.layerweights[str(l)] - dot(previousDelta, self.layerOutput[str(l)].transpose())
+            previousDelta = lDelta
+
 
         # apply weight changes
-        self.hweights = self.hweights - self.alpha * dot(self.hDelta, self.iOutput.transpose())
+        self.hweights = self.hweights - self.alpha * dot(previousDelta, self.iOutput.transpose())
 
 
     def cost(self):
