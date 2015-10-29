@@ -1,17 +1,17 @@
 child play
 street
-rodeo
+rodeo + cowboy
 surf
 (older) woman
 drink (+talk?)
-sitting behind desk?
+sitting behind desk - desk stuff
 face of a man
-shop
+shop + market
 clothes
 music performer
 (older) man + clothes
 crowd of people
-building?
+building (standing + looking)
 arm, leg, tattoo
 man+clothes
 baby + smoke xD
@@ -27,11 +27,11 @@ forest
 dog running on field
 body of water (lake,...)
 sitting at restaurant
-busstop sign
+busstop sign (trains buses trams)
 basketball
 walking on street
 water
-sitting on bench
+sitting on bench (outside)
 jumping in air
 brick wall
 climbing rocks
