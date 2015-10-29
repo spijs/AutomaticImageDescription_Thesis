@@ -10,7 +10,8 @@ def main(params):
     topics = params['topics']
     rate = params['rate']
     iterations = params['iterations']
-    networkLearner = LDANetworkLearner(dataset, topics, rate)
+    hidden_layers = params['hidden']
+    networkLearner = LDANetworkLearner(dataset, topics, rate, hidden_layers)
     networkLearner.learnNetwork(iterations)
 
 
@@ -20,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--topics', dest='topics', type=int, default=120, help='Number of topics to learn lda model')
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 1000000, help='Number of iterations for training the network')
     parser.add_argument('-r', '--rate', dest='rate', type=float, default=0.001, help='Training rate for the neural network')
+    parser.add_argument('-hidden', '--hidden', dest='hidden', type=int, default=256, help='Number of hidden layers')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     main(params)

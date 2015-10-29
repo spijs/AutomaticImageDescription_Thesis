@@ -7,12 +7,12 @@ import sys
 class LDANetworkLearner:
 
 
-    def __init__(self, dataset, nbOfTopics, rate):
+    def __init__(self, dataset, nbOfTopics, rate,hidden):
         self.nbOfTopics=nbOfTopics
         self.dataset = dataset
         self.dataprovider = getDataProvider(dataset)
-        self.network = FeedForwardNetwork(4096,512 , nbOfTopics, rate)
-	self.rate = rate
+        self.network = FeedForwardNetwork(4096,hidden , nbOfTopics, rate)
+        self.rate = rate
 
 
     # Train a simple FF neural network based on the topic distributions that were calculated earlier
@@ -27,7 +27,7 @@ class LDANetworkLearner:
         # for i in range(12):
         #     self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, self.rate)])
         # # validationError = sys.maxint
-        validationError = (-sys.maxint-1)
+        validationError = (sys.maxint-1)
 
         for i in range(iterations):
             if i % 100 == 0:
@@ -42,56 +42,53 @@ class LDANetworkLearner:
             # for networkID in len(self.topicnetworks):
             self.network.forward(features)
             self.network.backward(dist)
-            if i % 500  == 499 :
+            if i % 2000  == 1999 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):
                     validationPair = self.dataprovider.sampleImageSentencePair('val')
                     #print 'VALIDATING'
-                    self.network.forward(features)
-                    self.network.backward(dist)
+                    #self.network.forward(features)
+                    #self.network.backward(dist)
                     prediction = self.network.predict(validationPair['image']['feat'])
                     #prediction = random.random((self.nbOfTopics,1))		
                     correct = self.dictionary[validationPair['image']['filename']]
                     err = self.network.cost()
                     intermediate_error += err
-                if intermediate_error < validationError:
+                if intermediate_error > validationError:
                     print intermediate_error
                     print 'No more improvement'
-             	    break    
-		    #print 'testing'
-                else: 
+                    #break
+                    #print 'testing'
+                else:
                     print 'Validation Error', intermediate_error
                     validationError = intermediate_error
 
 
         print 'testing'
-	self.testNetwork()
-	print 'Writing results'
+        self.testNetwork()
+        print 'Writing results'
         filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics) + '.txt'
         self.network.writeResults(filename)
 
     def testNetwork(self):
         topicnamelist = self.createTopicList()
-	for i in range(10):
+        for i in range(10):
             testPair = self.dataprovider.sampleImageSentencePair('test')
             prediction = self.network.predict(testPair['image']['feat'])
-	    print prediction
-	    print type(prediction)
-            # sortedpred = prediction.sort()
-            # sortedpred = sortedpred[::-1]
-            #dictionary = dict(zip(prediction, topicnamelist))
+            #print prediction
+            #print type(prediction)
             print testPair['image']['filename']
             sortedpred = sorted(prediction)
-	    
-	    
-	    sortedpred = sortedpred[::-1]
-	    prediction = prediction.tolist()
-	    print 'sorted', sortedpred
+
+
+            sortedpred = sortedpred[::-1]
+            prediction = prediction.tolist()
+            #print 'sorted', sortedpred
             print 'Best topics\n'
             for j in range(5):
-		index = prediction.index(sortedpred[j])
-                print topicnamelist[index]
+                index = prediction.index(sortedpred[j])
+                print ('topic:' + str(topicnamelist[index]) + ' probability'+ str(sortedpred[j]))
 
 
     def createTopicList(self):
@@ -123,7 +120,6 @@ class LDANetworkLearner:
         return dict
 
     def preprocess(self, rawDistribution):
-        # print 'RAAAWWWWW', rawDistribution
         imgname = rawDistribution[0]
         distribution = []
         for i in range(2,len(rawDistribution)):
