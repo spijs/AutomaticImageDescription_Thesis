@@ -101,7 +101,9 @@ class FeedForwardNetwork:
 
     def writeResults(self, filename):
         #savetxt(filename+'_hweights', self.weights)
-        savetxt(filename+'_oweights', self.weights)
+        savetxt(filename+'_hweights.txt', self.hweights)
+        for i in range(len(self.layerweights)):
+            savetxt(filename+'_layerweights'+str(i)+'.txt',self.layerweights[str(i)])
         # results.write('oWeights\n')
         # results.write(str(self.oWeights)+'\n')
 def func(a):

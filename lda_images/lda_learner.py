@@ -67,7 +67,7 @@ class LDANetworkLearner:
         print 'testing'
         self.testNetwork()
         print 'Writing results'
-        filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics) + '.txt'
+        filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics)
         self.network.writeResults(filename)
 
     def testNetwork(self):
