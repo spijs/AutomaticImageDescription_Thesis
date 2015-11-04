@@ -25,6 +25,7 @@ class TopicExtractor:
         current_image=''
         current_sentence=''
         s=self.stopwords()
+        outputsplit = {}
         output = {}
         splits = ['train','test','val']
         for split in splits:
@@ -40,7 +41,8 @@ class TopicExtractor:
                     current_image=image
                     current_sentence=sentence
                 output[image] = current_sentence
-        return output
+            outputsplit[split] = output
+        return outputsplit
 
     def remove_common_words(self,sentence,stopwords):
         #s = set(stopwords.words('english'))
@@ -62,17 +64,20 @@ class TopicExtractor:
 
     def extract_model(self):
         print('Concatening sentences')
-        image_document_pairs = self.concatenate_sentences()
-        print('Documents size: '+str(len(image_document_pairs)))
+        splitPairs = self.concatenate_sentences()
+        train_pairs = splitPairs['train']
+        test_pairs = splitPairs['test']
+        val_pairs = splitPairs['val']
+        print('Documents size: '+str(len(train_pairs)))
         print('Creating vocabulary')
-        vocabulary = self.get_vocabulary(image_document_pairs.values())
+        vocabulary = self.get_vocabulary(train_pairs.values())
         print('Vocabulary size: '+str(len(vocabulary)))
         print('Creating term document matrix')
-        matrix = self.create_document_term_matrix(image_document_pairs.values(),vocabulary)
+        matrix = self.create_document_term_matrix(train_pairs.values(),vocabulary)
         #self.printMatrix(matrix) #Prints the document-term matrix
         print('Creating model')
         model = self.model(matrix)
-        return model,vocabulary,image_document_pairs.keys()
+        return model,vocabulary,splitPairs
 
     def printMatrix(self, matrix):
         f = open('matrixFile.txt','w')
