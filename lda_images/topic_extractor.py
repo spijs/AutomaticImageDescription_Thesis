@@ -66,11 +66,11 @@ class TopicExtractor:
         print('Concatening sentences')
         splitPairs = self.concatenate_sentences()
         train_pairs = splitPairs['train']
-	print "length train", len(train_pairs)
+        print "length train", len(train_pairs)
         test_pairs = splitPairs['test']
-	print "length test", len(test_pairs)
+        print "length test", len(test_pairs)
         val_pairs = splitPairs['val']
-	print "length val", len(val_pairs)
+        print "length val", len(val_pairs)
         print('Documents size: '+str(len(train_pairs)))
         print('Creating vocabulary')
         vocabulary = self.get_vocabulary(train_pairs.values())

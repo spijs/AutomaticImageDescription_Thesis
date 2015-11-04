@@ -13,16 +13,19 @@ def main(params):
     test_topic(model,vocabulary,dataset,topics)
     save_image_topic_distribution(model,splitPairs['train'].keys(),dataset,topics)
     for split in ['test', 'val']:
-        predict_image_topic_distribtution(model, splitPairs, dataset, topics, split)
+        sentences = splitPairs[split].values()
+        matrix = topic_extractor.create_document_term_matrix(sentences, vocabulary)
+        predict_image_topic_distribtution(model, splitPairs, dataset, topics, split, matrix)
     print('finished')
 
-def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topics, split):
+def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topics, split, matrix):
     pairs = image_sentence_pairs[split]
     f= open('lda_images/models/topic_word_distribution_'+dataset+'top'+str(topics)+'_'+split+'.txt','w')
-    for img in pairs.keys():
-            doc_topic = model.transform(pairs[img], )
-            dist = doc_topic[1,:]
-            f.write(img+' '+str(dist) + '\n')
+    doc_topic = model.transform(matrix)
+    for n in range(len(doc_topic)):
+        dist = doc_topic[n,:]
+        im = pairs.keys()[n]
+        f.write(im+' '+str(dist) + '\n')
 
 
 def test_topic(model,vocabulary,dataset,topics):
