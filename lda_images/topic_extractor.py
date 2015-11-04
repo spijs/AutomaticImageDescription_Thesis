@@ -26,9 +26,9 @@ class TopicExtractor:
         current_sentence=''
         s=self.stopwords()
         outputsplit = {}
-        output = {}
         splits = ['train','test','val']
         for split in splits:
+	    output = {}
             image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = split)
             for pair in image_sentence_pair_generator:
                 sentence = self.remove_common_words(pair['sentence']['tokens'],s)
@@ -66,8 +66,11 @@ class TopicExtractor:
         print('Concatening sentences')
         splitPairs = self.concatenate_sentences()
         train_pairs = splitPairs['train']
+	print "length train", len(train_pairs)
         test_pairs = splitPairs['test']
+	print "length test", len(test_pairs)
         val_pairs = splitPairs['val']
+	print "length val", len(val_pairs)
         print('Documents size: '+str(len(train_pairs)))
         print('Creating vocabulary')
         vocabulary = self.get_vocabulary(train_pairs.values())
