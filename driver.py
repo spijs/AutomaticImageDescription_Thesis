@@ -123,7 +123,9 @@ def main(params):
   host = socket.gethostname() # get computer hostname
 
   # fetch the data provider
-  dp = getDataProvider(dataset,params['lda']) #TODO gewijzigd :)
+  dp = getDataProvider(dataset) #TODO gewijzigd :)
+  if params['lda']:
+      dp.load_topic_models(dataset,params['lda'])
   misc = {} # stores various misc items that need to be passed around the framework
 
   # go over all training sentences and find the vocabulary we want to use, i.e. the words that occur

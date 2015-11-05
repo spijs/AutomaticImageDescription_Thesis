@@ -6,7 +6,7 @@ import codecs
 from collections import defaultdict
 
 class BasicDataProvider:
-    def __init__(self, dataset, topics):
+    def __init__(self, dataset):
         print 'Initializing data provider for dataset %s...' % (dataset, )
 
         # !assumptions on folder structure
@@ -23,15 +23,6 @@ class BasicDataProvider:
         print 'BasicDataProvider: reading %s' % (features_path, )
         features_struct = scipy.io.loadmat(features_path)
         self.features = features_struct['feats']
-
-        # load the topic distributions into memory
-        topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
-        self.topics = {}
-        train_file = topic_root+str(topics)+'_train.txt'
-        self.topics = self.create_dist_dict(train_file, self.topics)
-        for split in ['test', 'val']:
-            f = topic_root+str(topics)+'_'+split+'.txt'
-            self.topics = self.create_dist_dict(f, self.topics)
 
         # group images by their train/val/test split into a dictionary -> list structure
         self.split = defaultdict(list)
@@ -58,6 +49,16 @@ class BasicDataProvider:
         """ create a sentence structure for the driver """
         # NOOP for now
         return sent
+
+    def load_topic_models(self,dataset,topics):
+         # load the topic distributions into memory
+        topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
+        self.topics = {}
+        train_file = topic_root+str(topics)+'_train.txt'
+        self.topics = self.create_dist_dict(train_file, self.topics)
+        for split in ['test', 'val']:
+            f = topic_root+str(topics)+'_'+split+'.txt'
+            self.topics = self.create_dist_dict(f, self.topics)
 
     def create_dist_dict(self, filename, dict):
         if os.path.isfile(filename):
@@ -151,7 +152,7 @@ class BasicDataProvider:
                 distribution.extend([m])
         return imgname, distribution
 
-def getDataProvider(dataset, topics):
+def getDataProvider(dataset):
     """ we could intercept a special dataset and return different data providers """
     assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
-    return BasicDataProvider(dataset, topics)
+    return BasicDataProvider(dataset)
