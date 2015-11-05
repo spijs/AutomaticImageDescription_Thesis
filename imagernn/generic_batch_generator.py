@@ -79,14 +79,11 @@ class GenericBatchGenerator:
     # concatenate as rows. If N is number of image-sentence pairs,
     # F will be N x image_size
     F = np.row_stack(x['image']['feat'] for x in batch)
-    print(str(F.shape))
     We = model['We']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     Wlda = model['Wlda']
     L = np.row_stack(x['topics'] for x in batch)
-    print(str(L.shape))
-    print(str(Wlda.shape))
     lda = L.dot(Wlda)
 
     # decode the generator we wish to use
