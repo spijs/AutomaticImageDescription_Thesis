@@ -4,6 +4,8 @@ import argparse
 from lda_images.topic_extractor import TopicExtractor
 import numpy
 
+''' This class is used to create topic distributions for each split in a given dataset based on a model
+    learned with only the training split. '''
 def main(params):
     iterations = params['iterations']
     dataset = params['dataset']
@@ -12,12 +14,16 @@ def main(params):
     model,vocabulary,splitPairs = topic_extractor.extract_model()
     test_topic(model,vocabulary,dataset,topics)
     save_image_topic_distribution(model,splitPairs['train'].keys(),dataset,topics)
+
+    # Learn the 'ground truth' lda topic distributions for test and validation split.
     for split in ['test', 'val']:
         sentences = splitPairs[split].values()
         matrix = topic_extractor.create_document_term_matrix(sentences, vocabulary)
         predict_image_topic_distribtution(model, splitPairs, dataset, topics, split, matrix)
     print('finished')
 
+''' Learn and output the topic distribution of a given split in a given lda model'''
+# TODO refactor!!!
 def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topics, split, matrix):
     pairs = image_sentence_pairs[split]
     f= open('lda_images/models/topic_word_distribution_'+dataset+'top'+str(topics)+'_'+split+'.txt','w')
@@ -27,7 +33,7 @@ def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topi
         im = pairs.keys()[n]
         f.write(im+' '+str(dist) + '\n')
 
-
+''' This method is used to output the learned topic and for each topic the most important words'''
 def test_topic(model,vocabulary,dataset,topics):
     f= open('lda_images/models/topic_word_distribution_'+dataset+'top'+str(topics)+'.txt','w')
     n = 10
@@ -36,6 +42,7 @@ def test_topic(model,vocabulary,dataset,topics):
         topic_words = numpy.array(vocabulary)[numpy.argsort(topic_dist)][:-(n+1):-1]
         f.write('*Topic {}\n- {}'.format(i, ' '.join(topic_words)))
 
+''' This method is used to write the learned topic distribution to a file'''
 def save_image_topic_distribution(model,images,dataset,topics):
     f = open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'.txt','w')
     doc_topic = model.doc_topic_
@@ -46,7 +53,7 @@ def save_image_topic_distribution(model,images,dataset,topics):
 
 
 
-
+''' Parses the given arguments'''
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default=0, help='Number of iterations to learn lda model')
