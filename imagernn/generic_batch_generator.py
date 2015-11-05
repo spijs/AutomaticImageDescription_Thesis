@@ -89,10 +89,9 @@ class GenericBatchGenerator:
     Wlda = model['Wlda']
     lda_enabled = params.get('lda',0)
     L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
-    lda = np.zeros((len(batch),params.get('hidden_size',128)))
     if lda_enabled:
        L = np.row_stack(x['topics'] for x in batch)
-       lda = L.dot(Wlda)
+    lda = L.dot(Wlda)
 
     # decode the generator we wish to use
     generator_str = params.get('generator', 'lstm') 
