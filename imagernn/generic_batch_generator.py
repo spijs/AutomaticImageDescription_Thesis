@@ -84,6 +84,8 @@ class GenericBatchGenerator:
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     Wlda = model['Wlda']
     L = np.row_stack(x['topics'] for x in batch).transpose()
+    print(str(L.shape))
+    print(str(Wlda.shape))
     lda = L.dot(Wlda)
 
     # decode the generator we wish to use
