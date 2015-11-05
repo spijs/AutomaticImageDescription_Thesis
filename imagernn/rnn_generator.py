@@ -65,6 +65,7 @@ class RNNGenerator:
     if relu_encoders:
       Xsh = np.maximum(Xsh, 0)
       Xi = np.maximum(Xi, 0)
+      Li = np.maximum(Li,0)
 
     # recurrence iteration for the Multimodal RNN similar to one described in Karpathy et al.
     d = model['Wd'].shape[0] # size of hidden layer
@@ -78,10 +79,7 @@ class RNNGenerator:
       if not rnn_feed_once or t == 0:
         # feed the image in if feedonce is false. And it it is true, then
         # only feed the image in if its the first iteration
-        if(not lda):
-            H[t] = np.maximum(Xi + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
-        else:
-            H[t] = np.maximum(Xi + Li + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+        H[t] = np.maximum(Xi + Li + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
       else:
         H[t] = np.maximum(Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
 
@@ -106,7 +104,7 @@ class RNNGenerator:
       cache['Xsh'] = Xsh
       cache['Wxh'] = Wxh
       cache['Xi'] = Xi
-      cache['lda'] = lda
+      cache['Li'] = Li
       cache['relu_encoders'] = relu_encoders
       cache['drop_prob_encoder'] = drop_prob_encoder
       cache['drop_prob_decoder'] = drop_prob_decoder
@@ -128,7 +126,7 @@ class RNNGenerator:
     Whh = cache['Whh']
     Wxh = cache['Wxh']
     Xi = cache['Xi']
-    lda = cache['lda']
+    Li = cache['Li']
     drop_prob_encoder = cache['drop_prob_encoder']
     drop_prob_decoder = cache['drop_prob_decoder']
     relu_encoders = cache['relu_encoders']
@@ -149,13 +147,13 @@ class RNNGenerator:
     dXi = np.zeros(d)
     dWhh = np.zeros(Whh.shape)
     dbhh = np.zeros((1,d))
-    dlda = np.zeros(d)
+    dLi = np.zeros(d)
     for t in reversed(xrange(n)):
       dht = (H[t] > 0) * dH[t] # backprop ReLU
 
       if not rnn_feed_once or t == 0:
         dXi += dht # backprop to Xi
-        dlda += dht
+        dLi += dht
         
       dXsh[t] += dht # backprop to word encodings
       dbhh[0] += dht # backprop to bias
@@ -168,7 +166,7 @@ class RNNGenerator:
       # backprop relu
       dXsh[Xsh <= 0] = 0
       dXi[Xi <= 0] = 0
-      dlda[lda <= 0] = 0
+      dLi[Li <= 0] = 0
 
     # backprop the word encoder
     dWxh = Xs.transpose().dot(dXsh)
@@ -180,7 +178,7 @@ class RNNGenerator:
       dXi *= cache['Ui']
       dXs *= cache['Us']
 
-    return { 'Whh': dWhh, 'bhh': dbhh, 'Wd': dWd, 'bd': dbd, 'Wxh':dWxh, 'bxh':dbxh, 'dXs' : dXs, 'dXi': dXi, 'dlda' : dlda }
+    return { 'Whh': dWhh, 'bhh': dbhh, 'Wd': dWd, 'bd': dbd, 'Wxh':dWxh, 'bxh':dbxh, 'dXs' : dXs, 'dXi': dXi, 'dLi' : dLi }
 
   @staticmethod
   def predict(Xi,Li, model, Ws, params, **kwargs):
@@ -199,6 +197,7 @@ class RNNGenerator:
 
     if relu_encoders:
       Xi = np.maximum(Xi, 0)
+      Li = np.maximum(Li, 0)
 
     if beam_size > 1:
       # perform beam search
@@ -259,7 +258,7 @@ class RNNGenerator:
           Xsh = np.maximum(Xsh, 0)
 
         if (not rnn_feed_once) or (nsteps == 0):
-          ht = np.maximum(Xi + Xsh + hprev.dot(Whh) + bhh, 0)
+          ht = np.maximum(Xi + Li+ Xsh + hprev.dot(Whh) + bhh, 0)
         else:
           ht = np.maximum(Xsh + hprev.dot(Whh) + bhh, 0)
 
