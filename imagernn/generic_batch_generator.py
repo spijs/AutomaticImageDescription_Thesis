@@ -51,8 +51,12 @@ class GenericBatchGenerator:
     # Added for LDA
     if(lda):
         model['Wlda'] = initw(lda,image_encoding_size)
-        update.append('Wlda')
-        regularize.append('Wlda')
+    else:
+        model['Wlda'] = np.zeros(lda,image_encoding_size)
+
+    update.append('Wlda')
+
+    regularize.append('Wlda')
 
     init_struct = { 'model' : model, 'update' : update, 'regularize' : regularize}
 
