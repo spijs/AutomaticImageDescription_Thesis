@@ -87,7 +87,7 @@ class GenericBatchGenerator:
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     Wlda = model['Wlda']
-    lda_enabled = params.get['lda',0]
+    lda_enabled = params.get('lda',0)
     L = np.zeros(params.get('image_encoding_size',128),lda_enabled)
     lda = np.zeros(len(batch),params.get('hidden_size',128))
     if lda_enabled:
