@@ -23,26 +23,28 @@ def main(params):
     print('finished')
 
 ''' Learn and output the topic distribution of a given split in a given lda model'''
-# TODO refactor!!!
 def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topics, split, matrix):
     pairs = image_sentence_pairs[split]
     doc_topic = model.transform(matrix)
     f= open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'_'+split+'.txt','w')
+    imagenames = pairs.keys()
     numpy.set_printoptions(suppress=True)
-    for n in range(len(doc_topic)):
-        dist = doc_topic[n,:]
-        im = pairs.keys()[n]
-        f.write(im+' '+str(dist) + '\n')
+    save_distribtutions(doc_topic, f, imagenames)
+
+''' Write a topic distribution matrix to the given file, with the given file names'''
+def save_distribtutions(distribution_matrix, file, imagenames):
+    for n in range(len(distribution_matrix)):
+        dist = distribution_matrix[n, :]
+        im = imagenames[n]
+        file.write(im + ' ' + str(dist) + '\n')
+
 
 ''' This method is used to write the learned topic distribution to a file'''
 def save_image_topic_distribution(model,images,dataset,topics):
     doc_topic = model.doc_topic_
     f = open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'_train.txt','w')
     numpy.set_printoptions(suppress=True)
-    for n in range(len(doc_topic)):
-        dist = doc_topic[n,:]
-        im = images[n]
-        f.write(im+' '+str(dist) + '\n')
+    save_distribtutions(doc_topic, f, images)
 
 ''' This method is used to output the learned topic and for each topic the most important words'''
 def test_topic(model,vocabulary,dataset,topics):
