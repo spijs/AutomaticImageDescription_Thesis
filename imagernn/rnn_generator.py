@@ -29,7 +29,7 @@ class RNNGenerator:
     return { 'model' : model, 'update' : update, 'regularize' : regularize }
 
   @staticmethod
-  def forward(Xi, Xs,Li, model, params, **kwargs):
+  def forward(Xi, Xs, Li, model, params, **kwargs):
     """
     Xi is 1-d array of size D1 (containing the image representation)
     Xs is N x D2 (N time steps, rows are data containng word representations), and

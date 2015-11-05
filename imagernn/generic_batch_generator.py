@@ -83,8 +83,12 @@ class GenericBatchGenerator:
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     Wlda = model['Wlda']
-    L = np.row_stack(x['topics'] for x in batch)
-    lda = L.dot(Wlda)
+    lda_enabled = params.get['lda',0]
+    L = np.zeros(params.get('image_encoding_size',128),lda_enabled)
+    lda = np.zeros(len(batch),params.get('hidden_size',128))
+    if lda_enabled:
+       L = np.row_stack(x['topics'] for x in batch)
+       lda = L.dot(Wlda)
 
     # decode the generator we wish to use
     generator_str = params.get('generator', 'lstm') 
@@ -104,7 +108,8 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      Li = lda[i,:]
+      if lda_enabled:
+        Li = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,Li, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
