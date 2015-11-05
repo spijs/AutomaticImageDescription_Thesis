@@ -25,7 +25,7 @@ class BasicDataProvider:
     self.features = features_struct['feats']
 
     # load the topic distributions into memory
-    topic_root = os.path.join('lda_images/models/topic_word_distribution_'+dataset+'top')
+    topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
     self.topics = {}
     train_file = topic_root+str(topics)+'.txt'
     self.topics = self.create_dist_dict(train_file, self.topics)
