@@ -60,22 +60,23 @@ class BasicDataProvider:
     return sent
 
   def create_dist_dict(self, filename, dict):
-    f = open(filename)
-    rawDist = []
-    line = f.readline()
-    while(line != ''):
-      # print 'LINE', line
-      split = line.split()
-      if '[' in split and len(rawDist)!= 0:
-        img, distribution = self.preprocess(rawDist)
-        dict[img] = distribution
-        rawDist = split
-      else:
-        rawDist.extend(split)
+    if os.path.isfile(filename):
+      f = open(filename)
+      rawDist = []
       line = f.readline()
-    img, distribution = self.preprocess(rawDist)
-    dict[img] = distribution
-    return dict
+      while(line != ''):
+        # print 'LINE', line
+        split = line.split()
+        if '[' in split and len(rawDist)!= 0:
+          img, distribution = self.preprocess(rawDist)
+          dict[img] = distribution
+          rawDist = split
+        else:
+          rawDist.extend(split)
+        line = f.readline()
+      img, distribution = self.preprocess(rawDist)
+      dict[img] = distribution
+      return dict
 
   # PUBLIC FUNCTIONS
 
