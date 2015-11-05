@@ -1,3 +1,4 @@
+from argparse import _ActionsContainer
 import numpy as np
 import code
 from imagernn.utils import merge_init_structs, initw, accumNpDicts
@@ -31,6 +32,7 @@ class GenericBatchGenerator:
     hidden_size = params.get('hidden_size', 128)
     generator = params.get('generator', 'lstm')
     vocabulary_size = len(misc['wordtoix'])
+    lda = params.get('lda',0)
     output_size = len(misc['ixtoword']) # these should match though
     image_size = 4096 # size of CNN vectors hardcoded here
 
@@ -42,8 +44,16 @@ class GenericBatchGenerator:
     model['We'] = initw(image_size, image_encoding_size) # image encoder
     model['be'] = np.zeros((1,image_encoding_size))
     model['Ws'] = initw(vocabulary_size, word_encoding_size) # word encoder
+
     update = ['We', 'be', 'Ws']
     regularize = ['We', 'Ws']
+
+    # Added for LDA
+    if(lda):
+        model['Wlda'] = initw(lda,image_encoding_size)
+        update.append('Wlda')
+        regularize.append('Wlda')
+
     init_struct = { 'model' : model, 'update' : update, 'regularize' : regularize}
 
     # descend into the specific Generator and initialize it
@@ -72,17 +82,21 @@ class GenericBatchGenerator:
     We = model['We']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
+    Wlda = model['Wlda']
+    L = np.row_stack(x['topics'] for x in batch)
+    lda = L.dot(Wlda)
 
     # decode the generator we wish to use
     generator_str = params.get('generator', 'lstm') 
     Generator = decodeGenerator(generator_str)
+
 
     # encode all words in all sentences (which exist in our vocab)
     wordtoix = misc['wordtoix']
     Ws = model['Ws']
     gen_caches = []
     Ys = [] # outputs
-    for i,x in enumerate(batch):
+    for i,x,topics in enumerate(batch):
       # take all words in this sentence and pluck out their word vectors
       # from Ws. Then arrange them in a single matrix Xs
       # Note that we are setting the start token as first vector
@@ -90,9 +104,9 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-
+      Li = L[i,:]
       # forward prop through the RNN
-      gen_Y, gen_cache = Generator.forward(Xi, Xs, model, params, predict_mode = predict_mode)
+      gen_Y, gen_cache = Generator.forward(Xi, Xs,Li, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
       Ys.append(gen_Y)
 
@@ -102,20 +116,27 @@ class GenericBatchGenerator:
       # ok we need cache as well because we'll do backward pass
       cache['gen_caches'] = gen_caches
       cache['Xe'] = Xe
+      cache['lda'] = lda
       cache['Ws_shape'] = Ws.shape
       cache['F'] = F
+      cache['L'] = L
       cache['generator_str'] = generator_str
+
 
     return Ys, cache
     
   @staticmethod
   def backward(dY, cache):
     Xe = cache['Xe']
+    lda = cache['lda']
     generator_str = cache['generator_str']
     dWs = np.zeros(cache['Ws_shape'])
     gen_caches = cache['gen_caches']
     F = cache['F']
+    L = cache ['L']
     dXe = np.zeros(Xe.shape)
+    dlda = np.zeros(lda.shape)
+
 
     Generator = decodeGenerator(generator_str)
 
@@ -128,32 +149,39 @@ class GenericBatchGenerator:
       del local_grads['dXs']
       dXi = local_grads['dXi']
       del local_grads['dXi']
+      dLi  = local_grads['dlda']
+      del local_grads['dlda']
       accumNpDicts(grads, local_grads) # add up the gradients wrt model parameters
 
       # now backprop from dXs to the image vector and word vectors
+      dlda += dLi
       dXe[i,:] += dXi # image vector
       for n,j in enumerate(ix): # and now all the other words
         dWs[j,:] += dXs[n,:]
 
     # finally backprop into the image encoder
     dWe = F.transpose().dot(dXe)
+    dWlda = L.transpose().dot(dlda)
     dbe = np.sum(dXe, axis=0, keepdims = True)
 
-    accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs })
+    accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs, 'Wlda':dWlda })
     return grads
 
   @staticmethod
   def predict(batch, model, params, **kwparams):
     """ some code duplication here with forward pass, but I think we want the freedom in future """
-    F = np.row_stack(x['image']['feat'] for x in batch) 
+    F = np.row_stack(x['image']['feat'] for x in batch)
+    L = np.row_stack(x['topics'] for x in batch)
     We = model['We']
+    Wlda = model['Wlda']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
+    lda = L.dot(Wlda)
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []
     for i,x in enumerate(batch):
-      gen_Y = Generator.predict(Xe[i, :], model, model['Ws'], params, **kwparams)
+      gen_Y = Generator.predict(Xe[i, :], lda[i,:], model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
 

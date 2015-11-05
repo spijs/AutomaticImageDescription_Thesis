@@ -29,7 +29,7 @@ class RNNGenerator:
     return { 'model' : model, 'update' : update, 'regularize' : regularize }
 
   @staticmethod
-  def forward(Xi, Xs, model, params, **kwargs):
+  def forward(Xi, Xs,Li, model, params, **kwargs):
     """
     Xi is 1-d array of size D1 (containing the image representation)
     Xs is N x D2 (N time steps, rows are data containng word representations), and
@@ -37,7 +37,6 @@ class RNNGenerator:
     sentence with 10 words will be of size 11xD2 in Xs.
     """
     predict_mode = kwargs.get('predict_mode', False)
-
     # options
     drop_prob_encoder = params.get('drop_prob_encoder', 0.0)
     drop_prob_decoder = params.get('drop_prob_decoder', 0.0)
@@ -79,7 +78,10 @@ class RNNGenerator:
       if not rnn_feed_once or t == 0:
         # feed the image in if feedonce is false. And it it is true, then
         # only feed the image in if its the first iteration
-        H[t] = np.maximum(Xi + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+        if(not lda):
+            H[t] = np.maximum(Xi + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+        else:
+            H[t] = np.maximum(Xi + Li + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
       else:
         H[t] = np.maximum(Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
 
@@ -104,6 +106,7 @@ class RNNGenerator:
       cache['Xsh'] = Xsh
       cache['Wxh'] = Wxh
       cache['Xi'] = Xi
+      cache['lda'] = lda
       cache['relu_encoders'] = relu_encoders
       cache['drop_prob_encoder'] = drop_prob_encoder
       cache['drop_prob_decoder'] = drop_prob_decoder
@@ -125,6 +128,7 @@ class RNNGenerator:
     Whh = cache['Whh']
     Wxh = cache['Wxh']
     Xi = cache['Xi']
+    lda = cache['lda']
     drop_prob_encoder = cache['drop_prob_encoder']
     drop_prob_decoder = cache['drop_prob_decoder']
     relu_encoders = cache['relu_encoders']
@@ -145,11 +149,13 @@ class RNNGenerator:
     dXi = np.zeros(d)
     dWhh = np.zeros(Whh.shape)
     dbhh = np.zeros((1,d))
+    dlda = np.zeros(d)
     for t in reversed(xrange(n)):
       dht = (H[t] > 0) * dH[t] # backprop ReLU
 
       if not rnn_feed_once or t == 0:
         dXi += dht # backprop to Xi
+        dlda += dht
         
       dXsh[t] += dht # backprop to word encodings
       dbhh[0] += dht # backprop to bias
@@ -162,20 +168,22 @@ class RNNGenerator:
       # backprop relu
       dXsh[Xsh <= 0] = 0
       dXi[Xi <= 0] = 0
+      dlda[lda <= 0] = 0
 
     # backprop the word encoder
     dWxh = Xs.transpose().dot(dXsh)
     dbxh = np.sum(dXsh, axis=0, keepdims = True)
     dXs = dXsh.dot(Wxh.transpose())
 
+
     if drop_prob_encoder > 0: # backprop encoder dropout
       dXi *= cache['Ui']
       dXs *= cache['Us']
 
-    return { 'Whh': dWhh, 'bhh': dbhh, 'Wd': dWd, 'bd': dbd, 'Wxh':dWxh, 'bxh':dbxh, 'dXs' : dXs, 'dXi': dXi }
+    return { 'Whh': dWhh, 'bhh': dbhh, 'Wd': dWd, 'bd': dbd, 'Wxh':dWxh, 'bxh':dbxh, 'dXs' : dXs, 'dXi': dXi, 'dlda' : dlda }
 
   @staticmethod
-  def predict(Xi, model, Ws, params, **kwargs):
+  def predict(Xi,Li, model, Ws, params, **kwargs):
     
     beam_size = kwargs.get('beam_size', 1)
     relu_encoders = params.get('rnn_relu_encoders', 0)
@@ -213,7 +221,7 @@ class RNNGenerator:
             Xsh = np.maximum(Xsh, 0)
 
           if (not rnn_feed_once) or (not b[1]):
-            h1 = np.maximum(Xi + Xsh + b[2].dot(Whh) + bhh, 0)
+            h1 = np.maximum(Xi + Li + Xsh + b[2].dot(Whh) + bhh, 0)
           else:
             h1 = np.maximum(Xsh + b[2].dot(Whh) + bhh, 0)
 

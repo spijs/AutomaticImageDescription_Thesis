@@ -123,8 +123,7 @@ def main(params):
   host = socket.gethostname() # get computer hostname
 
   # fetch the data provider
-  dp = getDataProvider(dataset)
-
+  dp = getDataProvider(dataset,params['lda']) #TODO gewijzigd :)
   misc = {} # stores various misc items that need to be passed around the framework
 
   # go over all training sentences and find the vocabulary we want to use, i.e. the words that occur
@@ -287,7 +286,8 @@ if __name__ == "__main__":
   parser.add_argument('--rnn_feed_once', dest='rnn_feed_once', type=int, default=0, help='feed image to the rnn only single time?')
   #fsmn-specific params
   parser.add_argument('--layers', dest='layers', type=int, default='2', help = 'number of hidden layers and memory cells.')
-
+  #lda-specific params
+  parser.add_argument('--lda', dest='lda', type=int, default=True, help = 'use lda topic distribution as input using the provided number of topics.')
 
   # optimization parameters
   parser.add_argument('-c', '--regc', dest='regc', type=float, default=1e-8, help='regularization strength')
@@ -301,6 +301,7 @@ if __name__ == "__main__":
   parser.add_argument('--grad_clip', dest='grad_clip', type=float, default=5, help='clip gradients (normalized by batch size)? elementwise. if positive, at what threshold?')
   parser.add_argument('--drop_prob_encoder', dest='drop_prob_encoder', type=float, default=0.5, help='what dropout to apply right after the encoder to an RNN/LSTM')
   parser.add_argument('--drop_prob_decoder', dest='drop_prob_decoder', type=float, default=0.5, help='what dropout to apply right before the decoder in an RNN/LSTM')
+
 
   # data preprocessing parameters
   parser.add_argument('--word_count_threshold', dest='word_count_threshold', type=int, default=5, help='if a word occurs less than this number of times in training data, it is discarded')
