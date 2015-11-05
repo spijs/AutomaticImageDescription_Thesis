@@ -27,7 +27,7 @@ class BasicDataProvider:
     # load the topic distributions into memory
     topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
     self.topics = {}
-    train_file = topic_root+str(topics)+'.txt'
+    train_file = topic_root+str(topics)+'_train.txt'
     self.topics = self.create_dist_dict(train_file, self.topics)
     for split in ['test', 'val']:
       f = topic_root+str(topics)+'_'+split+'.txt'

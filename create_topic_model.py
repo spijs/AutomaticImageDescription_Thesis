@@ -26,12 +26,11 @@ def main(params):
 # TODO refactor!!!
 def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topics, split, matrix):
     pairs = image_sentence_pairs[split]
-    f= open('lda_images/models/topic_word_distribution_'+dataset+'top'+str(topics)+'_'+split+'.txt','w')
+    f= open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'_'+split+'.txt','w')
     doc_topic = model.transform(matrix)
-    print split, "DIST", doc_topic
+    numpy.set_printoptions(suppress=True)
     for n in range(len(doc_topic)):
         dist = doc_topic[n,:]
-        print split, "DIST", dist
         im = pairs.keys()[n]
         f.write(im+' '+str(dist) + '\n')
 
@@ -48,9 +47,9 @@ def test_topic(model,vocabulary,dataset,topics):
 def save_image_topic_distribution(model,images,dataset,topics):
     f = open('lda_images/models/image_topic_distribution_'+dataset+'top'+str(topics)+'_train.txt','w')
     doc_topic = model.doc_topic_
+    numpy.set_printoptions(suppress=True)
     for n in range(len(doc_topic)):
         dist = doc_topic[n,:]
-        print 'TRAIN DISTRIBUTION', dist
         im = images[n]
         f.write(im+' '+str(dist) + '\n')
 
