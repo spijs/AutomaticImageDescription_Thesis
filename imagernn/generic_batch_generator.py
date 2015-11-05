@@ -96,7 +96,7 @@ class GenericBatchGenerator:
     Ws = model['Ws']
     gen_caches = []
     Ys = [] # outputs
-    for i,x,topics in enumerate(batch):
+    for i,x in enumerate(batch):
       # take all words in this sentence and pluck out their word vectors
       # from Ws. Then arrange them in a single matrix Xs
       # Note that we are setting the start token as first vector
