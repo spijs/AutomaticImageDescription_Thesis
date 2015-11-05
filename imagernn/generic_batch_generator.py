@@ -52,7 +52,7 @@ class GenericBatchGenerator:
     if(lda):
         model['Wlda'] = initw(lda,image_encoding_size)
     else:
-        model['Wlda'] = np.zeros(lda,image_encoding_size)
+        model['Wlda'] = np.zeros((lda,image_encoding_size))
 
     update.append('Wlda')
 
