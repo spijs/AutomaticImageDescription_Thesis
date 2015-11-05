@@ -289,7 +289,7 @@ if __name__ == "__main__":
   #fsmn-specific params
   parser.add_argument('--layers', dest='layers', type=int, default='2', help = 'number of hidden layers and memory cells.')
   #lda-specific params
-  parser.add_argument('--lda', dest='lda', type=int, default=True, help = 'use lda topic distribution as input using the provided number of topics.')
+  parser.add_argument('--lda', dest='lda', type=int, default=0, help = 'use lda topic distribution as input using the provided number of topics.')
 
   # optimization parameters
   parser.add_argument('-c', '--regc', dest='regc', type=float, default=1e-8, help='regularization strength')
