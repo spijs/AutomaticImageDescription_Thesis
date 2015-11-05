@@ -8,7 +8,7 @@ from collections import defaultdict
 class BasicDataProvider:
     def __init__(self, dataset):
         print 'Initializing data provider for dataset %s...' % (dataset, )
-
+        self.topics = None
         # !assumptions on folder structure
         self.dataset_root = os.path.join('data', dataset)
         self.image_root = os.path.join('data', dataset, 'imgs')
