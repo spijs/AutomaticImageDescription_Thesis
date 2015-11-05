@@ -6,7 +6,7 @@ import codecs
 from collections import defaultdict
 
 class BasicDataProvider:
-  def __init__(self, dataset):
+  def __init__(self, dataset, topics):
     print 'Initializing data provider for dataset %s...' % (dataset, )
 
     # !assumptions on folder structure
@@ -23,6 +23,15 @@ class BasicDataProvider:
     print 'BasicDataProvider: reading %s' % (features_path, )
     features_struct = scipy.io.loadmat(features_path)
     self.features = features_struct['feats']
+
+    # load the topic distributions into memory
+    topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
+    self.topics = {}
+    train_file = topic_root+str(topics)+'.txt'
+    self.topics = self.create_dist_dict(train_file, self.topics)
+    for split in ['test', 'val']:
+        f = topic_root+str(topics)+'_'+split+'.txt'
+        self.topics = self.create_dist_dict(f, self.topics)
 
     # group images by their train/val/test split into a dictionary -> list structure
     self.split = defaultdict(list)
@@ -50,6 +59,24 @@ class BasicDataProvider:
     # NOOP for now
     return sent
 
+  def create_dist_dict(self, filename, dict):
+        f = open(filename)
+        rawDist = []
+        line = f.readline()
+        while(line != ''):
+            # print 'LINE', line
+            split = line.split()
+            if '[' in split and len(rawDist)!= 0:
+                img, distribution = self.preprocess(rawDist)
+                dict[img] = distribution
+                rawDist = split
+            else:
+                rawDist.extend(split)
+            line = f.readline()
+        img, distribution = self.preprocess(rawDist)
+        dict[img] = distribution
+        return dict
+
   # PUBLIC FUNCTIONS
 
   def getSplitSize(self, split, ofwhat = 'sentences'):
@@ -69,6 +96,8 @@ class BasicDataProvider:
     out = {}
     out['image'] = self._getImage(img)
     out['sentence'] = self._getSentence(sent)
+    out['topics'] = self.topics[img['image']['filename']]
+
     return out
 
   def iterImageSentencePair(self, split = 'train', max_images = -1):
@@ -110,7 +139,7 @@ class BasicDataProvider:
     for i in ix:
       yield self._getImage(imglist[i])
 
-def getDataProvider(dataset):
+def getDataProvider(dataset, topics):
   """ we could intercept a special dataset and return different data providers """
   assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
-  return BasicDataProvider(dataset)
+  return BasicDataProvider(dataset, topics)
