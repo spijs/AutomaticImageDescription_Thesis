@@ -97,7 +97,6 @@ class BasicDataProvider:
         out = {}
         out['image'] = self._getImage(img)
         out['sentence'] = self._getSentence(sent)
-        print('Topics', self.topics)
         out['topics'] = self.topics[img['filename']]
 
         return out
