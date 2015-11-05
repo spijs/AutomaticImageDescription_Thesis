@@ -112,8 +112,7 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      if lda_enabled:
-        Li = lda[i,:]
+      Li = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,Li, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
