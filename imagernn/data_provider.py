@@ -147,7 +147,7 @@ class BasicDataProvider:
         for i in range(2,len(rawDistribution)):
             modifiedNumber = str(rawDistribution[i]).replace(']', '')
             # print modifiedNumber
-            if not modifiedNumber:
+            if modifiedNumber and not ' ' in modifiedNumber:
                 m = float(modifiedNumber)
                 distribution.extend([m])
         return imgname, distribution
