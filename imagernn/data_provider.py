@@ -30,8 +30,8 @@ class BasicDataProvider:
     train_file = topic_root+str(topics)+'.txt'
     self.topics = self.create_dist_dict(train_file, self.topics)
     for split in ['test', 'val']:
-        f = topic_root+str(topics)+'_'+split+'.txt'
-        self.topics = self.create_dist_dict(f, self.topics)
+      f = topic_root+str(topics)+'_'+split+'.txt'
+      self.topics = self.create_dist_dict(f, self.topics)
 
     # group images by their train/val/test split into a dictionary -> list structure
     self.split = defaultdict(list)
@@ -60,28 +60,28 @@ class BasicDataProvider:
     return sent
 
   def create_dist_dict(self, filename, dict):
-        f = open(filename)
-        rawDist = []
-        line = f.readline()
-        while(line != ''):
-            # print 'LINE', line
-            split = line.split()
-            if '[' in split and len(rawDist)!= 0:
-                img, distribution = self.preprocess(rawDist)
-                dict[img] = distribution
-                rawDist = split
-            else:
-                rawDist.extend(split)
-            line = f.readline()
+    f = open(filename)
+    rawDist = []
+    line = f.readline()
+    while(line != ''):
+      # print 'LINE', line
+      split = line.split()
+      if '[' in split and len(rawDist)!= 0:
         img, distribution = self.preprocess(rawDist)
         dict[img] = distribution
-        return dict
+        rawDist = split
+      else:
+        rawDist.extend(split)
+      line = f.readline()
+    img, distribution = self.preprocess(rawDist)
+    dict[img] = distribution
+    return dict
 
   # PUBLIC FUNCTIONS
 
   def getSplitSize(self, split, ofwhat = 'sentences'):
     """ return size of a split, either number of sentences or number of images """
-    if ofwhat == 'sentences': 
+    if ofwhat == 'sentences':
       return sum(len(img['sentences']) for img in self.split[split])
     else: # assume images
       return len(self.split[split])
@@ -125,7 +125,7 @@ class BasicDataProvider:
       yield batch
 
   def iterSentences(self, split = 'train'):
-    for img in self.split[split]: 
+    for img in self.split[split]:
       for sent in img['sentences']:
         yield self._getSentence(sent)
 
@@ -138,6 +138,17 @@ class BasicDataProvider:
       ix = ix[:min(len(ix),max_images)] # crop the list
     for i in ix:
       yield self._getImage(imglist[i])
+
+  def preprocess(self, rawDistribution):
+    imgname = rawDistribution[0]
+    distribution = []
+    for i in range(2,len(rawDistribution)):
+      modifiedNumber = str(rawDistribution[i]).replace(']', '')
+      # print modifiedNumber
+      if modifiedNumber!= '':
+        m = float(modifiedNumber)
+        distribution.extend([m])
+    return imgname, distribution
 
 def getDataProvider(dataset, topics):
   """ we could intercept a special dataset and return different data providers """
