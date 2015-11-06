@@ -120,6 +120,8 @@ class BasicDataProvider:
                 out = {}
                 out['image'] = self._getImage(img)
                 out['sentence'] = self._getSentence(sent)
+                if self.topics:
+                    out['topics'] = self.topics[img['filename']]
                 batch.append(out)
                 if len(batch) >= max_batch_size:
                     yield batch
