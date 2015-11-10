@@ -24,7 +24,7 @@ class LSTMGenerator:
     return { 'model' : model, 'update' : update, 'regularize' : regularize }
 
   @staticmethod
-  def forward(Xi, Xs, model, params, **kwargs):
+  def forward(Xi, Xs, Li, model, params, **kwargs):
     """
     Xi is 1-d array of size D (containing the image representation)
     Xs is N x D (N time steps, rows are data containng word representations), and
@@ -191,7 +191,7 @@ class LSTMGenerator:
     return { 'WLSTM': dWLSTM, 'Wd': dWd, 'bd': dbd, 'dXi': dX[0,:], 'dXs': dX[1:,:] }
 
   @staticmethod
-  def predict(Xi, model, Ws, params, **kwargs):
+  def predict(Xi, Li,  model, Ws, params, **kwargs):
     """ 
     Run in prediction mode with beam search. The input is the vector Xi, which 
     should be a 1-D array that contains the encoded image vector. We go from there.
