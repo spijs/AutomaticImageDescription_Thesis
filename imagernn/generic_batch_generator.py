@@ -52,7 +52,6 @@ class GenericBatchGenerator:
     model['Wlda'] = initw(lda,image_encoding_size)
 
     update.append('Wlda')
-    print('model Wlda:', model['Wlda'].shape)
     regularize.append('Wlda')
 
     init_struct = { 'model' : model, 'update' : update, 'regularize' : regularize}
@@ -88,8 +87,6 @@ class GenericBatchGenerator:
     L = np.zeros((len(batch),lda_enabled))
     if lda_enabled!=0:
        L = np.row_stack(x['topics'] for x in batch)
-    print('Wlda', Wlda.shape)
-    print('L', L.shape)
     lda = L.dot(Wlda)
 
     # decode the generator we wish to use
@@ -133,7 +130,6 @@ class GenericBatchGenerator:
     
   @staticmethod
   def backward(dY, cache):
-    print('We komen in backward')
     Xe = cache['Xe']
     lda = cache['lda']
     generator_str = cache['generator_str']
