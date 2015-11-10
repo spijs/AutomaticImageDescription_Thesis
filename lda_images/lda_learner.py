@@ -28,7 +28,7 @@ class LDANetworkLearner:
         # for i in range(12):
         #     self.topicnetworks.extend([FeedForwardNetwork(4096, 256, 1, self.rate)])
         # # validationError = sys.maxint
-        validationError = (sys.maxint-1)
+        self.validationError = (sys.maxint-1)
 
         for i in range(iterations):
             if i % 100 == 0:
@@ -48,37 +48,27 @@ class LDANetworkLearner:
                 intermediate_error = 0.0
                 for j in range(1000):
                     validationPair = self.dataprovider.sampleImageSentencePair('val')
-                    #print 'VALIDATING'
-                    #self.network.forward(features)
-                    #self.network.backward(dist)
                     prediction = self.network.predict(validationPair['image']['feat'])
-                    #prediction = random.random((self.nbOfTopics,1))		
                     correct = self.dictionary[validationPair['image']['filename']]
-                    err = self.network.cost()
+                    err = -sum(correct*log(prediction))
                     intermediate_error += err
                 print 'validation error', intermediate_error
                 if i % 30000 == 29999:
-                    if intermediate_error > validationError:
+                    if intermediate_error > self.validationError:
                         print intermediate_error
                         print 'No more improvement'
                         break
                     else:
                         self.bestNetwork = copy.deepcopy(self.network)
                         print 'Validation Error', intermediate_error
-                        validationError = intermediate_error
+                        self.validationError = intermediate_error
 
-
-        # print 'testing'
-        # self.testNetwork()
-        # print 'Writing results'
-        # filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics)
-        # self.network.writeResults(filename)
         self.create_test_validation()
 
     def create_test_validation(self):
         for split in ['test', 'val']:
             set = self.dataprovider.iterImageSentencePair(split = split)
-            file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'+str(self.nbOfTopics)+'_'+split+'.txt')
+            file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'+str(self.nbOfTopics)+'_'+split+'_'+self.validationError+'.txt')
             numpy.set_printoptions(suppress=True)
             for pair in set:
                 prediction = self.bestNetwork.predict(pair['image']['feat'])
