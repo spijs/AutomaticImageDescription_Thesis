@@ -2,6 +2,8 @@ __author__ = 'Wout'
 
 from imagernn.data_provider import getDataProvider
 from lda_images.ff_nn import *
+import numpy
+import copy
 import sys
 
 class LDANetworkLearner:
@@ -41,7 +43,7 @@ class LDANetworkLearner:
             # for networkID in len(self.topicnetworks):
             self.network.forward(features)
             self.network.backward(dist)
-            if i % 2000  == 1999 :
+            if i % 30000  == 29999 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):
@@ -57,18 +59,31 @@ class LDANetworkLearner:
                 if intermediate_error > validationError:
                     print intermediate_error
                     print 'No more improvement'
-                    #break
-                    #print 'testing'
+                    break
                 else:
+                    self.bestNetwork = copy.deepcopy(self.network)
                     print 'Validation Error', intermediate_error
                     validationError = intermediate_error
 
 
-        print 'testing'
-        self.testNetwork()
-        print 'Writing results'
-        filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics)
-        self.network.writeResults(filename)
+        # print 'testing'
+        # self.testNetwork()
+        # print 'Writing results'
+        # filename = 'networkweights_'+self.dataset +'_' + str(self.nbOfTopics)
+        # self.network.writeResults(filename)
+        self.create_test_validation()
+
+    def create_test_validation(self):
+        for split in ['test', 'val']:
+            set = self.dataprovider.iterImageSentencePair(split = split)
+            file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'+self.nbOfTopics+'_'+split+'.txt')
+            numpy.set_printoptions(suppress=True)
+            for pair in set:
+                prediction = self.bestNetwork.predict(pair['image']['feat'])
+                img = pair['image']['filename']
+                file.write(img + ' ' + str(prediction) + '\n')
+
+
 
     def testNetwork(self):
         topicnamelist = self.createTopicList()
@@ -79,8 +94,6 @@ class LDANetworkLearner:
             #print type(prediction)
             print testPair['image']['filename']
             sortedpred = sorted(prediction)
-
-
             sortedpred = sortedpred[::-1]
             prediction = prediction.tolist()
             #print 'sorted', sortedpred
