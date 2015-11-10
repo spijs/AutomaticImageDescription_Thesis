@@ -133,6 +133,7 @@ class GenericBatchGenerator:
     
   @staticmethod
   def backward(dY, cache):
+    print('We komen in backward')
     Xe = cache['Xe']
     lda = cache['lda']
     generator_str = cache['generator_str']
