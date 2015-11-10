@@ -52,7 +52,7 @@ class GenericBatchGenerator:
     model['Wlda'] = initw(lda,image_encoding_size)
 
     update.append('Wlda')
-
+    print('model Wlda:', model['Wlda'].shape)
     regularize.append('Wlda')
 
     init_struct = { 'model' : model, 'update' : update, 'regularize' : regularize}
