@@ -124,7 +124,7 @@ class GenericBatchGenerator:
       cache['F'] = F
       cache['L'] = L
       cache['generator_str'] = generator_str
-
+      cache['lda_enabled'] = lda_enabled
 
     return Ys, cache
     
@@ -139,7 +139,7 @@ class GenericBatchGenerator:
     L = cache ['L']
     dXe = np.zeros(Xe.shape)
     dlda = np.zeros(lda.shape)
-
+    lda_enabled = cache['lda_enabled']
 
     Generator = decodeGenerator(generator_str)
 
@@ -153,7 +153,7 @@ class GenericBatchGenerator:
       dXi = local_grads['dXi']
       del local_grads['dXi']
 
-      if(lda.size):
+      if(lda_enabled):
         dLi  = local_grads['dLi']
         del local_grads['dLi']
         dlda[i,:] += dLi
