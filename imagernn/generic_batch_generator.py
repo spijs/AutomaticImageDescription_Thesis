@@ -152,8 +152,8 @@ class GenericBatchGenerator:
       del local_grads['dXs']
       dXi = local_grads['dXi']
       del local_grads['dXi']
-      
-      if(lda):
+
+      if(lda.size):
         dLi  = local_grads['dLi']
         del local_grads['dLi']
         dlda[i,:] += dLi
