@@ -124,7 +124,7 @@ class GenericBatchGenerator:
       cache['F'] = F
       cache['L'] = L
       cache['generator_str'] = generator_str
-
+      cache['lda_enabled'] = lda_enabled
 
     return Ys, cache
     
@@ -139,7 +139,7 @@ class GenericBatchGenerator:
     L = cache ['L']
     dXe = np.zeros(Xe.shape)
     dlda = np.zeros(lda.shape)
-
+    lda_enabled = cache['lda_enabled']
 
     Generator = decodeGenerator(generator_str)
 
@@ -152,12 +152,15 @@ class GenericBatchGenerator:
       del local_grads['dXs']
       dXi = local_grads['dXi']
       del local_grads['dXi']
-      dLi  = local_grads['dLi']
-      del local_grads['dLi']
+
+      if(lda_enabled):
+        dLi  = local_grads['dLi']
+        del local_grads['dLi']
+        dlda[i,:] += dLi
+
       accumNpDicts(grads, local_grads) # add up the gradients wrt model parameters
 
       # now backprop from dXs to the image vector and word vectors
-      dlda[i,:] += dLi
       dXe[i,:] += dXi # image vector
       for n,j in enumerate(ix): # and now all the other words
         dWs[j,:] += dXs[n,:]
