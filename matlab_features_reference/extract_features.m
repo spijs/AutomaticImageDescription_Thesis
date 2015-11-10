@@ -1,17 +1,18 @@
 %% vgg / caffe spec
+%% Runnen met matlab -r matlab_features_reference/extract_features.m
 
 use_gpu = 1;
 caffe('set_device', 1);
-model_def_file = '/home/karpathy/caffe2/models/vgg_ilsvrc_16/deploy_features.prototxt';
-model_file = '/home/karpathy/caffe2/models/vgg_ilsvrc_16/VGG_ILSVRC_16_layers.caffemodel';
+model_def_file = 'deploy_features.prototxt';
+model_file = '../data/VGG_ILSVRC_16_layers.caffemodel';
 batch_size = 10;
 
 matcaffe_init(use_gpu, model_def_file, model_file);
 
 %% input files spec
 
-root_path = '/data2/karpathy/flickr30k/';
-fs = textread([root_path 'all_imgs.txt'], '%s');
+root_path = '../flickr30kEntities/image_snippets/';
+fs = textread([root_path 'images.txt'], '%s');
 N = length(fs);
 
 %%
@@ -43,5 +44,5 @@ end
 
 %% write to file
 
-save([root_path 'vgg_feats_hdf5.mat'], 'feats', '-v7.3');
-save([root_path 'vgg_feats.mat'], 'feats');
+save([root_path 'flickr30kEntities/vgg_feats_hdf5.mat'], 'feats', '-v7.3');
+save([root_path 'flickr30kEntities/vgg_feats.mat'], 'feats');
