@@ -88,6 +88,8 @@ class GenericBatchGenerator:
     L = np.zeros((len(batch),lda_enabled))
     if lda_enabled!=0:
        L = np.row_stack(x['topics'] for x in batch)
+    print('Wlda', Wlda.shape)
+    print('L', L.shape)
     lda = L.dot(Wlda)
 
     # decode the generator we wish to use
