@@ -49,10 +49,7 @@ class GenericBatchGenerator:
     regularize = ['We', 'Ws']
 
     # Added for LDA
-    if(lda):
-        model['Wlda'] = initw(lda,image_encoding_size)
-    else:
-        model['Wlda'] = np.zeros((lda,image_encoding_size))
+    model['Wlda'] = initw(lda,image_encoding_size)
 
     update.append('Wlda')
 
@@ -89,7 +86,7 @@ class GenericBatchGenerator:
     Wlda = model['Wlda']
     lda_enabled = params.get('lda',0)
     L = np.zeros((len(batch),lda_enabled))
-    if lda_enabled:
+    if lda_enabled!=0:
        L = np.row_stack(x['topics'] for x in batch)
     lda = L.dot(Wlda)
 
