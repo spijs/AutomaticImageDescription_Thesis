@@ -57,7 +57,7 @@ class BasicDataProvider:
         train_file = topic_root+str(topics)+'_train.txt'
         self.topics = self.create_dist_dict(train_file, self.topics)
         for split in ['test', 'val']:
-            f = topic_root+str(topics)+'_'+split+'.txt'
+            f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+'_512_0_4575.txt')
             self.topics = self.create_dist_dict(f, self.topics)
 
     def create_dist_dict(self, filename, dict):
