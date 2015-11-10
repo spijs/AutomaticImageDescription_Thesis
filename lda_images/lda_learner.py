@@ -43,7 +43,7 @@ class LDANetworkLearner:
             # for networkID in len(self.topicnetworks):
             self.network.forward(features)
             self.network.backward(dist)
-            if i % 30000  == 29999 :
+            if i % 2000  == 1999 :
                 last_img = ''
                 intermediate_error = 0.0
                 for j in range(1000):
@@ -56,14 +56,16 @@ class LDANetworkLearner:
                     correct = self.dictionary[validationPair['image']['filename']]
                     err = self.network.cost()
                     intermediate_error += err
-                if intermediate_error > validationError:
-                    print intermediate_error
-                    print 'No more improvement'
-                    break
-                else:
-                    self.bestNetwork = copy.deepcopy(self.network)
-                    print 'Validation Error', intermediate_error
-                    validationError = intermediate_error
+                print 'validation error', intermediate_error
+                if i % 30000 == 29999:
+                    if intermediate_error > validationError:
+                        print intermediate_error
+                        print 'No more improvement'
+                        break
+                    else:
+                        self.bestNetwork = copy.deepcopy(self.network)
+                        print 'Validation Error', intermediate_error
+                        validationError = intermediate_error
 
 
         # print 'testing'
