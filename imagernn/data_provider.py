@@ -118,6 +118,7 @@ class BasicDataProvider:
 
     def iterImageSentencePairBatch(self, split = 'train', max_images = -1, max_batch_size = 100):
         batch = []
+        print('eerste lijn iter')
         for i,img in enumerate(self.split[split]):
             if max_images >= 0 and i >= max_images: break
             for sent in img['sentences']:
