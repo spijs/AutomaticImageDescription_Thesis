@@ -125,7 +125,7 @@ def main(params):
   # fetch the data provider
   dp = getDataProvider(dataset) #TODO gewijzigd :)
   if params['lda']:
-      print 'loading topics'
+      print 'loading topics, number:', str(params['lda'])
       dp.load_topic_models(dataset,params['lda'])
   misc = {} # stores various misc items that need to be passed around the framework
 
