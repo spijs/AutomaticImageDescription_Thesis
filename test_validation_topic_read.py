@@ -10,4 +10,4 @@ if __name__ == "__main__":
     batches = dataprovider.iterImageSentencePairBatch(split = 'val')
     for batch in batches:
         print (x['topics'] for x in batch)
-        print(batch)
+        print 'Length: ', len(batch)
