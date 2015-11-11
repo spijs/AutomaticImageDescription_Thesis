@@ -8,6 +8,6 @@ if __name__ == "__main__":
     dataprovider = getDataProvider('flickr30k')
     print dataprovider
     dataprovider.load_topic_models('flickr30k', 120)
-
-    dataprovider.iterImageSentencePairBatch(split = 'val')
-
+    print 'Hier'
+    batch = dataprovider.iterImageSentencePairBatch(split = 'val')
+    print batch[0]
