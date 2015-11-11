@@ -128,10 +128,9 @@ class BasicDataProvider:
                     # print 'setting topic dist', self.topics[img['filename']]
                     out['topics'] = self.topics[img['filename']]
                 batch.append(out)
-                #TODO terugzetten!
-                #if len(batch) >= max_batch_size:
-                #    yield batch
-                #    batch = []
+                if len(batch) >= max_batch_size:
+                    yield batch
+                    batch = []
         if batch:
             yield batch
 
