@@ -86,6 +86,7 @@ class GenericBatchGenerator:
     lda_enabled = params.get('lda',0)
     L = np.zeros((len(batch),lda_enabled))
     if lda_enabled!=0:
+       print (x['topics'] for x in batch)
        L = np.row_stack(x['topics'] for x in batch)
     lda = L.dot(Wlda)
 
