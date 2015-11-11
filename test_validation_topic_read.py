@@ -9,5 +9,5 @@ if __name__ == "__main__":
 
     dataprovider.load_topic_models('flickr30k', 120)
 
-    print(dataprovider.iterImageSentencePairBatch(split = 'val'))
+    dataprovider.iterImageSentencePairBatch(split = 'val')
 
