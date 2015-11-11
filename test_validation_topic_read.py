@@ -9,9 +9,5 @@ if __name__ == "__main__":
 
     dataprovider.load_topic_models('flickr30k', 120)
 
-    dataprovider.iterImageSentencePairBatch(split = 'val')
-
-    top = dataprovider.topics
-    print 'imagenames', top.values()
-    print "amount of topics", len(top)
+    dataprovider.iterImageSentencePairBatch(split = 'val',max_batch_size=1000)
 
