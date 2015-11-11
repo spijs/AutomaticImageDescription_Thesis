@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == "__main__":
     dataprovider = getDataProvider('flickr30k')
-
+    print dataprovider
     dataprovider.load_topic_models('flickr30k', 120)
 
     dataprovider.iterImageSentencePairBatch(split = 'val')
