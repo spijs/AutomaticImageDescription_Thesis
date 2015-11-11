@@ -124,6 +124,7 @@ class BasicDataProvider:
                 out = {}
                 out['image'] = self._getImage(img)
                 out['sentence'] = self._getSentence(sent)
+                print('in iter image')
                 if self.topics:
                     # print 'setting topic dist', self.topics[img['filename']]
                     print('we komen hier')
