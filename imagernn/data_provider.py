@@ -149,6 +149,16 @@ class BasicDataProvider:
         for i in ix:
             yield self._getImage(imglist[i])
 
+    def testfunction(self, split):
+        for i,img in enumerate(self.split[split]):
+            for sent in img['sentences']:
+                out = {}
+                out['image'] = self._getImage(img)
+                out['sentence'] = self._getSentence(sent)
+                if self.topics:
+                    print 'setting topic dist', self.topics[img['filename']]
+                    out['topics'] = self.topics[img['filename']]
+
     def preprocess(self, rawDistribution):
         imgname = rawDistribution[0]
         distribution = []
@@ -166,12 +176,4 @@ def getDataProvider(dataset):
     return BasicDataProvider(dataset)
 
 
-def testfunction(self, split):
-    for i,img in enumerate(self.split[split]):
-        for sent in img['sentences']:
-            out = {}
-            out['image'] = self._getImage(img)
-            out['sentence'] = self._getSentence(sent)
-            if self.topics:
-                print 'setting topic dist', self.topics[img['filename']]
-                out['topics'] = self.topics[img['filename']]
+
