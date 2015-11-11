@@ -9,5 +9,6 @@ if __name__ == "__main__":
     print dataprovider
     dataprovider.load_topic_models('flickr30k', 120)
     print 'Hier'
-    batch = dataprovider.iterImageSentencePairBatch(split = 'val')
-    print batch[0]
+    batches = dataprovider.iterImageSentencePairBatch(split = 'val')
+    for batch in batches:
+        print batch
