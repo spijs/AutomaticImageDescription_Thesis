@@ -6,12 +6,9 @@ import numpy as np
 
 if __name__ == "__main__":
     dataprovider = getDataProvider('flickr30k')
-
+    print dataprovider
     dataprovider.load_topic_models('flickr30k', 120)
-
-    dataprovider.iterImageSentencePairBatch(split = 'val')
-
-    top = dataprovider.topics
-    print 'imagenames', top.keys()
-    print "amount of topics", len(top)
-
+    print 'Hier'
+    batches = dataprovider.iterImageSentencePairBatch(split = 'val')
+    for batch in batches:
+        print batch

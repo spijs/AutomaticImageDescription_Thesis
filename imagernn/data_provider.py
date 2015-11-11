@@ -102,7 +102,7 @@ class BasicDataProvider:
         out['image'] = self._getImage(img)
         out['sentence'] = self._getSentence(sent)
         if self.topics:
-            print 'setting topic dist', self.topics[img['filename']]
+            #print 'setting topic dist', self.topics[img['filename']]
             out['topics'] = self.topics[img['filename']]
 
         return out
@@ -118,19 +118,22 @@ class BasicDataProvider:
 
     def iterImageSentencePairBatch(self, split = 'train', max_images = -1, max_batch_size = 100):
         batch = []
+        print('eerste lijn iter')
         for i,img in enumerate(self.split[split]):
             if max_images >= 0 and i >= max_images: break
             for sent in img['sentences']:
                 out = {}
                 out['image'] = self._getImage(img)
                 out['sentence'] = self._getSentence(sent)
+                print('in iter image')
                 if self.topics:
                     # print 'setting topic dist', self.topics[img['filename']]
+                    print('we komen hier')
                     out['topics'] = self.topics[img['filename']]
                 batch.append(out)
-                if len(batch) >= max_batch_size:
-                    yield batch
-                    batch = []
+                #if len(batch) >= max_batch_size:
+                #    yield batch
+                #    batch = []
         if batch:
             yield batch
 
@@ -156,7 +159,7 @@ class BasicDataProvider:
                 out['image'] = self._getImage(img)
                 out['sentence'] = self._getSentence(sent)
                 if self.topics:
-                    print 'setting topic dist', self.topics[img['filename']]
+                    #print 'setting topic dist', self.topics[img['filename']]
                     out['topics'] = self.topics[img['filename']]
 
     def preprocess(self, rawDistribution):
