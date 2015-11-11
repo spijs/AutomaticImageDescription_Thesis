@@ -102,7 +102,7 @@ class BasicDataProvider:
         out['image'] = self._getImage(img)
         out['sentence'] = self._getSentence(sent)
         if self.topics:
-            print 'setting topic dist', self.topics[img['filename']]
+            #print 'setting topic dist', self.topics[img['filename']]
             out['topics'] = self.topics[img['filename']]
 
         return out
@@ -156,7 +156,7 @@ class BasicDataProvider:
                 out['image'] = self._getImage(img)
                 out['sentence'] = self._getSentence(sent)
                 if self.topics:
-                    print 'setting topic dist', self.topics[img['filename']]
+                    #print 'setting topic dist', self.topics[img['filename']]
                     out['topics'] = self.topics[img['filename']]
 
     def preprocess(self, rawDistribution):
