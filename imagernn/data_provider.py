@@ -59,6 +59,7 @@ class BasicDataProvider:
         for split in ['test', 'val']:
             f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+'_512_0_4575.txt')
             self.topics = self.create_dist_dict(f, self.topics)
+        print 'amount of topics', len(self.topics)
 
     def create_dist_dict(self, filename, dict):
         if os.path.isfile(filename):
