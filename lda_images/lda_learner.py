@@ -22,8 +22,10 @@ class LDANetworkLearner:
     # First creates a dictionary to map the image names onto the topic distributions,
     # then samples random images from the dataprovider, and perform a forward and backward step
     def learnNetwork(self, iterations):
-        filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(self.nbOfTopics) + '.txt'
-        self.dictionary = self.create_dist_dict(filename)
+        self.dictionary = {}
+        for split in ['train', 'test', 'val']:
+            filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(self.nbOfTopics) + '_'+split+'.txt'
+            self.dictionary = self.create_dist_dict(filename, self.dictionary)
         # image_sentence_pair_generator = self.dataprovider.iterImageSentencePair(split = 'train')
         # validationset = self.dataprovider.iterImageSentencePair(split = 'val')
         # self.topicnetworks = []
@@ -107,8 +109,8 @@ class LDANetworkLearner:
             line = file.readline()
         return list
 
-    def create_dist_dict(self, filename):
-        dict = {}
+    def create_dist_dict(self, filename, dict):
+        # dict = {}
         f = open(filename)
         rawDist = []
         line = f.readline()
