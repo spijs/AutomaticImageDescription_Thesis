@@ -12,5 +12,6 @@ if __name__ == "__main__":
     dataprovider.iterImageSentencePairBatch(split = 'val')
 
     top = dataprovider.topics
+    print 'imagenames', top.keys
     print "amount of topics", len(top)
 
