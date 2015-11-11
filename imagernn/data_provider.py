@@ -78,6 +78,8 @@ class BasicDataProvider:
                 line = f.readline()
             img, distribution = self.preprocess(rawDist)
             dict[img] = distribution
+        else:
+            print 'file not found'
         return dict
 
     # PUBLIC FUNCTIONS
