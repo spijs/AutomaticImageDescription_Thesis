@@ -9,6 +9,8 @@ if __name__ == "__main__":
 
     dataprovider.load_topic_models('flickr30k', 120)
 
+    dataprovider.testfunction('val')
+
     top = dataprovider.topics
     print "amount of topics", len(top)
 

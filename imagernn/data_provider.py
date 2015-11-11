@@ -164,3 +164,14 @@ def getDataProvider(dataset):
     """ we could intercept a special dataset and return different data providers """
     assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
     return BasicDataProvider(dataset)
+
+
+def testfunction(self, split):
+    for i,img in enumerate(self.split[split]):
+        for sent in img['sentences']:
+            out = {}
+            out['image'] = self._getImage(img)
+            out['sentence'] = self._getSentence(sent)
+            if self.topics:
+                print 'setting topic dist', self.topics[img['filename']]
+                out['topics'] = self.topics[img['filename']]
