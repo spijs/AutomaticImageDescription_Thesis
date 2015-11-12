@@ -11,7 +11,7 @@ matcaffe_init(use_gpu, model_def_file, model_file);
 
 %% input files spec
 
-root_path = '../flickr30kEntities/image_snippets/';
+root_path = 'Flickr30kEntities/image_snippets/';
 fs = textread([root_path 'images.txt'], '%s');
 N = length(fs);
 
@@ -44,5 +44,5 @@ end
 
 %% write to file
 
-save([root_path 'flickr30kEntities/vgg_feats_hdf5.mat'], 'feats', '-v7.3');
-save([root_path 'flickr30kEntities/vgg_feats.mat'], 'feats');
+save([root_path 'Flickr30kEntities/vgg_feats_hdf5.mat'], 'feats', '-v7.3');
+save([root_path 'Flickr30kEntities/vgg_feats.mat'], 'feats');
