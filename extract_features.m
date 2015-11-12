@@ -1,6 +1,6 @@
 %% vgg / caffe spec
 %% Runnen met matlab extract_features.m
-addpath('/export/home2/NoCsBack/hci/susana/packages/caffe/matlab/')
+path(path,'/export/home2/NoCsBack/hci/susana/packages/caffe/matlab/caffe/')
 
 use_gpu = 1;
 caffe('set_device', 1);
