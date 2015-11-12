@@ -18,13 +18,14 @@ N = length(fs);
 
 %%
 
-% iterate over the iamges in batches
+% iterate over the images in batches
 feats = zeros(4096, N, 'single');
 for b=1:batch_size:N
 
     % enter images, and dont go out of bounds
     Is = {};
     for i = b:min(N,b+batch_size-1)
+        disp(fs{i})
         I = imread([root_path fs{i}]);
         if ndims(I) == 2
             I = cat(3, I, I, I); % handle grayscale edge case. Annoying!
