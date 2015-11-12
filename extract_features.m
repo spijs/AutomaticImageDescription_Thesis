@@ -1,5 +1,5 @@
 %% vgg / caffe spec
-%% Runnen met matlab -r matlab_features_reference/extract_features.m
+%% Runnen met matlab extract_features.m
 
 use_gpu = 1;
 caffe('set_device', 1);

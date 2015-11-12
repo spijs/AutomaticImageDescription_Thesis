@@ -2,7 +2,8 @@
 author: ahmed osman
 email : ahmed.osman99 AT GMAIL
 '''
-
+import sys
+sys.path.append('/export/home2/NoCsBack/hci/susana/packages/caffe/python/')
 import caffe
 import numpy as np
 import argparse
