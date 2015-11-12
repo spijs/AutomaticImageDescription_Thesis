@@ -5,7 +5,7 @@ path(path,'/export/home2/NoCsBack/hci/susana/packages/caffe/matlab/caffe/')
 use_gpu = 1;
 caffe('set_device', 1);
 model_def_file = 'matlab_features_reference/deploy_features.prototxt';
-model_file = '../data/VGG_ILSVRC_16_layers.caffemodel';
+model_file = 'data/VGG_ILSVRC_16_layers.caffemodel';
 batch_size = 10;
 
 matcaffe_init(use_gpu, model_def_file, model_file);
