@@ -109,7 +109,7 @@ def main(params):
 if __name__ == "__main__":
 
   parser = argparse.ArgumentParser()
-  parser.add_argument('checkpoint_path', type=str, help='the input checkpoint')
+  parser.add_argument('--checkpoint_path', type=str, help='the input checkpoint')
   parser.add_argument('-b', '--beam_size', type=int, default=1, help='beam size in inference. 1 indicates greedy per-word max procedure. Good value is approx 20 or so, and more = better.')
   parser.add_argument('--result_struct_filename', type=str, default='result_struct.json', help='filename of the result struct to save')
   parser.add_argument('-m', '--max_images', type=int, default=-1, help='max images to use')
