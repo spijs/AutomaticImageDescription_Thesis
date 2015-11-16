@@ -1,11 +1,10 @@
 import sys
 import os.path
 import argparse
-sys.path.append('/export/home2/NoCsBack/hci/wout/caffe/python/')
+sys.path.append('/export/home2/NoCsBack/hci/wout/caffe/python')
 import numpy as np
 from scipy.misc import imread, imresize
 import scipy.io
-
 import cPickle as pickle
 
 parser = argparse.ArgumentParser()
@@ -40,7 +39,7 @@ def predict(in_data, net):
     """
 
     out = net.forward(**{net.inputs[0]: in_data})
-    features = out[net.outputs[0]].squeeze(axis=(2,3))
+    features = out[net.outputs[0]]
     return features
 
 
@@ -102,7 +101,6 @@ else:
     caffe.set_mode_cpu()
 
 net = caffe.Net(args.model_def, args.model, caffe.TEST)
-caffe.set_phase_test()
 
 filenames = []
 

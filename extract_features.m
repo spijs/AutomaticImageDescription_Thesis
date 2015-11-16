@@ -1,20 +1,30 @@
 %% vgg / caffe spec
 %% Runnen met matlab extract_features.m
-path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab/')
+path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab/caffe')
 path(path,'matlab_features_reference')
 
-use_gpu = 1;
-caffe('set_device', 1);
-model_def_file = 'matlab_features_reference/VGG_ILSVRC_16_layers_deploy.prototxt';
-model_file = 'data/VGG_ILSVRC_16_layers.caffemodel';
+use_gpu = 0;
+gpu_id = 1;
+
+% Set caffe mode
+if use_gpu
+  caffe.set_mode_gpu();
+  caffe.set_device(gpu_id);
+else
+  caffe.set_mode_cpu();
+end
+
+model = 'matlab_features_reference/VGG_ILSVRC_16_layers_deploy.prototxt';
+weight = 'data/VGG_ILSVRC_16_layers.caffemodel';
 batch_size = 10;
 
-matcaffe_init(use_gpu, model_def_file, model_file);
+net = caffe.Net(model, weights, 'test');
+
 
 %% input files spec
 
-root_path = 'example_images/';
-fs = textread([root_path 'tasks.txt'], '%s');
+root_path = 'Flickr30kEntities/image_snippets/';
+fs = textread([root_path 'images.txt'], '%s');
 N = length(fs);
 
 %%
