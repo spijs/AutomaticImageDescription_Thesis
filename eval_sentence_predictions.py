@@ -54,7 +54,7 @@ def main(params):
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
     kwparams = { 'beam_size' : params['beam_size'] }
     topics = dp.getTopic(img['filename'])
-    Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params,topics **kwparams)
+    Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params,topics, **kwparams)
 
     img_blob = {} # we will build this up
     img_blob['img_path'] = img['local_file_path']
