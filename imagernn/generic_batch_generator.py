@@ -195,3 +195,24 @@ class GenericBatchGenerator:
       Ys.append(gen_Y)
     return Ys
 
+  @staticmethod
+  def predict_test(batch, model, params,topics,  **kwparams):
+    """ some code duplication here with forward pass, but I think we want the freedom in future """
+    F = np.row_stack(x['image']['feat'] for x in batch)
+    lda_enabled = params.get('lda',0)
+    L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
+    if lda_enabled:
+       L = topics
+    We = model['We']
+    Wlda = model['Wlda']
+    be = model['be']
+    Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
+    lda = L.dot(Wlda)
+    generator_str = params['generator']
+    Generator = decodeGenerator(generator_str)
+    Ys = []
+    for i,x in enumerate(batch):
+      gen_Y = Generator.predict(Xe[i, :], lda[i,:], model, model['Ws'], params, **kwparams)
+      Ys.append(gen_Y)
+    return Ys
+

@@ -48,12 +48,12 @@ def main(params):
   n = 0
   all_references = []
   all_candidates = []
-  for img in dp.iterImages(split = 'test', max_images = max_images):
+  for img in dp.iterImageSentencePair(split = 'test', max_images = max_images):
     n+=1
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
     kwparams = { 'beam_size' : params['beam_size'] }
-    Ys = BatchGenerator.predict([{'image':img}], model, checkpoint_params, **kwparams)
+    Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params,img['topics'] **kwparams)
 
     img_blob = {} # we will build this up
     img_blob['img_path'] = img['local_file_path']
