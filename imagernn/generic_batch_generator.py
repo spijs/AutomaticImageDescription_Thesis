@@ -207,6 +207,8 @@ class GenericBatchGenerator:
     Wlda = model['Wlda']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
+    print('L shape', L.shape)
+    print('Wlda shape', Wlda.shape)
     lda = L.dot(Wlda)
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
