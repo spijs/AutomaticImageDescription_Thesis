@@ -1,4 +1,5 @@
-__author__ = 'Wout'
+__author__ = 'Wout & thijs'
+
 # This implementation of a standard feed forward network (FFN) is short and efficient,
 # using numpy's array multiplications for fast forward and backward passes. The source
 # code comes with a little example, where the network learns the XOR problem.

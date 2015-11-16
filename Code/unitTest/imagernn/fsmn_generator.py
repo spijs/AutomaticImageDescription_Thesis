@@ -1,4 +1,4 @@
-__author__ = 'Thijs'
+__author__ = 'Wout & thijs'
 
 import unittest
 import numpy as np

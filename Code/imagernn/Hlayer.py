@@ -1,4 +1,4 @@
-__author__ = 'Thijs'
+__author__ = 'Wout & thijs'
 import numpy as np
 
 from imagernn.utils import initw

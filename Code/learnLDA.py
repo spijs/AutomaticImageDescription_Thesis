@@ -1,4 +1,4 @@
-__author__ = 'wout'
+__author__ = 'Wout & thijs'
 
 import argparse
 from lda_images.lda_learner import *

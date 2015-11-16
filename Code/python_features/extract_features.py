@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 import sys
 import os.path
 import argparse

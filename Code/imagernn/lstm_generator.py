@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 import numpy as np
 import code
 

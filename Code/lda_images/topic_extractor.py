@@ -1,4 +1,4 @@
-__author__ = 'Thijs'
+__author__ = 'Wout & thijs'
 
 import lda
 from imagernn.data_provider import getDataProvider

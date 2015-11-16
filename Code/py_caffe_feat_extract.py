@@ -1,5 +1,6 @@
 '''
 author: ahmed osman
+edited by: wout & thijs
 email : ahmed.osman99 AT GMAIL
 '''
 import sys

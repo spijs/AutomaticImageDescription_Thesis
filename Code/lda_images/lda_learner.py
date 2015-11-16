@@ -1,5 +1,4 @@
-__author__ = 'Wout'
-
+__author__ = 'Wout & thijs'
 from imagernn.data_provider import getDataProvider
 from lda_images.ff_nn import *
 import numpy

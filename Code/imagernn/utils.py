@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 from random import uniform
 import numpy as np
 

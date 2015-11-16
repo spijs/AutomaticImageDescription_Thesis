@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 from argparse import _ActionsContainer
 import numpy as np
 import code

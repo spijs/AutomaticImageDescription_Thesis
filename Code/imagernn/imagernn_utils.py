@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 from imagernn.generic_batch_generator import GenericBatchGenerator
 import numpy as np
 

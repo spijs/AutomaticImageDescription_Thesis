@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 import argparse
 import json
 import time

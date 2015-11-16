@@ -1,4 +1,4 @@
-__author__ = 'Thijs'
+__author__ = 'Wout & thijs'
 
 import argparse
 from lda_images.topic_extractor import TopicExtractor

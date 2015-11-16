@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 import time
 import numpy as np
 from imagernn.utils import randi

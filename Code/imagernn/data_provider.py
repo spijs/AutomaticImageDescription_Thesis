@@ -1,3 +1,5 @@
+__author__ = 'Wout & thijs'
+
 import json
 import os
 import random
