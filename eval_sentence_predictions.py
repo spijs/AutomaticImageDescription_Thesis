@@ -55,7 +55,7 @@ def main(params):
     kwparams = { 'beam_size' : params['beam_size'] }
     topics = []
     if not params['lda'] == 0:
-        topics = np.row_stack(dp.getTopic(img['filename']))
+        topics = np.row_stack(dp.getTopic(img['filename'])).transpose()
     Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params,topics, **kwparams)
 
     img_blob = {} # we will build this up
