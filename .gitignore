@@ -4,3 +4,5 @@ cv/*.p
 Report/masterproef.log
 Report/masterproef.pdf
 Report/masterproef.synctex.gz
+Code/lda_images/models
+Code/Flickr30kEntities
