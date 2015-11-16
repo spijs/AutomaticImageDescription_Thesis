@@ -32,6 +32,7 @@ def main(params):
     
   # fetch the data provider
   dp = getDataProvider(dataset)
+  dp.load_topic_models(dataset, params['topics'])
 
   misc = {}
   misc['wordtoix'] = checkpoint['wordtoix']
@@ -114,6 +115,7 @@ if __name__ == "__main__":
   parser.add_argument('--result_struct_filename', type=str, default='result_struct.json', help='filename of the result struct to save')
   parser.add_argument('-m', '--max_images', type=int, default=-1, help='max images to use')
   parser.add_argument('-d', '--dump_folder', type=str, default="", help='dump the relevant images to a separate folder with this name?')
+  parser.add_argument('-t', '--topics', type=int, default = 120, help = 'number of topics to be used')
 
   args = parser.parse_args()
   params = vars(args) # convert to ordinary dict
