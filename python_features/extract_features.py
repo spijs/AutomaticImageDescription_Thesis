@@ -1,7 +1,7 @@
 import sys
 import os.path
 import argparse
-sys.path.append('/export/home2/NoCsBack/hci/susana/packages/caffe/python/')
+sys.path.append('/export/home2/NoCsBack/hci/wout/caffe/python/')
 import numpy as np
 from scipy.misc import imread, imresize
 import scipy.io
