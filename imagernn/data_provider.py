@@ -170,6 +170,8 @@ class BasicDataProvider:
                 distribution.extend([m])
         return imgname, distribution
 
+    def getTopic(self, imgName):
+        return self.topics[imgName]
 def getDataProvider(dataset):
     """ we could intercept a special dataset and return different data providers """
     assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
