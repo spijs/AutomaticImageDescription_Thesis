@@ -1,0 +1,9 @@
+*.pyc
+cv/*.p
+data/
+.idea
+Latex/masterproef.log
+Latex/masterproef.pdf
+Latex/masterproef.synctex.gz
+status/*.json
+Flickr30kEntities/
