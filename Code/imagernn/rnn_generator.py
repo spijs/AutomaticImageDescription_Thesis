@@ -237,12 +237,10 @@ class RNNGenerator:
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
-            print('wordix ',wordix)
             beam_candidates.append((b[0] + y1[wordix], b[1] + [wordix], h1))
 
         beam_candidates.sort(reverse = True) # decreasing order
         beams = beam_candidates[:beam_size] # truncate to get new beams
-        print('beams ',beams)
         nsteps += 1
         if nsteps >= 20: # bad things are probably happening, break out
           break
