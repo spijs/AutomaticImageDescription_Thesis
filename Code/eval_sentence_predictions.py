@@ -81,6 +81,7 @@ def main(params):
 
     # now evaluate and encode the top prediction
     top_predictions = Ys[0] # take predictions for the first (and only) image we passed in
+    print('top_predictions', top_predictions)
     top_prediction = top_predictions[0] # these are sorted with highest on top
     candidate = ' '.join([ixtoword[ix] for ix in top_prediction[1] if ix > 0]) # ix 0 is the END token, skip that
     print 'PRED: (%f) %s' % (top_prediction[0], candidate)

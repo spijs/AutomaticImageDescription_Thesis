@@ -49,7 +49,7 @@ def main(params):
 
   # load the tasks.txt file
   root_path = params['root_path']
-  img_names = open(os.path.join(root_path, 'tasks.txt'), 'r').read().splitlines()
+  #img_names = open(os.path.join(root_path, 'tasks.txt'), 'r').read().splitlines()
 
   # load the features for all images
   features_path = os.path.join(root_path, 'vgg_feats.mat')
@@ -65,7 +65,7 @@ def main(params):
     # encode the image
     img = {}
     img['feat'] = features[:, n]
-    img['local_file_path'] =img_names[n]
+    #img['local_file_path'] =img_names[n]
 
     # perform the work. heavy lifting happens inside
     kwparams = { 'beam_size' : params['beam_size'] }
@@ -73,7 +73,7 @@ def main(params):
 
     # build up the output
     img_blob = {}
-    img_blob['img_path'] = img['local_file_path']
+    #img_blob['img_path'] = img['local_file_path']
 
     # encode the top prediction
     top_predictions = Ys[0] # take predictions for the first (and only) image we passed in
