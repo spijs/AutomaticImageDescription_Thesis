@@ -30,7 +30,7 @@ def readVocabulary():
     voc = open('dictionary.txt')
     line = voc.readline()
     while line:
-        result.append(line[0:-2])
+        result.append(line[0:-1])
         line = voc.readline()
     return result
 
@@ -45,8 +45,8 @@ def createOccurrenceVectors(vocabulary):
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
-            if current < 100:
-                current += 1
+         # if current < 1000:
+            current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
             f = open('./Flickr30kEntities/sentence_snippets/'+filename)
@@ -77,6 +77,7 @@ def createOccurrenceVectors(vocabulary):
                 sentenceID += 1
                 #print "ROW: " + str(row)
     for item in idf:
+      if item > 0:
         print "Idf item: " + str(item)
     idf = len(result.keys()) / idf
     return result, idf
@@ -108,11 +109,11 @@ def mainExec(name_file, features):
     for i in weightedVectors.keys():
 	# print sentenceMatrix
         if isLargeEnough(i):
-	    print "TRUE"
+#	    print "TRUE"
             sentenceMatrix.append(weightedVectors[i])
             imagematrix.append(getImage(i,name_file, features))
-	else: 
-	    print "FALSE"
+#	else: 
+	    #print "FALSE"
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
@@ -211,15 +212,15 @@ Given a filename, checks if the image behind that filename is bigger than 64x64
 '''
 def isLargeEnough(filename):
     file = filename+".jpg"
-    print file
+    #print file
     try:
         image = Image.open("./Flickr30kEntities/image_snippets/"+file)
     except IOError:
         
-	print "IMG NOT FOUND"
+	#print "IMG NOT FOUND"
 	return False
     width, height = image.size
-    print width,height
+ #   print width,height
     return (width >= 64) and (height >= 64)
 
 

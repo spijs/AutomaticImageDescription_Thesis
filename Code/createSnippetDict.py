@@ -47,7 +47,7 @@ if __name__ == "__main__":
             while not (line == ""):
 		if isLargeEnough(filename[0:-4]+'_'+str(sentenceid)):
                     for word in line.split():
-                        word = stem(word.decode('utf-8'))
+                        word = stem(word.decode('utf-8')).lower()
                         if (not word in stopwords):
                             if(not word in dict):
                                 dict[word]=1
