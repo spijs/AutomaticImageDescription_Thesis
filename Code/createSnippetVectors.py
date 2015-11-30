@@ -28,9 +28,9 @@ def createVocabulary():
     stopwords = getStopwords()
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
-        current += 1
-        print "Preprocessing sentence " + str(current)
         for filename in filenames:
+	    current += 1
+	    print "Preprocessing sentence: " + str(current)
             f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             # print filename
@@ -56,9 +56,9 @@ def createOccurrenceVectors(vocabulary):
     result = {}
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
-        current += 1
-        print "current sentence : " + str(current)
-        for filename in filenames:
+	for filename in filenames:
+            current += 1
+            print "current sentence : " + str(current)
             f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             sentenceID = 1
