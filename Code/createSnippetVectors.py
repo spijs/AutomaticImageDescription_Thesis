@@ -1,0 +1,108 @@
+import os
+import numpy as np
+from nltk.stem.porter import *
+import sklearn.cross_validation as skcv
+
+
+''' stems a word by using the porter algorithm'''
+def stem(word):
+    stemmer = PorterStemmer()
+    return stemmer.stem(word)
+
+def getStopwords():
+        stopwords = set()
+        file=open('lda_images/english')
+        for line in file.readlines():
+            stopwords.add(line[:-1])
+        return stopwords
+
+'''
+Creates a vocabulary, being a list of words
+'''
+def createVocabulary():
+    dict = {}
+    result = {}
+    stopwords = getStopwords()
+    for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+        for filename in filenames:
+            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
+            line = f.readline()
+            # print filename
+            while not (line == ""):
+                for word in line.split():
+                    word = stem(word.decode('utf-8'))
+                    if (not word in stopwords):
+                        if(not word in dict):
+                            dict[word]=1
+                        else:
+                            dict[word]+=1
+                line = f.readline()
+        for word in dict:
+            if(dict[word] >= 5):
+                result[word]=dict[word]
+    return result.keys()
+
+'''
+Reads a set of documents, returns a dictionary containing the filename of the corresponding picture, and the
+unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
+'''
+def createOccurrenceVectors(vocabulary):
+    result = {}
+    for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+        for filename in filenames:
+            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
+            line = f.readline()
+            sentenceID = 1
+            while not (line == ""):
+                wordcount = 0
+                row = np.zeros(len(vocabulary))
+                for word in line:
+                    stemmed = stem(word.decode('utf-8'))
+                    if stemmed in vocabulary:
+                        wordcount += 1
+                        i = vocabulary.index(stemmed)
+                        row[i] += 1
+                if wordcount:
+                    row = row / wordcount
+                result[filename+"_"+str(sentenceID)] = row
+                line = f.readline()
+                sentenceID += 1
+    return result
+
+def get_idf(documents, vocabulary):
+    result = np.zeros(len(vocabulary))
+    for i in range(len(vocabulary)):
+        docCount = 0
+        for j in documents.keys():
+            if documents[j][i]>0:
+                docCount += 1
+        result[i] = docCount
+    result = len(documents.keys()) / result
+    return result
+
+def weight_tfidf(documents, inv_freq, vocabulary):
+    result = {}
+    for i in documents.keys():
+        doc = documents[i]
+        result[i] = doc * inv_freq
+
+def mainExec():
+    voc = createVocabulary()
+    occurrenceVectors = createOccurrenceVectors(voc)
+    idf = get_idf(occurrenceVectors, voc)
+    weightedVectors = weight_tfidf(occurrenceVectors, idf, voc)
+
+    sentenceMatrix = []
+    imagematrix = []
+    for i in weightedVectors.keys():
+        sentenceMatrix = sentenceMatrix.append(weightedVectors[i])
+        imagematrix = imagematrix.append(getImage(i))
+    print weightedVectors
+
+def getImage(filename):
+    return 0
+
+if __name__ == "__main__":
+    mainExec()
+
+
