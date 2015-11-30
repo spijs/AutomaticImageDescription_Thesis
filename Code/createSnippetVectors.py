@@ -66,7 +66,11 @@ def createOccurrenceVectors(vocabulary):
                 wordcount = 0
                 row = np.zeros(len(vocabulary))
                 for word in line:
-                    stemmed = stem(word.decode('utf-8'))
+                    stemmed = ""
+                    try:
+                        stemmed = stem(word.decode('utf-8'))
+                    except UnicodeDecodeError:
+                         print "This word gave an error: " + word
                     if stemmed in vocabulary:
                         wordcount += 1
                         i = vocabulary.index(stemmed)
