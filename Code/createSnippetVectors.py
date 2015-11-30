@@ -113,6 +113,7 @@ def weight_tfidf(documents, inv_freq, vocabulary):
     for i in documents.keys():
         doc = documents[i]
         result[i] = doc * inv_freq
+    return result
 
 def mainExec(name_file, features):
     print "Creating vocabulary"
