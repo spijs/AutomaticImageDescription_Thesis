@@ -1,3 +1,19 @@
+import os
+from nltk.stem.porter import *
+
+''' stems a word by using the porter algorithm'''
+def stem(word):
+    stemmer = PorterStemmer()
+    return stemmer.stem(word)
+
+'''Returns a list containing the most frequent english words'''
+def getStopwords():
+        stopwords = set()
+        file=open('lda_images/english')
+        for line in file.readlines():
+            stopwords.add(line[:-1])
+        return stopwords
+
 if __name__ == "__main__":
     dict = {}
     result = {}
@@ -5,8 +21,8 @@ if __name__ == "__main__":
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
-        current += 1
-        print "Preprocessing sentence: " + str(current)
+            current += 1
+            print "Preprocessing sentence: " + str(current)
             f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             # print filename
@@ -22,7 +38,7 @@ if __name__ == "__main__":
         for word in dict:
             if(dict[word] >= 5):
                 result[word]=dict[word]
-    words = dict.keys()
+    words = result.keys()
     f = open("dictionary.txt", 'w+')
     for w in words:
         f.writelines(w+'\n')
