@@ -104,7 +104,7 @@ def mainExec(name_file, features):
         imagematrix = imagematrix.append(getImage(i,name_file, features))
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
-    pickle.dump(cca, open("ccasnippetmodel.p"))
+    pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
 def getImage(filename, file_with_names, features):
     line = file_with_names.readline()
@@ -117,8 +117,8 @@ def getImage(filename, file_with_names, features):
 
 
 if __name__ == "__main__":
-    names = file.open("./Flickr30kEntities/image_snippets/images.txt")
-    feats = scipy.io.loadmat("./Flickr30kEntities/image_snippets/vgg_feats.mat").transpose()
+    names = open("./Flickr30kEntities/image_snippets/images.txt")
+    feats = scipy.io.loadmat("./Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
     mainExec(names, feats)
 
 
