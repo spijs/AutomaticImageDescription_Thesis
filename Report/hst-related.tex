@@ -1,43 +1,60 @@
 \chapter{Gerelateerd Werk}
 \label{hoofdstuk:related}
+Het automatisch genereren van captions voor ongeziene afbeeldingen is een complex proces. Het combineert zowel computervisie (CV) als natuurlijke taalverwerking (NLP). Vele modellen zijn al voorgesteld die telkens elementen uit beide onderzoeksvelden combineren om tot een oplossing te komen. Daarom volgt er een opdeling van de gerelateerde literatuur gemaakt op basis van de gebruikte technieken in deze twee domeinen. Het genereren van captions kan worden beschouwd als een description retrieval probleem.\cite{Hodosh} \todo{Juist referentie} Om die reden bevat het volgende overzicht ook methodes van werk dat zich enkel focust op het opvragen van een zo goed mogelijke bestaande caption.
 
+\section{Afbeelding representaties}
+Alle huidige modellen gebruiken technieken uit computer vision om nuttige features af te leiden uit afbeeldingen. Nuttige features omvatten onder andere het detecteren van acties, scenes en objecten en hun attributen en relaties. \cite{bernardi} \todo{Juiste referentie fixen.}
+Deze features vormen dan de basis voor een representatie van de afbeelding die als input dient voor het generatie (of retrieval) model. Eerst volgt een bespreking van technieken die in het verleden zijn gebruikt. Daarna volgt de techniek die in de meer recente literatuur voorkomt namelijk Convolutional Neural Networks (CNN).
 
-\section{Eerste onderwerp in dit hoofdstuk}
-De inleidende informatie van dit onderwerp.
+\subsection{Oorpsronkelijke CV modellen}
+De literatuur gebruikt meerdere technieken uit computer vision om nuttige features af te leiden uit afbeeldingen. Features die in de vroegste papers over dit onderwerp voorkomen zijn bijvoorbeeld scene classificaties, object detecties en attribuut classifiers \cite{Farhadi},\cite{Yang}\cite{Patterson} \todo{fix cite}.Hiervoor gebruiken ze bestaande classifiers en dectors zoals \cite{Felzenszwalb}, Im2Text \cite{Ordonez} en GIST\cite{Oliva}. \todo{fix cite}Ee\'n of meerdere van deze features kan dan rechtstreeks de representatie vormen van een afbeelding. \cite{Farhadi} \cite{Yang} \cite{Li} \cite{Mitchell} gebruiken de features echter als input voor het vormen van abstracte afbeeldingsrepresentaties in de vorm van tupels. Deze tupels bevatten dan objecten, acties tussen objecten, scene types en/of spatiale relaties.
+Een andere manier om afbeeldingen te representeren zijn Visual Dependency Trees (VDR) zoals voorgesteld door \cite{Eliott2013}. VDR's gebruiken een dependency graaf om de spatiale relaties tussen objecten voor te stellen. VDR's kunnen geleerd worden op basis van geannoteerde training data of automatisch met behulp van objectherkenning \cite{Eliott2015} of de labels in abstracte scenes. \cite{Ortiz} 
 
-\subsection{Een item}
-De bijbehorende tekst. Denk eraan om de paragrafen lang genoeg te maken en
-de zinnen niet te lang.
+\subsection{CV met behulp van neurale netwerken}
+Voor de meeste taken blijkt echter dat bovenstaande methodes minder goed presteren dan convolutionele neurale netwerken (CNN). Dit zijn deep learning neurale netwerken met tot 15 verborgen lagen. Convolutionele neurale netwerken hebben minder verbindingen en parameters dan overeenkomstige feedforward neurale netwerken terwijl ze niet veel slechter presteren. \cite{Krizhevsky}\todo{cite fix} De meest recente publicaties maken hier dan ook gebruik van. De gebruikte CNN's zijn netwerken die getraind zijn op ImageNet.\cite{imagenet}\todo{fix cite} ImageNet is een dataset bestaande uit miljoenen afbeelding die gelabeled zijn binnen enkele duizenden categorie\"en. Het netwerk leert afbeeldingen correct te labelen. De juiste aantallen hangen af van het jaar van de gebruikte ImageNet classification challenge data. Vaak gebruikte CNN modellen zijn onder andere AlexNet \cite{Krizhevsky}\todo{fix} en het recentere VGGNet\cite{Simonyan}. Elke afbeelding wordt als input gegeven aan het netwerk. In de meeste werken worden de gewichten van de laatste laag voor de softmaxlaag gebruikt als representatie van deze afbeelding. \todo{cites hier toevoegen o.a. Chen, Karpathy,Vinyals...} \cite{Xu attention} gebruikt echter ook de lower convolutional layers als extra input.
 
-Een paragraaf omvat een gedachtengang en bevat dus steeds een paar zinnen.
-Een paragraaf die maar \'e\'en lijn lang is, is dus uit den boze.
+Bepaalde neurale netwerken maken eht ook mogelijk om een afbeelding op te delen in verschillende regio's en voor elke regio een afbeeldingsvector te maken.\cite{karpathy}\cite{Fang}
 
-\section{Tweede onderwerp in dit hoofdstuk}
-Er zijn in een hoofdstuk verschillende onderwerpen. We zullen nu
-veronderstellen dat dit het laatste onderwerp is.
+\section{Caption representaties}
+Ook voor de gekende captions kan een representatie nuttig zijn. De meeste modellen met zulke representaties maken gebruik van een vector representatie van elk woord. Vervolgens kan het nodig zijn om deze nog samen te voegen tot een representatie van de volledige zin.
 
-\subsection{Een item}
-Maak ook geen misbruik van opsommingen. Voor korte opsommingen gebruik je
-geen ``\verb|itemize|'' of ``\texttt{enumerate}'' commando's. Doe dus
-\emph{niet} het volgende:
-\begin{quote}
-  De Eiffeltoren bevat drie verdiepingen:
-  \begin{itemize}
-  \item de eerste;
-  \item de tweede;
-  \item de derde.
-  \end{itemize}
-\end{quote}
-Maar doe:
-\begin{quote}
-  De Eiffeltoren bevat drie verdiepingen: de eerste, de tweede en de derde.
-\end{quote}
+\subsection{Woord representaties}
+ Een voorstelling van woorden als vector vergemakelijkt enerzijds de verdere verwerking en kan anderzijds ook semantische informatie bieden zoals bij bijvoorbeeld word2vec\cite{mikolov}\todo{cite}
+ Een mogelijke eerste voorstelling is een one-hot encodering waarin de plaats waar de vector niet 0 is overeenkomt met het woord. Deze representatie kan verder worden uitgebreid door de vector nog te vermenigvuldigen met een te leren gewichtsmatrix om zo ook woordsemantiek te bevatten. Deze gewichtsmatrix kan willekeurig worden ge\"initialiseerd of eerst worden geleerd op bestaande corpora.\cite{Lebret}\cite{Vinyals}\cite{Mao}\todo{cite} Daarna kunnen de gekende woorden en zinnen de gewichten nog verfijnen.  Een andere mogelijkheid is om bestaande word embeddings te gebruiken.\cite{mikolov} Deze hebben als nadeel dat niet voor elk woord uit de captions een vector representatie beschikbaar is. 
+ 
+ \subsection{Voorstellen van zinnen}
+ Verschillende mogelijkheden bestaan om de zinnen voor te stellen wanneer de woord vectoren bekend zijn. Een eerste mogelijkheid gebruikt een dependency parser en stelt de zinnen voor als een geparsete afhankelijkheidsboom.\cite{Socher}\todo{fix cite}\cite{Karpathy} gebruikt ook een dependency parser maar probeert hier triplets uit te halen. Een volgende mogelijkheid is om de woordvectoren op te tellen.\cite{lebret}\todo{cite}Een vaak gebruikt taalmodel in de NLP-literatuur zijn Recurrente Neurale Netwerken (RNN).\cite{mikolov maar de RNN} Dit zijn neurale netwerken die goed overweg kunnen met sequenti\"ele data zoals taal.\cite{Kiros} gebruikt de verborgen lagen van een RNN met als input de zin samen met nog extra informatie over de zin zoals POS-tags. Andere modellen stellen een zin voor als de sequentie van woordvectoren in de zin.
+ 
+\section{Van representaties naar captions}
+Verschillende methodes kunnen worden gebruikt om vanuit de representaties van de afbeelding en bijbehorende zinnen een model te trainen dat zo goed mogelijk is in staat is om nieuwe afbeeldingen om te zetten tot zinnige beschrijvingen. De meeste modellen trainen met als doel het verschil tussen de gegenereerde omschrijving en de trainingsafbeelding te minimaliseren.
 
-\section{Besluit van dit hoofdstuk}
-Als je in dit hoofdstuk tot belangrijke resultaten of besluiten gekomen
-bent, dan is het ook logisch om het hoofdstuk af te ronden met een
-overzicht ervan. Voor hoofdstukken zoals de inleiding en het
-literatuuroverzicht is dit niet strikt nodig.
+\subsection{Closest image}
+E\"en van de meest eenvoudige aanpakken voor het genereren van een beschrijving bij een ongeziene afbeelding is het zoeken naar de verzameling van de meest gelijkaardige afbeeldingen in de training set. Een gelijkaardigheidsmetriek zoals de cosinusgelijkenis tussen de afbeeldingsrepresentaties biedt hier de oplossing. Het resultaat is dan een lijst met beschrijvingen van de meest gelijkaardige afbeeldingen. Vervolgens cre\"eert het model een rangorde op basis van extra visuele of textuele informatie.\cite{Ordonez}\cite{Oliva}\cite{Torralba}\cite{Devlin}
+Deze modellen hebben als nadeel dat er geen generatie van zinnen die nog niet in de training set zitten, mogelijk is.
+Een variatie hiervan \cite{Kuznetsova}\cite{Gupta} zoekt naar de beschrijving van visueel gelijkaardige objecten voor een afbeelding waarbij de objecten in de representatie zitten. Vervolgens detecteert het verschillende soorten phrases (NP,VP,PP) afhankelijk van de gedecteerde objecten en scenes. Met de verzamelde phrases wordt dan een nieuwe zin gegenereerd.
+Naast het rechtstreeks gebruiken van de beschrijvingen van de dichstbijzijnde afbeeldingen kunnen deze ook als input worden gebruikt samen met de afbeelding voor een tweede model. \cite{Mason} Zo beschouwt \cite{Mason} bijvoorbeeld het genereren van captions als een samenvattingsprobleem en gebruikt de beschrijvingen van gelijkaardige afbeeldingen als extra input. Daarnaast verkrijgt Xu\cite{Xu} verbeteringen door toevoegen van extra semantische informatie zoals beschrijvingen van gelijkaardige afbeeldingen aan het neurale netwerk.
+ 
+\subsection{Multimodale modellen}
+Enkele werken proberen een gemeenschappelijke afbeelding-zin embedding te leren zodat het mogelijk wordt om zowel de representatie van zinnen als afbeelding te mappen naar dezelfde ruimte. Dit laat toe om afbeeldingen en zinnen te vergelijken met een afstandsmaat zoals bijvoorbeeld de cosinusgelijkenis. Dit is zeer nuttig voor onder andere image retrieval en sentence retrieval. Het leren van multimodale modellen kan onder andere met Canonical Correlation Analysis (CCA)\cite{Hodosh} en neurale netwerken. \cite{Mao}\cite{Karpathy 1}\cite{Fang}
+
+\subsection{Template gebaseerd}
+Een volgende aanpak baseert zich op templates om zinnen te genereren. Op basis van de waarschijnlijke objecten, scenes, acties, werkwoorden etc. wordt een voorgedefinieerd template uit een lijst templates ingevuld.\cite{Yang} Hiervoor moeten dikwijls eerst nog complexe modellen worden getraind zoals bij bijvoorbeeld \cite{Elliott}. Het nadeel van deze methode is dat de gegenereerde zinnen wel syntactisch correct zijn, maar dikwijls onnatuurlijk aanvoelen voor mensen. Om deze methode te verbeteren kunnen gegenereerde of vooraf gekende zinfragmenten helpen bij het recombineren van fragmenten om nieuwe beschrijvingen te genereren. \cite{Mitchell}\cite{Kuznetsova}
+
+\subsection{Neurale netwerken}
+De meest recente en best scorende modellen gebruiken echter neurale netwerken voor de generatie van nieuwe zinnen. Deze modellen zijn in staat om compleet nieuwe en voor mensen vlotte zinnen te produceren. Recurrente Neurale Netwerken (RNN) \ref{Mikolov} winnen aan populariteit in de literatuur als taalmodel. RNN's zijn in staat om sequenti\"ele data te genereren op basis van een zekere input. LSTM's (Long Short Term Memory) vormen een uitbreiding op de RNN's en houden informatie bij die ze een langere termijn kunnen bijhouden in een geheugencel. Beide modellen verwachten een sequentie van woord representaties als input, maar kunnen ook uitgebreid worden met extra informatie. \cite{Kiros}\cite{Xu Kul}\cite{Socher} 
+
+Een eerste verzameling van modellen met neurale netwerken volgen het encoder-decoder principe.\cite{Kiros} De encoder transformeert een afbeelding naar een gemeenschappelijke multimodale ruimte. De decoder transformeert vervolgens deze multimodale representatie naar een zin in natuurlijke taal. Door het multimodale karakter van deze modellen is image en sentence retrieval ook mogelijk. Er bestaan zowel encoder-decoder modellen met LSTM's\cite{Kiros} als met RNN's\cite{Karpathy1}\cite{Mao}.
+
+Een tweede categorie gebruikt de afbeeldingsrepresentatie als extra input naast de sequentie van 
+woordrepresenties bij het trainen van het netwerk. Ook hier bestaan er modellen met LSTM \cite{Donahue} en RNN\cite{Karpathy}.
+
+Trainen van het netwerk gebeurt met terugpropagatie doorheen het netwerk. Het is mogelijk om de fouten ook terug te propageren naar de gewichtsvectoren van de woordrepresentaties of naar de gewichten van een CNN.
+
+Genereren van woorden kan gebeuren met sampling of met beam search op de output van het netwerk. Het einde van de zin wordt gekenmerkt met een specifiek stopwoord.
+
+\subsection{Entropie gebaseerde taalmodellen}
+Een andere categorie van modellen vormen de entropie gebaseerde taalmodellen. Zo gebruikt \cite{Fang} een statitisch taalmodel in combinatie met een lijst met waarschijnlijke woorden geleerd vanuit de afbeeldingsrepresentatie. Het taalmodel is geleerd op basis van de captions in de training data. In een volgende stap zoeken ze de zinnen die het meest waarschijnlijk zijn gegeven de woorden in de afbeelding. Vervolgens gaan ze de gegeneerde zinnen sorteren op basis van een aantal features. Dit model is net als bij de de neurale netwerken in staat om nieuwe en vlotte zinnen te vormen. Het presteert gelijkaardig als de neurale netwerken.
+\cite{Lebret} toont aan dat ook met een veel eenvoudiger taalmodel toch redelijk goede resultaten kunnen worden bekomen. Dit model extraheert alle phrases uit de training data en leert daarmee een eenvoudig 3-gram language model. In tegenstelling tot alle voorgaande modellen gebeurt training van de multimodale transformatie met negatieve sampling. Ook hier gebeurt er nog een hersortering.
 
 %%% Local Variables: 
 %%% mode: latex
