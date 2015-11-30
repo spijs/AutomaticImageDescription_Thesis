@@ -58,14 +58,15 @@ def createOccurrenceVectors(vocabulary):
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
 	for filename in filenames:
             current += 1
-            print "current sentence : " + str(current)
+            if current % 1000 == 0:
+		print "current sentence : " + str(current)
             f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             sentenceID = 1
             while not (line == ""):
                 wordcount = 0
                 row = np.zeros(len(vocabulary))
-                for word in line:
+                for word in line.split():
                     stemmed = ""
                     try:
                         stemmed = stem(word.decode('utf-8'))
@@ -84,7 +85,11 @@ def createOccurrenceVectors(vocabulary):
 
 def get_idf(documents, vocabulary):
     result = np.zeros(len(vocabulary))
+    current = 0
     for i in range(len(vocabulary)):
+        current += 1
+	if current % 100 == 0:
+	    print "Current word: " + str(current)
         empty = True
         docCount = 0
         for j in documents.keys():
@@ -103,24 +108,30 @@ def weight_tfidf(documents, inv_freq, vocabulary):
         result[i] = doc * inv_freq
 
 def mainExec(name_file, features):
+    print "Creating vocabulary"
     voc = createVocabulary()
+    print "Generating document vectors"
     occurrenceVectors = createOccurrenceVectors(voc)
+    print "Generating idf weights"
     idf = get_idf(occurrenceVectors, voc)
+    print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrenceVectors, idf, voc)
 
     sentenceMatrix = []
     imagematrix = []
+    print "Creating matrices"
     for i in weightedVectors.keys():
         sentenceMatrix = sentenceMatrix.append(weightedVectors[i])
         imagematrix = imagematrix.append(getImage(i,name_file, features))
+    print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
-    dp = getDataProvider('flickr30k')
-    for pair in dp.sampleImageSentencePair():
-        img = pair['image']['feat']
-        sentence = getFullSentence(pair)
+    #dp = getDataProvider('flickr30k')
+    #for pair in dp.sampleImageSentencePair():
+    #    img = pair['image']['feat']
+    #    sentence = getFullSentence(pair)
 
 
 def getFullSentence(imagesentencepair):
