@@ -1,7 +1,9 @@
 import os
 import numpy as np
 from nltk.stem.porter import *
-import sklearn.cross_validation as skcv
+from sklearn.cross_decomposition import CCA
+import scipy.io
+import pickle
 
 
 ''' stems a word by using the porter algorithm'''
@@ -72,11 +74,14 @@ def createOccurrenceVectors(vocabulary):
 def get_idf(documents, vocabulary):
     result = np.zeros(len(vocabulary))
     for i in range(len(vocabulary)):
+        empty = True
         docCount = 0
         for j in documents.keys():
-            if documents[j][i]>0:
+            if documents[j][i] > 0:
+                empty = False
                 docCount += 1
-        result[i] = docCount
+        if not empty:
+            result[i] = docCount
     result = len(documents.keys()) / result
     return result
 
@@ -86,7 +91,7 @@ def weight_tfidf(documents, inv_freq, vocabulary):
         doc = documents[i]
         result[i] = doc * inv_freq
 
-def mainExec():
+def mainExec(name_file, features):
     voc = createVocabulary()
     occurrenceVectors = createOccurrenceVectors(voc)
     idf = get_idf(occurrenceVectors, voc)
@@ -96,13 +101,24 @@ def mainExec():
     imagematrix = []
     for i in weightedVectors.keys():
         sentenceMatrix = sentenceMatrix.append(weightedVectors[i])
-        imagematrix = imagematrix.append(getImage(i))
-    print weightedVectors
+        imagematrix = imagematrix.append(getImage(i,name_file, features))
+    cca = CCA(n_components=128)
+    cca.fit(sentenceMatrix, imagematrix)
+    pickle.dump(cca, open("ccasnippetmodel.p"))
 
-def getImage(filename):
-    return 0
+def getImage(filename, file_with_names, features):
+    line = file_with_names.readline()
+    linenumber = 0
+    while(not line == ""):
+        if line+".jpg" == filename:
+            return features[linenumber]
+        line = file_with_names.readline()
+        linenumber+=1
+
 
 if __name__ == "__main__":
-    mainExec()
+    names = file.open("./Flickr30kEntities/image_snippets/images.txt")
+    feats = scipy.io.loadmat("./Flickr30kEntities/image_snippets/vgg_feats.mat").transpose()
+    mainExec(names, feats)
 
 
