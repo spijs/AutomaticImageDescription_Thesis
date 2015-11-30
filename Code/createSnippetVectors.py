@@ -76,8 +76,9 @@ def createOccurrenceVectors(vocabulary):
                 line = f.readline()
                 sentenceID += 1
                 #print "ROW: " + str(row)
+    for item in idf:
+        print "Idf item: " + str(item)
     idf = len(result.keys()) / idf
-    print "IDF"+ idf
     return result, idf
 
 '''
