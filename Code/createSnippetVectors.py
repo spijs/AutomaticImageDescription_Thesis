@@ -30,7 +30,7 @@ def readVocabulary():
     voc = open('dictionary.txt')
     line = voc.readline()
     while line:
-        result.append(line)
+        result.append(line[0:-2])
         line = voc.readline()
     return result
 
@@ -39,6 +39,7 @@ Reads a set of documents, returns a dictionary containing the filename of the co
 unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
 '''
 def createOccurrenceVectors(vocabulary):
+    print vocabulary
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
@@ -61,8 +62,10 @@ def createOccurrenceVectors(vocabulary):
                     except UnicodeDecodeError:
                          print "This word gave an error: " + word
                     if stemmed.lower() in vocabulary:
+			#print "WORD IS IN VOCABULARY"
                         wordcount += 1
                         i = vocabulary.index(stemmed.lower())
+		        #print "WORD IS ON POSITION " + str(i)
                         row[i] += 1
                 if wordcount:
                     row = row / wordcount
@@ -72,7 +75,7 @@ def createOccurrenceVectors(vocabulary):
                 result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
-                print "ROW: " + str(row)
+                #print "ROW: " + str(row)
     idf = len(result.keys()) / idf
     print "IDF"+ idf
     return result, idf
