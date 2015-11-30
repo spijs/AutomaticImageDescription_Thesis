@@ -14,6 +14,7 @@ def stem(word):
     stemmer = PorterStemmer()
     return stemmer.stem(word)
 
+'''Returns a list containing the most frequent english words'''
 def getStopwords():
         stopwords = set()
         file=open('lda_images/english')
@@ -22,7 +23,7 @@ def getStopwords():
         return stopwords
 
 '''
-Creates a vocabulary, being a list of words
+Creates a vocabulary based on a folder. Returns a list of words
 '''
 def createVocabulary():
     dict = {}
@@ -63,7 +64,7 @@ def createOccurrenceVectors(vocabulary):
             current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
-            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
+            f = open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             sentenceID = 1
             while not (line == ""):
@@ -90,25 +91,11 @@ def createOccurrenceVectors(vocabulary):
     idf = len(result.keys()) / idf
     return result, idf
 
-def get_idf(documents, vocabulary):
-    result = np.zeros(len(vocabulary))
-    current = 0
-    for i in range(len(vocabulary)):
-        current += 1
-	if current % 100 == 0:
-	    print "Current word: " + str(current)
-        empty = True
-        docCount = 0
-        for j in documents.keys():
-            if documents[j][i] > 0:
-                empty = False
-                docCount += 1
-        if not empty:
-            result[i] = docCount
-    result = len(documents.keys()) / result
-    return result
-
-def weight_tfidf(documents, inv_freq, vocabulary):
+'''
+Given a set of document vectors, and an inverse document frequency vector, returns the multiplication
+of each document with the idf vector
+'''
+def weight_tfidf(documents, inv_freq):
     result = {}
     for i in documents.keys():
         doc = documents[i]
@@ -123,7 +110,7 @@ def mainExec(name_file, features):
     # print "Generating idf weights"
     # idf = get_idf(occurrenceVectors, voc)
     print "Weighing vectors"
-    weightedVectors = weight_tfidf(occurrenceVectors, idf, voc)
+    weightedVectors = weight_tfidf(occurrenceVectors, idf)
 
     sentenceMatrix = []
     imagematrix = []
@@ -176,13 +163,17 @@ def mainExec(name_file, features):
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
 
-
+'''
+Returns the RFF function of the given vector, based on the given sigma and wanted dimension
+'''
 def phi(wantedDimension, sigma, x):
     b = np.random.rand(wantedDimension)
     R = np.random.normal(scale = sigma*sigma, size = (len(x), wantedDimension))
     return np.dot(x,R) + b
 
-
+'''
+Given a matrix with each row an observation, returns the average distance to the 50th nearest neighbor
+'''
 def nearest_neighbor(matrix):
     avg_dist = 0
     for i in range(len(matrix)):
@@ -195,6 +186,10 @@ def nearest_neighbor(matrix):
     avg_dist = avg_dist / len(matrix)
     return avg_dist
 
+
+'''
+given an image sentence pair, return an array containing the concatenation of the 5 sentences in the pair
+'''
 def getFullSentence(imagesentencepair):
     sentences = imagesentencepair['image']['sentences']
     s = getStopwords()
@@ -203,6 +198,10 @@ def getFullSentence(imagesentencepair):
         result = remove_common_words(sentence['tokens'], s)
         full.extend(result)
 
+
+'''
+Given a sentence, return a copy of that sentence, stripped of words that are in the provided stopwords
+'''
 def remove_common_words(sentence,stopwords):
         #s = set(stopwords.words('english'))
         stopwords.add(' ') #add spaces to stopwords
@@ -212,12 +211,23 @@ def remove_common_words(sentence,stopwords):
                 result.append(word.lower())
         return result
 
+
+'''
+Given a filename, checks if the image behind that filename is bigger than 64x64
+'''
 def isLargeEnough(filename):
     file = filename+".jpg"
-    image = Image.open("./Flickr30kEntities/image_snippets/"+file)
+    try:
+        image = Image.open("./Flickr30kEntities/image_snippets/"+file)
+    except IOError:
+        return False
     width, height = image.size
     return (width >= 64) and (height >= 64)
 
+
+'''
+Returns the image features corresponding to the provided image name
+'''
 def getImage(filename, file_with_names, features):
     line = file_with_names.readline()
     linenumber = 0
