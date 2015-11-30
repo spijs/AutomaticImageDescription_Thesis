@@ -25,31 +25,14 @@ def getStopwords():
 '''
 Creates a vocabulary based on a folder. Returns a list of words
 '''
-def createVocabulary():
-    dict = {}
-    result = {}
-    stopwords = getStopwords()
-    current = 0
-    for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
-        for filename in filenames:
-	    current += 1
-	    print "Preprocessing sentence: " + str(current)
-            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
-            line = f.readline()
-            # print filename
-            while not (line == ""):
-                for word in line.split():
-                    word = stem(word.decode('utf-8'))
-                    if (not word in stopwords):
-                        if(not word in dict):
-                            dict[word]=1
-                        else:
-                            dict[word]+=1
-                line = f.readline()
-        for word in dict:
-            if(dict[word] >= 5):
-                result[word]=dict[word]
-    return result.keys()
+def readVocabulary():
+    result = []
+    voc = open('dictionary.txt')
+    line = voc.readline()
+    while line:
+        result.append(line)
+        line = voc.readline()
+    return result
 
 '''
 Reads a set of documents, returns a dictionary containing the filename of the corresponding picture, and the
@@ -76,9 +59,9 @@ def createOccurrenceVectors(vocabulary):
                         stemmed = stem(word.decode('utf-8'))
                     except UnicodeDecodeError:
                          print "This word gave an error: " + word
-                    if stemmed in vocabulary:
+                    if stemmed.lower() in vocabulary:
                         wordcount += 1
-                        i = vocabulary.index(stemmed)
+                        i = vocabulary.index(stemmed.lower())
                         row[i] += 1
                 if wordcount:
                     row = row / wordcount
@@ -104,7 +87,7 @@ def weight_tfidf(documents, inv_freq):
 
 def mainExec(name_file, features):
     print "Creating vocabulary"
-    voc = createVocabulary()
+    voc = readVocabulary()
     print "Generating document vectors"
     occurrenceVectors, idf = createOccurrenceVectors(voc)
     # print "Generating idf weights"
@@ -117,8 +100,8 @@ def mainExec(name_file, features):
     print "Creating matrices"
     for i in weightedVectors.keys():
         if isLargeEnough(i):
-            sentenceMatrix = sentenceMatrix.append(weightedVectors[i])
-            imagematrix = imagematrix.append(getImage(i,name_file, features))
+            sentenceMatrix.append(weightedVectors[i])
+            imagematrix.append(getImage(i,name_file, features))
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
