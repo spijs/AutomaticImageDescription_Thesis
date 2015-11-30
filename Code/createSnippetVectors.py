@@ -73,6 +73,7 @@ def createOccurrenceVectors(vocabulary):
                 line = f.readline()
                 sentenceID += 1
     idf = len(result.keys()) / idf
+    print "IDF"+ idf
     return result, idf
 
 '''
@@ -100,7 +101,7 @@ def mainExec(name_file, features):
     imagematrix = []
     print "Creating matrices"
     for i in weightedVectors.keys():
-	print sentenceMatrix
+	# print sentenceMatrix
         if isLargeEnough(i):
 	    print "TRUE"
             sentenceMatrix.append(weightedVectors[i])
