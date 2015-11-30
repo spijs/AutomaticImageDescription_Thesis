@@ -44,6 +44,7 @@ def createOccurrenceVectors(vocabulary):
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
+	  if current < 100:
             current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
@@ -99,9 +100,13 @@ def mainExec(name_file, features):
     imagematrix = []
     print "Creating matrices"
     for i in weightedVectors.keys():
-        if isLargeEnough(i):
+	print sentenceMatrix
+        if isLargeEnough(i[0:-4]):
+	    print "TRUE"
             sentenceMatrix.append(weightedVectors[i])
             imagematrix.append(getImage(i,name_file, features))
+	else: 
+	    print "FALSE"
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
@@ -200,11 +205,15 @@ Given a filename, checks if the image behind that filename is bigger than 64x64
 '''
 def isLargeEnough(filename):
     file = filename+".jpg"
+    print file
     try:
         image = Image.open("./Flickr30kEntities/image_snippets/"+file)
     except IOError:
-        return False
+        
+	print "IMG NOT FOUND"
+	return False
     width, height = image.size
+    print width,height
     return (width >= 64) and (height >= 64)
 
 
