@@ -45,7 +45,7 @@ if __name__ == "__main__":
 	    sentenceid = 1
             # print filename
             while not (line == ""):
-		if isLargeEnough(filename[0:-4]+'_'+str(sentenceid)):
+		        if isLargeEnough(filename[0:-4]+'_'+str(sentenceid)):
                     for word in line.split():
                         word = stem(word.decode('utf-8')).lower()
                         if (not word in stopwords):

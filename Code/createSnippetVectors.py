@@ -56,16 +56,10 @@ def createOccurrenceVectors(vocabulary):
                 wordcount = 0
                 row = np.zeros(len(vocabulary))
                 for word in line.split():
-                    stemmed = ""
-                    try:
-                        stemmed = stem(word.decode('utf-8'))
-                    except UnicodeDecodeError:
-                         print "This word gave an error: " + word
-                    if stemmed.lower() in vocabulary:
-			#print "WORD IS IN VOCABULARY"
+                    stemmed = stem(word.decode('utf-8')).lower()
+                    if stemmed in vocabulary:
                         wordcount += 1
                         i = vocabulary.index(stemmed.lower())
-		        #print "WORD IS ON POSITION " + str(i)
                         row[i] += 1
                 if wordcount:
                     row = row / wordcount
@@ -77,7 +71,7 @@ def createOccurrenceVectors(vocabulary):
                 sentenceID += 1
                 #print "ROW: " + str(row)
     for item in idf:
-      if item > 0:
+      if item <= 0:
         print "Idf item: " + str(item)
     idf = len(result.keys()) / idf
     return result, idf
