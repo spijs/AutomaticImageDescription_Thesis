@@ -69,7 +69,7 @@ def createOccurrenceVectors(vocabulary):
                 for w in range(len(row)):
                     if row[w] > 0:
                         idf[w] += 1
-                result[filename+"_"+str(sentenceID)] = row
+                result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
     idf = len(result.keys()) / idf
@@ -101,7 +101,7 @@ def mainExec(name_file, features):
     print "Creating matrices"
     for i in weightedVectors.keys():
 	print sentenceMatrix
-        if isLargeEnough(i[0:-4]):
+        if isLargeEnough(i):
 	    print "TRUE"
             sentenceMatrix.append(weightedVectors[i])
             imagematrix.append(getImage(i,name_file, features))
