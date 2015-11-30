@@ -54,19 +54,20 @@ def createOccurrenceVectors(vocabulary):
             sentenceID = 1
             while not (line == ""):
                 wordcount = 0
-                row = np.zeros(len(vocabulary))
-                for word in line.split():
-                    stemmed = stem(word.decode('utf-8')).lower()
-                    if stemmed in vocabulary:
-                        wordcount += 1
-                        i = vocabulary.index(stemmed.lower())
-                        row[i] += 1
-                if wordcount:
-                    row = row / wordcount
-                for w in range(len(row)):
-                    if row[w] > 0:
-                        idf[w] += 1
-                result[filename[0:-4]+"_"+str(sentenceID)] = row
+                if isLargeEnough('./Flickr30kEntities/image_snippets/'+filename[0:-4]+"_"+str(sentenceID))
+                    row = np.zeros(len(vocabulary))
+                    for word in line.split():
+                        stemmed = stem(word.decode('utf-8')).lower()
+                        if stemmed in vocabulary:
+                            wordcount += 1
+                            i = vocabulary.index(stemmed.lower())
+                            row[i] += 1
+                    if wordcount:
+                        row = row / wordcount
+                    for w in range(len(row)):
+                        if row[w] > 0:
+                            idf[w] += 1
+                    result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
                 #print "ROW: " + str(row)
