@@ -4,6 +4,7 @@ from nltk.stem.porter import *
 from sklearn.cross_decomposition import CCA
 import scipy.io
 import pickle
+from imagernn.data_provider import getDataProvider
 
 
 ''' stems a word by using the porter algorithm'''
@@ -50,7 +51,10 @@ unweighted bag of words representation of the sentences in the documents, based 
 '''
 def createOccurrenceVectors(vocabulary):
     result = {}
+    current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+        current += 1
+        print "current sentence : " + str(current)
         for filename in filenames:
             f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
@@ -105,6 +109,29 @@ def mainExec(name_file, features):
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
+
+    dp = getDataProvider('flickr30k')
+    for pair in dp.sampleImageSentencePair():
+        img = pair['image']['feat']
+        sentence = getFullSentence(pair)
+
+
+def getFullSentence(imagesentencepair):
+    sentences = imagesentencepair['image']['sentences']
+    s = getStopwords()
+    full = []
+    for sentence in sentences:
+        result = remove_common_words(sentence['tokens'], s)
+        full.extend(result)
+
+def remove_common_words(sentence,stopwords):
+        #s = set(stopwords.words('english'))
+        stopwords.add(' ') #add spaces to stopwords
+        result = []
+        for word in sentence:
+            if not word.lower() in stopwords and len(word)>2:
+                result.append(word.lower())
+        return result
 
 def getImage(filename, file_with_names, features):
     line = file_with_names.readline()
