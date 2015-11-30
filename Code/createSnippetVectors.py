@@ -54,7 +54,7 @@ def createOccurrenceVectors(vocabulary):
             sentenceID = 1
             while not (line == ""):
                 wordcount = 0
-                if isLargeEnough('./Flickr30kEntities/image_snippets/'+filename[0:-4]+"_"+str(sentenceID))
+                if isLargeEnough('./Flickr30kEntities/image_snippets/'+filename[0:-4]+"_"+str(sentenceID)):
                     row = np.zeros(len(vocabulary))
                     for word in line.split():
                         stemmed = stem(word.decode('utf-8')).lower()
