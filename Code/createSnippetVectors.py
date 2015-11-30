@@ -59,34 +59,34 @@ def createOccurrenceVectors(vocabulary):
     result = {}
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
-	for filename in filenames:
-        current += 1
-        if current % 1000 == 0:
-		    print "current sentence : " + str(current)
-        f= open('./Flickr30kEntities/sentence_snippets/'+filename)
-        line = f.readline()
-        sentenceID = 1
-        while not (line == ""):
-            wordcount = 0
-            row = np.zeros(len(vocabulary))
-            for word in line.split():
-                stemmed = ""
-                try:
-                    stemmed = stem(word.decode('utf-8'))
-                except UnicodeDecodeError:
-                     print "This word gave an error: " + word
-                if stemmed in vocabulary:
-                    wordcount += 1
-                    i = vocabulary.index(stemmed)
-                    row[i] += 1
-            if wordcount:
-                row = row / wordcount
-            for w in range(len(row)):
-                if row[w] > 0:
-                    idf[w] += 1
-            result[filename+"_"+str(sentenceID)] = row
+        for filename in filenames:
+            current += 1
+            if current % 1000 == 0:
+                print "current sentence : " + str(current)
+            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
-            sentenceID += 1
+            sentenceID = 1
+            while not (line == ""):
+                wordcount = 0
+                row = np.zeros(len(vocabulary))
+                for word in line.split():
+                    stemmed = ""
+                    try:
+                        stemmed = stem(word.decode('utf-8'))
+                    except UnicodeDecodeError:
+                         print "This word gave an error: " + word
+                    if stemmed in vocabulary:
+                        wordcount += 1
+                        i = vocabulary.index(stemmed)
+                        row[i] += 1
+                if wordcount:
+                    row = row / wordcount
+                for w in range(len(row)):
+                    if row[w] > 0:
+                        idf[w] += 1
+                result[filename+"_"+str(sentenceID)] = row
+                line = f.readline()
+                sentenceID += 1
     idf = len(result.keys()) / idf
     return result, idf
 
