@@ -26,7 +26,10 @@ def createVocabulary():
     dict = {}
     result = {}
     stopwords = getStopwords()
+    current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+        current += 1
+        print "Preprocessing sentence " + str(current)
         for filename in filenames:
             f= open('./Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
