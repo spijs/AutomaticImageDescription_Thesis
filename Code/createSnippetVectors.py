@@ -44,8 +44,8 @@ def createOccurrenceVectors(vocabulary):
     current = 0
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
-	  if current < 100:
-            current += 1
+            if current < 100:
+                current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
             f = open('./Flickr30kEntities/sentence_snippets/'+filename)
@@ -72,6 +72,7 @@ def createOccurrenceVectors(vocabulary):
                 result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
+                print "ROW: " + str(row)
     idf = len(result.keys()) / idf
     print "IDF"+ idf
     return result, idf
