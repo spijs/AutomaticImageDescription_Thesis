@@ -86,6 +86,11 @@ def weight_tfidf(documents, inv_freq):
     for i in documents.keys():
         doc = documents[i]
         result[i] = doc * inv_freq
+        try:
+            float(result[i])
+        except ValueError:
+            print "NO FLOAT G"
+            print str(result[i])
     return result
 
 def mainExec(name_file, features):
