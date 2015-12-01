@@ -86,12 +86,8 @@ def weight_tfidf(documents, inv_freq):
     for i in documents.keys():
         doc = documents[i]
         result[i] = doc * inv_freq
-        for j in range(len(result[i])):
-            try:
-                float(result[i][j])
-            except ValueError:
-                print "NO FLOAT G"
-                print str(result[i])
+        print "Is NaN"+np.any(np.isnan(result[i]))
+        print "infinity "+np.any(np.isinf(result[i]))
     return result
 
 def mainExec(name_file, features):
