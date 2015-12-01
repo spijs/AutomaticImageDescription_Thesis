@@ -107,6 +107,8 @@ def mainExec(name_file, features):
 	# print sentenceMatrix
         if isLargeEnough(i):
 #	    print "TRUE"
+            for j in weightedVectors[i]:
+                weightedVectors[i][j] = float(weightedVectors[i][j])
             sentenceMatrix.append(weightedVectors[i])
             imagematrix.append(getImage(i,name_file, features))
 #	else: 
