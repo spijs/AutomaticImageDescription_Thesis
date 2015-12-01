@@ -174,7 +174,7 @@ def mainExec(name_file, features):
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
 
-def createFeatDict(names):
+def createFeatDict(names, namesfile, features):
     result = {}
     for name in names:
         result[name] = getImage(name, namesfile, features)
@@ -243,7 +243,7 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
  #   print width,height
-    return (width >= 64) and (height >= 64)
+    return (width >= 150) and (height >= 150)
 
 
 '''

@@ -15,7 +15,7 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
     #print width,height
-    return (width >= 64) and (height >= 64)
+    return (width >= 150) and (height >= 150)
 
 ''' stems a word by using the porter algorithm'''
 def stem(word):
