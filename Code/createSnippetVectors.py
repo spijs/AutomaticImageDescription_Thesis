@@ -86,8 +86,8 @@ def weight_tfidf(documents, inv_freq):
     for i in documents.keys():
         doc = documents[i]
         result[i] = doc * inv_freq
-        print "Is NaN"+np.any(np.isnan(result[i]))
-        print "infinity "+np.any(np.isinf(result[i]))
+        #print "Is NaN"+np.any(np.isnan(result[i]))
+        #print "infinity "+np.any(np.isinf(result[i]))
     return result
 
 def mainExec(name_file, features):
@@ -107,8 +107,8 @@ def mainExec(name_file, features):
 	# print sentenceMatrix
         if isLargeEnough(i):
 #	    print "TRUE"
-            for j in weightedVectors[i]:
-                weightedVectors[i][j] = float(weightedVectors[i][j])
+            for j in range(len(weightedVectors[i])):
+                weightedVectors[i][j] = float64(weightedVectors[i][j])
             sentenceMatrix.append(weightedVectors[i])
             imagematrix.append(getImage(i,name_file, features))
 #	else: 
