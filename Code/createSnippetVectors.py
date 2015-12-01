@@ -131,6 +131,7 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
+    pickle.dump(sentenceMatrix, "sentences.p")
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
