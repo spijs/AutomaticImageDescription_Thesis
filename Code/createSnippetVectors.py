@@ -131,6 +131,8 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
+    sentenceMatrix = sentenceMatrix[0:1]
+    imagematrix = imagematrix[0:1]
     print sentenceMatrix
     print type(sentenceMatrix)
     print "Amount of samples :" + str(len(sentenceMatrix))
