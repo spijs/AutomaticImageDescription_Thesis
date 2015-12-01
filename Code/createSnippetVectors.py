@@ -117,10 +117,10 @@ def mainExec(name_file, features):
                 sentenceMatrix = weightedVectors[i]
                 imagematrix = featuresDict[i]
             elif currentSentence ==2:
-                sentenceMatrix = np.concatenate(([sentenceMatrix], [weightedVectors[i]]), axis = 0)
+                sentenceMatrix = np.append([sentenceMatrix], [weightedVectors[i]], axis = 0)
                 imagematrix = np.concatenate(([imagematrix], [featuresDict[i]]), axis = 0)
             else:
-                sentenceMatrix = np.concatenate((sentenceMatrix, [weightedVectors[i]]), axis = 0)
+                sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis = 0)
                 imagematrix = np.concatenate((imagematrix, [featuresDict[i]]), axis = 0)
             # imagematrix.append(getImage(i,name_file, features))
 #	else: 
@@ -131,16 +131,18 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    sentenceMatrix = sentenceMatrix[0:2]
-    imagematrix = imagematrix[0:2]
-    print sentenceMatrix
+#    sentenceMatrix = sentenceMatrix[0:2]
+#    imagematrix = imagematrix[0:2]
+    print sentenceMatrix.shape
     print type(sentenceMatrix)
+    imagematrix = sentenceMatrix
     print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
     print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
     print "Amount of samples :" + str(len(sentenceMatrix))
     pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
+    pickle.dump(imagematrix, open("imagemat.p", 'w+'))
     print "Modelling cca"
-    cca = CCA(n_components=15)
+    cca = CCA(n_components = 1)
     cca.fit(sentenceMatrix, imagematrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
