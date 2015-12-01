@@ -22,6 +22,13 @@ def getStopwords():
             stopwords.add(line[:-1])
         return stopwords
 
+TRUE
+101 149
+TRUE
+23 44
+68 141
+TRUE
+
 '''
 Creates a vocabulary based on a folder. Returns a list of words
 '''
@@ -54,25 +61,30 @@ def createOccurrenceVectors(vocabulary):
             sentenceID = 1
             while not (line == ""):
                 wordcount = 0
-                if isLargeEnough(filename[0:-4]+"_"+str(sentenceID)):
-                    row = np.zeros(len(vocabulary))
-                    for word in line.split():
-                        stemmed = stem(word.decode('utf-8')).lower()
-                        if stemmed in vocabulary:
-                            wordcount += 1
-                            i = vocabulary.index(stemmed.lower())
-                            row[i] += 1
-                    if wordcount:
-                        row = row / wordcount
-                    for w in range(len(row)):
-                        if row[w] > 0:
-                            idf[w] += 1
-                    result[filename[0:-4]+"_"+str(sentenceID)] = row
+                row = np.zeros(len(vocabulary))
+                for word in line.split():
+                    stemmed = ""
+                    try:
+                        stemmed = stem(word.decode('utf-8'))
+                    except UnicodeDecodeError:
+                         print "This word gave an error: " + word
+                    if stemmed.lower() in vocabulary:
+			#print "WORD IS IN VOCABULARY"
+                        wordcount += 1
+                        i = vocabulary.index(stemmed.lower())
+		        #print "WORD IS ON POSITION " + str(i)
+                        row[i] += 1
+                if wordcount:
+                    row = row / wordcount
+                for w in range(len(row)):
+                    if row[w] > 0:
+                        idf[w] += 1
+                result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
                 #print "ROW: " + str(row)
     for item in idf:
-      if item <= 0:
+      if item > 0:
         print "Idf item: " + str(item)
     idf = len(result.keys()) / idf
     return result, idf
@@ -86,8 +98,6 @@ def weight_tfidf(documents, inv_freq):
     for i in documents.keys():
         doc = documents[i]
         result[i] = doc * inv_freq
-        #print "Is NaN"+np.any(np.isnan(result[i]))
-        #print "infinity "+np.any(np.isinf(result[i]))
     return result
 
 def mainExec(name_file, features):
@@ -99,38 +109,18 @@ def mainExec(name_file, features):
     # idf = get_idf(occurrenceVectors, voc)
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrenceVectors, idf)
-    print "creating feature dictionary"
-    featuresDict = createFeatDict(weightedVectors.keys(), name_file, features )
+
     sentenceMatrix = []
     imagematrix = []
     print "Creating matrices"
-    currentSentence = 0
     for i in weightedVectors.keys():
 	# print sentenceMatrix
         if isLargeEnough(i):
-            currentSentence += 1
-#	    print "TRUE"
-            for j in range(len(weightedVectors[i])):
-                weightedVectors[i][j] = float(weightedVectors[i][j])
-           	print weightedVectors[i][j]
-            if currentSentence == 1:
-                sentenceMatrix = weightedVectors[i]
-                imagematrix = featuresDict[i]
-            elif currentSentence ==2:
-                sentenceMatrix = np.concatenate(([sentenceMatrix], [weightedVectors[i]]), axis = 0)
-                imagematrix = np.concatenate(([imagematrix], [featuresDict[i]]), axis = 0)
-            else:
-                sentenceMatrix = np.concatenate((sentenceMatrix, [weightedVectors[i]]), axis = 0)
-                imagematrix = np.concatenate((imagematrix, [featuresDict[i]]), axis = 0)
-            # imagematrix.append(getImage(i,name_file, features))
+	    print "TRUE"
+            sentenceMatrix.append(weightedVectors[i])
+            imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
-    # if (sentenceMatrix.dtype.char in np.typecodes['AllFloat']):
-    #     print "Type Code is in AllFloat"
-    # if not np.isfinite(sentenceMatrix.sum()):
-    #     print "Sum of matrix is not finite"
-    # if not np.isfinite(sentenceMatrix).all():
-    #     print "Not all items are finite"
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
@@ -174,12 +164,6 @@ def mainExec(name_file, features):
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
-
-def createFeatDict(names, namesfile, features):
-    result = {}
-    for name in names:
-        result[name] = getImage(name, namesfile, features)
-    return result
 
 '''
 Returns the RFF function of the given vector, based on the given sigma and wanted dimension
@@ -243,8 +227,8 @@ def isLargeEnough(filename):
 	#print "IMG NOT FOUND"
 	return False
     width, height = image.size
- #   print width,height
-    return (width >= 450) and (height >= 450)
+    print width,height
+    return (width >= 64) and (height >= 64)
 
 
 '''
