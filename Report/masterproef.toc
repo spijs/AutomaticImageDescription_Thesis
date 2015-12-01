@@ -5,53 +5,53 @@
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
-\contentsline {chapter}{Voorwoord}{i}
-\contentsline {chapter}{Samenvatting}{iii}
-\contentsline {chapter}{L"yst van figuren en tabellen}{iv}
-\contentsline {chapter}{Lijst van afkortingen en symbolen}{v}
-\contentsline {chapter}{\chapternumberline {1}Inleiding}{1}
-\contentsline {section}{\numberline {1.1}Lorem ipsum 4--5}{1}
-\contentsline {section}{\numberline {1.2}Lorem ipsum 6--7}{1}
-\contentsline {chapter}{\chapternumberline {2}Gerelateerd Werk}{3}
-\contentsline {section}{\numberline {2.1}Afbeelding representaties}{3}
-\contentsline {subsection}{\numberline {2.1.1}Oorpsronkelijke CV modellen}{3}
-\contentsline {subsection}{\numberline {2.1.2}CV met behulp van neurale netwerken}{4}
-\contentsline {section}{\numberline {2.2}Caption representaties}{4}
-\contentsline {subsection}{\numberline {2.2.1}Woord representaties}{4}
-\contentsline {subsection}{\numberline {2.2.2}Voorstellen van zinnen}{5}
-\contentsline {section}{\numberline {2.3}Van representaties naar captions}{5}
-\contentsline {subsection}{\numberline {2.3.1}Closest image}{5}
-\contentsline {subsection}{\numberline {2.3.2}Multimodale modellen}{6}
-\contentsline {subsection}{\numberline {2.3.3}Template gebaseerd}{6}
-\contentsline {subsection}{\numberline {2.3.4}Neurale netwerken}{6}
-\contentsline {subsection}{\numberline {2.3.5}Entropie gebaseerde taalmodellen}{7}
-\contentsline {chapter}{\chapternumberline {3}Een volgend hoofdstuk}{9}
-\contentsline {section}{\numberline {3.1}Eerste onderwerp in dit hoofdstuk}{9}
-\contentsline {subsection}{\numberline {3.1.1}Een item}{9}
-\contentsline {section}{\numberline {3.2}Figuren}{9}
-\contentsline {section}{\numberline {3.3}Tabellen}{9}
-\contentsline {section}{\numberline {3.4}Lorem ipsum}{10}
-\contentsline {subsection}{\numberline {3.4.1}Lorem ipsum dolor sit amet, consectetur adipiscing elit}{10}
-\contentsline {subsection}{\numberline {3.4.2}Praesent auctor venenatis posuere}{11}
-\contentsline {subsection}{\numberline {3.4.3}Cras vulputate ultricies venenatis}{11}
-\contentsline {subsection}{\numberline {3.4.4}Donec nibh ante, consectetur et posuere id, tempus nec arcu}{11}
-\contentsline {subsection}{\numberline {3.4.5}Morbi et mauris tempus purus ornare vehicula}{12}
-\contentsline {section}{\numberline {3.5}Besluit van dit hoofdstuk}{12}
-\contentsline {chapter}{\chapternumberline {4}Het laatste hoofdstuk}{13}
-\contentsline {section}{\numberline {4.1}Eerste onderwerp in dit hoofdstuk}{13}
-\contentsline {subsection}{\numberline {4.1.1}Een item}{13}
-\contentsline {section}{\numberline {4.2}Tweede onderwerp in dit hoofdstuk}{13}
-\contentsline {section}{\numberline {4.3}Besluit van dit hoofdstuk}{13}
-\contentsline {chapter}{\chapternumberline {5}Besluit}{15}
-\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{19}
-\contentsline {section}{\numberline {A.1}Meer lorem}{19}
-\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{19}
-\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{20}
-\contentsline {section}{\numberline {A.2}Lorem 51}{20}
-\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{21}
-\contentsline {section}{\numberline {B.1}Lorem 20-24}{21}
-\contentsline {section}{\numberline {B.2}Lorem 25-27}{22}
-\contentsline {chapter}{Bibliografie}{23}
+\contentsline {chapter}{Voorwoord}{i}{chapter*.1}
+\contentsline {chapter}{Samenvatting}{iii}{chapter*.2}
+\contentsline {chapter}{L"yst van figuren en tabellen}{iv}{chapter*.3}
+\contentsline {chapter}{Lijst van afkortingen en symbolen}{v}{chapter*.6}
+\contentsline {chapter}{\chapternumberline {1}Inleiding}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Lorem ipsum 4--5}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Lorem ipsum 6--7}{1}{section.1.2}
+\contentsline {chapter}{\chapternumberline {2}Gerelateerd Werk}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Afbeelding representaties}{3}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}Oorpsronkelijke CV modellen}{3}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}CV met behulp van neurale netwerken}{4}{subsection.2.1.2}
+\contentsline {section}{\numberline {2.2}Caption representaties}{4}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Voorstellen van woorden}{4}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Voorstellen van zinnen}{5}{subsection.2.2.2}
+\contentsline {section}{\numberline {2.3}Van representaties naar captions}{5}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Closest image}{5}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}Multimodale modellen}{6}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Template gebaseerd}{6}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}Neurale netwerken}{6}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.5}Entropie gebaseerde taalmodellen}{7}{subsection.2.3.5}
+\contentsline {chapter}{\chapternumberline {3}Een volgend hoofdstuk}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}Eerste onderwerp in dit hoofdstuk}{9}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Een item}{9}{subsection.3.1.1}
+\contentsline {section}{\numberline {3.2}Figuren}{9}{section.3.2}
+\contentsline {section}{\numberline {3.3}Tabellen}{9}{section.3.3}
+\contentsline {section}{\numberline {3.4}Lorem ipsum}{10}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Lorem ipsum dolor sit amet, consectetur adipiscing elit}{10}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Praesent auctor venenatis posuere}{11}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Cras vulputate ultricies venenatis}{11}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}Donec nibh ante, consectetur et posuere id, tempus nec arcu}{11}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.5}Morbi et mauris tempus purus ornare vehicula}{12}{subsection.3.4.5}
+\contentsline {section}{\numberline {3.5}Besluit van dit hoofdstuk}{12}{section.3.5}
+\contentsline {chapter}{\chapternumberline {4}Het laatste hoofdstuk}{13}{chapter.4}
+\contentsline {section}{\numberline {4.1}Eerste onderwerp in dit hoofdstuk}{13}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Een item}{13}{subsection.4.1.1}
+\contentsline {section}{\numberline {4.2}Tweede onderwerp in dit hoofdstuk}{13}{section.4.2}
+\contentsline {section}{\numberline {4.3}Besluit van dit hoofdstuk}{13}{section.4.3}
+\contentsline {chapter}{\chapternumberline {5}Besluit}{15}{chapter.5}
+\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{19}{appendix.A}
+\contentsline {section}{\numberline {A.1}Meer lorem}{19}{section.A.1}
+\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{19}{subsection.A.1.1}
+\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{20}{subsection.A.1.2}
+\contentsline {section}{\numberline {A.2}Lorem 51}{20}{section.A.2}
+\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{21}{appendix.B}
+\contentsline {section}{\numberline {B.1}Lorem 20-24}{21}{section.B.1}
+\contentsline {section}{\numberline {B.2}Lorem 25-27}{22}{section.B.2}
+\contentsline {chapter}{Bibliografie}{23}{section*.24}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
