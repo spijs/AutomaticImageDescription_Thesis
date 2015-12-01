@@ -112,7 +112,7 @@ def mainExec(name_file, features):
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
-           	print weightedVectors[i][j]
+           	print str(len(weightedVectors[i]))
             if currentSentence == 1:
                 sentenceMatrix = weightedVectors[i]
                 imagematrix = featuresDict[i]
@@ -131,7 +131,9 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    pickle.dump(sentenceMatrix, "sentences.p")
+    print sentenceMatrix
+    print "Amount of samples :" + str(len(sentenceMatrix))
+    pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
