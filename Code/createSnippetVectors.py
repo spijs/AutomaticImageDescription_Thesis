@@ -131,10 +131,12 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    sentenceMatrix = sentenceMatrix[0:1]
-    imagematrix = imagematrix[0:1]
+    sentenceMatrix = sentenceMatrix[0:2]
+    imagematrix = imagematrix[0:2]
     print sentenceMatrix
     print type(sentenceMatrix)
+    print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
+    print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
     print "Amount of samples :" + str(len(sentenceMatrix))
     pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
     print "Modelling cca"
