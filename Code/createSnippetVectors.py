@@ -108,11 +108,17 @@ def mainExec(name_file, features):
         if isLargeEnough(i):
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
-                weightedVectors[i][j] = float64(weightedVectors[i][j])
+                weightedVectors[i][j] = float(weightedVectors[i][j])
             sentenceMatrix.append(weightedVectors[i])
             imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
+    if (sentenceMatrix.dtype.char in np.typecodes['AllFloat']):
+        print "Type Code is in AllFloat"
+    if not np.isfinite(sentenceMatrix.sum()):
+        print "Sum of matrix is not finite"
+    if not np.isfinite(sentenceMatrix).all():
+        print "Not all items are finite"
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
