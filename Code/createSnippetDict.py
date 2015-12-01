@@ -11,7 +11,7 @@ def isLargeEnough(filename):
     try:
         image = Image.open("./Flickr30kEntities/image_snippets/"+file)
     except IOError:
-	#print "IMG NOT FOUND"
+    #print "IMG NOT FOUND"
 	return False
     width, height = image.size
     #print width,height
@@ -38,23 +38,23 @@ if __name__ == "__main__":
     for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
             current += 1
-	    if current % 1000 == 0:
-                print "Preprocessing sentence: " + str(current)
-            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
+        if current % 1000 == 0:
+            print "Preprocessing sentence: " + str(current)
+        f= open('./Flickr30kEntities/sentence_snippets/'+filename)
+        line = f.readline()
+        sentenceid = 1
+        # print filename
+        while not (line == ""):
+            if isLargeEnough(filename[0:-4]+'_'+str(sentenceid)):
+                for word in line.split():
+                    word = stem(word.decode('utf-8')).lower()
+                    if (not word in stopwords):
+                        if(not word in dict):
+                            dict[word]=1
+                        else:
+                            dict[word]+=1
             line = f.readline()
-	    sentenceid = 1
-            # print filename
-            while not (line == ""):
-		        if isLargeEnough(filename[0:-4]+'_'+str(sentenceid)):
-                    for word in line.split():
-                        word = stem(word.decode('utf-8')).lower()
-                        if (not word in stopwords):
-                            if(not word in dict):
-                                dict[word]=1
-                            else:
-                                dict[word]+=1
-                line = f.readline()
-		sentenceid += 1
+        sentenceid += 1
         for word in dict:
             if(dict[word] >= 5):
                 result[word]=dict[word]
