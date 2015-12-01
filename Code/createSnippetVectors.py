@@ -132,10 +132,11 @@ def mainExec(name_file, features):
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
     print sentenceMatrix
+    print type(sentenceMatrix)
     print "Amount of samples :" + str(len(sentenceMatrix))
     pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
     print "Modelling cca"
-    cca = CCA(n_components=128)
+    cca = CCA(n_components=15)
     cca.fit(sentenceMatrix, imagematrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
@@ -247,7 +248,7 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
  #   print width,height
-    return (width >= 450) and (height >= 450)
+    return (width >= 480) and (height >= 480)
 
 
 '''
