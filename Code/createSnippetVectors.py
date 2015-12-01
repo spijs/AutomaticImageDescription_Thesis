@@ -99,7 +99,8 @@ def mainExec(name_file, features):
     # idf = get_idf(occurrenceVectors, voc)
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrenceVectors, idf)
-
+    print "creating feature dictionary"
+    featuresDict = createFeatDict(weightedVectors.keys(), name_file, features )
     sentenceMatrix = []
     imagematrix = []
     print "Creating matrices"
@@ -113,13 +114,13 @@ def mainExec(name_file, features):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
             if currentSentence == 1:
                 sentenceMatrix = weightedVectors[i]
-                imagematrix = getImage(i,name_file, features)
+                imagematrix = featuresDict[i]
             elif currentSentence ==2:
                 sentenceMatrix = np.concatenate(([sentenceMatrix], [weightedVectors[i]]), axis = 0)
-                imagematrix = np.concatenate(([imagematrix], [getImage(i,name_file, features)]), axis = 0)
+                imagematrix = np.concatenate(([imagematrix], [featuresDict[i]]), axis = 0)
             else:
                 sentenceMatrix = np.concatenate((sentenceMatrix, [weightedVectors[i]]), axis = 0)
-                imagematrix = np.concatenate((imagematrix, [getImage(i,name_file, features)]), axis = 0)
+                imagematrix = np.concatenate((imagematrix, [featuresDict[i]]), axis = 0)
             # imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
@@ -171,6 +172,12 @@ def mainExec(name_file, features):
     augmentedcca.fit(augm_img, augm_sent)
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
+
+
+def createFeatDict(names):
+    result = {}
+    for name in names:
+        result[name] = getImage(name, namesfile, features)
 
 
 '''
