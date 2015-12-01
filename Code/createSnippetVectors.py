@@ -103,22 +103,32 @@ def mainExec(name_file, features):
     sentenceMatrix = []
     imagematrix = []
     print "Creating matrices"
+    currentSentence = 0
     for i in weightedVectors.keys():
 	# print sentenceMatrix
         if isLargeEnough(i):
+            currentSentence += 1
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
-            sentenceMatrix.append(weightedVectors[i])
-            imagematrix.append(getImage(i,name_file, features))
+            if currentSentence == 1:
+                sentenceMatrix = weightedVectors[i]
+                imagematrix = getImage(i,name_file, features)
+            elif currentSentence ==2:
+                sentenceMatrix = np.concatenate(([sentenceMatrix], [weightedVectors[i]]), axis = 0)
+                imagematrix = np.concatenate(([imagematrix], [getImage(i,name_file, features)]), axis = 0)
+            else:
+                sentenceMatrix = np.concatenate((sentenceMatrix, [weightedVectors[i]]), axis = 0)
+                imagematrix = np.concatenate((imagematrix, [getImage(i,name_file, features)]), axis = 0)
+            # imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
-    if (sentenceMatrix.dtype.char in np.typecodes['AllFloat']):
-        print "Type Code is in AllFloat"
-    if not np.isfinite(sentenceMatrix.sum()):
-        print "Sum of matrix is not finite"
-    if not np.isfinite(sentenceMatrix).all():
-        print "Not all items are finite"
+    # if (sentenceMatrix.dtype.char in np.typecodes['AllFloat']):
+    #     print "Type Code is in AllFloat"
+    # if not np.isfinite(sentenceMatrix.sum()):
+    #     print "Sum of matrix is not finite"
+    # if not np.isfinite(sentenceMatrix).all():
+    #     print "Not all items are finite"
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
