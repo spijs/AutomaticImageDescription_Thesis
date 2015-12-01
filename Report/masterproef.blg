@@ -1,6 +1,37 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: masterproef.aux
 A level-1 auxiliary file: inleiding.aux
 A level-1 auxiliary file: hst-related.aux
+White space in argument---line 31 of file hst-related.aux
+ : \citation{Xu
+ :              attention}
+I'm skipping whatever remains of this command
+Case mismatch error between cite keys Karpathy and karpathy
+---line 40 of file hst-related.aux
+ : \citation{Karpathy
+ :                   }
+I'm skipping whatever remains of this command
+Case mismatch error between cite keys lebret and Lebret
+---line 41 of file hst-related.aux
+ : \citation{lebret
+ :                 }
+I'm skipping whatever remains of this command
+White space in argument---line 42 of file hst-related.aux
+ : \citation{mikolov
+ :                   maar de RNN}
+I'm skipping whatever remains of this command
+White space in argument---line 64 of file hst-related.aux
+ : \citation{Karpathy
+ :                    1}
+I'm skipping whatever remains of this command
+White space in argument---line 76 of file hst-related.aux
+ : \citation{Xu
+ :              Kul}
+I'm skipping whatever remains of this command
+Case mismatch error between cite keys Karpathy and karpathy
+---line 83 of file hst-related.aux
+ : \citation{Karpathy
+ :                   }
+I'm skipping whatever remains of this command
 A level-1 auxiliary file: hfdst-2.aux
 A level-1 auxiliary file: hfdst-n.aux
 A level-1 auxiliary file: besluit.aux
@@ -8,3 +39,37 @@ A level-1 auxiliary file: app-A.aux
 A level-1 auxiliary file: app-n.aux
 The style file: abbrv.bst
 Database file #1: referenties.bib
+Warning--I didn't find a database entry for "Hodosh"
+Warning--I didn't find a database entry for "bernardi"
+Warning--I didn't find a database entry for "Farhadi"
+Warning--I didn't find a database entry for "Yang"
+Warning--I didn't find a database entry for "Patterson"
+Warning--I didn't find a database entry for "Felzenszwalb"
+Warning--I didn't find a database entry for "Ordonez"
+Warning--I didn't find a database entry for "Oliva"
+Warning--I didn't find a database entry for "Li"
+Warning--I didn't find a database entry for "Mitchell"
+Warning--I didn't find a database entry for "Eliott2013"
+Warning--I didn't find a database entry for "Eliott2015"
+Warning--I didn't find a database entry for "Ortiz"
+Warning--I didn't find a database entry for "Krizhevsky"
+Warning--I didn't find a database entry for "imagenet"
+Warning--I didn't find a database entry for "Simonyan"
+Warning--I didn't find a database entry for "karpathy"
+Warning--I didn't find a database entry for "Fang"
+Warning--I didn't find a database entry for "mikolov"
+Warning--I didn't find a database entry for "Lebret"
+Warning--I didn't find a database entry for "Vinyals"
+Warning--I didn't find a database entry for "Mao"
+Warning--I didn't find a database entry for "Socher"
+Warning--I didn't find a database entry for "Kiros"
+Warning--I didn't find a database entry for "Torralba"
+Warning--I didn't find a database entry for "Devlin"
+Warning--I didn't find a database entry for "Kuznetsova"
+Warning--I didn't find a database entry for "Gupta"
+Warning--I didn't find a database entry for "Mason"
+Warning--I didn't find a database entry for "Xu"
+Warning--I didn't find a database entry for "Elliott"
+Warning--I didn't find a database entry for "Karpathy1"
+Warning--I didn't find a database entry for "Donahue"
+(There were 7 error messages)
