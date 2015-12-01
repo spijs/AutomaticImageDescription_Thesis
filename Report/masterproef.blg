@@ -1,34 +1,34 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: masterproef.aux
 A level-1 auxiliary file: inleiding.aux
 A level-1 auxiliary file: hst-related.aux
-White space in argument---line 31 of file hst-related.aux
+White space in argument---line 30 of file hst-related.aux
  : \citation{Xu
  :              attention}
 I'm skipping whatever remains of this command
 Case mismatch error between cite keys Karpathy and karpathy
----line 51 of file hst-related.aux
+---line 49 of file hst-related.aux
  : \citation{Karpathy
  :                   }
 I'm skipping whatever remains of this command
 Case mismatch error between cite keys lebret and Lebret
----line 52 of file hst-related.aux
+---line 50 of file hst-related.aux
  : \citation{lebret
  :                 }
 I'm skipping whatever remains of this command
-White space in argument---line 53 of file hst-related.aux
+White space in argument---line 51 of file hst-related.aux
  : \citation{mikolov
  :                   maar de RNN}
 I'm skipping whatever remains of this command
-White space in argument---line 72 of file hst-related.aux
+White space in argument---line 73 of file hst-related.aux
  : \citation{Karpathy
  :                    1}
 I'm skipping whatever remains of this command
-White space in argument---line 79 of file hst-related.aux
+White space in argument---line 80 of file hst-related.aux
  : \citation{Xu
  :              Kul}
 I'm skipping whatever remains of this command
 Case mismatch error between cite keys Karpathy and karpathy
----line 86 of file hst-related.aux
+---line 91 of file hst-related.aux
  : \citation{Karpathy
  :                   }
 I'm skipping whatever remains of this command

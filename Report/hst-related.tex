@@ -1,6 +1,8 @@
 \chapter{Gerelateerd Werk}
 \label{hoofdstuk:related}
-Het automatisch genereren van captions voor ongeziene afbeeldingen is een complex proces. Het combineert zowel computervisie (vision??) (CV) als natuurlijke taalverwerking (NLP) \todo{moet dees in ne lijst van afkortingen ofzo? }. Vele modellen zijn al voorgesteld die telkens elementen uit beide onderzoeksvelden combineren om tot een oplossing te komen. Daarom volgt er een opdeling van de gerelateerde literatuur gemaakt op basis van de gebruikte technieken in deze twee domeinen. Het genereren van captions kan worden beschouwd als een description retrieval probleem.\cite{Hodosh} \todo{Juist referentie} Om die reden bevat het volgende overzicht ook methodes van werk dat zich enkel focust op het opvragen van een zo goed mogelijke bestaande caption.
+Het automatisch genereren van captions voor ongeziene afbeeldingen is een complex proces. Het combineert zowel computervisie (vision??) (CV) als natuurlijke taalverwerking (NLP) \todo{moet dees in ne lijst van afkortingen ofzo? }. Vele modellen zijn al voorgesteld die telkens elementen uit beide onderzoeksvelden combineren om tot een oplossing te komen. Daarom volgt er een opdeling van de gerelateerde literatuur gemaakt op basis van de gebruikte technieken in deze twee domeinen. 
+
+Het genereren van captions kan worden beschouwd als een description retrieval probleem.\cite{Hodosh} \todo{Juist referentie} Om die reden bevat het volgende overzicht ook methodes van werk dat zich enkel focust op het opvragen van een zo goed mogelijke bestaande caption.
 
 \section{Afbeelding representaties}
 Alle huidige modellen gebruiken technieken uit computer vision om nuttige features af te leiden uit afbeeldingen. Nuttige features omvatten onder andere het detecteren van acties, scenes en objecten en hun attributen en relaties. \cite{bernardi} \todo{Juiste referentie fixen.} Deze features vormen dan de basis voor een representatie van de afbeelding die als input dient voor het generatie (of retrieval) model. 
@@ -21,7 +23,7 @@ Voor de meeste taken blijkt echter dat \todo{dat CNN beter presteren dan bovenst
 
 De gebruikte CNN's zijn netwerken die getraind zijn op ImageNet.\cite{imagenet}\todo{fix cite} ImageNet is een dataset bestaande uit miljoenen afbeeldingen die gelabeled zijn binnen enkele duizenden categorie\"en. Het netwerk leert afbeeldingen correct te labelen. De juiste aantallen hangen af van het jaar van de gebruikte ImageNet classification challenge data. Vaak gebruikte CNN modellen zijn onder andere AlexNet \cite{Krizhevsky}\todo{fix} en het recentere VGGNet\cite{Simonyan}. Elke afbeelding wordt als input gegeven aan het netwerk. In de meeste werken worden de gewichten van de laatste laag voor de softmaxlaag gebruikt als representatie van deze afbeelding. \todo{cites hier toevoegen o.a. Chen, Karpathy,Vinyals...} \cite{Xu attention} gebruikt echter ook de lower convolutional layers als extra input.
 
-Bepaalde neurale netwerken maken eht ook mogelijk om een afbeelding op te delen in verschillende regio's en voor elke regio een afbeeldingsvector te maken.\cite{karpathy}\cite{Fang}
+Bepaalde neurale netwerken maken het ook mogelijk om een afbeelding op te delen in verschillende regio's en voor elke regio een afbeeldingsvector te maken.\cite{karpathy}\cite{Fang}
 
 \section{Caption representaties}
 Ook voor de gekende captions kan een representatie nuttig zijn. De meeste modellen met zulke representaties maken gebruik van een vector representatie van elk woord. Vervolgens kan het nodig zijn om deze nog samen te voegen tot een representatie van de volledige zin.

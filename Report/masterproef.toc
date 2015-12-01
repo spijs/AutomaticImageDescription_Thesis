@@ -14,10 +14,10 @@
 \contentsline {section}{\numberline {1.2}Lorem ipsum 6--7}{1}{section.1.2}
 \contentsline {chapter}{\chapternumberline {2}Gerelateerd Werk}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}Afbeelding representaties}{3}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Oorpsronkelijke CV modellen}{3}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.1}Oorpsronkelijke CV modellen}{4}{subsection.2.1.1}
 \contentsline {subsection}{\numberline {2.1.2}CV met behulp van neurale netwerken}{4}{subsection.2.1.2}
 \contentsline {section}{\numberline {2.2}Caption representaties}{4}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Voorstellen van woorden}{4}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.1}Voorstellen van woorden}{5}{subsection.2.2.1}
 \contentsline {subsection}{\numberline {2.2.2}Voorstellen van zinnen}{5}{subsection.2.2.2}
 \contentsline {section}{\numberline {2.3}Van representaties naar captions}{5}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Closest image}{5}{subsection.2.3.1}
@@ -51,7 +51,7 @@
 \contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{21}{appendix.B}
 \contentsline {section}{\numberline {B.1}Lorem 20-24}{21}{section.B.1}
 \contentsline {section}{\numberline {B.2}Lorem 25-27}{22}{section.B.2}
-\contentsline {chapter}{Bibliografie}{23}{section*.24}
+\contentsline {chapter}{Bibliografie}{23}{section*.26}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
