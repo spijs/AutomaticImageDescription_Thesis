@@ -163,7 +163,7 @@ def mainExec(name_file, features):
         currentPair += 1
         img = pair['image']['feat']
         # trainingimages.append(img)
-        sentence = getFullSentence(pair)
+        sentence = getFullSentence(pair, voc)
         for i in range(len(sentence)):
             if sentence[i] > 0:
                 idf[i] += 1
@@ -171,8 +171,8 @@ def mainExec(name_file, features):
                 trainingsentences = sentence
                 trainingimages = img
             elif currentPair ==2:
-		print "shape of matrix"+ str(trainingsentences.shape)
-	        print "shape of sentence" + str([sentence].shape)
+                print "shape of matrix"+ str(trainingsentences.shape)
+                print "shape of sentence" + str([sentence].shape)
                 trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
                 trainingimages = np.concatenate(([trainingimages], [img]), axis = 0)
             else:
@@ -239,15 +239,21 @@ def nearest_neighbor(matrix):
 '''
 given an image sentence pair, return an array containing the concatenation of the 5 sentences in the pair
 '''
-def getFullSentence(imagesentencepair):
+def getFullSentence(imagesentencepair, vocabulary):
     sentences = imagesentencepair['image']['sentences']
     s = getStopwords()
     full = []
+    vector =  np.zeros(len(vocabulary))
     print sentences
     for sentence in sentences:
         result = remove_common_words(sentence['tokens'], s)
         full.extend(result)
-    return full
+    for word in full :
+        if word.lower() in vocabulary :
+            vector[vocabulary.index(word.lower)] += 1
+
+
+    return vector
 
 
 '''
