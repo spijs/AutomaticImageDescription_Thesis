@@ -151,7 +151,7 @@ def mainExec(name_file, features):
     #pickle.dump(imagematrix, open("imagemat.p", 'w+'))
     print "Modelling cca"
     cca = CCA(n_components = 10)
-    cca.fit(sentenceMatrix, imagematrix)
+    cca.fit(imagematrix, sentenceMatrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
     idf = np.zeros(len(voc))
@@ -159,44 +159,46 @@ def mainExec(name_file, features):
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
-    for pair in dp.iterImageSentencePair(max_images= 5):
+    for pair in dp.iterImageSentencePair(max_images= 50):
         currentPair += 1
-        img = pair['image']['feat']
+	print "Current pair : " + str(currentPair)
+        img = pair['image']['feat'][0:1000]
         # trainingimages.append(img)
         sentence = getFullSentence(pair, voc)
         for i in range(len(sentence)):
             if sentence[i] > 0:
                 idf[i] += 1
-            if currentPair == 1:
-                trainingsentences = sentence
-                trainingimages = img
-            elif currentPair ==2:
-                print "shape of matrix"+ str(trainingsentences.shape)
-                print "shape of sentence" + str([sentence].shape)
-                trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
-                trainingimages = np.concatenate(([trainingimages], [img]), axis = 0)
-            else:
-                trainingsentences = np.append(trainingsentences, [sentence], axis = 0)
-                trainingimages = np.concatenate((trainingimages, [img]), axis = 0)
-        if currentPair % 100 == 0:
-            print "Current pair: " + str(currentPair)
+        if currentPair == 1:
+            trainingsentences = sentence
+            trainingimages = img
+        elif currentPair == 2:
+            print "shape of matrix"+ str(trainingsentences.shape)
+            print "shape of sentence" + str(sentence.shape)
+            trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
+            trainingimages = np.append([trainingimages], [img], axis = 0)
+        else:
+            trainingsentences = np.append(trainingsentences, [sentence], axis = 0)
+            trainingimages = np.append(trainingimages, [img], axis = 0)
+        #if currentPair % 100 == 0:
+        #print "Current pair: " + str(currentPair)
 
         # trainingsentences.append(sentence)
-    for i in range(trainingsentences):
+    for i in range(len(trainingsentences)):
         trainingsentences[i] = trainingsentences[i]*idf
 
     trans_img, trans_sent = cca.transform(trainingimages, trainingsentences)
     nn_img = nearest_neighbor(trainingimages)
     nn_sent = nearest_neighbor(trainingsentences)
-
+    print "NN Image: " + str(nn_img)
+    print "NN Sentence: " + str(nn_sent)
     augmented_imgs = []
     augmented_sentences = []
     for i in range(len(trans_img)):
-        augm_img = trainingimages[i].extend(phi(3000,nn_img, trans_img[i]))
+        augm_img = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
         augmented_imgs.append(augm_img)
 
     for i in range(len(trans_sent)):
-        augm_sent = trainingsentences[i].extend(phi(3000, nn_sent, trans_sent[i]))
+        augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
         augmented_sentences.append(augm_sent)
 
     augmentedcca = CCA(n_components= 96)
@@ -224,13 +226,15 @@ def phi(wantedDimension, sigma, x):
 Given a matrix with each row an observation, returns the average distance to the 50th nearest neighbor
 '''
 def nearest_neighbor(matrix):
+    print "Matrix dimensions : " + str(matrix.shape)
     avg_dist = 0
     for i in range(len(matrix)):
-        distances = np.zeros(len(matrix)-1)
+        distances = np.zeros(len(matrix))
         for j in range(len(matrix)):
             if not i == j:
                 distances[j] = spatial.distance.cosine(matrix[i], matrix[j])
-        distances = distances.sort()
+        distances = np.delete(distances, i)
+        distances.sort()
         avg_dist += distances[49]
     avg_dist = avg_dist / len(matrix)
     return avg_dist
@@ -244,15 +248,13 @@ def getFullSentence(imagesentencepair, vocabulary):
     s = getStopwords()
     full = []
     vector =  np.zeros(len(vocabulary))
-    print sentences
+#    print sentences
     for sentence in sentences:
         result = remove_common_words(sentence['tokens'], s)
         full.extend(result)
     for word in full :
         if word.lower() in vocabulary :
-            vector[vocabulary.index(word.lower)] += 1
-
-
+            vector[vocabulary.index(word.lower())] += 1
     return vector
 
 
