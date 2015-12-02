@@ -219,6 +219,9 @@ def mainExec(name_file, features):
     print "Augmented sentence shape : " + str(augmented_sentences.shape)
     rown = 0
     for row in augmented_sentences:
+        for j in range(len(row)):
+            row[j] = float(row[j])
+        augmented_sentences[rown] = row
         if np.any(np.isnan(row)):
             print "Sentence has nan: " + str(rown)
             f = open('sentence_nan_'+str(rown)+'.txt', 'w+')
@@ -232,6 +235,10 @@ def mainExec(name_file, features):
         rown+=1
     rown = 0
     for row in augmented_imgs:
+        for j in range(len(row)):
+            row[j] = float(row[j])
+
+        augmented_imgs[rown] = row
         if np.any(np.isnan(row)):
             print "image has nan: " + str(rown)
             f = open('image_nan'+str(rown)+'.txt', 'w+')
