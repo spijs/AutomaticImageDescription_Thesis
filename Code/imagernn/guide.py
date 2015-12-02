@@ -2,7 +2,7 @@ __author__ = 'Wout&Thijs'
 
 def get_guide_size(guide_type):
     if guide_type=="image":
-        return 256
+        return 4096
 
 def get_guide(guide_type,im):
     if guide_type=="image":
