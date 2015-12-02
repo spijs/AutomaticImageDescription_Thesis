@@ -74,6 +74,8 @@ class gLSTMGenerator:
       Hin[t,0] = 1
       Hin[t,1:1+d] = X[t]
       Hin[t,1+d:(1+d+input_size)] = prev
+      print(Hin[t,1+d+input_size])
+      print(guide)
       Hin[t,1+d+input_size] = guide
 
       # compute all gate activations. dots:
