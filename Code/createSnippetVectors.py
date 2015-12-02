@@ -211,8 +211,7 @@ def mainExec(name_file, features):
     #     augmented_sentences.append(augm_sent)
 
     augmentedcca = CCA(n_components= 96)
-    augmentedcca.fit(augmented_imgs, augmented_sentences = []
-)
+    augmentedcca.fit(augmented_imgs, augmented_sentences)
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
@@ -242,7 +241,7 @@ def nearest_neighbor(matrix):
         distances = np.zeros(len(matrix))
         for j in range(len(matrix)):
             if not i == j:
-                distances[j] = spatial.distance.cosine(matrix[i], matrix[j])
+                distances[j] = spatial.distance.euclidean(matrix[i], matrix[j])
         distances = np.delete(distances, i)
         distances.sort()
         avg_dist += distances[49]
