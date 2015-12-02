@@ -188,6 +188,7 @@ def mainExec(name_file, features):
 
     trans_img, trans_sent = cca.transform(trainingimages, trainingsentences)
     nn_img = nearest_neighbor(trainingimages)
+    print "SENTENCES NN"
     nn_sent = nearest_neighbor(trainingsentences)
     print "NN Image: " + str(nn_img)
     print "NN Sentence: " + str(nn_sent)
@@ -238,13 +239,15 @@ def nearest_neighbor(matrix):
     print "Matrix dimensions : " + str(matrix.shape)
     avg_dist = 0
     for i in range(len(matrix)):
+	print "Sentence: " + str(matrix[i])
         distances = np.zeros(len(matrix))
         for j in range(len(matrix)):
             if not i == j:
-                distances[j] = spatial.distance.euclidean(matrix[i], matrix[j])
+                distances[j] = spatial.distance.cosine(matrix[i]/np.linalg.norm(matrix[i]), matrix[j]/np.linalg.norm(matrix[j]))
         distances = np.delete(distances, i)
         distances.sort()
         avg_dist += distances[49]
+    
     avg_dist = avg_dist / len(matrix)
     return avg_dist
 
