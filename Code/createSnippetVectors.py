@@ -27,7 +27,7 @@ Creates a vocabulary based on a folder. Returns a list of words
 '''
 def readVocabulary():
     result = []
-    voc = open('dictionary.txt')
+    voc = open('fullDictionary.txt')
     line = voc.readline()
     while line:
         result.append(line[0:-1])
@@ -39,7 +39,7 @@ Reads a set of documents, returns a dictionary containing the filename of the co
 unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
 '''
 def createOccurrenceVectors(vocabulary):
-    print vocabulary
+    print "amount of words: " + str(len(vocabulary))
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
@@ -109,7 +109,7 @@ def mainExec(name_file, features):
     # print sentenceMatrix
         if isLargeEnough(i):
             currentSentence += 1
-            print "Trying stuff for file with name : "+i
+            #print "Trying stuff for file with name : "+i
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
@@ -135,19 +135,22 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    sentenceMatrix = sentenceMatrix[0:2]
-    imagematrix = imagematrix[0:2]
-    print sentenceMatrix.shape
-    print type(sentenceMatrix)
+    #sentenceMatrix = sentenceMatrix[0:2]
+    #imagematrix = imagematrix[0:2]
+
+    print "Sentences: " + sentenceMatrix.shape
+    print "Images: " + imagematrix.shape
+    #print type(sentenceMatrix)
     #imagematrix = sentenceMatrix
-    print imagematrix
-    print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
-    print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
-    print "Amount of samples :" + str(len(sentenceMatrix))
-    pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
-    pickle.dump(imagematrix, open("imagemat.p", 'w+'))
+    #sentenceMatrix = imagematrix
+    #print imagematrix
+    #print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
+    #print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
+    #print "Amount of samples :" + str(len(sentenceMatrix))
+    #pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
+    #pickle.dump(imagematrix, open("imagemat.p", 'w+'))
     print "Modelling cca"
-    cca = CCA(n_components = 1)
+    cca = CCA(n_components = 128)
     cca.fit(sentenceMatrix, imagematrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
@@ -260,20 +263,20 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
  #   print width,height
-    return (width >= 480) and (height >= 480)
+    return (width >= 64) and (height >= 64)
 
 
 '''
 Returns the image features corresponding to the provided image name
 '''
 def getImage(filename, file_with_names, features):
-    print filename
+    #print filename
     file_with_names = open(file_with_names)
     line = file_with_names.readline()
     linenumber = 0
     while(not line == ""):
         if line[0:-5] == filename:
-            print 'RETURNING A FEATURE'
+            #print 'RETURNING A FEATURE'
             return features[linenumber]
         line = file_with_names.readline()
         linenumber+=1
