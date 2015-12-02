@@ -200,8 +200,8 @@ def mainExec(name_file, features):
     while i < len(trans_img):
         newSentence = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
         newImage = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
-	print "NEW SENTENCE: " + str(newSentence)
-	print "new IMAGE :" + str(newImage)
+        print "NEW SENTENCE: " + str(newSentence)
+        print "new IMAGE :" + str(newImage)
         if (((not np.linalg.norm(newSentence) == 0) and (np.all(np.isfinite(newSentence))) and (not np.any(np.isnan(newSentence)))) and
             ((not np.linalg.norm(newImage) == 0) and (np.all(np.isfinite(newImage))) and (not np.any(np.isnan(newImage))))):
             if i == 0:
@@ -216,6 +216,8 @@ def mainExec(name_file, features):
             # augm_img = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
             # augmented_imgs.append(augm_img)
             i += 1
+    print "Augmented sentence shape : " + str(augmented_sentences.shape)
+    print "augmentend img shape: " + str(augmented_imgs.shape)
     # for i in range(len(trans_sent)):
     #     augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
     #     augmented_sentences.append(augm_sent)
