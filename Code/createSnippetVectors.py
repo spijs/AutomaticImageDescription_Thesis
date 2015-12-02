@@ -239,7 +239,10 @@ def nearest_neighbor(matrix):
     print "Matrix dimensions : " + str(matrix.shape)
     avg_dist = 0
     for i in range(len(matrix)):
-	print "Sentence: " + str(matrix[i])
+        x = np.linalg.norm(matrix[i])
+        if not x > 0:
+            print "THE NORM OF THE SENTENCE: " + str(x)
+            print "THE SENTENCE: " + str(matrix[i])
         distances = np.zeros(len(matrix))
         for j in range(len(matrix)):
             if not i == j:
