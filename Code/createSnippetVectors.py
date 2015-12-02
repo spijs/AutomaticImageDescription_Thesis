@@ -125,7 +125,7 @@ def mainExec(name_file, features):
                 imagematrix = np.concatenate(([imagematrix], [imgfeature]), axis = 0)
             else:
                 sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis = 0)
-                imagematrix = np.concatenate((imagematrix, [imgfeature), axis = 0)
+                imagematrix = np.concatenate((imagematrix, [imgfeature]), axis = 0)
             # imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
