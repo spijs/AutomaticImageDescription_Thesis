@@ -161,25 +161,26 @@ def mainExec(name_file, features):
     dp = getDataProvider('flickr30k')
     currentPair = 0
     for pair in dp.iterImageSentencePair(max_images= 50):
-        currentPair += 1
-	print "Current pair : " + str(currentPair)
+        print "Current pair : " + str(currentPair)
         img = pair['image']['feat'][0:1000]
         # trainingimages.append(img)
         sentence = getFullSentence(pair, voc)
-        for i in range(len(sentence)):
-            if sentence[i] > 0:
-                idf[i] += 1
-        if currentPair == 1:
-            trainingsentences = sentence
-            trainingimages = img
-        elif currentPair == 2:
-            print "shape of matrix"+ str(trainingsentences.shape)
-            print "shape of sentence" + str(sentence.shape)
-            trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
-            trainingimages = np.append([trainingimages], [img], axis = 0)
-        else:
-            trainingsentences = np.append(trainingsentences, [sentence], axis = 0)
-            trainingimages = np.append(trainingimages, [img], axis = 0)
+        if np.linalg.norm(sentence) > 0:
+            for i in range(len(sentence)):
+                if sentence[i] > 0:
+                    idf[i] += 1
+            if currentPair == 0:
+                trainingsentences = sentence
+                trainingimages = img
+            elif currentPair == 1:
+                print "shape of matrix"+ str(trainingsentences.shape)
+                print "shape of sentence" + str(sentence.shape)
+                trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
+                trainingimages = np.append([trainingimages], [img], axis = 0)
+            else:
+                trainingsentences = np.append(trainingsentences, [sentence], axis = 0)
+                trainingimages = np.append(trainingimages, [img], axis = 0)
+            currentPair += 1
         #if currentPair % 100 == 0:
         #print "Current pair: " + str(currentPair)
 
