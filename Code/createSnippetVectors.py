@@ -135,11 +135,11 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    # sentenceMatrix = sentenceMatrix[0:2]
-    imagematrix = imagematrix[0:2]
-    sentenceMatrix = imagematrix
-    print "Sentences: " + sentenceMatrix.shape
-    print "Images: " + imagematrix.shape
+    #sentenceMatrix = sentenceMatrix
+    #imagematrix = imagematrix
+    #sentenceMatrix = imagematrix
+    print "Sentences: " + str(sentenceMatrix.shape)
+    print "Images: " + str(imagematrix.shape)
     #print type(sentenceMatrix)
     #imagematrix = sentenceMatrix
     #sentenceMatrix = imagematrix
@@ -150,7 +150,7 @@ def mainExec(name_file, features):
     #pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
     #pickle.dump(imagematrix, open("imagemat.p", 'w+'))
     print "Modelling cca"
-    cca = CCA(n_components = 128)
+    cca = CCA(n_components = 10)
     cca.fit(sentenceMatrix, imagematrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
@@ -163,14 +163,16 @@ def mainExec(name_file, features):
         currentPair += 1
         img = pair['image']['feat']
         # trainingimages.append(img)
-        sentence = getFullSentence(pair, voc)
+        sentence = getFullSentence(pair)
         for i in range(len(sentence)):
             if sentence[i] > 0:
                 idf[i] += 1
-        if currentPair == 1:
+            if currentPair == 1:
                 trainingsentences = sentence
                 trainingimages = img
-            elif currentSentence ==2:
+            elif currentPair ==2:
+		print "shape of matrix"+ str(trainingsentences.shape)
+	        print "shape of sentence" + str([sentence].shape)
                 trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
                 trainingimages = np.concatenate(([trainingimages], [img]), axis = 0)
             else:
@@ -206,7 +208,7 @@ def mainExec(name_file, features):
 def createFeatDict(names, namesfile, features):
     result = {}
     for name in names:
-	print "trying to add feature to dict for: "+name
+	#print "trying to add feature to dict for: "+name
         result[name] = getImage(name, namesfile, features)
     return result
 
@@ -241,9 +243,11 @@ def getFullSentence(imagesentencepair):
     sentences = imagesentencepair['image']['sentences']
     s = getStopwords()
     full = []
+    print sentences
     for sentence in sentences:
         result = remove_common_words(sentence['tokens'], s)
         full.extend(result)
+    return full
 
 
 '''
@@ -273,7 +277,7 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
  #   print width,height
-    return (width >= 64) and (height >= 64)
+    return (width >=400 ) and (height >= 400)
 
 
 '''
