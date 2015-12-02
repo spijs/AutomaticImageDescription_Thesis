@@ -135,9 +135,9 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    #sentenceMatrix = sentenceMatrix[0:2]
-    #imagematrix = imagematrix[0:2]
-
+    # sentenceMatrix = sentenceMatrix[0:2]
+    imagematrix = imagematrix[0:2]
+    sentenceMatrix = imagematrix
     print "Sentences: " + sentenceMatrix.shape
     print "Images: " + imagematrix.shape
     #print type(sentenceMatrix)
@@ -159,17 +159,27 @@ def mainExec(name_file, features):
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
-    for pair in dp.sampleImageSentencePair():
+    for pair in dp.iterImageSentencePair(max_images= 5):
         currentPair += 1
-        if currentPair % 100 == 0:
-            print "Current pair: " + str(currentPair)
         img = pair['image']['feat']
-        trainingimages.append(img)
+        # trainingimages.append(img)
         sentence = getFullSentence(pair, voc)
         for i in range(len(sentence)):
             if sentence[i] > 0:
                 idf[i] += 1
-        trainingsentences.append(sentence)
+        if currentPair == 1:
+                trainingsentences = sentence
+                trainingimages = img
+            elif currentSentence ==2:
+                trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
+                trainingimages = np.concatenate(([trainingimages], [img]), axis = 0)
+            else:
+                trainingsentences = np.append(trainingsentences, [sentence], axis = 0)
+                trainingimages = np.concatenate((trainingimages, [img]), axis = 0)
+        if currentPair % 100 == 0:
+            print "Current pair: " + str(currentPair)
+
+        # trainingsentences.append(sentence)
     for i in range(trainingsentences):
         trainingsentences[i] = trainingsentences[i]*idf
 
