@@ -125,10 +125,11 @@ def main(params):
   host = socket.gethostname() # get computer hostname
 
   # fetch the data provider
-  dp = getDataProvider(dataset) #TODO gewijzigd :)
-  if params['lda']:
-      print 'loading topics, number:', str(params['lda'])
-      dp.load_topic_models(dataset,params['lda'])
+  dp = getDataProvider(dataset)
+  #LDA
+  #if params['lda']:
+  #    print 'loading topics, number:', str(params['lda'])
+  #    dp.load_topic_models(dataset,params['lda'])
   misc = {} # stores various misc items that need to be passed around the framework
 
   # go over all training sentences and find the vocabulary we want to use, i.e. the words that occur
@@ -293,6 +294,7 @@ if __name__ == "__main__":
   parser.add_argument('--layers', dest='layers', type=int, default='2', help = 'number of hidden layers and memory cells.')
   #lda-specific params
   parser.add_argument('--lda', dest='lda', type=int, default=0, help = 'use lda topic distribution as input using the provided number of topics.')
+  parser.add_argument('--guide', dest='guide', type=str, default='image', help='Which guide to use when using glstm.')
 
   # optimization parameters
   parser.add_argument('-c', '--regc', dest='regc', type=float, default=1e-8, help='regularization strength')
