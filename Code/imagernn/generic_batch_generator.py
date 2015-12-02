@@ -8,6 +8,7 @@ from imagernn.lstm_generator import LSTMGenerator
 from imagernn.rnn_generator import RNNGenerator
 from imagernn.fsmn_generator import FSMNGenerator
 from imagernn.glstm_generator import gLSTMGenerator
+from imagernn.guide import get_guide_size,get_image_guide
 
 def decodeGenerator(generator):
   if generator == 'lstm':
@@ -37,10 +38,10 @@ class GenericBatchGenerator:
     hidden_size = params.get('hidden_size', 128)
     generator = params.get('generator', 'lstm')
     vocabulary_size = len(misc['wordtoix'])
-    lda = params.get('lda',0)
+    #lda = params.get('lda',0)
     output_size = len(misc['ixtoword']) # these should match though
     image_size = 4096 # size of CNN vectors hardcoded here
-
+    guide_input = params.get('guide',"image")
     if generator == 'lstm':
       assert image_encoding_size == word_encoding_size, 'this implementation does not support different sizes for these parameters'
 
@@ -67,7 +68,7 @@ class GenericBatchGenerator:
     if(generator != 'glstm'):
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
     else:
-        guide_size=256 #TODO juist zetten
+        guide_size = get_guide_size(guide_input)
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, guide_size, output_size)
     merge_init_structs(init_struct, generator_init_struct)
     return init_struct
@@ -100,7 +101,7 @@ class GenericBatchGenerator:
     generator_str = params.get('generator', 'lstm') 
     Generator = decodeGenerator(generator_str)
 
-
+    guide_input = params.get('guide','image')
     # encode all words in all sentences (which exist in our vocab)
     wordtoix = misc['wordtoix']
     Ws = model['Ws']
@@ -114,7 +115,7 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      guide = Xi #TODO hier methode gebruiken die guide geeft die nodig is.
+      guide = get_image_guide(guide_input,Xi)
       #Li = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
@@ -198,11 +199,11 @@ class GenericBatchGenerator:
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []
-    guide = None #TODO fixen
+    guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = Xi #TODO hier juiste methode gebruiken
-      gen_Y = Generator.predict(Xe[i, :], guide, model, model['Ws'], params, **kwparams)
+      guide = get_image_guide(guide_input,Xi)
+      gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
 
