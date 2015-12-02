@@ -1,4 +1,4 @@
-__author__ = 'spijs'
+__author__ = 'Wout&Thijs'
 
 
 class guide:
