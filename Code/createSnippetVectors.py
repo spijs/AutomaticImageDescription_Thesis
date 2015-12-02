@@ -106,23 +106,26 @@ def mainExec(name_file, features):
     print "Creating matrices"
     currentSentence = 0
     for i in weightedVectors.keys():
-	# print sentenceMatrix
+    # print sentenceMatrix
         if isLargeEnough(i):
             currentSentence += 1
-	    print "Trying stuff for file with name : "+i
+            print "Trying stuff for file with name : "+i
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
-           	#print str(len(weightedVectors[i]))
+            imgfeature = featuresDict[i]
+            for j in range(len(imgfeature)):
+                imgfeature[j] = float(imgfeature[j])
+            #print str(len(weightedVectors[i]))
             if currentSentence == 1:
                 sentenceMatrix = weightedVectors[i]
-                imagematrix = featuresDict[i]
+                imagematrix = imgfeature
             elif currentSentence ==2:
                 sentenceMatrix = np.append([sentenceMatrix], [weightedVectors[i]], axis = 0)
-                imagematrix = np.concatenate(([imagematrix], [featuresDict[i]]), axis = 0)
+                imagematrix = np.concatenate(([imagematrix], [imgfeature]), axis = 0)
             else:
                 sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis = 0)
-                imagematrix = np.concatenate((imagematrix, [featuresDict[i]]), axis = 0)
+                imagematrix = np.concatenate((imagematrix, [imgfeature), axis = 0)
             # imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
