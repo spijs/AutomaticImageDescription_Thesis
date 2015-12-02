@@ -200,8 +200,8 @@ def mainExec(name_file, features):
     while i < len(trans_img):
         newSentence = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
         newImage = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
-        print "NEW SENTENCE: " + str(newSentence)
-        print "new IMAGE :" + str(newImage)
+        # print "NEW SENTENCE: " + str(newSentence)
+        # print "new IMAGE :" + str(newImage)
         if (((not np.linalg.norm(newSentence) == 0) and (np.all(np.isfinite(newSentence))) and (not np.any(np.isnan(newSentence)))) and
             ((not np.linalg.norm(newImage) == 0) and (np.all(np.isfinite(newImage))) and (not np.any(np.isnan(newImage))))):
             if i == 0:
@@ -217,6 +217,33 @@ def mainExec(name_file, features):
             # augmented_imgs.append(augm_img)
             i += 1
     print "Augmented sentence shape : " + str(augmented_sentences.shape)
+    rown = 0
+    for row in augmented_sentences:
+        if np.any(np.isnan(row)):
+            print "Sentence has nan: " + str(rown)
+            f = open('sentence_nan_'+str(rown)+'.txt', 'w+')
+            for el in row:
+                f.write(el+'\n')
+        if np.any(np.isinf(row)):
+            print "Sentence has inf: " + str(rown)
+            f = open('sentence_inf_'+str(rown)+'.txt', 'w+')
+            for el in row:
+                f.write(el+'\n')
+        rown+=1
+    rown = 0
+    for row in augmented_imgs:
+        if np.any(np.isnan(row)):
+            print "image has nan: " + str(rown)
+            f = open('image_nan'+str(rown)+'.txt', 'w+')
+            for el in row:
+                f.write(el+'\n')
+        if np.any(np.isinf(row)):
+            print "Image has inf: " + str(rown)
+            f = open('image_inf_'+str(rown)+'.txt', 'w+')
+            for el in row:
+                f.write(el+'\n')
+        rown+=1
+
     print "augmentend img shape: " + str(augmented_imgs.shape)
     # for i in range(len(trans_sent)):
     #     augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
