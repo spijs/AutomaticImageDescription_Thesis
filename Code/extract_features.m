@@ -1,10 +1,10 @@
 %% vgg / caffe spec
 %% Runnen met matlab extract_features.m
 path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab')
-path(path,'matlab_features_reference')
+path(path,'/export/home2/NoCsBack/hci/wout/caffe')
 
-use_gpu = 0;
-gpu_id = 1;
+use_gpu = 1;
+gpu_id = 0;
 
 % Set caffe mode
 if use_gpu
@@ -14,8 +14,8 @@ else
   caffe.set_mode_cpu();
 end
 
-model = 'matlab_features_reference/VGG_ILSVRC_16_layers_deploy.prototxt';
-weight = 'data/VGG_ILSVRC_16_layers.caffemodel';
+model = 'matlab_features_reference/deploy_features.prototext';
+weights = 'data/VGG_ILSVRC_16_layers.caffemodel';
 batch_size = 10;
 
 net = caffe.Net(model, weights, 'test');
@@ -46,7 +46,7 @@ for b=1:batch_size:N
     input_data = prepare_images_batch(Is);
 
     tic;
-    scores = caffe('forward', {input_data});
+    scores = net.forward({input_data});
     scores = squeeze(scores{1});
     tt = toc;
 
