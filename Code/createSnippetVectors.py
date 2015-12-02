@@ -194,15 +194,25 @@ def mainExec(name_file, features):
     augmented_imgs = []
     augmented_sentences = []
     for i in range(len(trans_img)):
-        augm_img = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
-        augmented_imgs.append(augm_img)
+        if i == 0:
+            augmented_imgs = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
+            augmented_sentences = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
+        elif i == 1:
+            augmented_sentences = np.append([augmented_sentences], [np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))], axis = 0)
+            augmented_imgs = np.append([augmented_imgs], [np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))], axis = 0)
+        else:
+            augmented_sentences = np.append(augmented_sentences, [np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))], axis = 0)
+            augmented_imgs = np.append(augmented_imgs, [np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))], axis = 0)
+        # augm_img = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
+        # augmented_imgs.append(augm_img)
 
-    for i in range(len(trans_sent)):
-        augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
-        augmented_sentences.append(augm_sent)
+    # for i in range(len(trans_sent)):
+    #     augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
+    #     augmented_sentences.append(augm_sent)
 
     augmentedcca = CCA(n_components= 96)
-    augmentedcca.fit(augm_img, augm_sent)
+    augmentedcca.fit(augmented_imgs, augmented_sentences = []
+)
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
