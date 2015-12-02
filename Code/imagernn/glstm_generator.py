@@ -20,7 +20,7 @@ class gLSTMGenerator:
     # Decoder weights (e.g. mapping to vocabulary)
     model['Wd'] = initw(hidden_size, output_size) # decoder
     model['bd'] = np.zeros((1, output_size))
-    model['input_size'] = input_size
+    model['input_size'] = [input_size]
     update = ['WLSTM', 'Wd', 'bd']
     regularize = ['WLSTM', 'Wd']
     return { 'model' : model, 'update' : update, 'regularize' : regularize }
