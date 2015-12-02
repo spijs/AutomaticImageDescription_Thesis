@@ -68,6 +68,7 @@ class GenericBatchGenerator:
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
     else:
         guide_size=512 #TODO juist zetten
+
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, guide_size, output_size)
     merge_init_structs(init_struct, generator_init_struct)
     return init_struct

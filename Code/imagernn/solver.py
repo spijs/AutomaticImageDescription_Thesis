@@ -35,7 +35,8 @@ class Solver:
       for u in update:
         if not u in self.step_cache_:
       #    print('U in solver: %s' % (u)) TODO remove
-          self.step_cache_[u] = np.zeros(model[u].shape)
+          if(u!="input_size"):
+            self.step_cache_[u] = np.zeros(model[u].shape)
           if solver == 'adadelta':
             self.step_cache2_[u] = np.zeros(model[u].shape) # adadelta needs one more cache
 
