@@ -223,12 +223,12 @@ def mainExec(name_file, features):
             print "Sentence has nan: " + str(rown)
             f = open('sentence_nan_'+str(rown)+'.txt', 'w+')
             for el in row:
-                f.write(el+'\n')
+                f.write(str(el)+'\n')
         if np.any(np.isinf(row)):
             print "Sentence has inf: " + str(rown)
             f = open('sentence_inf_'+str(rown)+'.txt', 'w+')
             for el in row:
-                f.write(el+'\n')
+                f.write(str(el)+'\n')
         rown+=1
     rown = 0
     for row in augmented_imgs:
@@ -236,12 +236,12 @@ def mainExec(name_file, features):
             print "image has nan: " + str(rown)
             f = open('image_nan'+str(rown)+'.txt', 'w+')
             for el in row:
-                f.write(el+'\n')
+                f.write(str(el)+'\n')
         if np.any(np.isinf(row)):
             print "Image has inf: " + str(rown)
             f = open('image_inf_'+str(rown)+'.txt', 'w+')
             for el in row:
-                f.write(el+'\n')
+                f.write(str(el)+'\n')
         rown+=1
 
     print "augmentend img shape: " + str(augmented_imgs.shape)
