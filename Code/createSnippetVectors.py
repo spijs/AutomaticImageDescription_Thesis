@@ -106,22 +106,26 @@ def mainExec(name_file, features):
     print "Creating matrices"
     currentSentence = 0
     for i in weightedVectors.keys():
-	# print sentenceMatrix
+    # print sentenceMatrix
         if isLargeEnough(i):
             currentSentence += 1
+            print "Trying stuff for file with name : "+i
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
-           	print str(len(weightedVectors[i]))
+            imgfeature = featuresDict[i]
+            for j in range(len(imgfeature)):
+                imgfeature[j] = float(imgfeature[j])
+            #print str(len(weightedVectors[i]))
             if currentSentence == 1:
                 sentenceMatrix = weightedVectors[i]
-                imagematrix = featuresDict[i]
+                imagematrix = imgfeature
             elif currentSentence ==2:
                 sentenceMatrix = np.append([sentenceMatrix], [weightedVectors[i]], axis = 0)
-                imagematrix = np.concatenate(([imagematrix], [featuresDict[i]]), axis = 0)
+                imagematrix = np.concatenate(([imagematrix], [imgfeature]), axis = 0)
             else:
                 sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis = 0)
-                imagematrix = np.concatenate((imagematrix, [featuresDict[i]]), axis = 0)
+                imagematrix = np.concatenate((imagematrix, [imgfeature), axis = 0)
             # imagematrix.append(getImage(i,name_file, features))
 #	else: 
 	    #print "FALSE"
@@ -131,11 +135,12 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-#    sentenceMatrix = sentenceMatrix[0:2]
-#    imagematrix = imagematrix[0:2]
+    sentenceMatrix = sentenceMatrix[0:2]
+    imagematrix = imagematrix[0:2]
     print sentenceMatrix.shape
     print type(sentenceMatrix)
-    imagematrix = sentenceMatrix
+    #imagematrix = sentenceMatrix
+    print imagematrix
     print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
     print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
     print "Amount of samples :" + str(len(sentenceMatrix))
@@ -188,6 +193,7 @@ def mainExec(name_file, features):
 def createFeatDict(names, namesfile, features):
     result = {}
     for name in names:
+	print "trying to add feature to dict for: "+name
         result[name] = getImage(name, namesfile, features)
     return result
 
@@ -261,18 +267,22 @@ def isLargeEnough(filename):
 Returns the image features corresponding to the provided image name
 '''
 def getImage(filename, file_with_names, features):
+    print filename
+    file_with_names = open(file_with_names)
     line = file_with_names.readline()
     linenumber = 0
     while(not line == ""):
-        if line+".jpg" == filename:
+        if line[0:-5] == filename:
+            print 'RETURNING A FEATURE'
             return features[linenumber]
         line = file_with_names.readline()
         linenumber+=1
 
 
 if __name__ == "__main__":
-    names = open("./Flickr30kEntities/image_snippets/images.txt")
+    names = "./Flickr30kEntities/image_snippets/images.txt"
     feats = scipy.io.loadmat("./Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
+    print "SHAPE FEAT: " + str(feats.shape)
     mainExec(names, feats)
 
 
