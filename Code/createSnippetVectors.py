@@ -256,13 +256,15 @@ def mainExec(name_file, features):
     #     augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
     #     augmented_sentences.append(augm_sent)
 
-    augmented_imgs = np.zeros((100,50))+1
-    augmented_sentences = np.zeros((100,300))+2
+    fitCCA()
 
-    augmentedcca = CCA(n_components= 2)
+
+def fitCCA():
+    augmented_imgs = np.zeros((100, 50)) + 1
+    augmented_sentences = np.zeros((100, 300)) + 2
+    augmentedcca = CCA(n_components=)
     augmentedcca.fit(augmented_imgs, augmented_sentences)
-
-    pickle.dump(cca, open("augmentedcca.p",'w+'))
+    pickle.dump(augmentedcca, open("augmentedcca.p", 'w+'))
 
 
 def createFeatDict(names, namesfile, features):
