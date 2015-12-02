@@ -1,10 +1,10 @@
 
 path(path,'/export/home2/NoCsBack/hci/wout/caffe/')
 path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab')
-path(path,'matlab_features_reference')
+path(path,'/export/home2/NoCsBack/hci/wout/caffe')
 
-use_gpu = 0;
-gpu_id = 1;
+use_gpu = 1;
+gpu_id = 0;
 
 % Set caffe mode
 if use_gpu
