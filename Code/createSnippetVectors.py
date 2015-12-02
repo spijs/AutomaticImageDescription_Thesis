@@ -160,7 +160,7 @@ def mainExec(name_file, features):
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
-    for pair in dp.iterImageSentencePair(max_images= 50):
+    for pair in dp.iterImageSentencePair(max_images= 5):
         print "Current pair : " + str(currentPair)
         img = pair['image']['feat'][0:1000]
         # trainingimages.append(img)
@@ -216,7 +216,7 @@ def mainExec(name_file, features):
     #     augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
     #     augmented_sentences.append(augm_sent)
 
-    augmentedcca = CCA(n_components= 96)
+    augmentedcca = CCA(n_components= 2)
     augmentedcca.fit(augmented_imgs, augmented_sentences)
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
