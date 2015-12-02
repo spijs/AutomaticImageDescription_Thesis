@@ -115,7 +115,7 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,Xi)
+      guide = get_guide(guide_input,F[i,:])
       #Li = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
@@ -202,7 +202,7 @@ class GenericBatchGenerator:
     guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,Xi)
+      guide = get_guide(guide_input,F[i,:])
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
@@ -228,7 +228,7 @@ class GenericBatchGenerator:
     guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,Xi)
+      guide = get_guide(guide_input,F[i,:])
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
