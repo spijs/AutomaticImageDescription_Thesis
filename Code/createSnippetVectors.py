@@ -27,7 +27,7 @@ Creates a vocabulary based on a folder. Returns a list of words
 '''
 def readVocabulary():
     result = []
-    voc = open('dictionary.txt')
+    voc = open('fullDictionary.txt')
     line = voc.readline()
     while line:
         result.append(line[0:-1])
@@ -39,7 +39,7 @@ Reads a set of documents, returns a dictionary containing the filename of the co
 unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
 '''
 def createOccurrenceVectors(vocabulary):
-    print vocabulary
+    print "amount of words: " + str(len(vocabulary))
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
@@ -109,7 +109,7 @@ def mainExec(name_file, features):
     # print sentenceMatrix
         if isLargeEnough(i):
             currentSentence += 1
-            print "Trying stuff for file with name : "+i
+            #print "Trying stuff for file with name : "+i
 #	    print "TRUE"
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
@@ -135,20 +135,23 @@ def mainExec(name_file, features):
     #     print "Sum of matrix is not finite"
     # if not np.isfinite(sentenceMatrix).all():
     #     print "Not all items are finite"
-    sentenceMatrix = sentenceMatrix[0:2]
-    imagematrix = imagematrix[0:2]
-    print sentenceMatrix.shape
-    print type(sentenceMatrix)
+    #sentenceMatrix = sentenceMatrix
+    #imagematrix = imagematrix
+    #sentenceMatrix = imagematrix
+    print "Sentences: " + str(sentenceMatrix.shape)
+    print "Images: " + str(imagematrix.shape)
+    #print type(sentenceMatrix)
     #imagematrix = sentenceMatrix
-    print imagematrix
-    print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
-    print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
-    print "Amount of samples :" + str(len(sentenceMatrix))
-    pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
-    pickle.dump(imagematrix, open("imagemat.p", 'w+'))
+    #sentenceMatrix = imagematrix
+    #print imagematrix
+    #print "Is Sum finite? : " + str(np.isfinite(sentenceMatrix.sum()))
+    #print "ALl items finite? :" + str(np.isfinite(sentenceMatrix).all())
+    #print "Amount of samples :" + str(len(sentenceMatrix))
+    #pickle.dump(sentenceMatrix, open("sentences.p",'w+'))
+    #pickle.dump(imagematrix, open("imagemat.p", 'w+'))
     print "Modelling cca"
-    cca = CCA(n_components = 1)
-    cca.fit(sentenceMatrix, imagematrix)
+    cca = CCA(n_components = 10)
+    cca.fit(imagematrix, sentenceMatrix)
     pickle.dump(cca, open("ccasnippetmodel.p",'w+'))
 
     idf = np.zeros(len(voc))
@@ -156,36 +159,60 @@ def mainExec(name_file, features):
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
-    for pair in dp.sampleImageSentencePair():
+    for pair in dp.iterImageSentencePair(max_images= 50):
         currentPair += 1
-        if currentPair % 100 == 0:
-            print "Current pair: " + str(currentPair)
-        img = pair['image']['feat']
-        trainingimages.append(img)
+	print "Current pair : " + str(currentPair)
+        img = pair['image']['feat'][0:1000]
+        # trainingimages.append(img)
         sentence = getFullSentence(pair, voc)
         for i in range(len(sentence)):
             if sentence[i] > 0:
                 idf[i] += 1
-        trainingsentences.append(sentence)
-    for i in range(trainingsentences):
+        if currentPair == 1:
+            trainingsentences = sentence
+            trainingimages = img
+        elif currentPair == 2:
+            print "shape of matrix"+ str(trainingsentences.shape)
+            print "shape of sentence" + str(sentence.shape)
+            trainingsentences = np.append([trainingsentences], [sentence], axis = 0)
+            trainingimages = np.append([trainingimages], [img], axis = 0)
+        else:
+            trainingsentences = np.append(trainingsentences, [sentence], axis = 0)
+            trainingimages = np.append(trainingimages, [img], axis = 0)
+        #if currentPair % 100 == 0:
+        #print "Current pair: " + str(currentPair)
+
+        # trainingsentences.append(sentence)
+    for i in range(len(trainingsentences)):
         trainingsentences[i] = trainingsentences[i]*idf
 
     trans_img, trans_sent = cca.transform(trainingimages, trainingsentences)
     nn_img = nearest_neighbor(trainingimages)
+    print "SENTENCES NN"
     nn_sent = nearest_neighbor(trainingsentences)
-
+    print "NN Image: " + str(nn_img)
+    print "NN Sentence: " + str(nn_sent)
     augmented_imgs = []
     augmented_sentences = []
     for i in range(len(trans_img)):
-        augm_img = trainingimages[i].extend(phi(3000,nn_img, trans_img[i]))
-        augmented_imgs.append(augm_img)
+        if i == 0:
+            augmented_imgs = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
+            augmented_sentences = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
+        elif i == 1:
+            augmented_sentences = np.append([augmented_sentences], [np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))], axis = 0)
+            augmented_imgs = np.append([augmented_imgs], [np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))], axis = 0)
+        else:
+            augmented_sentences = np.append(augmented_sentences, [np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))], axis = 0)
+            augmented_imgs = np.append(augmented_imgs, [np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))], axis = 0)
+        # augm_img = np.append(trainingimages[i],phi(3000,nn_img, trans_img[i]))
+        # augmented_imgs.append(augm_img)
 
-    for i in range(len(trans_sent)):
-        augm_sent = trainingsentences[i].extend(phi(3000, nn_sent, trans_sent[i]))
-        augmented_sentences.append(augm_sent)
+    # for i in range(len(trans_sent)):
+    #     augm_sent = np.append(trainingsentences[i],phi(3000, nn_sent, trans_sent[i]))
+    #     augmented_sentences.append(augm_sent)
 
     augmentedcca = CCA(n_components= 96)
-    augmentedcca.fit(augm_img, augm_sent)
+    augmentedcca.fit(augmented_imgs, augmented_sentences)
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
@@ -193,7 +220,7 @@ def mainExec(name_file, features):
 def createFeatDict(names, namesfile, features):
     result = {}
     for name in names:
-	print "trying to add feature to dict for: "+name
+	#print "trying to add feature to dict for: "+name
         result[name] = getImage(name, namesfile, features)
     return result
 
@@ -209,14 +236,21 @@ def phi(wantedDimension, sigma, x):
 Given a matrix with each row an observation, returns the average distance to the 50th nearest neighbor
 '''
 def nearest_neighbor(matrix):
+    print "Matrix dimensions : " + str(matrix.shape)
     avg_dist = 0
     for i in range(len(matrix)):
-        distances = np.zeros(len(matrix)-1)
+        x = np.linalg.norm(matrix[i])
+        if not x > 0:
+            print "THE NORM OF THE SENTENCE: " + str(x)
+            print "THE SENTENCE: " + str(matrix[i])
+        distances = np.zeros(len(matrix))
         for j in range(len(matrix)):
             if not i == j:
-                distances[j] = spatial.distance.cosine(matrix[i], matrix[j])
-        distances = distances.sort()
+                distances[j] = spatial.distance.cosine(matrix[i]/np.linalg.norm(matrix[i]), matrix[j]/np.linalg.norm(matrix[j]))
+        distances = np.delete(distances, i)
+        distances.sort()
         avg_dist += distances[49]
+    
     avg_dist = avg_dist / len(matrix)
     return avg_dist
 
@@ -224,13 +258,19 @@ def nearest_neighbor(matrix):
 '''
 given an image sentence pair, return an array containing the concatenation of the 5 sentences in the pair
 '''
-def getFullSentence(imagesentencepair):
+def getFullSentence(imagesentencepair, vocabulary):
     sentences = imagesentencepair['image']['sentences']
     s = getStopwords()
     full = []
+    vector =  np.zeros(len(vocabulary))
+#    print sentences
     for sentence in sentences:
         result = remove_common_words(sentence['tokens'], s)
         full.extend(result)
+    for word in full :
+        if word.lower() in vocabulary :
+            vector[vocabulary.index(word.lower())] += 1
+    return vector
 
 
 '''
@@ -260,20 +300,20 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
  #   print width,height
-    return (width >= 480) and (height >= 480)
+    return (width >=400 ) and (height >= 400)
 
 
 '''
 Returns the image features corresponding to the provided image name
 '''
 def getImage(filename, file_with_names, features):
-    print filename
+    #print filename
     file_with_names = open(file_with_names)
     line = file_with_names.readline()
     linenumber = 0
     while(not line == ""):
         if line[0:-5] == filename:
-            print 'RETURNING A FEATURE'
+            #print 'RETURNING A FEATURE'
             return features[linenumber]
         line = file_with_names.readline()
         linenumber+=1
