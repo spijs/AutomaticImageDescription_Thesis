@@ -1,6 +1,6 @@
 %% vgg / caffe spec
 %% Runnen met matlab extract_features.m
-path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab/caffe')
+path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab')
 path(path,'matlab_features_reference')
 
 use_gpu = 0;
