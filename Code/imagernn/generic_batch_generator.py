@@ -7,7 +7,7 @@ from imagernn.utils import merge_init_structs, initw, accumNpDicts
 from imagernn.lstm_generator import LSTMGenerator
 from imagernn.rnn_generator import RNNGenerator
 from imagernn.fsmn_generator import FSMNGenerator
-from imagernn.fsmn_generator import gLSTMGenerator
+from imagernn.glstm_generator import gLSTMGenerator
 
 def decodeGenerator(generator):
   if generator == 'lstm':
