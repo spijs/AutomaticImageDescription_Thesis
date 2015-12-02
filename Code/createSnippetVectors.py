@@ -67,7 +67,8 @@ def createOccurrenceVectors(vocabulary):
                     for w in range(len(row)):
                         if row[w] > 0:
                             idf[w] += 1
-                    result[filename[0:-4]+"_"+str(sentenceID)] = row
+                    if np.linalg.norm(row) > 0 :
+                        result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
                 #print "ROW: " + str(row)
