@@ -188,7 +188,7 @@ class gLSTMGenerator:
       # backprop the identity transforms into Hin
       dX[t] = dHin[t,1:1+d]
       if t > 0:
-        dHout[t-1] += dHin[t,1+d:]
+        dHout[t-1] += dHin[t,(1+d):(1+2*d)]
 
     if drop_prob_encoder > 0: # backprop encoder dropout
       dX *= cache['U']
