@@ -44,13 +44,13 @@ def createOccurrenceVectors(vocabulary):
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
-    for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+    for dirname, dirnames, filenames in os.walk('Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
           #if current < 1000:
             current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
-            f = open('./Flickr30kEntities/sentence_snippets/'+filename)
+            f = open('Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             sentenceID = 1
             while not (line == ""):
@@ -115,10 +115,10 @@ def mainExec(name_file, features):
     print "NN Sentence: " + str(nn_sent)
     augmented_imgs, augmented_sentences = augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_img,
                                                           trans_sent)
-
+    print "Fitting augmented CCA model"
     augmentedcca = CCA(n_components=15)
     augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
-
+    print "Writing the model to disk"
     resultingModel = StackedCCAModel(nn_img, nn_sent, cca, augmentedcca)
 
     pickle.dump(resultingModel, open("stackedCCAModel.p", 'w+'))
@@ -181,7 +181,7 @@ def createTrainMatrices(voc):
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
-    for pair in dp.iterImageSentencePair(max_images=60):
+    for pair in dp.iterImageSentencePair(max_images=400):
         print "Current pair : " + str(currentPair)
         img = pair['image']['feat'][0:1000]
         sentence = getFullSentence(pair, voc)
@@ -286,7 +286,7 @@ def isLargeEnough(filename):
     file = filename+".jpg"
     #print file
     try:
-        image = Image.open("./Flickr30kEntities/image_snippets/"+file)
+        image = Image.open("Flickr30kEntities/image_snippets/"+file)
     except IOError:
         #print "img not found"
 	# image not found. Is ok, many snippets dont have a corresponding image
@@ -312,8 +312,8 @@ def getImage(filename, file_with_names, features):
 
 
 if __name__ == "__main__":
-    names = "./Flickr30kEntities/image_snippets/images.txt"
-    feats = scipy.io.loadmat("./Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
+    names = "Flickr30kEntities/image_snippets/images.txt"
+    feats = scipy.io.loadmat("Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
     print "SHAPE FEAT: " + str(feats.shape)
     mainExec(names, feats)
 
