@@ -7,6 +7,7 @@ from scipy import spatial
 import pickle
 from PIL import Image
 from imagernn.data_provider import getDataProvider
+from stackedCCAModel import *
 
 
 ''' stems a word by using the porter algorithm'''
@@ -116,7 +117,11 @@ def mainExec(name_file, features):
                                                           trans_sent)
 
     augmentedcca = CCA(n_components=15)
-    fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
+    augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
+
+    resultingModel = StackedCCAModel(nn_img, nn_sent, cca, augmentedcca)
+
+    pickle.dump(resultingModel, open("stackedCCAModel.p", 'w+'))
 
 
 def augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_img, trans_sent):
