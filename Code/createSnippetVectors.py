@@ -119,6 +119,12 @@ def mainExec(name_file, features):
     augmentedcca = CCA(n_components=15)
     augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
     print "Writing the model to disk"
+
+
+#    augmentedcca = CCA(n_components=15)
+ #   augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
+
+
     resultingModel = StackedCCAModel(nn_img, nn_sent, cca, augmentedcca)
 
     pickle.dump(resultingModel, open("stackedCCAModel.p", 'w+'))
@@ -173,15 +179,24 @@ def createSnippetMatrices(featuresDict, weightedVectors):
                 sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis=0)
                 imagematrix = np.concatenate((imagematrix, [imgfeature]), axis=0)
     return imagematrix, sentenceMatrix
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> 5cf7f906df0847f01ada26b79c580568dbcf0ca1
 def createTrainMatrices(voc):
     idf = np.zeros(len(voc))
     trainingimages = []
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
+<<<<<<< HEAD
     for pair in dp.iterImageSentencePair(max_images=400):
+=======
+    for pair in dp.iterImageSentencePair(max_images=60):
+>>>>>>> 5cf7f906df0847f01ada26b79c580568dbcf0ca1
         print "Current pair : " + str(currentPair)
         img = pair['image']['feat'][0:1000]
         sentence = getFullSentence(pair, voc)
@@ -288,8 +303,12 @@ def isLargeEnough(filename):
     try:
         image = Image.open("Flickr30kEntities/image_snippets/"+file)
     except IOError:
+<<<<<<< HEAD
         #print "img not found"
 	# image not found. Is ok, many snippets dont have a corresponding image
+=======
+        print "img not found"
+>>>>>>> 5cf7f906df0847f01ada26b79c580568dbcf0ca1
 	return False
     width, height = image.size
     return (width >=400 ) and (height >= 400)
