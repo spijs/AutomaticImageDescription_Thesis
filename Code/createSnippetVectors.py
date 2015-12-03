@@ -288,7 +288,8 @@ def isLargeEnough(filename):
     try:
         image = Image.open("./Flickr30kEntities/image_snippets/"+file)
     except IOError:
-        print "img not found"
+        #print "img not found"
+	# image not found. Is ok, many snippets dont have a corresponding image
 	return False
     width, height = image.size
     return (width >=400 ) and (height >= 400)
