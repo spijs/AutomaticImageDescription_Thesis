@@ -28,7 +28,7 @@ Creates a vocabulary based on a folder. Returns a list of words
 '''
 def readVocabulary():
     result = []
-    voc = open('fullDictionary.txt')
+    voc = open('complete_dictionary.txt')
     line = voc.readline()
     while line:
         result.append(line[0:-1])
@@ -103,7 +103,7 @@ def mainExec(name_file, features):
     print "Sentences: " + str(sentenceMatrix.shape)
     print "Images: " + str(imagematrix.shape)
     print "Modelling cca"
-    cca = CCA(n_components = 10)
+    cca = CCA(n_components = 128)
     cca = fitCCA(cca, imagematrix, sentenceMatrix, "ccasnippetmodel.p")
 
     trainingimages, trainingsentences = createTrainMatrices(voc)
@@ -116,7 +116,7 @@ def mainExec(name_file, features):
     augmented_imgs, augmented_sentences = augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_img,
                                                           trans_sent)
     print "Fitting augmented CCA model"
-    augmentedcca = CCA(n_components=15)
+    augmentedcca = CCA(n_components=96)
     augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
     print "Writing the model to disk"
 
@@ -127,7 +127,7 @@ def mainExec(name_file, features):
 
     resultingModel = StackedCCAModel(nn_img, nn_sent, cca, augmentedcca)
 
-    pickle.dump(resultingModel, open("stackedCCAModel.p", 'w+'))
+    pickle.dump(resultingModel, open("completestackedCCAModel.p", 'w+'))
 
 
 def augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_img, trans_sent):
@@ -179,26 +179,17 @@ def createSnippetMatrices(featuresDict, weightedVectors):
                 sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis=0)
                 imagematrix = np.concatenate((imagematrix, [imgfeature]), axis=0)
     return imagematrix, sentenceMatrix
-<<<<<<< HEAD
 
 
-=======
-
-
->>>>>>> 5cf7f906df0847f01ada26b79c580568dbcf0ca1
 def createTrainMatrices(voc):
     idf = np.zeros(len(voc))
     trainingimages = []
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
-<<<<<<< HEAD
-    for pair in dp.iterImageSentencePair(max_images=400):
-=======
-    for pair in dp.iterImageSentencePair(max_images=60):
->>>>>>> 5cf7f906df0847f01ada26b79c580568dbcf0ca1
+    for pair in dp.iterImageSentencePair():
         print "Current pair : " + str(currentPair)
-        img = pair['image']['feat'][0:1000]
+        img = pair['image']['feat']
         sentence = getFullSentence(pair, voc)
         if np.linalg.norm(sentence) > 0:
             for i in range(len(sentence)):
@@ -303,15 +294,10 @@ def isLargeEnough(filename):
     try:
         image = Image.open("Flickr30kEntities/image_snippets/"+file)
     except IOError:
-<<<<<<< HEAD
-        #print "img not found"
 	# image not found. Is ok, many snippets dont have a corresponding image
-=======
-        print "img not found"
->>>>>>> 5cf7f906df0847f01ada26b79c580568dbcf0ca1
 	return False
     width, height = image.size
-    return (width >=400 ) and (height >= 400)
+    return (width >=64 ) and (height >= 64)
 
 
 '''
@@ -332,7 +318,7 @@ def getImage(filename, file_with_names, features):
 
 if __name__ == "__main__":
     names = "Flickr30kEntities/image_snippets/images.txt"
-    feats = scipy.io.loadmat("Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
+    feats = scipy.io.loadmat("Flickr30kEntities/snippets_features/vgg_feats.mat")['feats'].transpose()
     print "SHAPE FEAT: " + str(feats.shape)
     mainExec(names, feats)
 

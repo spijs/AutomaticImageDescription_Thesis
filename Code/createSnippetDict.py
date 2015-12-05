@@ -15,7 +15,7 @@ def isLargeEnough(filename):
 	return False
     width, height = image.size
     #print width,height
-    return (width >= 480) and (height >= 480)
+    return (width >= 64) and (height >= 64)
 
 ''' stems a word by using the porter algorithm'''
 def stem(word):
@@ -59,6 +59,6 @@ if __name__ == "__main__":
             if(dict[word] >= 5):
                 result[word]=dict[word]
     words = result.keys()
-    f = open("dictionary.txt", 'w+')
+    f = open("complete_dictionary.txt", 'w+')
     for w in words:
         f.writelines(w+'\n')
