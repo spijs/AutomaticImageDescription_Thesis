@@ -28,6 +28,12 @@ def isLargeEnough(filename):
 if __name__ == "__main__":
     for dirname, dirnames, filenames in os.walk('Flickr30kEntities/image_snippets'):
         f = open("Flickr30kEntities/images_snippets/images.txt", 'w+')
+        g = open("Flickr30kEntities/images_snippets/images2.txt", 'w+')
+        i = 0
         for filename in filenames:
             if isLargeEnough(filename):
-                f.write(filename+'\n')
+                if i%2==0:
+                    f.write(filename+'\n')
+                else:
+                    g.write(filename+'\n')
+            i += 1
