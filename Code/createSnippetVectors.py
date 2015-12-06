@@ -90,7 +90,7 @@ def weight_tfidf(documents, inv_freq):
         result[i] = doc * inv_freq
     return result
 
-def mainExec(name_file, features):
+def mainExec(name_file1, name_file2, features1, features2):
     print "Creating vocabulary"
     voc = readVocabulary()
     print "Generating document vectors"
@@ -98,7 +98,7 @@ def mainExec(name_file, features):
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrenceVectors, idf)
     print "creating feature dictionary"
-    featuresDict = createFeatDict(weightedVectors.keys(), name_file, features )
+    featuresDict = createFeatDict(weightedVectors.keys(), name_file1, name_file2, features1, features2 )
     imagematrix, sentenceMatrix = createSnippetMatrices(featuresDict, weightedVectors)
     print "Sentences: " + str(sentenceMatrix.shape)
     print "Images: " + str(imagematrix.shape)
@@ -218,11 +218,15 @@ def fitCCA(model, x, y, file):
     return model
 
 
-def createFeatDict(names, namesfile, features):
+def createFeatDict(names, namesfile1, namesfile2, features1, features2):
     result = {}
     for name in names:
-	#print "trying to add feature to dict for: "+name
-        result[name] = getImage(name, namesfile, features)
+    #print "trying to add feature to dict for: "+name
+        img1 = getImage(name, namesfile1, features1)
+        if img1 == -1:
+            result[name] = getImage(name, namesfile2, features2)
+        else:
+            result[name] = img1
     return result
 
 '''
@@ -294,7 +298,7 @@ def isLargeEnough(filename):
     try:
         image = Image.open("Flickr30kEntities/image_snippets/"+file)
     except IOError:
-	# image not found. Is ok, many snippets dont have a corresponding image
+    # image not found. Is ok, many snippets dont have a corresponding image
 	return False
     width, height = image.size
     return (width >=64 ) and (height >= 64)
@@ -310,16 +314,18 @@ def getImage(filename, file_with_names, features):
     linenumber = 0
     while(not line == ""):
         if line[0:-5] == filename:
-            #print 'RETURNING A FEATURE'
             return features[linenumber]
         line = file_with_names.readline()
         linenumber+=1
+    return -1
 
 
 if __name__ == "__main__":
-    names = "Flickr30kEntities/image_snippets/images.txt"
-    feats = scipy.io.loadmat("Flickr30kEntities/snippets_features/vgg_feats.mat")['feats'].transpose()
-    print "SHAPE FEAT: " + str(feats.shape)
-    mainExec(names, feats)
+    names1 = "Flickr30kEntities/image_snippets/images.txt"
+    names2 = "Flickr30kEntities/image_snippets/images2.txt"
+    feats1 = scipy.io.loadmat("Flickr30kEntities/snippets_features/vgg_feats.mat")['feats'].transpose()
+    feats2 = scipy.io.loadmat("Flickr30kEntities/snippets_features/vgg_feats2.mat")['feats'].transpose()
+    # print "SHAPE FEAT: " + str(feats.shape)
+    mainExec(names1, names2 , feats1, feats2)
 
 
