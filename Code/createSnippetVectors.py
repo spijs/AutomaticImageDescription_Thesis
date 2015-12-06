@@ -223,10 +223,10 @@ def createFeatDict(names, namesfile1, namesfile2, features1, features2):
     for name in names:
     #print "trying to add feature to dict for: "+name
         img1 = getImage(name, namesfile1, features1)
-        if img1:
-            result[name] = getImage(name, namesfile2, features2)
-        else:
+        if not len(img1) == 0:
             result[name] = img1
+        else:
+            result[name] = getImage(name, namesfile2, features2)
     return result
 
 '''
@@ -317,7 +317,7 @@ def getImage(filename, file_with_names, features):
             return features[linenumber]
         line = file_with_names.readline()
         linenumber+=1
-
+    return []
 
 if __name__ == "__main__":
     names1 = "Flickr30kEntities/image_snippets/images.txt"
