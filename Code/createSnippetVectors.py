@@ -141,6 +141,8 @@ def augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_im
         not np.any(np.isnan(newSentence)))) and
                 ((not np.linalg.norm(newImage) == 0) and (np.all(np.isfinite(newImage))) and (
                 not np.any(np.isnan(newImage))))):
+            if i % 1000 == 0:
+                print "Current pair: " + str(i)
             if i == 0:
                 augmented_imgs = newImage
                 augmented_sentences = newSentence
@@ -162,22 +164,23 @@ def createSnippetMatrices(featuresDict, weightedVectors):
     print "Creating matrices"
     currentSentence = 0
     for i in weightedVectors.keys():
-        if isLargeEnough(i):
-            currentSentence += 1
-            for j in range(len(weightedVectors[i])):
-                weightedVectors[i][j] = float(weightedVectors[i][j])
-            imgfeature = featuresDict[i]
-            for j in range(len(imgfeature)):
-                imgfeature[j] = float(imgfeature[j])
-            if currentSentence == 1:
-                sentenceMatrix = weightedVectors[i]
-                imagematrix = imgfeature
-            elif currentSentence == 2:
-                sentenceMatrix = np.append([sentenceMatrix], [weightedVectors[i]], axis=0)
-                imagematrix = np.concatenate(([imagematrix], [imgfeature]), axis=0)
-            else:
-                sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis=0)
-                imagematrix = np.concatenate((imagematrix, [imgfeature]), axis=0)
+        currentSentence += 1
+        if currentSentence % 1000 == 0:
+            print "Current Sentence: " + str(currentSentence)
+        # for j in range(len(weightedVectors[i])):
+            # weightedVectors[i][j] = float(weightedVectors[i][j])
+        imgfeature = featuresDict[i]
+        # for j in range(len(imgfeature)):
+        #     imgfeature[j] = float(imgfeature[j])
+        if currentSentence == 1:
+            sentenceMatrix = weightedVectors[i]
+            imagematrix = imgfeature
+        elif currentSentence == 2:
+            sentenceMatrix = np.append([sentenceMatrix], [weightedVectors[i]], axis=0)
+            imagematrix = np.concatenate(([imagematrix], [imgfeature]), axis=0)
+        else:
+            sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis=0)
+            imagematrix = np.concatenate((imagematrix, [imgfeature]), axis=0)
     return imagematrix, sentenceMatrix
 
 
@@ -199,8 +202,6 @@ def createTrainMatrices(voc):
                 trainingsentences = sentence
                 trainingimages = img
             elif currentPair == 1:
-                print "shape of matrix" + str(trainingsentences.shape)
-                print "shape of sentence" + str(sentence.shape)
                 trainingsentences = np.append([trainingsentences], [sentence], axis=0)
                 trainingimages = np.append([trainingimages], [img], axis=0)
             else:
