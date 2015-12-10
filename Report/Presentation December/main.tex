@@ -205,11 +205,11 @@
 
 
 \subsection{LDA}%W
-\begin{frame}{LDA \cite{Blei2012}}
+\begin{frame}{LDA }{\cite{Blei2012}}
 \begin{wideitemize}
 \item generative probabilistic model for discrete data
-\item documents generate topics
-\item topics generate words
+\item documents have topic distribution
+\item topics have word distribution
 \item train with e.g. Gibbs sampling
 
 \end{wideitemize}
@@ -218,6 +218,7 @@
 \begin{frame}{LDA}
 \begin{itemize}
 \item $\theta$: per-document topic distribution
+\item $\phi$: per-topic word distribution
 \item $z$: topic
 \item $w$: word
 \end{itemize}
@@ -230,7 +231,7 @@ $P(player|doc_i) = P(topic_{sport} | doc_i) P(player | topic_{sport})$
 \end{frame}
 
 \subsection{Stacked CCA}%W
-\begin{frame}{Stacked CCA \cite{Gong2014}}
+\begin{frame}{Stacked CCA }{\cite{Gong2014}}
 \begin{itemize}
 \item CCA
     \begin{wideitemize}
