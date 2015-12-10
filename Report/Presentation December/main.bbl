@@ -1,0 +1,75 @@
+\begin{thebibliography}{}
+
+\bibitem[Blei et~al., 2012]{Blei2012}
+Blei, D.~M., Ng, A.~Y., and Jordan, M.~I. (2012).
+\newblock {Latent Dirichlet Allocation}.
+\newblock {\em Journal of Machine Learning Research}, 3(4-5):993--1022.
+
+\bibitem[Girshick et~al., 2014]{Girshick2014}
+Girshick, R., Donahue, J., Darrell, T., Berkeley, U.~C., and Malik, J. (2014).
+\newblock {Rich feature hierarchies for accurate object detection and semantic
+  segmentation}.
+\newblock {\em Cvpr'14}, pages 2--9.
+
+\bibitem[Gong et~al., 2014]{Gong2014}
+Gong, Y., Wang, L., Hodosh, M., and Hockenmaier, J. (2014).
+\newblock {Improving Image-Sentence Embeddings Using Large Weakly Annotated
+  Photo Collections}.
+\newblock {\em Computer Vision–ECCV}, pages 529--545.
+
+\bibitem[Hochreiter and Schmidhuber, 1997]{SeppHochreiter1997}
+Hochreiter, S. and Schmidhuber, J. (1997).
+\newblock {Long short-term memory}.
+\newblock {\em Neural computation}, 9(8):1735--1780.
+
+\bibitem[Jia et~al., 2015]{Fernando2015}
+Jia, X., Gavves, E., Fernando, B., and Tuytelaars, T. (2015).
+\newblock {Guiding Long-Short Term Memory for Image Caption Generation}.
+
+\bibitem[Karpathy and Fei-Fei, 2015]{Karpathy2015}
+Karpathy, a. and Fei-Fei, L. (2015).
+\newblock {Deep Visual-Semantic Alignments for Generating Image Des}.
+\newblock {\em Cvpr2015}.
+
+\bibitem[Krizhevsky et~al., 2012]{Krizhevsky2012a}
+Krizhevsky, A., Sutskever, I., and Hinton, G.~E. (2012).
+\newblock {ImageNet Classification with Deep Convolutional Neural Networks}.
+\newblock {\em Advances In Neural Information Processing Systems}, pages 1--9.
+
+\bibitem[LeCun et~al., 2015]{LeCun2015}
+LeCun, Y., Bengio, Y., and Hinton, G. (2015).
+\newblock {Deep learning}.
+\newblock {\em Nature}, 521(7553):436--444.
+
+\bibitem[Lin et~al., 2014]{Lin2014}
+Lin, T.-Y., Maire, M., Belongie, S., Bourdev, L., Girshick, R., Hays, J.,
+  Perona, P., Ramanan, D., Zitnick, C.~L., and Doll{\'{a}}r, P. (2014).
+\newblock {Microsoft COCO: Common Objects in Context}.
+
+\bibitem[Plummer et~al., 2015]{Plummer2015}
+Plummer, B.~a., Wang, L., Cervantes, C.~M., Caicedo, J.~C., Hockenmaier, J.,
+  and Lazebnik, S. (2015).
+\newblock {Flickr30k Entities: Collecting Region-to-Phrase Correspondences for
+  Richer Image-to-Sentence Models}.
+
+\bibitem[Simonyan and Zisserman, 2015]{Arge2015}
+Simonyan, K. and Zisserman, A. (2015).
+\newblock {Very Deep Convolutional Networks For Large-Scale Image Recognition}.
+
+\bibitem[Vinyals et~al., 2015]{Google}
+Vinyals, O., Toshev, A., Bengio, S., and Erhan, D. (2015).
+\newblock {Show and Tell: A Neural Image Caption Generator}.
+
+\bibitem[Young et~al., 2014]{Young2014}
+Young, P., Lai, A., Hodosh, M., and Hockenmaier, J. (2014).
+\newblock {From Image Descriptions to Visual Denotations: New Similarity
+  Metrics for Semantic Inference over Event Descriptions}.
+\newblock {\em Transactions of the Association for Computational Linguistics
+  (TACL)}, 2(April):67--78.
+
+\bibitem[Zhang et~al., 2015]{Zhang}
+Zhang, S., Jiang, H., Wei, S., and Dai, L. (2015).
+\newblock {Feedforward Sequential Memory Neural Networks without Recurrent
+  Feedback}.
+
+\end{thebibliography}

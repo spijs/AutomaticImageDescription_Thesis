@@ -162,8 +162,8 @@
 \begin{frame}{Convolutional Neural Networks (CNN)}
 \begin{wideitemize}
 \item ImageNet Classification 
-\item deeper Models: VGGNet 16 layers
-\item use of layers
+\item deeper Models: VGGNet 16 layers \cite{Arge2015}
+\item use of layers for other tasks
 \begin{figure}[tb]
            \centering
            \includegraphics[width=\linewidth]{cnn.PNG}
@@ -275,6 +275,12 @@ $P(player|doc_i) = P(topic_{sport} | doc_i) P(player | topic_{sport})$
     \item alignment objective
     \end{itemize}
 \end{wideitemize}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{alignment.PNG}
+\end{figure}
+
 \end{frame}
 
 \begin{frame}{\cite{Karpathy2015}}
@@ -382,8 +388,8 @@ $P(player|doc_i) = P(topic_{sport} | doc_i) P(player | topic_{sport})$
 
 \begin{frame}{Methodology}
 \begin{wideitemize}
-\item modify NeuralTalk code which implements both Karpathy and Vinyals
-\item Feedforward Sequential Memory Neural Networks without Recurrent Feedback %ref Zhang
+\item modify NeuralTalk\footnote{\url{https://github.com/karpathy/neuraltalk}} code which implements both Karpathy and Vinyals
+\item Feedforward Sequential Memory Neural Networks without Recurrent Feedback \cite{Zhang}
 \item LDA
 \begin{itemize}
 \item learn LDA on training set
