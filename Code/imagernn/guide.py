@@ -6,6 +6,8 @@ import os
 def get_guide_size(guide_type):
     if guide_type=="image":
         return 4096
+    if guide_type=="lda":
+        return 120
 
 def get_guide(guide_type,im,L=None):
     if guide_type=="image":
