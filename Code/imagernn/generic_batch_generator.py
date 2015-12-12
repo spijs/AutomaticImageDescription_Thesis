@@ -115,7 +115,7 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:],L[i,:])
+      guide = get_guide(guide_input,F[i,:],L=L[i,:])
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
@@ -186,7 +186,7 @@ class GenericBatchGenerator:
   def predict(batch, model, params, **kwparams):
     """ some code duplication here with forward pass, but I think we want the freedom in future """
     F = np.row_stack(x['image']['feat'] for x in batch)
-    #lda_enabled = params.get('lda',0)
+    lda_enabled = params.get('lda',0)
     L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
     if lda_enabled:
        L = np.row_stack(x['topics'] for x in batch)
@@ -201,7 +201,7 @@ class GenericBatchGenerator:
     guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:],L[i,:])
+      guide = get_guide(guide_input,F[i,:],L=L[i,:])
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
@@ -227,7 +227,7 @@ class GenericBatchGenerator:
     guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:],L[i,:])
+      guide = get_guide(guide_input,F[i,:],L=L[i,:])
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
