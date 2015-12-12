@@ -90,11 +90,11 @@ class GenericBatchGenerator:
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     #Wlda = model['Wlda']
-    #lda_enabled = params.get('lda',0)
-    # L = np.zeros((len(batch),lda_enabled))
-    #if lda_enabled!=0:
-    #   print (x['topics'] for x in batch)
-    #   L = np.row_stack(x['topics'] for x in batch)
+    lda_enabled = params.get('lda',0)
+    L = np.zeros((len(batch),lda_enabled))
+    if lda_enabled!=0:
+       print (x['topics'] for x in batch)
+       L = np.row_stack(x['topics'] for x in batch)
     #lda = L.dot(Wlda)
 
     # decode the generator we wish to use
@@ -115,8 +115,7 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:])
-      #Li = lda[i,:]
+      guide = get_guide(guide_input,F[i,:],L[i,:])
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
@@ -131,9 +130,9 @@ class GenericBatchGenerator:
       #cache['lda'] = lda
       cache['Ws_shape'] = Ws.shape
       cache['F'] = F
-      #cache['L'] = L
+      cache['L'] = L
       cache['generator_str'] = generator_str
-      #cache['lda_enabled'] = lda_enabled
+      cache['lda_enabled'] = lda_enabled
 
     return Ys, cache
 
@@ -188,9 +187,9 @@ class GenericBatchGenerator:
     """ some code duplication here with forward pass, but I think we want the freedom in future """
     F = np.row_stack(x['image']['feat'] for x in batch)
     #lda_enabled = params.get('lda',0)
-    #L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
-    #if lda_enabled:
-    #   L = np.row_stack(x['topics'] for x in batch)
+    L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
+    if lda_enabled:
+       L = np.row_stack(x['topics'] for x in batch)
     We = model['We']
     #Wlda = model['Wlda']
     be = model['be']
@@ -202,7 +201,7 @@ class GenericBatchGenerator:
     guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:])
+      guide = get_guide(guide_input,F[i,:],L[i,:])
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
@@ -211,10 +210,10 @@ class GenericBatchGenerator:
   def predict_test(batch, model, params,topics,  **kwparams):
     """ some code duplication here with forward pass, but I think we want the freedom in future """
     F = np.row_stack(x['image']['feat'] for x in batch)
-    #lda_enabled = params.get('lda',0)
+    lda_enabled = params.get('lda',0)
     #L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
-    #if lda_enabled:
-    #   L = topics
+    if lda_enabled:
+       L = topics
     We = model['We']
     #Wlda = model['Wlda']
     be = model['be']
@@ -228,7 +227,7 @@ class GenericBatchGenerator:
     guide_input = params.get('guide','image')
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:])
+      guide = get_guide(guide_input,F[i,:],L[i,:])
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
