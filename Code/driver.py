@@ -127,9 +127,9 @@ def main(params):
   # fetch the data provider
   dp = getDataProvider(dataset)
   #LDA
-  #if params['lda']:
-  #    print 'loading topics, number:', str(params['lda'])
-  #    dp.load_topic_models(dataset,params['lda'])
+  if params['lda']:
+      print 'loading topics, number:', str(params['lda'])
+      dp.load_topic_models(dataset,params['lda'])
   misc = {} # stores various misc items that need to be passed around the framework
 
   # go over all training sentences and find the vocabulary we want to use, i.e. the words that occur
