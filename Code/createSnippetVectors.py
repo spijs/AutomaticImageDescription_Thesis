@@ -120,11 +120,6 @@ def mainExec(name_file1, name_file2, features1, features2):
     augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
     print "Writing the model to disk"
 
-
-#    augmentedcca = CCA(n_components=15)
- #   augmentedcca = fitCCA(augmentedcca, augmented_imgs, augmented_sentences, "augmentedcca.p")
-
-
     resultingModel = StackedCCAModel(nn_img, nn_sent, cca, augmentedcca)
 
     pickle.dump(resultingModel, open("completestackedCCAModel.p", 'w+'))
@@ -143,19 +138,10 @@ def augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_im
                 not np.any(np.isnan(newImage))))):
             if i % 1000 == 0:
                 print "Current pair: " + str(i)
-            if i == 0:
-                augmented_imgs = newImage
-                augmented_sentences = newSentence
-            elif i == 1:
-                augmented_sentences = np.append([augmented_sentences], [newSentence], axis=0)
-                augmented_imgs = np.append([augmented_imgs],
-                                           [newImage], axis=0)
-            else:
-                augmented_sentences = np.append(augmented_sentences, [newSentence], axis=0)
-                augmented_imgs = np.append(augmented_imgs,
-                                           [newImage], axis=0)
+            augmented_imgs.append(newImage)
+            augmented_sentences.append(newSentence)
             i += 1
-    return augmented_imgs, augmented_sentences
+    return np.array(augmented_imgs), np.array(augmented_sentences)
 
 
 def createSnippetMatrices(featuresDict, weightedVectors):
@@ -167,47 +153,42 @@ def createSnippetMatrices(featuresDict, weightedVectors):
         currentSentence += 1
         if currentSentence % 1000 == 0:
             print "Current Sentence: " + str(currentSentence)
-        # for j in range(len(weightedVectors[i])):
-            # weightedVectors[i][j] = float(weightedVectors[i][j])
         imgfeature = featuresDict[i]
-        # for j in range(len(imgfeature)):
-        #     imgfeature[j] = float(imgfeature[j])
-        if currentSentence == 1:
-            sentenceMatrix = weightedVectors[i]
-            imagematrix = imgfeature
-        elif currentSentence == 2:
-            sentenceMatrix = np.append([sentenceMatrix], [weightedVectors[i]], axis=0)
-            imagematrix = np.concatenate(([imagematrix], [imgfeature]), axis=0)
-        else:
-            sentenceMatrix = np.append(sentenceMatrix, [weightedVectors[i]], axis=0)
-            imagematrix = np.concatenate((imagematrix, [imgfeature]), axis=0)
-    return imagematrix, sentenceMatrix
+        imagematrix.append(imgfeature)
+        sentenceMatrix.append(weightedVectors[i])
+    return np.array(imagematrix), np.array(sentenceMatrix)
 
 
 def createTrainMatrices(voc):
+    s = getStopwords()
     idf = np.zeros(len(voc))
     trainingimages = []
     trainingsentences = []
     dp = getDataProvider('flickr30k')
     currentPair = 0
+    current_image = ""
+    current_sentence = []
     for pair in dp.iterImageSentencePair():
-        print "Current pair : " + str(currentPair)
+        if currentPair % 1000 == 0:
+            print "Current pair : " + str(currentPair)
+        img_name = pair['image']['filename']
+        new_sentence = pair['sentence']['tokens']
         img = pair['image']['feat']
-        sentence = getFullSentence(pair, voc)
-        if np.linalg.norm(sentence) > 0:
-            for i in range(len(sentence)):
-                if sentence[i] > 0:
-                    idf[i] += 1
-            if currentPair == 0:
-                trainingsentences = sentence
-                trainingimages = img
-            elif currentPair == 1:
-                trainingsentences = np.append([trainingsentences], [sentence], axis=0)
-                trainingimages = np.append([trainingimages], [img], axis=0)
-            else:
-                trainingsentences = np.append(trainingsentences, [sentence], axis=0)
-                trainingimages = np.append(trainingimages, [img], axis=0)
-            currentPair += 1
+        if(img_name is current_image):
+            current_sentence=current_sentence + new_sentence
+        else:
+            current_image=img_name
+            sentence = getFullSentence(current_sentence, voc, s)
+            current_sentence = new_sentence
+            if np.linalg.norm(sentence) > 0:
+                for i in range(len(sentence)):
+                    if sentence[i] > 0:
+                        idf[i] += 1
+                trainingimages.append(img)
+                trainingsentences.append(sentence)
+                currentPair += 1
+    trainingsentences = np.array(trainingsentences)
+    trainingimages = np.array(trainingimages)
     for i in range(len(trainingsentences)):
         trainingsentences[i] = trainingsentences[i] * idf
     return trainingimages, trainingsentences
@@ -264,15 +245,11 @@ def nearest_neighbor(matrix):
 '''
 given an image sentence pair, return an array containing the concatenation of the 5 sentences in the pair
 '''
-def getFullSentence(imagesentencepair, vocabulary):
-    sentences = imagesentencepair['image']['sentences']
-    s = getStopwords()
-    full = []
+def getFullSentence(sentence, vocabulary, stopwords):
+
     vector =  np.zeros(len(vocabulary))
-    for sentence in sentences:
-        result = remove_common_words(sentence['tokens'], s)
-        full.extend(result)
-    for word in full :
+    result = remove_common_words(sentence, stopwords)
+    for word in result :
         if word.lower() in vocabulary :
             vector[vocabulary.index(word.lower())] += 1
     return vector
