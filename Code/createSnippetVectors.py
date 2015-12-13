@@ -202,7 +202,11 @@ def fitCCA(model, x, y, file):
 
 def createFeatDict(names, namesfile1, namesfile2, features1, features2):
     result = {}
+    current = 0
     for name in names:
+    current += 1
+    if current % 1000 == 0:
+        print "current image: "+ str(current)
     #print "trying to add feature to dict for: "+name
         img1 = getImage(name, namesfile1, features1)
         if not len(img1) == 0:
