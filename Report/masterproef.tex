@@ -69,9 +69,13 @@
 \begin{flushleft}
   \renewcommand{\arraystretch}{1.1}
   \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
-    LoG   & Laplacian-of-Gaussian \\
-    MSE   & Mean Square error \\
-    PSNR  & Peak Signal-to-Noise ratio \\
+    LDA  & Latent Dirichlet Allocation \\
+    RNN & Recurrent Neuraal Netwerk \\
+    CNN & Convolutioneel Neuraal Netwerk \\
+    LSTM & Long Short Term Memory \\
+    CCA & Canonical Correlation Analysis \\
+    
+    
   \end{tabularx}
 \end{flushleft}
 \section*{Symbolen}
@@ -84,6 +88,8 @@
     $E$   & Energie \\
     $m$   & Massa \\
     $\pi$ & Het getal pi \\
+    $\theta$   & Kansverdeling van onderwerpen per document (LDA) \\
+    $\phi$   & Kansverdeling van woorden per onderwerp (LDA)  \\
   \end{tabularx}
 \end{flushleft}
 
@@ -92,7 +98,7 @@
 
 \include{inleiding}
 \include{hst-related}
-\include{hfdst-2}
+\include{hst-theorie}
 % ... en zo verder tot
 \include{hfdst-n}
 \include{besluit}
