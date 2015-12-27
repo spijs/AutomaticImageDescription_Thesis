@@ -2,6 +2,8 @@
 \label{hst-theorie}
 Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aanpak zo goed mogelijk te begrijpen. Het bevat een beschrijving van de gebruikte neurale netwerken en van een aantal concepten uit de statistiek.
 
+
+% RNN
 \section{Recurrente Neurale Netwerken}
 Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen layers. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over de verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om dingen te onthouden. Hierdoor kunnen recurrente netwerken zeer goed om met het coderen van tijdsgerelateerde informatie. Dit is zeer geschikt om sequenti\"ele data, zoals tekst, te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een language model.\
 
@@ -13,8 +15,12 @@ Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neur
 \end{figure}
 
 Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een voorspelling gemaakt worden van het volgende woord. De woorden worden in de vorm van vectorrepresentaties aan het netwerk gegeven. Deze encodering kan gebruik maken van one-hot codering, ze kan random zijn, of er kan gebruik gemaakt worden van word embeddings zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}.
+
+% CNN
 \section{Convolutionele Neurale Netwerken}
 
+
+% LSTM
 \section{Long Short Term Memory Neurale Netwerken}
 Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Op figuur \ref{fig:lstm} is te zien hoe een LSTM-blok er uitziet.\cite{Google}\cite{SeppHochreiter1997}
 
@@ -26,6 +32,8 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
 \end{figure}
 
 LSTM netwerken worden net als RNN gebruikt als language models en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken een langere periode hebben waarover de input kan onthouden worden. Door het geheugen dat langer kan onthouden dan een RNN is het mogelijk om sequenties met een langere periode tussen belangrijke events te modelleren. 
+
+% LDA
 \section{Latent Dirichlet Allocation}
 Latent Dirichlet Allocation is een generatief probabilistisch model voor dsicrete data. Een van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. Dit conecpt is gebaseerd op de veronderstelling dat elk document een zeker kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben dan een kansverdeling over alle mogelijke woorden. Zo kan de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat worden geschreven als een som over alle verschillende topics (formule \ref{formule:lda}). 
 
@@ -43,4 +51,16 @@ Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van 
     \caption{Grafische weergave van LDA}
 \end{figure}
 
+
+%  Stacked CCA
 \section{Stacked Canonical Correlation Analysis}
+Canonical Correlation Analysis (CCA) is een methode die gebruikt wordt om een covariantiematrix van twee datasets te berekenen. Dit houdt in dat er een projectie wordt gemaakt naar een gemeenschappelijke ruimte voor beide datasets. In het onderzoek naar image captioning kan dit bijvoorbeeld leiden tot een multimodale mapping van afbeeldings- en beschrijvingsrepresentatie. 
+
+Stacked CCA, gebaseerd op Stacked Auxiliary Embedding kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van ge-annoteerde foto's, versterkt met een dataset die per foto een set van stukjes van de foto met een aparte beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
+
+Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Uit de extra dataset volgt een eerste set van CCA projecties ($A$, $B$). Daarna volgt een projectie van de originele dataset ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$, resulterend in projecties $AX$ en $BY$. Vervolgens transformeren we $AX$ en $BY$ volgens de niet-lineaire functie $\phi(x)$. Concatenatie van de originele dataset met het resultaat van de niet-lineaire transformatie leidt tot $\hat{X} = [X, \phi(XA)], \hat{Y} = [Y, \phi(YB)]$. Een laatste stap in het proces is het berekenen van een LDA projectie die gebaseerd is op $\hat{X}$ en $\hat{Y}$, wat resulteert in $U$ en $V$.
+
+
+Om de dimensionaliteit van de projectie te verhogen wordt voor $\phi(x)$ een random Fourier Feature (RFF) mapping gebruikt. Deze RFF is een functie gebaseerd op de gemiddelde afstand tot de vijftigste dichtste buur van de data. Voor elke foto en caption wordt gekeken welke andere foto of caption de vijftigste dichtste buur is, om vervolgens het gemiddelde te nemen van alle afstanden. De exacte berekening is $\phi(\mathbf{x})=\sqrt{2}cos(\mathbf{x}R+\mathbf{b})$. $R$ is een matrix die verkregen wordt door sampling van een normaalverdeling met gemiddelde 0, en standaardafwijking $\sigma^2$, waarbij $\sigma$ overeen komt met de eerder berekende gemiddelde afstand. Vector $b$ is resultaat van sampling uit een uniforme verdeling [0,1].
+
+De projectie van een ongeziene afbeelding is het resultaat van het achtereenvolgens uitvoeren van alle transformaties. Voor vector $\mathbf{x}$ geeft dit $\mathbf{\hat{x}} = U[\mathbf{x}, \phi(A\mathbf{x})]$. Deze representatie kan gebruikt worden als een verbeterde versie van de originele image vector, bijvoorbeeld bij een image retrieval taak.
