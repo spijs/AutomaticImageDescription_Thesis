@@ -10,3 +10,6 @@ Code/cv
 Report/Presentatie December/main.log
 Report/Presentatie December/main.pdf
 Report/Presentatie December/main.synctex.gz
+Report/*.pdf
+Report/*.synctex.gz
+Report/*.log
