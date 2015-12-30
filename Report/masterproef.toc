@@ -25,33 +25,27 @@
 \contentsline {subsection}{\numberline {2.3.3}Template gebaseerd}{6}{subsection.2.3.3}
 \contentsline {subsection}{\numberline {2.3.4}Neurale netwerken}{6}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}Entropie gebaseerde taalmodellen}{7}{subsection.2.3.5}
-\contentsline {chapter}{\chapternumberline {3}Een volgend hoofdstuk}{9}{chapter.3}
-\contentsline {section}{\numberline {3.1}Eerste onderwerp in dit hoofdstuk}{9}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Een item}{9}{subsection.3.1.1}
-\contentsline {section}{\numberline {3.2}Figuren}{9}{section.3.2}
-\contentsline {section}{\numberline {3.3}Tabellen}{9}{section.3.3}
-\contentsline {section}{\numberline {3.4}Lorem ipsum}{10}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Lorem ipsum dolor sit amet, consectetur adipiscing elit}{10}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}Praesent auctor venenatis posuere}{11}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Cras vulputate ultricies venenatis}{11}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}Donec nibh ante, consectetur et posuere id, tempus nec arcu}{11}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}Morbi et mauris tempus purus ornare vehicula}{12}{subsection.3.4.5}
-\contentsline {section}{\numberline {3.5}Besluit van dit hoofdstuk}{12}{section.3.5}
-\contentsline {chapter}{\chapternumberline {4}Het laatste hoofdstuk}{13}{chapter.4}
-\contentsline {section}{\numberline {4.1}Eerste onderwerp in dit hoofdstuk}{13}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Een item}{13}{subsection.4.1.1}
-\contentsline {section}{\numberline {4.2}Tweede onderwerp in dit hoofdstuk}{13}{section.4.2}
-\contentsline {section}{\numberline {4.3}Besluit van dit hoofdstuk}{13}{section.4.3}
-\contentsline {chapter}{\chapternumberline {5}Besluit}{15}{chapter.5}
-\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{19}{appendix.A}
-\contentsline {section}{\numberline {A.1}Meer lorem}{19}{section.A.1}
-\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{19}{subsection.A.1.1}
-\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{20}{subsection.A.1.2}
-\contentsline {section}{\numberline {A.2}Lorem 51}{20}{section.A.2}
-\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{21}{appendix.B}
-\contentsline {section}{\numberline {B.1}Lorem 20-24}{21}{section.B.1}
-\contentsline {section}{\numberline {B.2}Lorem 25-27}{22}{section.B.2}
-\contentsline {chapter}{Bibliografie}{23}{section*.26}
+\contentsline {chapter}{\chapternumberline {3}Theoretische Achtergrond}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}Recurrente Neurale Netwerken}{9}{section.3.1}
+\contentsline {section}{\numberline {3.2}Convolutionele Neurale Netwerken}{10}{section.3.2}
+\contentsline {section}{\numberline {3.3}Long Short Term Memory Neurale Netwerken}{11}{section.3.3}
+\contentsline {section}{\numberline {3.4}Latent Dirichlet Allocation}{11}{section.3.4}
+\contentsline {section}{\numberline {3.5}Stacked Canonical Correlation Analysis}{13}{section.3.5}
+\contentsline {chapter}{\chapternumberline {4}Het laatste hoofdstuk}{15}{chapter.4}
+\contentsline {section}{\numberline {4.1}Eerste onderwerp in dit hoofdstuk}{15}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Een item}{15}{subsection.4.1.1}
+\contentsline {section}{\numberline {4.2}Tweede onderwerp in dit hoofdstuk}{15}{section.4.2}
+\contentsline {section}{\numberline {4.3}Besluit van dit hoofdstuk}{15}{section.4.3}
+\contentsline {chapter}{\chapternumberline {5}Besluit}{17}{chapter.5}
+\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{21}{appendix.A}
+\contentsline {section}{\numberline {A.1}Meer lorem}{21}{section.A.1}
+\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{21}{subsection.A.1.1}
+\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{22}{subsection.A.1.2}
+\contentsline {section}{\numberline {A.2}Lorem 51}{22}{section.A.2}
+\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{23}{appendix.B}
+\contentsline {section}{\numberline {B.1}Lorem 20-24}{23}{section.B.1}
+\contentsline {section}{\numberline {B.2}Lorem 25-27}{24}{section.B.2}
+\contentsline {chapter}{Bibliografie}{25}{section*.26}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}

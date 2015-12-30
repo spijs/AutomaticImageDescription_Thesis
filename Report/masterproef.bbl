@@ -1,22 +1,71 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{h2g2}
-D.~Adams.
-\newblock {\em The Hitchhiker's Guide to the Galaxy}.
-\newblock Del Rey (reprint), 1995.
-\newblock ISBN-13: 978-0345391803.
+\bibitem{Arge2015}
+F.~O. R.~L. Arge and C.~I. Mage.
+\newblock {V d c n l -s i r}.
+\newblock pages 1--14, 2015.
 
-\bibitem{pratchett06:_good_omens}
-T.~Pratchett and N.~Gaiman.
-\newblock {\em Good Omens: \emph{The Nice and Accurate Prophecies of Agnes
-  Nutter, Witch}}.
-\newblock HarperTorch (reprint), 2006.
-\newblock ISBN-13: 978-0060853983.
+\bibitem{bernardi}
+R.~Bernardi, R.~Cakici, D.~Elliott, and A.~Erdem.
+\newblock {Automatic Image Description Systems : A Survey}.
+\newblock (Cv).
 
-\bibitem{wiki}
-Wikipedia.
-\newblock Scriptie.
-\newblock URL: \url{http://nl.wikipedia.org/wiki/Masterproef}, laatst nagekeken
-  op 2010-01-07.
+\bibitem{ciresan2012multi}
+D.~Ciresan, U.~Meier, and J.~Schmidhuber.
+\newblock Multi-column deep neural networks for image classification.
+\newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2012 IEEE
+  Conference on}, pages 3642--3649. IEEE, 2012.
+
+\bibitem{Girshick2014}
+R.~Girshick, J.~Donahue, T.~Darrell, U.~C. Berkeley, and J.~Malik.
+\newblock {Rich feature hierarchies for accurate object detection and semantic
+  segmentation}.
+\newblock {\em Cvpr'14}, pages 2--9, 2014.
+
+\bibitem{SeppHochreiter1997}
+S.~Hochreiter and J.~Schmidhuber.
+\newblock {Long short-term memory}.
+\newblock {\em Neural computation}, 9(8):1735--1780, 1997.
+
+\bibitem{Jia2014}
+Y.~Jia, E.~Shelhamer, J.~Donahue, S.~Karayev, J.~Long, R.~Girshick,
+  S.~Guadarrama, T.~Darrell, and U.~C.~B. Eecs.
+\newblock {Caffe : Convolutional Architecture for Fast Feature Embedding}.
+\newblock {\em ACM Conference on Multimedia}, 2014.
+
+\bibitem{Krizhevsky2012a}
+A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton.
+\newblock {ImageNet Classification with Deep Convolutional Neural Networks}.
+\newblock {\em Advances In Neural Information Processing Systems}, pages 1--9,
+  2012.
+
+\bibitem{lawrence1997face}
+S.~Lawrence, C.~L. Giles, A.~C. Tsoi, and A.~D. Back.
+\newblock Face recognition: A convolutional neural-network approach.
+\newblock {\em Neural Networks, IEEE Transactions on}, 8(1):98--113, 1997.
+
+\bibitem{LeCun2010}
+Y.~LeCun, K.~Kavukcuoglu, and C.~Farabet.
+\newblock {Convolutional networks and applications in vision}.
+\newblock {\em ISCAS 2010 - 2010 IEEE International Symposium on Circuits and
+  Systems: Nano-Bio Circuit Fabrics and Systems}, pages 253--256, 2010.
+
+\bibitem{Mikolov2013}
+T.~Mikolov, K.~Chen, G.~Corrado, and J.~Dean.
+\newblock {Distributed Representations of Words and Phrases and their
+  Compositionality}.
+\newblock {\em Nips}, pages 1--9, 2013.
+
+\bibitem{ILSVRC15}
+O.~Russakovsky, J.~Deng, H.~Su, J.~Krause, S.~Satheesh, S.~Ma, Z.~Huang,
+  A.~Karpathy, A.~Khosla, M.~Bernstein, A.~C. Berg, and L.~Fei-Fei.
+\newblock {ImageNet Large Scale Visual Recognition Challenge}.
+\newblock {\em International Journal of Computer Vision (IJCV)},
+  115(3):211--252, 2015.
+
+\bibitem{Google}
+O.~Vinyals, A.~Toshev, S.~Bengio, and D.~Erhan.
+\newblock {Show and Tell: A Neural Image Caption Generator}.
+\newblock 2015.
 
 \end{thebibliography}

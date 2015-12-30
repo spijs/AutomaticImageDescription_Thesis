@@ -5,7 +5,7 @@ Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aan
 
 % RNN
 \section{Recurrente Neurale Netwerken}
-Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen layers. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over de verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om dingen te onthouden. Hierdoor kunnen recurrente netwerken zeer goed om met het coderen van tijdsgerelateerde informatie. Dit is zeer geschikt om sequenti\"ele data, zoals tekst, te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een language model.\
+Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen layers. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over de verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.\
 
 \begin{figure}[tb]
     \centering
@@ -14,10 +14,22 @@ Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neur
     \caption{Ontrolling van een recurrent neuraal netwerk}
 \end{figure}
 
-Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een voorspelling gemaakt worden van het volgende woord. De woorden worden in de vorm van vectorrepresentaties aan het netwerk gegeven. Deze encodering kan gebruik maken van one-hot codering, ze kan random zijn, of er kan gebruik gemaakt worden van word embeddings zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}.
+Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om taal te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze encodering kan gebruik maken van one-hot codering, ze kan random zijn, of er kan gebruik gemaakt worden van word embeddings zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}. Deze codering zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
 
 % CNN
 \section{Convolutionele Neurale Netwerken}
+Convolutionele Neurale Networken (ConvNets of CNN's) zijn een biologisch- ge\" inspireerde trainbare architectuur die invariante afbeeldingskarakteristieken kan leren. \cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{ciresan2012multi}\cite{lawrence1997face}
+Een CNN is een 'Deep Learning' architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een 'feature map' noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding van alle mogelijke locaties van de input. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
+Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau kleine rechthoekjes uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
+
+E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een paper\cite{Krizhevsky2012a} die CNN's gebruikt voor het oplossen van de ImageNet challenge.\cite{ILSVRC15}
+Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categori\"en. De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitting te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die op dezelfde en recentere wedstrijden nog betere resultaten bekomen. Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is publiek beschikbaar met behulp van Caffe\cite{Jia2014}. De feature maps van verschillende outputlagen van dit netwerk dienen als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de laatste laag voor de classificatielaag worden beschouwd als een representatievector voor de hele afbeelding. Output van andere lagen is een representatie voor lagere  afbeeldingskenmerken. 
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{Images/cnn.PNG}
+	\label{fig:AlexNet}
+	\caption{Convolutioneel Neural Netwerk gebruikt door \cite{Krizhevsky2012a} voor classificatie van afbeeldingen}
+\end{figure}
 
 
 % LSTM
@@ -31,7 +43,7 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
     \caption{Long Short Term Memory geheugenblok}
 \end{figure}
 
-LSTM netwerken worden net als RNN gebruikt als language models en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken een langere periode hebben waarover de input kan onthouden worden. Door het geheugen dat langer kan onthouden dan een RNN is het mogelijk om sequenties met een langere periode tussen belangrijke events te modelleren. 
+LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken over een langere periode dan een gewone RNN informatie kan onthouden. Hierdoor is het mogelijk om sequenties met events die gescheiden zijn door een langere periode, te modelleren. 
 
 % LDA
 \section{Latent Dirichlet Allocation}

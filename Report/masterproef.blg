@@ -32,15 +32,16 @@ Case mismatch error between cite keys Karpathy and karpathy
  : \citation{Karpathy
  :                   }
 I'm skipping whatever remains of this command
-A level-1 auxiliary file: hfdst-2.aux
+A level-1 auxiliary file: hst-theorie.aux
 A level-1 auxiliary file: hfdst-n.aux
 A level-1 auxiliary file: besluit.aux
 A level-1 auxiliary file: app-A.aux
 A level-1 auxiliary file: app-n.aux
 The style file: abbrv.bst
 Database file #1: referenties.bib
+Warning--I didn't find a database entry for "h2g2"
+Warning--I didn't find a database entry for "wiki"
 Warning--I didn't find a database entry for "Hodosh"
-Warning--I didn't find a database entry for "bernardi"
 Warning--I didn't find a database entry for "Farhadi"
 Warning--I didn't find a database entry for "Yang"
 Warning--I didn't find a database entry for "Patterson"
@@ -72,4 +73,9 @@ Warning--I didn't find a database entry for "Xu"
 Warning--I didn't find a database entry for "Elliott"
 Warning--I didn't find a database entry for "Karpathy1"
 Warning--I didn't find a database entry for "Donahue"
+Warning--empty journal in Arge2015
+Warning--empty journal in bernardi
+Warning--there's a number but no volume in bernardi
+Warning--empty year in bernardi
+Warning--empty journal in Google
 (There were 7 error messages)
