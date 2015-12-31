@@ -10,6 +10,11 @@ R.~Bernardi, R.~Cakici, D.~Elliott, and A.~Erdem.
 \newblock {Automatic Image Description Systems : A Survey}.
 \newblock (Cv).
 
+\bibitem{Bishop:1995:NNP:525960}
+C.~M. Bishop.
+\newblock {\em Neural Networks for Pattern Recognition}.
+\newblock Oxford University Press, Inc., New York, NY, USA, 1995.
+
 \bibitem{ciresan2012multi}
 D.~Ciresan, U.~Meier, and J.~Schmidhuber.
 \newblock Multi-column deep neural networks for image classification.

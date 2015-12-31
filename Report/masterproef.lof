@@ -12,10 +12,11 @@
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Ontrolling van een recurrent neuraal netwerk}}{9}{figure.3.1}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Convolutioneel Neural Netwerk gebruikt door \cite {Krizhevsky2012a} voor classificatie van afbeeldingen}}{11}{figure.3.2}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Long Short Term Memory geheugenblok}}{12}{figure.3.3}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Grafische weergave van LDA}}{13}{figure.3.4}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Feed Forward Neuraal Netwerk met twee verborgen lagen}}{10}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Ontrolling van een recurrent neuraal netwerk}}{10}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Convolutioneel Neural Netwerk gebruikt door \cite {Krizhevsky2012a} voor classificatie van afbeeldingen}}{12}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Long Short Term Memory geheugenblok}}{13}{figure.3.4}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Grafische weergave van LDA}}{14}{figure.3.5}
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}

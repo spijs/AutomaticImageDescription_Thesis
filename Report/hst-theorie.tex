@@ -2,10 +2,79 @@
 \label{hst-theorie}
 Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aanpak zo goed mogelijk te begrijpen. Het bevat een beschrijving van de gebruikte neurale netwerken en van een aantal concepten uit de statistiek.
 
+\section{Neurale Netwerken}
+Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feed forward), dat de basis vormt voor de varianten die wij gebruiken. Daarna lichten we enkele meer complexe netwerken toe: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken. 
+
+\subsection{Feed Forward Neurale Netwerken}
+Om een feed forward neuraal netwerk te begrijpen is het concept perceptron nodig. \todo{perceptron nog uitleggen}
+\paragraph{Concept} % (fold)
+\label{par:concept}
+Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. Het bestaat uit een input laag, een aantal verborgen lagen en een output laag. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}. De output kan indien nodig nog door een activatiefunctie worden veranderd.\cite{Bishop:1995:NNP:525960}
+
+\begin{figure}
+\def\layersep{2.5cm}
+\centering
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!50];
+    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron] (I-\name) at (0,-\y) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,5}
+        \path[yshift=0.5cm]
+            node[hidden neuron] (H1-\name) at (\layersep,-\y cm) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,5}
+        \path[yshift=0.5cm]
+            node[hidden neuron] (H2-\name) at (2*\layersep,-\y cm) {};
+
+    % Draw the output layer node
+    \node[output neuron, right of=H2-3] (O) {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,5}
+            \path (I-\source) edge (H1-\dest);
+
+    \foreach \source in {1,...,5}
+        \foreach \dest in {1,...,5}
+            \path (H1-\source) edge (H2-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,5}
+        \path (H2-\source) edge (O);
+
+    % Annotate the layers
+    \node[annot,above of=H1-1, node distance=1cm] (hl1) {Hidden layer 1};
+    \node[annot,above of=H2-1, node distance=1cm] (hl2) {Hidden layer 2};
+    \node[annot,left of=hl1] {Input layer};
+    \node[annot,right of=hl2] {Output layer};
+\end{tikzpicture}
+\caption{Feed Forward Neuraal Netwerk met twee verborgen lagen}
+\label{fig:ffnn}
+\end{figure}
+
+% paragraph concept (end)
+
+\paragraph{Training} % (fold)
+\label{par:training}
+Het trainen van een feed forward network gebeurt meestal met een techniek die terugpropagatie heet. Hierbij wordt de fout op de output van het netwerk laag per laag terug gepropageerd doorheen het netwerk. Op basis van de afgeleide van de output in functie van de gewichten wordt een correctie uitgevoerd. De grootte van deze correctie is afhankelijk van de learning rate: hoe groter de learning rate, hoe groter de correctie. Een belangrijke voorwaarde voor terugpropagatie is dat de activatiefunctie afleidbaar is.\cite{Bishop:1995:NNP:525960}
+
+% paragraph training (end)
 
 % RNN
-\section{Recurrente Neurale Netwerken}
-Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen layers. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over de verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.\
+\subsection{Recurrente Neurale Netwerken}
+Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen layers. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over de verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.
 
 \begin{figure}[tb]
     \centering
@@ -17,7 +86,7 @@ Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neur
 Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om taal te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze encodering kan gebruik maken van one-hot codering, ze kan random zijn, of er kan gebruik gemaakt worden van word embeddings zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}. Deze codering zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
 
 % CNN
-\section{Convolutionele Neurale Netwerken}
+\subsection{Convolutionele Neurale Netwerken}
 Convolutionele Neurale Networken (ConvNets of CNN's) zijn een biologisch- ge\" inspireerde trainbare architectuur die invariante afbeeldingskarakteristieken kan leren. \cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{ciresan2012multi}\cite{lawrence1997face}
 Een CNN is een 'Deep Learning' architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een 'feature map' noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding van alle mogelijke locaties van de input. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau kleine rechthoekjes uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
@@ -33,7 +102,7 @@ Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een a
 
 
 % LSTM
-\section{Long Short Term Memory Neurale Netwerken}
+\subsection{Long Short Term Memory Neurale Netwerken}
 Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Op figuur \ref{fig:lstm} is te zien hoe een LSTM-blok er uitziet.\cite{Google}\cite{SeppHochreiter1997}
 
 \begin{figure}[tb]

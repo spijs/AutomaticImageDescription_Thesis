@@ -1,4 +1,6 @@
-This is BibTeX, Version 0.99dThe top-level auxiliary file: masterproef.aux
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: masterproef.aux
 A level-1 auxiliary file: inleiding.aux
 A level-1 auxiliary file: hst-related.aux
 White space in argument---line 30 of file hst-related.aux
@@ -39,7 +41,6 @@ A level-1 auxiliary file: app-A.aux
 A level-1 auxiliary file: app-n.aux
 The style file: abbrv.bst
 Database file #1: referenties.bib
-Warning--I didn't find a database entry for "h2g2"
 Warning--I didn't find a database entry for "wiki"
 Warning--I didn't find a database entry for "Hodosh"
 Warning--I didn't find a database entry for "Farhadi"
@@ -73,9 +74,51 @@ Warning--I didn't find a database entry for "Xu"
 Warning--I didn't find a database entry for "Elliott"
 Warning--I didn't find a database entry for "Karpathy1"
 Warning--I didn't find a database entry for "Donahue"
+Warning--I didn't find a database entry for "h2g2"
 Warning--empty journal in Arge2015
 Warning--empty journal in bernardi
 Warning--there's a number but no volume in bernardi
 Warning--empty year in bernardi
 Warning--empty journal in Google
+You've used 13 entries,
+            2118 wiz_defined-function locations,
+            647 strings with 6713 characters,
+and the built_in function-call counts, 5257 in all, are:
+= -- 504
+> -- 318
+< -- 6
++ -- 125
+- -- 112
+* -- 393
+:= -- 882
+add.period$ -- 40
+call.type$ -- 13
+change.case$ -- 94
+chr.to.int$ -- 0
+cite$ -- 18
+duplicate$ -- 184
+empty$ -- 338
+format.name$ -- 112
+if$ -- 1079
+int.to.chr$ -- 0
+int.to.str$ -- 13
+missing$ -- 14
+newline$ -- 68
+num.names$ -- 26
+pop$ -- 102
+preamble$ -- 1
+purify$ -- 82
+quote$ -- 0
+skip$ -- 139
+stack$ -- 0
+substring$ -- 278
+swap$ -- 51
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 50
+warning$ -- 5
+while$ -- 49
+width$ -- 15
+write$ -- 140
 (There were 7 error messages)
