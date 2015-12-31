@@ -6,10 +6,17 @@ Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aan
 Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feed forward), dat de basis vormt voor de varianten die wij gebruiken. Daarna lichten we enkele meer complexe netwerken toe: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken. 
 
 \subsection{Feed Forward Neurale Netwerken}
-Om een feed forward neuraal netwerk te begrijpen is het concept perceptron nodig. \todo{perceptron nog uitleggen}
-\paragraph{Concept} % (fold)
-\label{par:concept}
-Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. Het bestaat uit een input laag, een aantal verborgen lagen en een output laag. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}. De output kan indien nodig nog door een activatiefunctie worden veranderd.\cite{Bishop:1995:NNP:525960}
+\paragraph{Perceptron} % (fold)
+\label{par:perceptron}
+
+Om een feed forward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een perceptron is een gewogen som van alle inputs met gewichten $w_i$, gewijzigd met een transferfunctie $f$ (formule \ref{formule:perceptron}).
+
+\begin{equation}
+    y = f(\sum\limits_{i=1}^{n}w_ix_i)
+    \label{formule:perceptron}
+\end{equation}
+
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Een voorbeeld van een multi-output perceptron is te zien in figuur \ref{fig:perceptron}.
 
 \begin{figure}
 \def\layersep{2.5cm}
@@ -17,8 +24,44 @@ Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. He
 \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
     \tikzstyle{every pin edge}=[<-,shorten <=1pt]
     \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
-    \tikzstyle{input neuron}=[neuron, fill=green!50];
-    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{input neuron}=[neuron, fill=lime!65];
+    \tikzstyle{output neuron}=[neuron, fill=red!65];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    \foreach \name / \y in {1,...,5}
+        \path[yshift=0.5cm]
+            node[input neuron] (I-\name) at (0,-\y cm) {};
+
+    \foreach \name / \y in {1,...,3}
+        \node[output neuron] (O-\name) at (\layersep,-\y-0.5) {};
+
+
+    \foreach \source in {1,...,5}
+        \foreach \dest in {1,...,3}
+            \path (I-\source) edge (O-\dest);
+
+    % Annotate the layers
+    \node[annot,above of=I-1, node distance=1cm] (i1) {Input};
+    \node[annot,right of=i1] (hl2) {Output};
+\end{tikzpicture}
+\caption{Perceptron met vijf inputs en drie outputs}
+\label{fig:perceptron}
+\end{figure}
+
+
+% paragraph perceptron (end)
+\paragraph{Feed Forward Netwerk} % (fold)
+\label{par:concept}
+Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met meerdere lagen: tussen de input en output laag zitten een aantal verborgen lagen. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}. \cite{Bishop:1995:NNP:525960}
+
+\begin{figure}
+\def\layersep{2.5cm}
+\centering
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=lime!65];
+    \tikzstyle{output neuron}=[neuron, fill=red!65];
     \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
     \tikzstyle{annot} = [text width=4em, text centered]
 
