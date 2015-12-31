@@ -9,16 +9,16 @@ Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste d
 \paragraph{Perceptron} % (fold)
 \label{par:perceptron}
 
-Om een feed forward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een perceptron is een gewogen som van alle inputs met gewichten $w_i$, gewijzigd met een transferfunctie $f$ (formule \ref{formule:perceptron}).
+Om een feed forward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, gewijzigd met een transferfunctie $f$ (formule \ref{formule:neuron}).
 
 \begin{equation}
     y = f(\sum\limits_{i=1}^{n}w_ix_i)
-    \label{formule:perceptron}
+    \label{formule:neuron}
 \end{equation}
 
 Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs.
 
-\begin{figure}
+\begin{figure}[ht]
 \def\layersep{2.5cm}
 \centering
 \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
@@ -28,14 +28,16 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
     \tikzstyle{output neuron}=[neuron, fill=red!65];
     \tikzstyle{annot} = [text width=4em, text centered]
 
+    %input neurons
     \foreach \name / \y in {1,...,5}
         \path[yshift=0.5cm]
             node[input neuron] (I-\name) at (0,-\y cm) {};
 
+    %output neurons
     \foreach \name / \y in {1,...,3}
         \node[output neuron] (O-\name) at (\layersep,-\y-0.5) {};
 
-
+    %links
     \foreach \source in {1,...,5}
         \foreach \dest in {1,...,3}
             \path (I-\source) edge (O-\dest);
@@ -49,12 +51,11 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 \end{figure}
 
 
-% paragraph perceptron (end)
-\paragraph{Feed Forward Netwerk} % (fold)
+\paragraph{Feed Forward Netwerk}
 \label{par:concept}
-Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met meerdere lagen: tussen de input en output laag zitten een aantal verborgen lagen. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}. \cite{Bishop:1995:NNP:525960}
+Een feed forward neuraal netwerk is het eenvoudigste neurale netwerk. Het is een perceptron met tussen de input en output een aantal verborgen lagen. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). \cite{Bishop:1995:NNP:525960}
 
-\begin{figure}
+\begin{figure}[ht]
 \def\layersep{2.5cm}
 \centering
 \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
@@ -88,7 +89,7 @@ Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. He
     \foreach \source in {1,...,4}
         \foreach \dest in {1,...,5}
             \path (I-\source) edge (H1-\dest);
-
+    %links van eerste naar tweede hidden layer       
     \foreach \source in {1,...,5}
         \foreach \dest in {1,...,5}
             \path (H1-\source) edge (H2-\dest);
@@ -111,14 +112,13 @@ Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. He
 
 \paragraph{Training} % (fold)
 \label{par:training}
-Het trainen van een feed forward network gebeurt meestal met een techniek die terugpropagatie heet. Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde output $\mathbf{\hat{y}}$ bij input $\mathbf{x}$: 
+Het trainen van een feed forward netwerk gebeurt meestal met een techniek die terugpropagatie heet. Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde output $\mathbf{\hat{y}}$ bij input $\mathbf{x}$: 
 \begin{equation}
     \mathbf{\hat{h}} = f(\mathbf{Wx})
 \end{equation} 
 \begin{equation}
     \mathbf{\hat{y}} = f(\mathbf{W'\hat{h}}) = f(\mathbf{W'f(\mathbf{Wx})})
 \end{equation}
-
 Waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de links tussen respectievelijk input en verborgen laag, en verborgen laag en output. Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input en output gebeuren. 
 
 Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd door gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Indien er een logistische transferfunctie wordt gebruikt geeft dit volgend resultaat:
@@ -126,16 +126,16 @@ Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y
     w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
 \end{equation}
 
-Gradient descent kan ook worden gebruik om \myvector{\hat{h}} aan te passen. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus \myvector{W} wordt gewijzigd zodat de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}}:
+Vervolgens wordt gradient descent gebruikt om \myvector{\hat{h}} aan te passen. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus \myvector{W} wordt gewijzigd zodat de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}} weergeeft:
 \begin{equation}
     \Delta h_i = \sum\limits_{j}(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)w'_{ji}
 \end{equation}
-
 Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzigd worden met volgende formule:
 \begin{equation}
     w_{ji} = w_{ji} + \sigma(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
 \end{equation}
-Op deze manier is de fout op de output \myvector{\hat{y}-y} verkleind, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}. Indien er meer verborgen lagen zijn, kan dit proces eenvoudig uitgebreid worden.
+
+Op deze manier is de fout op de output \myvector{\hat{y}-y} verkleind, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}. Deze methode kan eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen.
 % paragraph training (end)
 
 % RNN
@@ -145,8 +145,8 @@ Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neur
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/rnn.PNG}
-    \label{fig:rnn}
     \caption{Ontrolling van een recurrent neuraal netwerk}
+    \label{fig:rnn}
 \end{figure}
 
 Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om taal te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze encodering kan gebruik maken van one-hot codering, ze kan random zijn, of er kan gebruik gemaakt worden van word embeddings zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}. Deze codering zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
@@ -154,16 +154,20 @@ Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de
 % CNN
 \subsection{Convolutionele Neurale Netwerken}
 Convolutionele Neurale Networken (ConvNets of CNN's) zijn een biologisch- ge\" inspireerde trainbare architectuur die invariante afbeeldingskarakteristieken kan leren. \cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{ciresan2012multi}\cite{lawrence1997face}
+
 Een CNN is een 'Deep Learning' architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een 'feature map' noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding van alle mogelijke locaties van de input. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
+
 Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau kleine rechthoekjes uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
 
 E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een paper\cite{Krizhevsky2012a} die CNN's gebruikt voor het oplossen van de ImageNet challenge.\cite{ILSVRC15}
-Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categori\"en. De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitting te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die op dezelfde en recentere wedstrijden nog betere resultaten bekomen. Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is publiek beschikbaar met behulp van Caffe\cite{Jia2014}. De feature maps van verschillende outputlagen van dit netwerk dienen als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de laatste laag voor de classificatielaag worden beschouwd als een representatievector voor de hele afbeelding. Output van andere lagen is een representatie voor lagere  afbeeldingskenmerken. 
+Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categori\"en. De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitting te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die op dezelfde en recentere wedstrijden nog betere resultaten bekomen. 
+
+Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is publiek beschikbaar met behulp van Caffe\cite{Jia2014}. De feature maps van verschillende outputlagen van dit netwerk dienen als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de laatste laag voor de classificatielaag worden beschouwd als een representatievector voor de hele afbeelding. Output van andere lagen is een representatie voor lagere  afbeeldingskenmerken. 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/cnn.PNG}
+    \caption{Convolutioneel Neural Netwerk gebruikt door \cite{Krizhevsky2012a} voor classificatie van afbeeldingen}
 	\label{fig:AlexNet}
-	\caption{Convolutioneel Neural Netwerk gebruikt door \cite{Krizhevsky2012a} voor classificatie van afbeeldingen}
 \end{figure}
 
 
@@ -174,19 +178,21 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lstm.PNG}
-    \label{fig:lstm}
     \caption{Long Short Term Memory geheugenblok}
+    \label{fig:lstm}
 \end{figure}
 
 LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken over een langere periode dan een gewone RNN informatie kan onthouden. Hierdoor is het mogelijk om sequenties met events die gescheiden zijn door een langere periode, te modelleren. 
 
+\section{Statistiek}
+
 % LDA
-\section{Latent Dirichlet Allocation}
+\subsection{Latent Dirichlet Allocation}
 Latent Dirichlet Allocation is een generatief probabilistisch model voor dsicrete data. Een van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. Dit conecpt is gebaseerd op de veronderstelling dat elk document een zeker kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben dan een kansverdeling over alle mogelijke woorden. Zo kan de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat worden geschreven als een som over alle verschillende topics (formule \ref{formule:lda}). 
 
 \begin{equation}
-    \label{formule:lda}
     P(w_i | d_j) = \sum\limits_{k=0}^{n_{topics}}P(w_i|topic_k)P(topic_k|d_j)
+    \label{formule:lda}
 \end{equation}
 
 Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ word een kansverdeling over de onderwerpen gesampled per document ($\theta$), alsook een kansverdeling over de woorden voor elk onderwerp ($\phi$). Uit $\theta$ wordt voor elke positie $i$ in een document $j$ een onderwerp gesampled ($z_{ji}$). Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$. Trainen van een LDA model gebeurt bijvoorbeeld met Gibbs sampling, en leidt tot de verdelingen $\theta$ en $\phi$.
@@ -194,13 +200,13 @@ Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lda.png}
-    \label{fig:lda}
     \caption{Grafische weergave van LDA}
+    \label{fig:lda}
 \end{figure}
 
 
 %  Stacked CCA
-\section{Stacked Canonical Correlation Analysis}
+\subsection{Stacked Canonical Correlation Analysis}
 Canonical Correlation Analysis (CCA) is een methode die gebruikt wordt om een covariantiematrix van twee datasets te berekenen. Dit houdt in dat er een projectie wordt gemaakt naar een gemeenschappelijke ruimte voor beide datasets. In het onderzoek naar image captioning kan dit bijvoorbeeld leiden tot een multimodale mapping van afbeeldings- en beschrijvingsrepresentatie. 
 
 Stacked CCA, gebaseerd op Stacked Auxiliary Embedding kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van ge-annoteerde foto's, versterkt met een dataset die per foto een set van stukjes van de foto met een aparte beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
