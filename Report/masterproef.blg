@@ -3,36 +3,9 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: masterproef.aux
 A level-1 auxiliary file: inleiding.aux
 A level-1 auxiliary file: hst-related.aux
-White space in argument---line 30 of file hst-related.aux
- : \citation{Xu
- :              attention}
-I'm skipping whatever remains of this command
-Case mismatch error between cite keys Karpathy and karpathy
----line 49 of file hst-related.aux
- : \citation{Karpathy
- :                   }
-I'm skipping whatever remains of this command
-Case mismatch error between cite keys lebret and Lebret
----line 50 of file hst-related.aux
- : \citation{lebret
- :                 }
-I'm skipping whatever remains of this command
-White space in argument---line 51 of file hst-related.aux
- : \citation{mikolov
- :                   maar de RNN}
-I'm skipping whatever remains of this command
-White space in argument---line 73 of file hst-related.aux
- : \citation{Karpathy
- :                    1}
-I'm skipping whatever remains of this command
 White space in argument---line 80 of file hst-related.aux
  : \citation{Xu
  :              Kul}
-I'm skipping whatever remains of this command
-Case mismatch error between cite keys Karpathy and karpathy
----line 91 of file hst-related.aux
- : \citation{Karpathy
- :                   }
 I'm skipping whatever remains of this command
 A level-1 auxiliary file: hst-theorie.aux
 A level-1 auxiliary file: hfdst-n.aux
@@ -42,28 +15,19 @@ A level-1 auxiliary file: app-n.aux
 The style file: abbrv.bst
 Database file #1: referenties.bib
 Warning--I didn't find a database entry for "wiki"
-Warning--I didn't find a database entry for "Hodosh"
-Warning--I didn't find a database entry for "Farhadi"
-Warning--I didn't find a database entry for "Yang"
 Warning--I didn't find a database entry for "Patterson"
-Warning--I didn't find a database entry for "Felzenszwalb"
-Warning--I didn't find a database entry for "Ordonez"
-Warning--I didn't find a database entry for "Oliva"
 Warning--I didn't find a database entry for "Li"
 Warning--I didn't find a database entry for "Mitchell"
 Warning--I didn't find a database entry for "Eliott2013"
 Warning--I didn't find a database entry for "Eliott2015"
-Warning--I didn't find a database entry for "Ortiz"
 Warning--I didn't find a database entry for "Krizhevsky"
-Warning--I didn't find a database entry for "imagenet"
 Warning--I didn't find a database entry for "Simonyan"
-Warning--I didn't find a database entry for "karpathy"
 Warning--I didn't find a database entry for "Fang"
-Warning--I didn't find a database entry for "mikolov"
-Warning--I didn't find a database entry for "Lebret"
-Warning--I didn't find a database entry for "Vinyals"
 Warning--I didn't find a database entry for "Mao"
+Warning--I didn't find a database entry for "mikolov"
 Warning--I didn't find a database entry for "Socher"
+Warning--I didn't find a database entry for "Karpathy"
+Warning--I didn't find a database entry for "Lebret"
 Warning--I didn't find a database entry for "Kiros"
 Warning--I didn't find a database entry for "Torralba"
 Warning--I didn't find a database entry for "Devlin"
@@ -71,54 +35,60 @@ Warning--I didn't find a database entry for "Kuznetsova"
 Warning--I didn't find a database entry for "Gupta"
 Warning--I didn't find a database entry for "Mason"
 Warning--I didn't find a database entry for "Xu"
+Warning--I didn't find a database entry for "Yang"
 Warning--I didn't find a database entry for "Elliott"
 Warning--I didn't find a database entry for "Karpathy1"
 Warning--I didn't find a database entry for "Donahue"
 Warning--I didn't find a database entry for "h2g2"
 Warning--empty journal in Arge2015
-Warning--empty journal in bernardi
-Warning--there's a number but no volume in bernardi
-Warning--empty year in bernardi
+Warning--empty journal in Bernardi
+Warning--there's a number but no volume in Bernardi
+Warning--empty year in Bernardi
+Warning--empty journal in Karpathy2014
+Warning--empty journal in Lebret2013
+Warning--empty journal in Mao2014
+Warning--there's a number but no volume in Mikolov2010
 Warning--empty journal in Google
-You've used 13 entries,
+Warning--empty journal in Xu2015
+You've used 27 entries,
             2118 wiz_defined-function locations,
-            647 strings with 6713 characters,
-and the built_in function-call counts, 5257 in all, are:
-= -- 504
-> -- 318
-< -- 6
-+ -- 125
-- -- 112
-* -- 393
-:= -- 882
-add.period$ -- 40
-call.type$ -- 13
-change.case$ -- 94
+            718 strings with 9246 characters,
+and the built_in function-call counts, 10789 in all, are:
+= -- 1050
+> -- 635
+< -- 12
++ -- 249
+- -- 222
+* -- 796
+:= -- 1796
+add.period$ -- 82
+call.type$ -- 27
+change.case$ -- 191
 chr.to.int$ -- 0
-cite$ -- 18
-duplicate$ -- 184
-empty$ -- 338
-format.name$ -- 112
-if$ -- 1079
+cite$ -- 37
+duplicate$ -- 381
+empty$ -- 695
+format.name$ -- 222
+if$ -- 2219
 int.to.chr$ -- 0
-int.to.str$ -- 13
-missing$ -- 14
-newline$ -- 68
-num.names$ -- 26
-pop$ -- 102
+int.to.str$ -- 27
+missing$ -- 28
+newline$ -- 138
+num.names$ -- 54
+pop$ -- 199
 preamble$ -- 1
-purify$ -- 82
+purify$ -- 165
 quote$ -- 0
-skip$ -- 139
+skip$ -- 297
 stack$ -- 0
-substring$ -- 278
-swap$ -- 51
-text.length$ -- 6
+substring$ -- 612
+swap$ -- 107
+text.length$ -- 12
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 50
-warning$ -- 5
-while$ -- 49
-width$ -- 15
-write$ -- 140
-(There were 7 error messages)
+type$ -- 106
+warning$ -- 10
+while$ -- 103
+width$ -- 29
+write$ -- 287
+(There was 1 error message)

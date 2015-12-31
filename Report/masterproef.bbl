@@ -5,7 +5,7 @@ F.~O. R.~L. Arge and C.~I. Mage.
 \newblock {V d c n l -s i r}.
 \newblock pages 1--14, 2015.
 
-\bibitem{bernardi}
+\bibitem{Bernardi}
 R.~Bernardi, R.~Cakici, D.~Elliott, and A.~Erdem.
 \newblock {Automatic Image Description Systems : A Survey}.
 \newblock (Cv).
@@ -21,6 +21,24 @@ D.~Ciresan, U.~Meier, and J.~Schmidhuber.
 \newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2012 IEEE
   Conference on}, pages 3642--3649. IEEE, 2012.
 
+\bibitem{Farhadi2010}
+A.~Farhadi, M.~Hejrati, M.~A. Sadeghi, P.~Young, C.~Rashtchian, J.~Hockenmaier,
+  and D.~Forsyth.
+\newblock {Every picture tells a story: Generating sentences from images}.
+\newblock {\em Lecture Notes in Computer Science (including subseries Lecture
+  Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)}, 6314
+  LNCS(PART 4):15--29, 2010.
+
+\bibitem{Felzenszwalb2008}
+P.~Felzenszwalb, D.~McAllester, and D.~Ramanan.
+\newblock {A Discriminatively Trained, Multiscaled, Deformable Part Model}.
+\newblock {\em Computer Vision and Pattern Recognition}, 2008.
+
+\bibitem{Gilberto2015}
+L.~Gilberto, M.~Ortiz, C.~Wolff, and M.~Lapata.
+\newblock {Learning to Interpret and Describe Abstract Scenes}.
+\newblock {\em Naacl2015}, pages 1505--1515, 2015.
+
 \bibitem{Girshick2014}
 R.~Girshick, J.~Donahue, T.~Darrell, U.~C. Berkeley, and J.~Malik.
 \newblock {Rich feature hierarchies for accurate object detection and semantic
@@ -32,11 +50,33 @@ S.~Hochreiter and J.~Schmidhuber.
 \newblock {Long short-term memory}.
 \newblock {\em Neural computation}, 9(8):1735--1780, 1997.
 
+\bibitem{Hodosh2013}
+M.~Hodosh, P.~Young, and J.~Hockenmaier.
+\newblock {Framing image description as a ranking task: Data, models and
+  evaluation metrics}.
+\newblock {\em Journal of Artificial Intelligence Research}, 47:853--899, 2013.
+
 \bibitem{Jia2014}
 Y.~Jia, E.~Shelhamer, J.~Donahue, S.~Karayev, J.~Long, R.~Girshick,
   S.~Guadarrama, T.~Darrell, and U.~C.~B. Eecs.
 \newblock {Caffe : Convolutional Architecture for Fast Feature Embedding}.
 \newblock {\em ACM Conference on Multimedia}, 2014.
+
+\bibitem{Karpathy2015}
+a.~Karpathy and L.~Fei-Fei.
+\newblock {Deep Visual-Semantic Alignments for Generating Image Des}.
+\newblock {\em Cvpr2015}, 2015.
+
+\bibitem{Karpathy2014}
+A.~Karpathy, A.~Joulin, and L.~Fei-Fei.
+\newblock {Deep Fragment Embeddings for Bidirectional Image Sentence Mapping}.
+\newblock pages 1--9, 2014.
+
+\bibitem{Krizhevsky2012}
+a.~Krizhevsky, I.~Sutskever, and G.~Hinton.
+\newblock {Imagenet classification with deep convolutional neural networks}.
+\newblock {\em Advances in neural information processing systems}, pages
+  1097--1105, 2012.
 
 \bibitem{Krizhevsky2012a}
 A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton.
@@ -49,17 +89,44 @@ S.~Lawrence, C.~L. Giles, A.~C. Tsoi, and A.~D. Back.
 \newblock Face recognition: A convolutional neural-network approach.
 \newblock {\em Neural Networks, IEEE Transactions on}, 8(1):98--113, 1997.
 
+\bibitem{Lebret2013}
+R.~Lebret and R.~Collobert.
+\newblock {Word Emdeddings through Hellinger PCA}.
+\newblock page~9, 2013.
+
 \bibitem{LeCun2010}
 Y.~LeCun, K.~Kavukcuoglu, and C.~Farabet.
 \newblock {Convolutional networks and applications in vision}.
 \newblock {\em ISCAS 2010 - 2010 IEEE International Symposium on Circuits and
   Systems: Nano-Bio Circuit Fabrics and Systems}, pages 253--256, 2010.
 
+\bibitem{Mao2014}
+J.~Mao, W.~Xu, Y.~Yang, J.~Wang, Z.~Huang, and A.~Yuille.
+\newblock {Deep Captioning with Multimodal Recurrent Neural Networks (m-RNN)}.
+\newblock 1090(2014):1--17, 2014.
+
 \bibitem{Mikolov2013}
 T.~Mikolov, K.~Chen, G.~Corrado, and J.~Dean.
 \newblock {Distributed Representations of Words and Phrases and their
   Compositionality}.
 \newblock {\em Nips}, pages 1--9, 2013.
+
+\bibitem{Mikolov2010}
+T.~Mikolov, M.~Karafiat, L.~Burget, J.~Cernocky, and S.~Khudanpur.
+\newblock {Recurrent Neural Network based Language Model}.
+\newblock {\em Interspeech}, (September):1045--1048, 2010.
+
+\bibitem{Oliva2006}
+A.~Oliva and A.~Torralba.
+\newblock {Chapter 2 Building the gist of a scene: the role of global image
+  features in recognition}.
+\newblock {\em Progress in Brain Research}, 155 B:23--36, 2006.
+
+\bibitem{Ordonez2011}
+V.~Ordonez, G.~Kulkarni, and T.~Berg.
+\newblock {Im2text: Describing images using 1 million captioned photographs}.
+\newblock {\em Advances in Neural Information Processing Systems}, pages 1 --
+  9, 2011.
 
 \bibitem{ILSVRC15}
 O.~Russakovsky, J.~Deng, H.~Su, J.~Krause, S.~Satheesh, S.~Ma, Z.~Huang,
@@ -72,5 +139,17 @@ O.~Russakovsky, J.~Deng, H.~Su, J.~Krause, S.~Satheesh, S.~Ma, Z.~Huang,
 O.~Vinyals, A.~Toshev, S.~Bengio, and D.~Erhan.
 \newblock {Show and Tell: A Neural Image Caption Generator}.
 \newblock 2015.
+
+\bibitem{Xu2015}
+K.~Xu, J.~Ba, R.~Kiros, K.~Cho, A.~Courville, R.~Salakhutdinov, R.~Zemel, and
+  Y.~Bengio.
+\newblock {Show, Attend and Tell: Neural Image Caption Generation with Visual
+  Attention}.
+\newblock 2015.
+
+\bibitem{Yang2011}
+Y.~Yang, C.~L. Teo, H.~Daume, and Y.~Aloimonos.
+\newblock {Corpus-Guided Sentence Generation of Natural Images}.
+\newblock {\em Proceedings of EMNLP}, pages 444--454, 2011.
 
 \end{thebibliography}
