@@ -16,7 +16,7 @@ Om een feed forward neuraal netwerk te begrijpen is het concept perceptron nodig
     \label{formule:perceptron}
 \end{equation}
 
-Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Een voorbeeld van een multi-output perceptron is te zien in figuur \ref{fig:perceptron}.
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs.
 
 \begin{figure}
 \def\layersep{2.5cm}
@@ -111,8 +111,31 @@ Een feed forward neural netwerk is een van de eenvoudigste neurale netwerken. He
 
 \paragraph{Training} % (fold)
 \label{par:training}
-Het trainen van een feed forward network gebeurt meestal met een techniek die terugpropagatie heet. Hierbij wordt de fout op de output van het netwerk laag per laag terug gepropageerd doorheen het netwerk. Op basis van de afgeleide van de output in functie van de gewichten wordt een correctie uitgevoerd. De grootte van deze correctie is afhankelijk van de learning rate: hoe groter de learning rate, hoe groter de correctie. Een belangrijke voorwaarde voor terugpropagatie is dat de activatiefunctie afleidbaar is.\cite{Bishop:1995:NNP:525960}
+Het trainen van een feed forward network gebeurt meestal met een techniek die terugpropagatie heet. Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde output $\mathbf{\hat{y}}$ bij input $\mathbf{x}$: 
+\begin{equation}
+    \mathbf{\hat{h}} = f(\mathbf{Wx})
+\end{equation} 
+\begin{equation}
+    \mathbf{\hat{y}} = f(\mathbf{W'\hat{h}}) = f(\mathbf{W'f(\mathbf{Wx})})
+\end{equation}
 
+Waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de links tussen respectievelijk input en verborgen laag, en verborgen laag en output. Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input en output gebeuren. 
+
+Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd door gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Indien er een logistische transferfunctie wordt gebruikt geeft dit volgend resultaat:
+\begin{equation}
+    w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
+\end{equation}
+
+Gradient descent kan ook worden gebruik om \myvector{\hat{h}} aan te passen. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus \myvector{W} wordt gewijzigd zodat de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}}:
+\begin{equation}
+    \Delta h_i = \sum\limits_{j}(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)w'_{ji}
+\end{equation}
+
+Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzigd worden met volgende formule:
+\begin{equation}
+    w_{ji} = w_{ji} + \sigma(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
+\end{equation}
+Op deze manier is de fout op de output \myvector{\hat{y}-y} verkleind, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}.
 % paragraph training (end)
 
 % RNN
