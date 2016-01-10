@@ -31,11 +31,11 @@
 \contentsline {paragraph}{Perceptron}{9}{section*.25}
 \contentsline {paragraph}{Feed Forward Netwerk}{9}{section*.26}
 \contentsline {paragraph}{Training}{10}{section*.27}
-\contentsline {subsection}{\numberline {3.1.2}Recurrente Neurale Netwerken}{11}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.2}Recurrente Neurale Netwerken}{12}{subsection.3.1.2}
 \contentsline {subsection}{\numberline {3.1.3}Convolutionele Neurale Netwerken}{12}{subsection.3.1.3}
-\contentsline {subsection}{\numberline {3.1.4}Long Short Term Memory Neurale Netwerken}{13}{subsection.3.1.4}
-\contentsline {section}{\numberline {3.2}Statistiek}{13}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Latent Dirichlet Allocation}{13}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.1.4}Long Short Term Memory Neurale Netwerken}{14}{subsection.3.1.4}
+\contentsline {section}{\numberline {3.2}Statistiek}{15}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Latent Dirichlet Allocation}{15}{subsection.3.2.1}
 \contentsline {subsection}{\numberline {3.2.2}Stacked Canonical Correlation Analysis}{15}{subsection.3.2.2}
 \contentsline {chapter}{\chapternumberline {4}Het laatste hoofdstuk}{17}{chapter.4}
 \contentsline {section}{\numberline {4.1}Eerste onderwerp in dit hoofdstuk}{17}{section.4.1}
@@ -51,7 +51,7 @@
 \contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{25}{appendix.B}
 \contentsline {section}{\numberline {B.1}Lorem 20-24}{25}{section.B.1}
 \contentsline {section}{\numberline {B.2}Lorem 25-27}{26}{section.B.2}
-\contentsline {chapter}{Bibliografie}{27}{section*.32}
+\contentsline {chapter}{Bibliografie}{27}{section*.37}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
