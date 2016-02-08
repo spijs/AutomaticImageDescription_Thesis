@@ -16,11 +16,16 @@ def main(params):
     dataset = params['dataset']
     dataprovider = getDataProvider(dataset)
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
+    print "Reading Vocabulary..."
     vocabulary = readVocabulary("training_dictionary.txt")
+    print "Done"
+    print "Creating sentence vectors..."
     occurrences, idf, images = getOccurenceVectorsAndImages(vocabulary, img_sentence_pair_generator)
+    print "Done"
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrences, idf)
-    print len(weightedVectors)
+    print "Done"
+    print "Learning CCA"
     cca = CCA(n_components= 2)
     cca.fit(images, weightedVectors)
     pickle.dump(cca, open("trainingCCA.p",'w+'))
@@ -63,8 +68,12 @@ def getOccurenceVectorsAndImages(vocabulary, pairGenerator):
     stopwords = getStopwords()
     images = []
     idf = np.zeros(len(vocabulary))
+    current = 0
     result = []
     for pair in pairGenerator:
+        current+= 1
+        if current % 1000 ==0:
+            print "Processing pair " + current
         sentence = remove_common_words(pair['sentence']['tokens'],stopwords)
         wordcount = 0
         row = np.zeros(len(vocabulary))
