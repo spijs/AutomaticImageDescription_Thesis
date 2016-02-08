@@ -65,6 +65,10 @@ def remove_common_words(sentence,stopwords):
                 result.append(word.lower())
         return result
 
+'''
+Given a image-sentence pair generator and a vocabulary, this function returns TF vectors
+for each sentence, the IDF for each word and a matrix containing all image representations.
+'''
 def getOccurenceVectorsAndImages(vocabulary, pairGenerator):
     stopwords = getStopwords()
     images = []
