@@ -26,7 +26,8 @@ def main(params):
     weightedVectors = weight_tfidf(occurrences, idf)
     print "Done"
     print "Learning CCA"
-    cca = CCA(n_components= 2)
+    print str(len(images))
+    cca = CCA(n_components= 256)
     cca.fit(images, weightedVectors)
     pickle.dump(cca, open("trainingCCA.p",'w+'))
     print('finished')
