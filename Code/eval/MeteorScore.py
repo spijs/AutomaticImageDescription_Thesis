@@ -6,7 +6,7 @@ import subprocess as sp
 ''' METEOR Scores as defined in https://www.cs.cmu.edu/~alavie/METEOR/ '''
 class MeteorScore(EvaluationStrategy):
 
-    ''' Evaluates the meteor score of a single sentence, given its references'''
+    ''' Evaluates the METEOR score of a single sentence, given its references'''
     def evaluate_sentence(self,sentence,references,n):
         self.write_singlereferences(references)
         self.write_singlesentences(sentence)

@@ -2,7 +2,7 @@ __author__ = 'Wout & thijs'
 
 import argparse
 import json
-from BleuScore import BlueScore
+from BleuScore import BleuScore
 from MeteorScore import MeteorScore
 
 
@@ -14,10 +14,16 @@ def main(params):
   with open(struct_path) as data_file:
       data = json.load(data_file)
       images = data['imgblobs']
-  estrategy = MeteorScore('meteor')
+  estrategy = getStrategy(params['metric'])
   print_sorted(calculate_individual_score(images,struct_path,ngrams,estrategy))
   calculate_total_score(images,struct_path,ngrams,estrategy)
 
+def getStrategy(metric):
+    if(metric is "bleu"):
+        return BleuScore("bleu")
+    elif(metric is "meteor"):
+        return MeteorScore("meteor")
+    
 def calculate_individual_score(images,struct_path,n,evalStrategy):
     results = {}
     for image in images:
@@ -72,7 +78,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--struct', type=str, default="result_struct.json", help='the result json file')
   parser.add_argument('--ngrams', type=int, default=4, help='the number of ngrams')
-
+  parser.add_argument('--metric', type=str, default="bleu", help='the metric to evaluate the generated sentences')
   args = parser.parse_args()
   params = vars(args) # convert to ordinary dict
   print 'parsed parameters:'

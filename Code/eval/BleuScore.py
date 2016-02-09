@@ -4,7 +4,7 @@ from evaluationStrategy import EvaluationStrategy
 import nltk
 import nltkbleu
 
-class BlueScore(EvaluationStrategy):
+class BleuScore(EvaluationStrategy):
 
     ''' Evaluates and returns the bleu score of a single sentence given its references and n of ngrams    '''
     def evaluate_sentence(self,sentence,references,n):
