@@ -19,12 +19,11 @@ def main(params):
   calculate_total_score(images,struct_path,ngrams,estrategy)
 
 def getStrategy(metric):
-    if(metric is "bleu"):
+    if(metric == "bleu"):
         return BleuScore("bleu")
-    elif(metric is "meteor"):
+    elif(metric == "meteor"):
         return MeteorScore("meteor")
     else:
-        print metric
         return BleuScore("bleu")
 
 def calculate_individual_score(images,struct_path,n,evalStrategy):
