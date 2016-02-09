@@ -6,7 +6,7 @@ import subprocess as sp
 class MeteorScore(EvaluationStrategy):
 
     def evaluate_sentence(self,sentence,references,n):
-        self.write_references(references)
+        self.write_singlereferences(references)
         self.write_sentences(sentence)
         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -l en -norm"
         process = sp.Popen(command,stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
@@ -44,6 +44,11 @@ class MeteorScore(EvaluationStrategy):
         for sentence in sentences:
             for i in range(5):
                 f.write(sentence+'\n')
+
+    def write_singlereferences(self,sentences):
+        f = open('meteor_sentences.txt','w')
+        for sentence in sentences:
+            f.write(sentence+'\n')
 
     ''' Returns a list of uniform weights, based on the choice of n'''
     def get_weights(self,n):
