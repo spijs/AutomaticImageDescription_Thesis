@@ -14,8 +14,9 @@ class MeteorScore(EvaluationStrategy):
         fline = ""
         for line in lines_iterator:
             fline = line
+            print fline
         result = fline.split("            ")
-        return result[1]
+        #return result[1]
 
     def evaluate_total(self,sentences,references,n):
          self.write_references(references)
