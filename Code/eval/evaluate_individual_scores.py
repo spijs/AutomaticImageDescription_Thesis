@@ -23,7 +23,9 @@ def getStrategy(metric):
         return BleuScore("bleu")
     elif(metric is "meteor"):
         return MeteorScore("meteor")
-    
+    else:
+        return BleuScore("bleu")
+
 def calculate_individual_score(images,struct_path,n,evalStrategy):
     results = {}
     for image in images:
