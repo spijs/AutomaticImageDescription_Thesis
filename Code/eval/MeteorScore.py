@@ -48,15 +48,18 @@ class MeteorScore(EvaluationStrategy):
         for sentence in sentences:
             for i in range(5):
                 f.write(sentence+'\n')
+        f.close()
 
     ''' Writes one sentence 5 times to a txt-file'''
     def write_singlesentences(self,sentence):
         f = open('meteor_sentences.txt','w')
         for i in range(5):
             f.write(sentence+'\n')
+        f.close()
 
     ''' Writes a list of references to a txt-file '''
     def write_singlereferences(self,sentences):
         f = open('meteor_references.txt','w')
         for sentence in sentences:
             f.write(sentence+'\n')
+        f.close()
