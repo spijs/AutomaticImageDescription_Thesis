@@ -44,7 +44,7 @@ def calculate_total_score(images,struct_path,ngrams,evalStrategy):
         all_candidates.append(cand)
         all_references.append(ref_texts)
     score = evalStrategy.evaluate_total(all_candidates,all_references,ngrams)
-    print 'corpus bleu: ' + str(score)
+    print 'corpus score: ' + str(score)
 
 
 ''' Saves the list of generated sentences sorted on their bleu score together with their reference sentences.'''
@@ -63,7 +63,7 @@ def print_sorted(dict):
         f.write('---------------------------------\n')
     f.close()
 
-''' Returns the image ids sorted by bleu-score'''
+''' Returns the image ids sorted by score'''
 def sort(dict):
     return sorted(dict, key=dict.get)
 

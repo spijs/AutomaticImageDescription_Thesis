@@ -6,7 +6,16 @@ import subprocess as sp
 class MeteorScore(EvaluationStrategy):
 
     def evaluate_sentence(self,sentence,references,n):
-        pass
+        self.write_references(references)
+        self.write_sentences(sentence)
+        command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -l en -norm"
+        process = sp.Popen(command,stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
+        lines_iterator = iter(process.stdout.readline, b"")
+        fline = ""
+        for line in lines_iterator:
+            fline = line
+        result = fline.split("            ")
+        return result[1]
 
     def evaluate_total(self,sentences,references,n):
          self.write_references(references)
