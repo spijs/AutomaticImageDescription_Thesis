@@ -7,7 +7,7 @@ class MeteorScore(EvaluationStrategy):
 
     def evaluate_sentence(self,sentence,references,n):
         self.write_singlereferences(references)
-        self.write_sentences(sentence)
+        self.write_singlesentences(sentence)
         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -l en -norm"
         process = sp.Popen(command,stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
         lines_iterator = iter(process.stdout.readline, b"")
@@ -45,11 +45,11 @@ class MeteorScore(EvaluationStrategy):
             for i in range(5):
                 f.write(sentence+'\n')
 
-    def write_singlesentence(self,sentence):
+    def write_singlesentences(self,sentence):
         f = open('meteor_sentences.txt','w')
         for i in range(5):
                 f.write(sentence+'\n')
-            
+
     def write_singlereferences(self,sentences):
         f = open('meteor_references.txt','w')
         for sentence in sentences:
