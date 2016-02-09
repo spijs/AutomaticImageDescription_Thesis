@@ -78,7 +78,7 @@ def getOccurenceVectorsAndImages(vocabulary, pairGenerator):
     for pair in pairGenerator:
         current+= 1
         if current % 1000 ==0:
-            print "Processing pair " + current
+            print "Processing pair " + str(current)
         sentence = remove_common_words(pair['sentence']['tokens'],stopwords)
         wordcount = 0
         row = np.zeros(len(vocabulary))

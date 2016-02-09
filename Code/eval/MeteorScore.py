@@ -53,7 +53,7 @@ class MeteorScore(EvaluationStrategy):
     def write_singlesentences(self,sentence):
         f = open('meteor_sentences.txt','w')
         for i in range(5):
-                f.write(sentence+'\n')
+            f.write(sentence+'\n')
 
     ''' Writes a list of references to a txt-file '''
     def write_singlereferences(self,sentences):
