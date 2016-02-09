@@ -12,7 +12,7 @@ class MeteorScore(EvaluationStrategy):
          self.write_references(references)
          self.write_sentences(sentences)
 
-         command = "java -Xmx2G -jar meteor-1.5.jar meteor_sentences.txt meteor_references.txt -l en -norm"
+         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -l en -norm"
          process = sp.Popen(command,stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
          lines_iterator = iter(process.stdout.readline, b"")
          for line in lines_iterator:
