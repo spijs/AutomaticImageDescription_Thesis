@@ -26,7 +26,8 @@ def main(params):
     weightedVectors = weight_tfidf(occurrences, idf)
     print "Done"
     print "Learning CCA"
-    cca = CCA(n_components= 2)
+    print str(len(images))
+    cca = CCA(n_components= 256)
     cca.fit(images, weightedVectors)
     pickle.dump(cca, open("trainingCCA.p",'w+'))
     print('finished')
@@ -64,6 +65,10 @@ def remove_common_words(sentence,stopwords):
                 result.append(word.lower())
         return result
 
+'''
+Given a image-sentence pair generator and a vocabulary, this function returns TF vectors
+for each sentence, the IDF for each word and a matrix containing all image representations.
+'''
 def getOccurenceVectorsAndImages(vocabulary, pairGenerator):
     stopwords = getStopwords()
     images = []
