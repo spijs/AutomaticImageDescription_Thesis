@@ -4,7 +4,9 @@ from evaluationStrategy import EvaluationStrategy
 import nltk
 import nltkbleu
 
-class BlueScore(EvaluationStrategy):
+class BleuScore(EvaluationStrategy):
+
+    ''' Evaluates and returns the bleu score of a single sentence given its references and n of ngrams    '''
     def evaluate_sentence(self,sentence,references,n):
          ref_texts = []
          for ref in references:
@@ -13,6 +15,7 @@ class BlueScore(EvaluationStrategy):
          bleu = nltkbleu.sentence_bleu(ref_texts,cand,self.get_weights(n))
          return bleu
 
+    ''' Evaluates and returns the bleu score of a corpus of sentences given their references and n of ngrams    '''
     def evaluate_total(self,sentences,references,n):
         candidates = []
         final_references = []

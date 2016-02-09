@@ -3,8 +3,10 @@ __author__ = 'spijs'
 from evaluationStrategy import EvaluationStrategy
 import subprocess as sp
 
+''' METEOR Scores as defined in https://www.cs.cmu.edu/~alavie/METEOR/ '''
 class MeteorScore(EvaluationStrategy):
 
+    ''' Evaluates the METEOR score of a single sentence, given its references'''
     def evaluate_sentence(self,sentence,references,n):
         self.write_singlereferences(references)
         self.write_singlesentences(sentence)
@@ -17,6 +19,7 @@ class MeteorScore(EvaluationStrategy):
         result = fline.split("            ")
         return result[1]
 
+    ''' Evaluates the METEOR score of an entire corpus '''
     def evaluate_total(self,sentences,references,n):
          self.write_references(references)
          self.write_sentences(sentences)
@@ -31,6 +34,7 @@ class MeteorScore(EvaluationStrategy):
          result = fline.split("            ")
          return result[1]
 
+    ''' Writes a list containing lists of 5 references to a txt-file'''
     def write_references(self,references):
          f= open('meteor_references.txt','w')
          for lof_references in references:
@@ -38,26 +42,21 @@ class MeteorScore(EvaluationStrategy):
                  f.write(reference+'\n')
          f.close()
 
+    ''' Writes 5 copies of the sentences in a list to a txt-file '''
     def write_sentences(self,sentences):
         f = open('meteor_sentences.txt','w')
         for sentence in sentences:
             for i in range(5):
                 f.write(sentence+'\n')
 
+    ''' Writes one sentence 5 times to a txt-file'''
     def write_singlesentences(self,sentence):
         f = open('meteor_sentences.txt','w')
         for i in range(5):
             f.write(sentence+'\n')
 
+    ''' Writes a list of references to a txt-file '''
     def write_singlereferences(self,sentences):
         f = open('meteor_references.txt','w')
         for sentence in sentences:
             f.write(sentence+'\n')
-
-    ''' Returns a list of uniform weights, based on the choice of n'''
-    def get_weights(self,n):
-        value = 1/(n*1.0)
-        weights = []
-        for i in range(n):
-            weights.append(value)
-        return weights
