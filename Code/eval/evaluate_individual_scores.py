@@ -15,7 +15,7 @@ def main(params):
       data = json.load(data_file)
       images = data['imgblobs']
   estrategy = getStrategy(params['metric'])
-  if(params['i']==1):
+  if(params['individual']==1):
       print_sorted(calculate_individual_score(images,struct_path,ngrams,estrategy))
   calculate_total_score(images,struct_path,ngrams,estrategy)
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
   parser.add_argument('--struct', type=str, default="result_struct.json", help='the result json file')
   parser.add_argument('--ngrams', type=int, default=4, help='the number of ngrams')
   parser.add_argument('--metric', type=str, default="bleu", help='the metric to evaluate the generated sentences')
-  parser.add_argument('--i', type=int, default=0, help='do you want individually ordered results? Yes=1,No=0=default')
+  parser.add_argument('--individual', type=int, default=0, help='do you want individually ordered results? Yes=1,No=0=default')
   args = parser.parse_args()
   params = vars(args) # convert to ordinary dict
   print 'parsed parameters:'
