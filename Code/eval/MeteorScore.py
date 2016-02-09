@@ -40,7 +40,6 @@ class MeteorScore(EvaluationStrategy):
          for lof_references in references:
              for reference in lof_references:
                  f.write(reference+'\n')
-                 print reference
          f.close()
 
     ''' Writes 5 copies of the sentences in a list to a txt-file '''

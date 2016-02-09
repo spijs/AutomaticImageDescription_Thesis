@@ -17,7 +17,8 @@ def main(params):
   estrategy = getStrategy(params['metric'])
   if(params['individual']==1):
       print_sorted(calculate_individual_score(images,struct_path,ngrams,estrategy))
-  calculate_total_score(images,struct_path,ngrams,estrategy)
+  else:
+      calculate_total_score(images,struct_path,ngrams,estrategy)
 
 def getStrategy(metric):
     if(metric == "bleu"):
