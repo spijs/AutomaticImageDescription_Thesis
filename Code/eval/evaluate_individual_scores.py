@@ -82,7 +82,7 @@ if __name__ == "__main__":
   parser.add_argument('--struct', type=str, default="result_struct.json", help='the result json file')
   parser.add_argument('--ngrams', type=int, default=4, help='the number of ngrams')
   parser.add_argument('--metric', type=str, default="bleu", help='the metric to evaluate the generated sentences')
-  parser.add_argument('i', type=str, default=0, help='do you want individually ordered results? Yes=1,No=0=default')
+  parser.add_argument('--i', type=str, default=0, help='do you want individually ordered results? Yes=1,No=0=default')
   args = parser.parse_args()
   params = vars(args) # convert to ordinary dict
   print 'parsed parameters:'
