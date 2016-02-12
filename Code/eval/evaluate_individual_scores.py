@@ -30,6 +30,7 @@ def getStrategy(metric):
 
 def calculate_individual_score(images,struct_path,n,evalStrategy):
     results = {}
+    bleu = 0
     for image in images:
         refs = image['references']
         ref_texts = []
@@ -39,6 +40,8 @@ def calculate_individual_score(images,struct_path,n,evalStrategy):
         score = evalStrategy.evaluate_sentence(cand,ref_texts,n)
         str(ref_texts)+ image['candidate']['text']+ str(evalStrategy.get_name())
         results.update({image['imgid']:{'cand':image['candidate']['text'],'ref':ref_texts,'score':score}})
+        bleu+=score
+    print "Total average bleu : " + str(1.0*bleu/(len(images)))
     return results
 
 ''' Calculates and prints the total corpus bleu score, note that this isn't just the average'''
