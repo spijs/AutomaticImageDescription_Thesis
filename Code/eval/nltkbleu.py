@@ -176,6 +176,9 @@ def corpus_bleu(list_of_references, hypotheses, weights=(0.25, 0.25, 0.25, 0.25)
     s = (w * math.log(p_i) if p_i else 0
          for w, p_i in zip(weights, p_n))
 
+
+    #ADDED PRINTS
+    print "BP: %s, ratio: hyp_len: %s, ref_len: %s" % (bp, str(hyp_lengths), str(ref_lengths))
     return bp * math.exp(math.fsum(s))
 
 
