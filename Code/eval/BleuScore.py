@@ -12,6 +12,7 @@ class BleuScore(EvaluationStrategy):
          for ref in references:
             ref_texts.append(nltk.word_tokenize(ref))
          cand = nltk.word_tokenize(sentence)
+         print(ref_texts)
          bleu = nltkbleu.sentence_bleu(ref_texts,cand,self.get_weights(n))
          return bleu
 
@@ -26,7 +27,6 @@ class BleuScore(EvaluationStrategy):
             for imageref in imagerefs:
                 tokenizedrefs.append(nltk.word_tokenize(imageref))
             final_references.append(tokenizedrefs)
-            print tokenizedrefs
         return nltkbleu.corpus_bleu(final_references,candidates,self.get_weights(n))
 
     ''' Returns a list of uniform weights, based on the choice of n'''
