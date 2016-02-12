@@ -222,7 +222,8 @@ class RNNGenerator:
             Xsh = np.maximum(Xsh, 0)
 
           if (not rnn_feed_once) or (not b[1]):
-            h1 = np.maximum(Xi + Li + Xsh + b[2].dot(Whh) + bhh, 0)
+            h1 = np.maximum(Xi  + Xsh + b[2].dot(Whh) + bhh, 0)
+            #h1 = np.maximum(Xi + Li + Xsh + b[2].dot(Whh) + bhh, 0) #LDA
           else:
             h1 = np.maximum(Xsh + b[2].dot(Whh) + bhh, 0)
 
