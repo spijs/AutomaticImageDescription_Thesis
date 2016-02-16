@@ -19,8 +19,24 @@ class WordFrequency(EvaluationStrategy):
         for word in reversed(sorted_words):
             print word + " " + str(words_in_sentences[word])
         nb = self.count_unique_words(references)
-        print "Number of unique words references: " + str(nb)
+        print("Number of sentences: "+str(len(sentences)))
+        print "Average sentence length: " + str(self.get_average_sentence_length(sentences))
+        print "Number of unique words in references: " + str(nb)
         return len(words_in_sentences)
+
+    def get_average_sentence_length(self,sentences):
+        sum = 0.0
+        distribution = {}
+        for sentence in sentences:
+            nb = len(nltk.word_tokenize(sentence))
+            sum += nb
+            if distribution.get(nb):
+                distribution[nb] = distribution[nb]+1
+            else:
+                distribution[nb] = 1
+        for el in distribution.keys():
+            print "Number of length "+str(el)+ "sentences :"+str(distribution[el])
+        return sum/len(sentences)
 
     ''' count the number of unique words in a list of lists of sentences '''
     def count_unique_words(self,references):
