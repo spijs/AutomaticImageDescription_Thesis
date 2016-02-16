@@ -9,13 +9,20 @@ class BleuScore(EvaluationStrategy):
     ''' Evaluates and returns the bleu score of a single sentence given its references and n of ngrams    '''
     def evaluate_sentence(self,sentence,references,n):
          ref_texts = []
+         weights = self.get_weights(n)
          for ref in references:
             ref_texts.append(nltk.word_tokenize(ref))
          cand = nltk.word_tokenize(sentence)
          bleu = 0
+         #sf = nltkbleu.SmoothingFunction()
          if cand and len(cand)>0:
-            bleu = nltkbleu.sentence_bleu(ref_texts,cand,self.get_weights(n))
+            bleu = nltkbleu.sentence_bleu(ref_texts,cand,weights)
+            if bleu == 0:
+                print "candidate :" + str(cand)
+                print "references : "+ str(ref_texts)
+
          return bleu
+
 
     ''' Evaluates and returns the bleu score of a corpus of sentences given their references and n of ngrams    '''
     def evaluate_total(self,sentences,references,n):
@@ -28,6 +35,7 @@ class BleuScore(EvaluationStrategy):
             for imageref in imagerefs:
                 tokenizedrefs.append(nltk.word_tokenize(imageref))
             final_references.append(tokenizedrefs)
+
         return nltkbleu.corpus_bleu(final_references,candidates,self.get_weights(n))
 
 

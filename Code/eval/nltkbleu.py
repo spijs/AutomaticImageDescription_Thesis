@@ -78,12 +78,14 @@ def sentence_bleu(references, hypothesis, weights=(0.25, 0.25, 0.25, 0.25),
                                  hypothesis=hypothesis, hyp_len=hyp_len)
 
     # Calculates the overall modified precision for all ngrams.
-    # By sum of the product of the weights and the respective *p_n*
+
     s = (w * math.log(p_i) if p_i else 0
          for w, p_i in zip(weights, p_n))
     sum_s = math.fsum(s)
-    if sum_s == 0:
-        return 0
+    #WHY IS THIS EVEN HERE?
+    #if sum_s == 0:
+    #    print str(s)
+    #    return 0
     return bp * math.exp(sum_s)
 
 
