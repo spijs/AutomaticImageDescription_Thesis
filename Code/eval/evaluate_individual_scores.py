@@ -4,6 +4,7 @@ import argparse
 import json
 from BleuScore import BleuScore
 from MeteorScore import MeteorScore
+from wordFrequency import WordFrequency
 
 
 def main(params):
@@ -25,6 +26,8 @@ def getStrategy(metric):
         return BleuScore("bleu")
     elif(metric == "meteor"):
         return MeteorScore("meteor")
+    elif(metric == "freq"):
+        return WordFrequency("freq")
     else:
         return BleuScore("bleu")
 
