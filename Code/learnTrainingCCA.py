@@ -31,7 +31,10 @@ def main(params):
     cca = CCA(n_components= 256, max_iter=1)
     cca.fit(images, weightedVectors)
     print "SIZE OF CCA:" + str(sys.getsizeof(cca))
-    pickle.dump(cca, open("trainingCCA.p",'w+'))
+    print "writing results to pickle"
+    pickle_dump_file = open("data/trainingCCA.p",'w+')
+    pickle.dump(cca, pickle_dump_file)
+    pickle_dump_file.close()
     print('finished')
 
 
