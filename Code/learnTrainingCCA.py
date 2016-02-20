@@ -28,7 +28,7 @@ def main(params):
     print "Done"
     print "Learning CCA"
     print str(len(images))
-    cca = CCA(n_components= 256, max_iter=1)
+    cca = CCA(n_components= 256, max_iter=700)
     cca.fit(images, weightedVectors)
     print "SIZE OF CCA:" + str(sys.getsizeof(cca))
     print "writing results to pickle"
