@@ -1,5 +1,96 @@
+Bleu-scores met Karpathy evaluatie -> zonder BP
+-------------------------------------------------
+
 65.1/43.9/29.0/18.9 --> RNN
 
 64.5/43.1/27.9/17.6 --> RNN met LDA
 
-59.1/37.2/22.8/14.0 --> LSTM
+59.1/37.2/22.8/14.0 --> LSTM30k
+
+Bleu-scores met karpatphy evaluatie -> met BP
+------------------------------------------------
+51.6/30.9/18.5/11.6 (BP=0.989, ratio=0.989, hyp_len=9845, ref_len=9955) --> gLSTM+LDA
+56.0/37.6/24.6/15.8 (BP=0.867, ratio=0.875, hyp_len=7456, ref_len=8519) --> RNN 26.99
+
+Bleu-scores Thijs
+--------------------------------------
+55.7/39.8/31.5/24.2 RNN+LDA (BP = 0.878)
+52.2/34.0/26.4/20.4 LSTM+LDA (BP = 0.989)
+52.6/36.3/27.9/20.4 LSTM30k
+53.4/38.1/29.4/21.8 rnn (BP=0.843)
+55.1/39.4/30.6/23.4 Rnn: 26.99 (BP = 0.867)
+
+
+
+
+
+******************************************************************
+Frequency Scores
+
+gLSTM+LDA 37.37:
+------------------
+Number of length 2sentences :4
+Number of length 4sentences :6
+Number of length 5sentences :23
+Number of length 6sentences :60
+Number of length 7sentences :50
+Number of length 8sentences :70
+Number of length 9sentences :156
+Number of length 10sentences :270
+Number of length 11sentences :251
+Number of length 12sentences :36
+Number of length 13sentences :18
+Number of length 14sentences :16
+Number of length 15sentences :24
+Number of length 16sentences :1
+Number of length 17sentences :1
+Number of length 20sentences :14
+Average sentence length: 9.845
+Number of unique words in references: 4207
+corpus score: 270
+
+
+RNN+LDA
+-------------------
+Number of length 2sentences :4
+Number of length 3sentences :6
+Number of length 4sentences :20
+Number of length 5sentences :75
+Number of length 6sentences :191
+Number of length 7sentences :298
+Number of length 8sentences :97
+Number of length 9sentences :124
+Number of length 10sentences :61
+Number of length 11sentences :108
+Number of length 12sentences :14
+Number of length 13sentences :2
+Average sentence length: 7.597
+Number of unique words in references: 4207
+corpus score: 207
+
+RNN 26.99
+-----------------------------
+Number of length 2sentences :14
+Number of length 3sentences :2
+Number of length 4sentences :19
+Number of length 5sentences :85
+Number of length 6sentences :191
+Number of length 7sentences :300
+Number of length 8sentences :126
+Number of length 9sentences :110
+Number of length 10sentences :43
+Number of length 11sentences :84
+Number of length 12sentences :22
+Number of length 13sentences :3
+Number of length 20sentences :1
+Average sentence length: 7.456
+Number of unique words in references: 4206
+corpus score: 211
+
+
+***********************************
+Meteor scores
+----------------------
+glstm+lda : 0.075
+rnn+lda   : 0.0902
+rnn 26.99 : 0.0884
