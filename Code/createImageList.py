@@ -29,7 +29,8 @@ if __name__ == "__main__":
     f = open("Flickr30kEntities/image_snippets/images.txt",'w+')
     g = open("Flickr30kEntities/images_snippets/images2.txt", 'w+')
     i=0
-    for dirname, dirnames, filenames in os.walk('Flickr30kEntities/image_snippets')
+    for dirname, dirnames, filenames in os.walk('Flickr30kEntities/image_snippets'):
+        for filename in filenames:
             if isLargeEnough(filename):
                 if i%2==0:
                     f.write(filename+'\n')
