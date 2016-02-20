@@ -10,6 +10,7 @@ from scipy import spatial
 import pickle
 from PIL import Image
 from imagernn.data_provider import getDataProvider
+import sys
 
 
 def main(params):
@@ -27,9 +28,13 @@ def main(params):
     print "Done"
     print "Learning CCA"
     print str(len(images))
-    cca = CCA(n_components= 256)
+    cca = CCA(n_components= 256, max_iter=700)
     cca.fit(images, weightedVectors)
-    pickle.dump(cca, open("trainingCCA.p",'w+'))
+    print "SIZE OF CCA:" + str(sys.getsizeof(cca))
+    print "writing results to pickle"
+    pickle_dump_file = open("data/trainingCCA.p",'w+')
+    pickle.dump(cca, pickle_dump_file)
+    pickle_dump_file.close()
     print('finished')
 
 

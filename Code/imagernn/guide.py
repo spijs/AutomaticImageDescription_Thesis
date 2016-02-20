@@ -29,7 +29,7 @@ def get_cca_projection(im):
     return ccamodel.getTransformedVector(im)
 
 def get_image_projection(image):
-    cca = pickle.load(open(os.path.dirname(__file__) + "/../trainingCCA.p"))
+    cca = pickle.load(open(os.path.dirname(__file__) + "/../data/trainingCCA.p"))
     return cca.transform(image.reshape(1,-1))
 
 
