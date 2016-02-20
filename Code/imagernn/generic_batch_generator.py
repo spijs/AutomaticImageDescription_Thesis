@@ -211,9 +211,9 @@ class GenericBatchGenerator:
     """ some code duplication here with forward pass, but I think we want the freedom in future """
     F = np.row_stack(x['image']['feat'] for x in batch)
     lda_enabled = params.get('lda',0)
-    #L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
+    L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
     if lda_enabled:
-       L = topics
+       L = np.row_stack(x['topics'] for x in batch)
     We = model['We']
     #Wlda = model['Wlda']
     be = model['be']
