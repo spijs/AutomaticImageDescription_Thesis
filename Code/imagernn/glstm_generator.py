@@ -222,7 +222,7 @@ class gLSTMGenerator:
       Hin[t,0] = 1
       Hin[t,1:1+d] = x
       Hin[t,1+d:(1+d+input_size)] = h_prev
-      Hin[t,1+d+input_size] = guide
+      Hin[t,1+d+input_size:] = guide
 
       # LSTM tick forward
       IFOG = np.zeros((1, d * 4))
