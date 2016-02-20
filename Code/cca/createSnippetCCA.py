@@ -6,7 +6,7 @@ import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from imagernn.data_provider import getDataProvider
+from Code.imagernn.data_provider import getDataProvider
 
 
 ''' stems a word by using the porter algorithm'''
@@ -17,7 +17,7 @@ def stem(word):
 '''Returns a list containing the most frequent english words'''
 def getStopwords():
         stopwords = set()
-        file=open('lda_images/english')
+        file=open('../lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords
@@ -43,13 +43,13 @@ def createOccurrenceVectors(vocabulary):
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
-    for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+    for dirname, dirnames, filenames in os.walk('../Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
          # if current < 1000:
             current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
-            f = open('./Flickr30kEntities/sentence_snippets/'+filename)
+            f = open('../Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             sentenceID = 1
             while not (line == ""):
@@ -229,7 +229,7 @@ def isLargeEnough(filename):
     file = filename+".jpg"
     #print file
     try:
-        image = Image.open("./Flickr30kEntities/image_snippets/"+file)
+        image = Image.open("../Flickr30kEntities/image_snippets/"+file)
     except IOError:
         
 	#print "IMG NOT FOUND"
@@ -253,8 +253,8 @@ def getImage(filename, file_with_names, features):
 
 
 if __name__ == "__main__":
-    names = open("./Flickr30kEntities/image_snippets/images.txt")
-    feats = scipy.io.loadmat("./Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
+    names = open("../Flickr30kEntities/image_snippets/images.txt")
+    feats = scipy.io.loadmat("../Flickr30kEntities/image_snippets/vgg_feats.mat")['feats'].transpose()
     mainExec(names, feats)
 
 

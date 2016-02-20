@@ -9,7 +9,7 @@ def isLargeEnough(filename):
     file = filename+".jpg"
     #print file
     try:
-        image = Image.open("./Flickr30kEntities/image_snippets/"+file)
+        image = Image.open("../Flickr30kEntities/image_snippets/"+file)
     except IOError:
     #print "IMG NOT FOUND"
 	return False
@@ -25,7 +25,7 @@ def stem(word):
 '''Returns a list containing the most frequent english words'''
 def getStopwords():
         stopwords = set()
-        file=open('lda_images/english')
+        file=open('../lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords
@@ -35,12 +35,12 @@ if __name__ == "__main__":
     result = {}
     stopwords = getStopwords()
     current = 0
-    for dirname, dirnames, filenames in os.walk('./Flickr30kEntities/sentence_snippets'):
+    for dirname, dirnames, filenames in os.walk('../Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
             current += 1
             if current % 1000 == 0:
                 print "Preprocessing sentence: " + str(current)
-            f= open('./Flickr30kEntities/sentence_snippets/'+filename)
+            f= open('../Flickr30kEntities/sentence_snippets/'+filename)
             line = f.readline()
             sentenceid = 1
             # print filename
@@ -62,3 +62,4 @@ if __name__ == "__main__":
     f = open("complete_dictionary.txt", 'w+')
     for w in words:
         f.writelines(w+'\n')
+    f.close()
