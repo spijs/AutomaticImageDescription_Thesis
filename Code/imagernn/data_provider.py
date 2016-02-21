@@ -60,7 +60,6 @@ class BasicDataProvider:
         self.topics = self.create_dist_dict(train_file, self.topics)
         for split in ['test', 'val']:
             f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+'.txt')
-            #TODO fix hardcoding !
             self.topics = self.create_dist_dict(f, self.topics)
         print 'amount of topics', len(self.topics)
 
