@@ -3,11 +3,11 @@ __author__ = 'Wout&Thijs'
 import pickle
 import os
 
-def get_guide_size(guide_type):
+def get_guide_size(guide_type,lda=None):
     if guide_type=="image":
         return 4096
     if guide_type=="lda":
-        return 120
+        return lda
     if guide_type=="imageprojection":
         return 256
 
