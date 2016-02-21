@@ -68,7 +68,7 @@ class GenericBatchGenerator:
     if(generator != 'glstm'):
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
     else:
-        guide_size = get_guide_size(guide_input)
+        guide_size = get_guide_size(guide_input,params['lda'])
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, guide_size, output_size)
     merge_init_structs(init_struct, generator_init_struct)
     return init_struct
