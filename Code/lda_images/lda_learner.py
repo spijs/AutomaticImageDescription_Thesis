@@ -72,7 +72,7 @@ class LDANetworkLearner:
         for split in ['test', 'val']:
             set = self.dataprovider.iterImageSentencePair(split = split)
             file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'
-                        +str(self.nbOfTopics)+'_'+split+'_'+str(self.hidden)+'_' + str(self.layers)+'_' + str(self.rate)+ '_' +str(self.validationError)+'.txt', 'w')
+                        +str(self.nbOfTopics)+'_'+split+'.txt', 'w')
             numpy.set_printoptions(suppress=True)
             for pair in set:
                 prediction = self.bestNetwork.predict(pair['image']['feat'])
