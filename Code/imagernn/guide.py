@@ -7,7 +7,7 @@ def get_guide_size(guide_type):
     if guide_type=="image":
         return 4096
     if guide_type=="lda":
-        return 120
+        return 80
     if guide_type=="imageprojection":
         return 256
 
