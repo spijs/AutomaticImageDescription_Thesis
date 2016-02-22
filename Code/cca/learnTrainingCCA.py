@@ -1,21 +1,25 @@
 __author__ = 'Wout & thijs'
 
 import os
+import sys
 import argparse
 import numpy as np
 from nltk.stem.porter import *
 # from sklearn.cross_decomposition import CCA
-import Code.rcca
+sys.path.append("..")
+import rcca
 import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from Code.imagernn.data_provider import getDataProvider
+from imagernn.data_provider import getDataProvider
 import sys
 
 def preprocess():
     dataset = "flickr30k"
+    os.chdir("..")
     dataprovider = getDataProvider(dataset)
+    os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     print "Reading Vocabulary..."
     vocabulary = readVocabulary("training_dictionary.txt")
@@ -44,7 +48,7 @@ def main(params):
     print "Done"
     print "Learning CCA"
     # print str(len(images))
-    cca = Code.rcca.CCA(kernelcca=False, numCC=256, reg=0.)
+    cca = rcca.CCA(kernelcca=False, numCC=256, reg=0.)
     cca.train([images, sentences])
     # cca = CCA(n_components= 256, max_iter=700)
     # cca.fit(images, weightedVectors)
