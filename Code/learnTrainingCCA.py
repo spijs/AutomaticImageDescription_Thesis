@@ -4,7 +4,8 @@ import os
 import argparse
 import numpy as np
 from nltk.stem.porter import *
-from sklearn.cross_decomposition import CCA
+# from sklearn.cross_decomposition import CCA
+import rcca
 import scipy.io
 from scipy import spatial
 import pickle
@@ -28,9 +29,11 @@ def main(params):
     print "Done"
     print "Learning CCA"
     print str(len(images))
-    cca = CCA(n_components= 256, max_iter=700)
-    cca.fit(images, weightedVectors)
-    print "SIZE OF CCA:" + str(sys.getsizeof(cca))
+    cca = rcca.CCA(kernelcca=False, numCC=256, reg=0.)
+    cca.train([images, weightedVectors])
+    # cca = CCA(n_components= 256, max_iter=700)
+    # cca.fit(images, weightedVectors)
+    # print "SIZE OF CCA:" + str(sys.getsizeof(cca))
     print "writing results to pickle"
     pickle_dump_file = open("data/trainingCCA.p",'w+')
     pickle.dump(cca, pickle_dump_file)

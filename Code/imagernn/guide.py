@@ -30,7 +30,9 @@ def get_cca_projection(im):
 
 def get_image_projection(image):
     cca = pickle.load(open(os.path.dirname(__file__) + "/../data/trainingCCA.p"))
-    return cca.transform(image.reshape(1,-1))
+    weights = cca.ws[0]
+    return np.dot(image, weights)
+    # return cca.transform(image.reshape(1,-1))
 
 
 
