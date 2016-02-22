@@ -81,8 +81,8 @@ class RNNGenerator:
       if not rnn_feed_once or t == 0:
         # feed the image in if feedonce is false. And it it is true, then
         # only feed the image in if its the first iteration
-        H[t] = np.maximum(Xi + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
-        #H[t] = np.maximum(Xi + Li + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+        #H[t] = np.maximum(Xi + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+        H[t] = np.maximum(Xi + Li + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
       else:
         H[t] = np.maximum(Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
 
@@ -223,8 +223,8 @@ class RNNGenerator:
             Xsh = np.maximum(Xsh, 0)
 
           if (not rnn_feed_once) or (not b[1]):
-            h1 = np.maximum(Xi  + Xsh + b[2].dot(Whh) + bhh, 0)
-            #h1 = np.maximum(Xi + Li + Xsh + b[2].dot(Whh) + bhh, 0) #LDA
+            #h1 = np.maximum(Xi  + Xsh + b[2].dot(Whh) + bhh, 0)
+            h1 = np.maximum(Xi + Li + Xsh + b[2].dot(Whh) + bhh, 0) #LDA
           else:
             h1 = np.maximum(Xsh + b[2].dot(Whh) + bhh, 0)
 
