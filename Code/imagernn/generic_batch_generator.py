@@ -38,7 +38,7 @@ class GenericBatchGenerator:
     hidden_size = params.get('hidden_size', 128)
     generator = params.get('generator', 'lstm')
     vocabulary_size = len(misc['wordtoix'])
-    #lda = params.get('lda',0)
+    lda = params.get('lda',0)
     output_size = len(misc['ixtoword']) # these should match though
     image_size = 4096 # size of CNN vectors hardcoded here
     guide_input = params.get('guide',"image")
@@ -55,10 +55,10 @@ class GenericBatchGenerator:
     regularize = ['We', 'Ws']
 
     # Added for LDA
-    # model['Wlda'] = initw(lda,image_encoding_size)
+    model['Wlda'] = initw(lda,image_encoding_size)
 
-    # update.append('Wlda')
-    # regularize.append('Wlda')
+    update.append('Wlda')
+    regularize.append('Wlda')
 
     init_struct = { 'model' : model, 'update' : update, 'regularize' : regularize}
 
@@ -89,13 +89,13 @@ class GenericBatchGenerator:
     We = model['We']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
-    #Wlda = model['Wlda']
+    Wlda = model['Wlda']
     lda_enabled = params.get('lda',0)
     L = np.zeros((len(batch),lda_enabled))
     if lda_enabled!=0:
        print (x['topics'] for x in batch)
        L = np.row_stack(x['topics'] for x in batch)
-    #lda = L.dot(Wlda)
+    lda = L.dot(Wlda)
 
     # decode the generator we wish to use
     generator_str = params.get('generator', 'lstm') 
@@ -116,6 +116,8 @@ class GenericBatchGenerator:
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if lda_enabled!=0:
+        guide = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
@@ -127,7 +129,7 @@ class GenericBatchGenerator:
       # ok we need cache as well because we'll do backward pass
       cache['gen_caches'] = gen_caches
       cache['Xe'] = Xe
-      #cache['lda'] = lda
+      cache['lda'] = lda
       cache['Ws_shape'] = Ws.shape
       cache['F'] = F
       cache['L'] = L
@@ -140,15 +142,15 @@ class GenericBatchGenerator:
   @staticmethod
   def backward(dY, cache):
     Xe = cache['Xe']
-    #lda = cache['lda']
+    lda = cache['lda']
     generator_str = cache['generator_str']
     dWs = np.zeros(cache['Ws_shape'])
     gen_caches = cache['gen_caches']
     F = cache['F']
-    #L = cache ['L']
+    L = cache ['L']
     dXe = np.zeros(Xe.shape)
-    #dlda = np.zeros(lda.shape)
-    #lda_enabled = cache['lda_enabled']
+    dlda = np.zeros(lda.shape)
+    lda_enabled = cache['lda_enabled']
 
     Generator = decodeGenerator(generator_str)
 
@@ -162,10 +164,10 @@ class GenericBatchGenerator:
       dXi = local_grads['dXi']
       del local_grads['dXi']
 
-      #if(lda_enabled):
-      #  dLi  = local_grads['dLi']
-      #  del local_grads['dLi']
-      #  dlda[i,:] += dLi
+      if(lda_enabled):
+        dLi  = local_grads['dLi']
+        del local_grads['dLi']
+        dlda[i,:] += dLi
 
       accumNpDicts(grads, local_grads) # add up the gradients wrt model parameters
 
@@ -176,10 +178,10 @@ class GenericBatchGenerator:
 
     # finally backprop into the image encoder
     dWe = F.transpose().dot(dXe)
-    #dWlda = L.transpose().dot(dlda)
+    dWlda = L.transpose().dot(dlda)
     dbe = np.sum(dXe, axis=0, keepdims = True)
 
-    accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs})#'Wlda':dWlda
+    accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs, 'Wlda':dWlda})#'Wlda':dWlda
     return grads
 
   @staticmethod
@@ -191,10 +193,10 @@ class GenericBatchGenerator:
     if lda_enabled:
        L = np.row_stack(x['topics'] for x in batch)
     We = model['We']
-    #Wlda = model['Wlda']
+    Wlda = model['Wlda']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
-    #lda = L.dot(Wlda)
+    lda = L.dot(Wlda)
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []
@@ -202,23 +204,27 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if lda_enabled:
+        guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
 
   @staticmethod
-  def predict_test(batch, model, params,topics,  **kwparams):
+  def predict_test(batch, model, params,  **kwparams):
     """ some code duplication here with forward pass, but I think we want the freedom in future """
     F = np.row_stack(x['image']['feat'] for x in batch)
     lda_enabled = params.get('lda',0)
-    L = topics
+    L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
+    if lda_enabled:
+       L = np.row_stack(x['topics'] for x in batch)
     We = model['We']
-    #Wlda = model['Wlda']
+    Wlda = model['Wlda']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     #print('L shape', L.shape)
     #print('Wlda shape', Wlda.shape)
-    #lda = L.dot(Wlda)
+    lda = L.dot(Wlda)
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []
@@ -226,6 +232,8 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if lda_enabled:
+        guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
