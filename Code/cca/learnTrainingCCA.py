@@ -30,7 +30,7 @@ def preprocess():
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrences, idf)
     pair = image_sentence_matrix_pair(images, weightedVectors)
-    pair_file = open("imagesentencematrix.p", 'w+')
+    pair_file = open("imagesentencematrix.p", 'wb')
     pickle.dump(pair, pair_file)
     pair_file.close()
 
@@ -42,7 +42,7 @@ class image_sentence_matrix_pair:
 
 def main(params):
     print "Loading data into memory"
-    matrixpair = pickle.load(open("imagesentencematrix.p", 'w+'))
+    matrixpair = pickle.load(open("imagesentencematrix.p", 'rb'))
     images = np.array(matrixpair.images)
     print "Image dimensions " + str(images.shape)
     sentences = np.array(matrixpair.sentences)
