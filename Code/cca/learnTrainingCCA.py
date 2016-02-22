@@ -43,8 +43,10 @@ class image_sentence_matrix_pair:
 def main(params):
     print "Loading data into memory"
     matrixpair = pickle.load(open("imagesentencematrix.p", 'w+'))
-    images = matrixpair.images
+    images = np.array(matrixpair.images)
+    print "Image dimensions " + str(images.shape)
     sentences = matrixpair.sentences
+    print "Sentence dimensions " + str(sentences.shape)
     print "Done"
     print "Learning CCA"
     # print str(len(images))
