@@ -9,7 +9,7 @@ import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from imagernn.data_provider import getDataProvider
+from Code.imagernn.data_provider import getDataProvider
 
 
 def main(params):
@@ -39,7 +39,7 @@ def main(params):
 '''Returns a list containing the most frequent english words'''
 def getStopwords():
         stopwords = set()
-        file=open('lda_images/english')
+        file=open('../lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords

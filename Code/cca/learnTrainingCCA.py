@@ -5,17 +5,16 @@ import argparse
 import numpy as np
 from nltk.stem.porter import *
 # from sklearn.cross_decomposition import CCA
-import rcca
+import Code.rcca
 import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from imagernn.data_provider import getDataProvider
+from Code.imagernn.data_provider import getDataProvider
 import sys
 
-
-def main(params):
-    dataset = params['dataset']
+def preprocess():
+    dataset = "flickr30k"
     dataprovider = getDataProvider(dataset)
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     print "Reading Vocabulary..."
@@ -26,16 +25,32 @@ def main(params):
     print "Done"
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrences, idf)
+    pair = image_sentence_matrix_pair(images, weightedVectors)
+    pair_file = open("imagesentencematrix.p", 'w+')
+    pickle.dump(pair, pair_file)
+    pair_file.close()
+
+class image_sentence_matrix_pair:
+    def __init__(self, images, sentences):
+        self.images = images
+        self.sentences = sentences
+
+
+def main(params):
+    print "Loading data into memory"
+    matrixpair = pickle.load(open("imagesentencematrix.p", 'w+'))
+    images = matrixpair.images
+    sentences = matrixpair.sentences
     print "Done"
     print "Learning CCA"
-    print str(len(images))
-    cca = rcca.CCA(kernelcca=False, numCC=256, reg=0.)
-    cca.train([images, weightedVectors])
+    # print str(len(images))
+    cca = Code.rcca.CCA(kernelcca=False, numCC=256, reg=0.)
+    cca.train([images, sentences])
     # cca = CCA(n_components= 256, max_iter=700)
     # cca.fit(images, weightedVectors)
     # print "SIZE OF CCA:" + str(sys.getsizeof(cca))
     print "writing results to pickle"
-    pickle_dump_file = open("data/trainingCCA.p",'w+')
+    pickle_dump_file = open("../data/trainingCCA.p",'w+')
     pickle.dump(cca, pickle_dump_file)
     pickle_dump_file.close()
     print('finished')
