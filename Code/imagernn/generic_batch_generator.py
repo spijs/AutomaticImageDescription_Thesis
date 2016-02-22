@@ -117,7 +117,7 @@ class GenericBatchGenerator:
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled!=0:
-        guide = L[i,:]
+        guide = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
       gen_caches.append((ix, gen_cache))
