@@ -55,10 +55,8 @@ def main(params):
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
     kwparams = { 'beam_size' : params['beam_size'] }
-    topics = []
     if not params['lda'] == 0:
-        topics = np.row_stack(dp.getTopic(img['filename'])).transpose()
-        Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params,topics, **kwparams)
+        Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
     else:
         Ys = BatchGenerator.predict([{'image':img}], model, checkpoint_params, **kwparams)
 

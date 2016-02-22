@@ -211,11 +211,13 @@ class GenericBatchGenerator:
     return Ys
 
   @staticmethod
-  def predict_test(batch, model, params,topics,  **kwparams):
+  def predict_test(batch, model, params,  **kwparams):
     """ some code duplication here with forward pass, but I think we want the freedom in future """
     F = np.row_stack(x['image']['feat'] for x in batch)
     lda_enabled = params.get('lda',0)
-    L = topics
+    L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
+    if lda_enabled:
+       L = np.row_stack(x['topics'] for x in batch)
     We = model['We']
     Wlda = model['Wlda']
     be = model['be']
@@ -231,7 +233,7 @@ class GenericBatchGenerator:
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled:
-        guide = L[i,:]
+        guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
