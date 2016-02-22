@@ -4,12 +4,14 @@ import os
 import argparse
 import numpy as np
 from nltk.stem.porter import *
+import sys
+sys.path.append("../imagernn")
 from sklearn.cross_decomposition import CCA
 import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from imagernn.data_provider import getDataProvider
+from data_provider import getDataProvider
 
 
 def main(params):
