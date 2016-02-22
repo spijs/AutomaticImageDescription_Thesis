@@ -18,6 +18,7 @@ from data_provider import getDataProvider
 def main(params):
     dataset = params['dataset']
     dataprovider = getDataProvider(dataset)
+    os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     dict = {}
     result = {}
