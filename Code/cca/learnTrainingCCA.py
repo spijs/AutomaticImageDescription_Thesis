@@ -45,7 +45,7 @@ def main(params):
     matrixpair = pickle.load(open("imagesentencematrix.p", 'w+'))
     images = np.array(matrixpair.images)
     print "Image dimensions " + str(images.shape)
-    sentences = matrixpair.sentences
+    sentences = np.array(matrixpair.sentences)
     print "Sentence dimensions " + str(sentences.shape)
     print "Done"
     print "Learning CCA"
