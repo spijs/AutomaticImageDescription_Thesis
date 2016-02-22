@@ -5,8 +5,8 @@ import argparse
 import numpy as np
 from nltk.stem.porter import *
 import sys
-# sys.path.append("../imagernn")
-os.chdir("..")
+sys.path.append("../imagernn")
+
 from sklearn.cross_decomposition import CCA
 import scipy.io
 from scipy import spatial
@@ -17,6 +17,7 @@ from data_provider import getDataProvider
 
 def main(params):
     dataset = params['dataset']
+    os.chdir("..")
     dataprovider = getDataProvider(dataset)
     os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
