@@ -9,7 +9,7 @@ import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from Code.imagernn.data_provider import getDataProvider
+from ..imagernn.data_provider import getDataProvider
 
 
 def main(params):
