@@ -4,17 +4,22 @@ import os
 import argparse
 import numpy as np
 from nltk.stem.porter import *
+import sys
+sys.path.append("../imagernn")
+
 from sklearn.cross_decomposition import CCA
 import scipy.io
 from scipy import spatial
 import pickle
 from PIL import Image
-from imagernn.data_provider import getDataProvider
+from data_provider import getDataProvider
 
 
 def main(params):
     dataset = params['dataset']
+    os.chdir("..")
     dataprovider = getDataProvider(dataset)
+    os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     dict = {}
     result = {}
@@ -39,7 +44,7 @@ def main(params):
 '''Returns a list containing the most frequent english words'''
 def getStopwords():
         stopwords = set()
-        file=open('lda_images/english')
+        file=open('../lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords
