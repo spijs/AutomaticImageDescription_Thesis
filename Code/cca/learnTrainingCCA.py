@@ -42,7 +42,9 @@ class image_sentence_matrix_pair:
 
 def main(params):
     print "Loading data into memory"
-    matrixpair = pickle.load(open("imagesentencematrix.p", 'rb'))
+    load_from = open("imagesentencematrix.p", 'rb')
+    matrixpair = pickle.load(load_from)
+    load_from.close()
     images = np.array(matrixpair.images)
     print "Image dimensions " + str(images.shape)
     sentences = np.array(matrixpair.sentences)
