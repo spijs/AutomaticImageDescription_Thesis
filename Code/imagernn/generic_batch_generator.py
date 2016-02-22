@@ -204,6 +204,8 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if lda_enabled:
+        guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
@@ -228,6 +230,8 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if lda_enabled:
+        guide = L[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
