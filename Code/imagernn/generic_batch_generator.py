@@ -116,7 +116,7 @@ class GenericBatchGenerator:
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled!=0:
+      if lda_enabled!=0 and not guide_input:
         guide = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
@@ -204,7 +204,7 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled:
+      if lda_enabled and not guide_input:
         guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
@@ -232,7 +232,7 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled:
+      if lda_enabled and not guide_input:
         guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
