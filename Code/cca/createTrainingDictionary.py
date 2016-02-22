@@ -5,7 +5,8 @@ import argparse
 import numpy as np
 from nltk.stem.porter import *
 import sys
-sys.path.append("../imagernn")
+# sys.path.append("../imagernn")
+os.chdir("..")
 from sklearn.cross_decomposition import CCA
 import scipy.io
 from scipy import spatial
