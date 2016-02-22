@@ -63,7 +63,7 @@ def main(params):
 '''Returns a list containing the most frequent english words'''
 def getStopwords():
         stopwords = set()
-        file=open('lda_images/english')
+        file=open('../lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords
