@@ -161,8 +161,8 @@ def corpus_bleu(list_of_references, hypotheses, weights=(0.25, 0.25, 0.25, 0.25)
         ref_lengths += _closest_ref_length(references, hyp_len)
 
     # Calculate corpus-level brevity penalty.
-    bp = _brevity_penalty(ref_lengths, hyp_lengths)
-
+    #bp = _brevity_penalty(ref_lengths, hyp_lengths)
+    bp = 1
     # Collects the various precision values for the different ngram orders.
     p_n = [Fraction(p_numerators[i], p_denominators[i])
            for i, _ in enumerate(weights, start=1)]
