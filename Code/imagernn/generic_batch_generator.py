@@ -116,7 +116,7 @@ class GenericBatchGenerator:
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled!=0:
+      if lda_enabled!=0 and not guide_input:
         guide = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
@@ -135,6 +135,7 @@ class GenericBatchGenerator:
       cache['L'] = L
       cache['generator_str'] = generator_str
       cache['lda_enabled'] = lda_enabled
+      cache['guide'] = guide_input
 
     return Ys, cache
 
@@ -143,6 +144,7 @@ class GenericBatchGenerator:
   def backward(dY, cache):
     Xe = cache['Xe']
     lda = cache['lda']
+    guide = cache['guide']
     generator_str = cache['generator_str']
     dWs = np.zeros(cache['Ws_shape'])
     gen_caches = cache['gen_caches']
@@ -164,7 +166,7 @@ class GenericBatchGenerator:
       dXi = local_grads['dXi']
       del local_grads['dXi']
 
-      if(lda_enabled):
+      if(lda_enabled and not guide):
         dLi  = local_grads['dLi']
         del local_grads['dLi']
         dlda[i,:] += dLi
@@ -204,7 +206,7 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled:
+      if lda_enabled and not guide_input:
         guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
@@ -232,7 +234,7 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled:
+      if lda_enabled and not guide_input:
         guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
