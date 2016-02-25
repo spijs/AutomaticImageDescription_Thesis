@@ -197,7 +197,7 @@ class GenericBatchGenerator:
     try:
         Wlda = model['Wlda']
         lda = L.dot(Wlda)
-    except(ValueError):
+    except(KeyError):
         print 'no wlda'
 
     be = model['be']
