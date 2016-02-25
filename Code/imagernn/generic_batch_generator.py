@@ -93,7 +93,6 @@ class GenericBatchGenerator:
     lda_enabled = params.get('lda',0)
     L = np.zeros((len(batch),lda_enabled))
     if lda_enabled!=0:
-       print (x['topics'] for x in batch)
        L = np.row_stack(x['topics'] for x in batch)
     lda = L.dot(Wlda)
 
@@ -219,7 +218,7 @@ class GenericBatchGenerator:
     lda_enabled = params.get('lda',0)
     L = np.zeros((params.get('image_encoding_size',128),lda_enabled))
     if lda_enabled:
-       L = np.row_stack(x['topics'] for x in batch)
+       L = np.row_stack(x['image']['topics'] for x in batch)
     We = model['We']
     Wlda = model['Wlda']
     be = model['be']
