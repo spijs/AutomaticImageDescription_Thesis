@@ -45,8 +45,8 @@ class BasicDataProvider:
         if not 'feat' in img: # also fill in the features
             feature_index = img['imgid'] # NOTE: imgid is an integer, and it indexes into features
             img['feat'] = self.features[:,feature_index]
-            if self.topics:
-                img['topics'] = self.topics[img['filename']]
+        if self.topics:
+            img['topics'] = self.topics[img['filename']]
         return img
 
     def _getSentence(self, sent):
