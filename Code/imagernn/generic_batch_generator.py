@@ -235,6 +235,7 @@ class GenericBatchGenerator:
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled and not guide_input:
         guide = lda[i,:]
+        print 'guide'
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
