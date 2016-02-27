@@ -1,0 +1,38 @@
+\begin{thebibliography}{}
+
+\bibitem[Denkowski and Lavie, 2007]{Denkowski2007}
+Denkowski, M. and Lavie, A. (2007).
+\newblock {Meteor Universal : Language Specific Translation Evaluation for Any
+  Target Language}.
+
+\bibitem[Jia et~al., 2015]{Fernando2015}
+Jia, X., Gavves, E., Fernando, B., and Tuytelaars, T. (2015).
+\newblock {Guiding Long-Short Term Memory for Image Caption Generation}.
+
+\bibitem[Karpathy and Fei-Fei, 2015]{Karpathy2015}
+Karpathy, a. and Fei-Fei, L. (2015).
+\newblock {Deep Visual-Semantic Alignments for Generating Image Des}.
+\newblock {\em Cvpr2015}.
+
+\bibitem[Papineni et~al., 2001]{Papineni2001}
+Papineni, K., Roukos, S., Ward, T., and Zhu, W.-J. (2001).
+\newblock {BLEU: a Method for Automatic Evaluation of Machine Translation}.
+\newblock {\em Proceedings of the 40th Annual Meeting on Association for
+  Computational Linguistics - ACL '02}, (July):311--318.
+
+\bibitem[Plummer et~al., 2015]{Plummer2015}
+Plummer, B.~a., Wang, L., Cervantes, C.~M., Caicedo, J.~C., Hockenmaier, J.,
+  and Lazebnik, S. (2015).
+\newblock {Flickr30k Entities: Collecting Region-to-Phrase Correspondences for
+  Richer Image-to-Sentence Models}.
+
+\bibitem[Vinyals et~al., 2015]{Google}
+Vinyals, O., Toshev, A., Bengio, S., and Erhan, D. (2015).
+\newblock {Show and Tell: A Neural Image Caption Generator}.
+
+\bibitem[Zhang et~al., 2015]{Zhang}
+Zhang, S., Jiang, H., Wei, S., and Dai, L. (2015).
+\newblock {Feedforward Sequential Memory Neural Networks without Recurrent
+  Feedback}.
+
+\end{thebibliography}
