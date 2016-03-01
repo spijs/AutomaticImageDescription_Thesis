@@ -43,8 +43,8 @@ def create_mat_files():
     print "Image dimensions " + str(images.shape)
     sentences = np.array(matrixpair.sentences)
     print "Sentence dimensions " + str(sentences.shape)
-    scipy.io.savemat('images.mat', images)
-    scipy.io.savemat('sentences.mat', sentences)
+    scipy.io.savemat('images.mat', {"images":images})
+    scipy.io.savemat('sentences.mat', {"sentences":sentences})
 
 class image_sentence_matrix_pair:
     def __init__(self, images, sentences):
