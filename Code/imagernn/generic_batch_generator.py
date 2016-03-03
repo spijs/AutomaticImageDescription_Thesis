@@ -181,10 +181,13 @@ class GenericBatchGenerator:
 
     # finally backprop into the image encoder
     dWe = F.transpose().dot(dXe)
-    dWlda = L.transpose().dot(dlda)
     dbe = np.sum(dXe, axis=0, keepdims = True)
 
-    accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs, 'Wlda':dWlda})#'Wlda':dWlda
+    if lda_enabled:
+      dWlda = L.transpose().dot(dlda)
+      accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs, 'Wlda':dWlda})#'Wlda':dWlda
+    else:
+      accumNpDicts(grads, { 'We':dWe, 'be':dbe, 'Ws':dWs})#'Wlda':dWlda
     return grads
 
   @staticmethod
