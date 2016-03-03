@@ -143,7 +143,6 @@ class GenericBatchGenerator:
   @staticmethod
   def backward(dY, cache):
     Xe = cache['Xe']
-    lda = cache['lda']
     guide = cache['guide']
     generator_str = cache['generator_str']
     dWs = np.zeros(cache['Ws_shape'])
@@ -151,8 +150,10 @@ class GenericBatchGenerator:
     F = cache['F']
     L = cache ['L']
     dXe = np.zeros(Xe.shape)
-    dlda = np.zeros(lda.shape)
     lda_enabled = cache['lda_enabled']
+    if lda_enabled:
+      lda = cache['lda']
+      dlda = np.zeros(lda.shape)
 
     Generator = decodeGenerator(generator_str)
 
