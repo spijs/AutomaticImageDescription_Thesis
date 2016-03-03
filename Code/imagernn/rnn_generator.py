@@ -276,7 +276,7 @@ class RNNGenerator:
         if nsteps >= 20: # bad things are probably happening, break out
           break
       # strip the intermediates
-      predictions = [(b[0], b[1]) for b in beams]
+      predictions = [(b[0], b[2]) for b in beams]
 
     else:
       ixprev = 0 # start out on start token
