@@ -244,6 +244,7 @@ class LSTMGenerator:
     # perform BEAM search. NOTE: I am not very confident in this implementation since I don't have
     # a lot of experience with these models. This implements my current understanding but I'm not
     # sure how to handle beams that predict END tokens. TODO: research this more.
+    print normalization
     if beam_size > 1:
       # log probability, indices of words predicted in this beam so far, and the hidden and cell states
       beams = [(0.0, [], h, c)] 
