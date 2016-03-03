@@ -100,7 +100,7 @@ class GenericBatchGenerator:
     generator_str = params.get('generator', 'lstm') 
     Generator = decodeGenerator(generator_str)
 
-    guide_input = params.get('guide','image')
+    guide_input = params.get('guide',None)
     # encode all words in all sentences (which exist in our vocab)
     wordtoix = misc['wordtoix']
     Ws = model['Ws']
