@@ -20,12 +20,14 @@ def getOccurenceVectorsAndImages():
         if current % 1000 ==0:
             print "Processing pair " + str(current)
         sentence = remove_common_words(pair['sentence']['tokens'],stopwords)
-        wordcount = 0
         done = []
         for word in sentence:
             stemmed = stem(word.decode('utf-8')).lower()
             if stemmed in vocabulary and stemmed not in done:
-                idf[stemmed] += 1
+                if idf[stemmed]:
+                    idf[stemmed] += 1
+                else:
+                    idf[stemmed] = 1
                 done.append(stemmed)
     idf = {k: np.log(current/v) for k, v in idf.iteritems()}
     sorted_idf = sorted(idf.items(), key=operator.itemgetter(1))
