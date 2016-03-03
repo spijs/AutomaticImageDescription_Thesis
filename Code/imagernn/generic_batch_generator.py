@@ -214,10 +214,8 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      print ('lda_enabled %s' % str(lda_enabled))
       if lda_enabled and not guide_input:
         guide = lda[i,:]
-        print 'guide = lda'
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
@@ -245,11 +243,9 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      print ('lda_enabled %s' % str(lda_enabled))
-      print ('guide_input %s' % str(guide_input))
-      if lda_enabled and not guide_input:
-        guide = lda[i,:]
-        print 'guide = lda'
+      #if lda_enabled and not guide_input:
+      guide = lda[i,:]
+      #  print 'guide = lda'
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
       Ys.append(gen_Y)
     return Ys
