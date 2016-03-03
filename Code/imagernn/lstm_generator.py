@@ -244,7 +244,6 @@ class LSTMGenerator:
     # perform BEAM search. NOTE: I am not very confident in this implementation since I don't have
     # a lot of experience with these models. This implements my current understanding but I'm not
     # sure how to handle beams that predict END tokens. TODO: research this more.
-    print normalization
     if beam_size > 1:
       #normalized log probability, log probability, indices of words predicted in this beam so far, and the hidden and cell states
       beams = [(0.0, 0.0, [], h, c)]
@@ -267,7 +266,7 @@ class LSTMGenerator:
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
-            beam_candidates.append(((b[1] + y1[wordix])/gaussianNorm(len(b[2])),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
+            beam_candidates.append(((b[1] + y1[wordix])/normalize(normalization,len(b[2])),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
         beam_candidates.sort(reverse = True) # decreasing order
         beams = beam_candidates[:beam_size] # truncate to get new beams
         nsteps += 1
@@ -310,3 +309,9 @@ def gaussianNorm(length, mean=12.315 , dev=5.18887):
   var = pow(dev,2)
   norm = 1/(dev*math.sqrt(2*math.pi*var))
   return norm*math.exp(-pow(length-mean,2)/(2*var))
+
+def normalize(form,length):
+    if form=="gauss":
+        return gaussianNorm(length)
+    else:
+        return 1
