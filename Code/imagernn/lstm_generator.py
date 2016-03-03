@@ -267,7 +267,7 @@ class LSTMGenerator:
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
-            beam_candidates.append(((b[1] + y1[wordix])/gaussianNorm(b[2]),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
+            beam_candidates.append(((b[1] + y1[wordix])/gaussianNorm(len(b[2])),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
         beam_candidates.sort(reverse = True) # decreasing order
         beams = beam_candidates[:beam_size] # truncate to get new beams
         nsteps += 1
