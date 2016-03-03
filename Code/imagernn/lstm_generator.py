@@ -205,7 +205,7 @@ class LSTMGenerator:
     """
     tanhC_version = params['tanhC_version']
     beam_size = kwargs.get('beam_size', 1)
-    normalization = kwargs.get('gauss',None)
+    normalization = kwargs.get('normalization',None)
 
     WLSTM = model['WLSTM']
     d = model['Wd'].shape[0] # size of hidden layer
