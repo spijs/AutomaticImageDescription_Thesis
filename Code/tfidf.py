@@ -30,8 +30,8 @@ def getOccurenceVectorsAndImages():
                 done.append(stemmed)
     idf = {k: np.log(current/v) for k, v in idf.iteritems()}
     sorted_idf = sorted(idf.items(), key=operator.itemgetter(1))
-    for k, v in sorted_idf.iteritems():
-        print "Word: " + k + " IDF: " + str(v)
+    for k in sorted_idf:
+        print "Word: " + k + " IDF: " + str(idf[k])
     output = open('idf.p', 'wb')
     pickle.dump(idf, output)
     output.close()
