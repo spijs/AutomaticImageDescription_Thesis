@@ -3,6 +3,7 @@ __author__ = 'Wout & thijs'
 import numpy as np
 import math
 import code
+import pickle
 
 from imagernn.utils import initw
 
@@ -304,6 +305,12 @@ def ymax(y):
   y1 = np.log(1e-20 + p1) # guard against zero probabilities just in case
   ix = np.argmax(y1)
   return (ix, y1[ix])
+
+'''Given a word, returns the idf value based on the training corpus'''
+def getIDF(word):
+  file = open('../idf.p')
+  idf = pickle.load(file)
+  return idf[word]
 
 # Flickr30k
 # Mean: 12.315055172413793
