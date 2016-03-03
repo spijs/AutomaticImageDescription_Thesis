@@ -205,6 +205,7 @@ class LSTMGenerator:
     """
     tanhC_version = params['tanhC_version']
     beam_size = kwargs.get('beam_size', 1)
+    normalization = kwargs.get('gauss',None)
 
     WLSTM = model['WLSTM']
     d = model['Wd'].shape[0] # size of hidden layer
@@ -262,7 +263,8 @@ class LSTMGenerator:
           p1 = e1 / np.sum(e1)
           y1 = np.log(1e-20 + p1) # and back to log domain
           #TODO hier algemener maken
-          y1 = y1/gaussianNorm(len(b[1]))
+          if(normalization=="gauss"):
+            y1 = y1/gaussianNorm(len(b[1]))
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
