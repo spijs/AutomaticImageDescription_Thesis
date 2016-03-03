@@ -89,15 +89,15 @@ class GenericBatchGenerator:
     We = model['We']
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
-    Wlda = model['Wlda']
     lda_enabled = params.get('lda',0)
     L = np.zeros((len(batch),lda_enabled))
     if lda_enabled!=0:
-       L = np.row_stack(x['topics'] for x in batch)
-    lda = L.dot(Wlda)
+      Wlda = model['Wlda']
+      L = np.row_stack(x['topics'] for x in batch)
+      lda = L.dot(Wlda)
 
     # decode the generator we wish to use
-    generator_str = params.get('generator', 'lstm') 
+    generator_str = params.get('generator', 'lstm')
     Generator = decodeGenerator(generator_str)
 
     guide_input = params.get('guide',None)
