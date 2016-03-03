@@ -210,7 +210,7 @@ class GenericBatchGenerator:
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []
-    guide_input = params.get('guide','image')
+    guide_input = params.get('guide',None)
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
@@ -239,7 +239,7 @@ class GenericBatchGenerator:
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []
-    guide_input = params.get('guide','image')
+    guide_input = params.get('guide',None)
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
