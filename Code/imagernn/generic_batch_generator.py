@@ -246,6 +246,7 @@ class GenericBatchGenerator:
       Xi = Xe[i,:]
       guide = get_guide(guide_input,F[i,:],L=L[i,:])
       print ('lda_enabled %s' % str(lda_enabled))
+      print ('guide_input %s' % str(guide_input))
       if lda_enabled and not guide_input:
         guide = lda[i,:]
         print 'guide = lda'
