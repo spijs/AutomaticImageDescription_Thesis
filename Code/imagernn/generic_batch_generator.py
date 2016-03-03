@@ -128,7 +128,8 @@ class GenericBatchGenerator:
       # ok we need cache as well because we'll do backward pass
       cache['gen_caches'] = gen_caches
       cache['Xe'] = Xe
-      cache['lda'] = lda
+      if lda_enabled:
+        cache['lda'] = lda
       cache['Ws_shape'] = Ws.shape
       cache['F'] = F
       cache['L'] = L
