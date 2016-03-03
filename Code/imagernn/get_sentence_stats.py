@@ -10,8 +10,8 @@ def main():
     dataprovider = getDataProvider(dataset)
     os.chdir("imagernn")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
-    mean = 0
-    nb_of_sentences = 0
+    mean = 0.0
+    nb_of_sentences = 0.0
 
     for pair in img_sentence_pair_generator:
         l = len(pair['sentence']['tokens'])
@@ -20,7 +20,7 @@ def main():
     mean = mean/nb_of_sentences
 
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
-    dev = 0
+    dev = 0.0
     for pair in img_sentence_pair_generator:
         l = len(pair['sentence']['tokens'])
         d = math.pow(mean-l,2)
