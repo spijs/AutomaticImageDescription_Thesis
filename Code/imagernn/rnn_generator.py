@@ -242,7 +242,7 @@ class RNNGenerator:
           if relu_encoders:
             Xsh = np.maximum(Xsh, 0)
 
-          if lda and (not lda_feed_once (not b[2])):
+          if lda and (not lda_feed_once or b[2]==0):
               temp = Xi+Li
           else:
               temp = Xi
