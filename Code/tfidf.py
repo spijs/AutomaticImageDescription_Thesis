@@ -1,19 +1,11 @@
 __author__ = 'Wout & thijs'
 
-import os
 import sys
-import argparse
 import numpy as np
 from nltk.stem.porter import *
-# from sklearn.cross_decomposition import CCA
 sys.path.append("..")
-import rcca
-import scipy.io
-from scipy import spatial
 import pickle
-from PIL import Image
 from imagernn.data_provider import getDataProvider
-import sys
 import operator
 
 def getOccurenceVectorsAndImages():
