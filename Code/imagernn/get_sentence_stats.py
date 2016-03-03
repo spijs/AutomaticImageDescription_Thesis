@@ -2,10 +2,13 @@ __author__ = 'Wout & thijs'
 
 from data_provider import getDataProvider
 import math
+import os
 
-def main(params):
+def main():
     dataset = 'flickr30k'
+    os.chdir("..")
     dataprovider = getDataProvider(dataset)
+    os.chdir("imagernn")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     mean = 0
     nb_of_sentences = 0
