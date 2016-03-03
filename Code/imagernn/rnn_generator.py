@@ -44,6 +44,8 @@ class RNNGenerator:
     drop_prob_decoder = params.get('drop_prob_decoder', 0.0)
     relu_encoders = params.get('rnn_relu_encoders', 0)
     rnn_feed_once = params.get('rnn_feed_once', 0)
+    lda_feed_once = params.get('lda_feed_once',0)
+    lda = params.get('lda',0)
 
     if drop_prob_encoder > 0: # if we want dropout on the encoder
       # inverted version of dropout here. Suppose the drop_prob is 0.5, then during training
@@ -78,13 +80,20 @@ class RNNGenerator:
     for t in xrange(n):
       
       prev = np.zeros(d) if t == 0 else H[t-1]
-      if not rnn_feed_once or t == 0:
-        # feed the image in if feedonce is false. And it it is true, then
-        # only feed the image in if its the first iteration
-        #H[t] = np.maximum(Xi + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
-        H[t] = np.maximum(Xi + Li + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+
+      if lda and (not lda_feed_once or t==0):
+          temp = Xi+Li
       else:
-        H[t] = np.maximum(Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+          temp = Xi
+      if not rnn_feed_once or t == 0:
+        # feed the image in if feedonce is false. And if it is true, then
+        # only feed the image in if its the first iteration
+          H[t] = np.maximum(temp + Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
+      else:
+        if lda and (not lda_feed_once or t==0):
+           H[t] = np.maximum(Xsh[t] + Li + prev.dot(Whh) + bhh, 0) # also ReLU
+        else:
+           H[t] = np.maximum(Xsh[t] + prev.dot(Whh) + bhh, 0) # also ReLU
 
     if drop_prob_decoder > 0: # if we want dropout on the decoder
       if not predict_mode: # and we are in training mode
@@ -112,6 +121,9 @@ class RNNGenerator:
       cache['drop_prob_encoder'] = drop_prob_encoder
       cache['drop_prob_decoder'] = drop_prob_decoder
       cache['rnn_feed_once'] = rnn_feed_once
+      cache['lda'] = lda
+      cache['lda_feed_once']= lda_feed_once
+
       if drop_prob_encoder > 0: 
         cache['Us'] = Us # keep the dropout masks around for backprop
         cache['Ui'] = Ui
@@ -134,6 +146,8 @@ class RNNGenerator:
     drop_prob_decoder = cache['drop_prob_decoder']
     relu_encoders = cache['relu_encoders']
     rnn_feed_once = cache['rnn_feed_once']
+    lda_feed_once = cache['lda_feed_once']
+    lda = cache['lda']
     n,d = H.shape
 
     # backprop the decoder
@@ -156,6 +170,8 @@ class RNNGenerator:
 
       if not rnn_feed_once or t == 0:
         dXi += dht # backprop to Xi
+
+      if lda and not lda_feed_once or t==0:
         dLi += dht
         
       dXsh[t] += dht # backprop to word encodings
@@ -189,6 +205,8 @@ class RNNGenerator:
     beam_size = kwargs.get('beam_size', 1)
     relu_encoders = params.get('rnn_relu_encoders', 0)
     rnn_feed_once = params.get('rnn_feed_once', 0)
+    lda = params.get('lda',0)
+    lda_feed_once = params.get('lda_feed_once',0)
 
     d = model['Wd'].shape[0] # size of hidden layer
     Whh = model['Whh']
@@ -222,11 +240,19 @@ class RNNGenerator:
           if relu_encoders:
             Xsh = np.maximum(Xsh, 0)
 
-          if (not rnn_feed_once) or (not b[1]):
-            h1 = np.maximum(Xi  + Xsh + b[2].dot(Whh) + bhh, 0)
-            #h1 = np.maximum(Xi + Li + Xsh + b[2].dot(Whh) + bhh, 0) #LDA
+          if lda and (not lda_feed_once or b[1]==0):
+              temp = Xi+Li
           else:
-            h1 = np.maximum(Xsh + b[2].dot(Whh) + bhh, 0)
+              temp = Xi
+          if not rnn_feed_once or b[1] == 0:
+          # feed the image in if feedonce is false. And if it is true, then
+          # only feed the image in if its the first iteration
+            h1 = np.maximum(temp + Xsh + b[2].dot(Whh) + bhh, 0) # also ReLU
+          else:
+            if lda and (not lda_feed_once or b[1]==0):
+               h1 = np.maximum(Xsh + Li + b[2].dot(Whh) + bhh, 0) # also ReLU
+            else:
+               h1 = np.maximum(Xsh + b[2].dot(Whh) + bhh, 0) # also ReLU
 
           y1 = h1.dot(Wd) + bd
 
@@ -249,7 +275,7 @@ class RNNGenerator:
       # strip the intermediates
       predictions = [(b[0], b[1]) for b in beams]
 
-    else:
+    else: #Todo deze case is niet uitgewerkt (we gebruiken enkel beamsize > 1)
       ixprev = 0 # start out on start token
       nsteps = 0
       predix = []
@@ -265,6 +291,7 @@ class RNNGenerator:
           ht = np.maximum(Xi + Li+ Xsh + hprev.dot(Whh) + bhh, 0)
         else:
           ht = np.maximum(Xsh + hprev.dot(Whh) + bhh, 0)
+
 
         Y = ht.dot(Wd) + bd
         hprev = ht
