@@ -247,37 +247,35 @@ class LSTMGenerator:
     # sure how to handle beams that predict END tokens. TODO: research this more.
     print normalization
     if beam_size > 1:
-      # log probability, indices of words predicted in this beam so far, and the hidden and cell states
-      beams = [(0.0, [], h, c)] 
+      #normalized log probability, log probability, indices of words predicted in this beam so far, and the hidden and cell states
+      beams = [(0.0, 0.0, [], h, c)]
       nsteps = 0
       while True:
         beam_candidates = []
         for b in beams:
-          ixprev = b[1][-1] if b[1] else 0 # start off with the word where this beam left off else first word is 0
-          if ixprev == 0 and b[1]:
+          ixprev = b[2][-1] if b[2] else 0 # start off with the word where this beam left off else first word is 0
+          if ixprev == 0 and b[2]:
             # this beam predicted end token. Keep in the candidates but don't expand it out any more
             beam_candidates.append(b)
             continue
-          (y1, h1, c1) = LSTMtick(Ws[ixprev], b[2], b[3])
+          (y1, h1, c1) = LSTMtick(Ws[ixprev], b[3], b[4])
           y1 = y1.ravel() # make into 1D vector
           maxy1 = np.amax(y1)
           e1 = np.exp(y1 - maxy1) # for numerical stability shift into good numerical range
           p1 = e1 / np.sum(e1)
           y1 = np.log(1e-20 + p1) # and back to log domain
           #TODO hier algemener maken
-          if(normalization=="gauss"):
-            y2 = y1/gaussianNorm(len(b[1]))
-          top_indices = np.argsort(-y2)  # we do -y because we want decreasing order
+          top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
-            beam_candidates.append((b[0] + y1[wordix], b[1] + [wordix], h1, c1))
+            beam_candidates.append(((b[1] + y1[wordix])/gaussianNorm(len(b[2])),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
         beam_candidates.sort(reverse = True) # decreasing order
         beams = beam_candidates[:beam_size] # truncate to get new beams
         nsteps += 1
         if nsteps >= 20: # bad things are probably happening, break out
           break
       # strip the intermediates
-      predictions = [(b[0], b[1]) for b in beams]
+      predictions = [(b[0], b[2]) for b in beams]
     else: # Deze else gebruiken we nooit!
       # greedy inference. lets write it up independently, should be bit faster and simpler
       ixprev = 0
