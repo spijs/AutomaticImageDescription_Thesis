@@ -261,7 +261,7 @@ class LSTMGenerator:
           e1 = np.exp(y1 - maxy1) # for numerical stability shift into good numerical range
           p1 = e1 / np.sum(e1)
           y1 = np.log(1e-20 + p1) # and back to log domain
-          #TODO hier y1 aanpassen
+          #TODO hier algemener maken
           y1 = y1/gaussianNorm(len(b[1]))
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
@@ -306,6 +306,6 @@ def ymax(y):
 # Mean: 12.315055172413793
 # Std.Dev : 5.188878248688354
 def gaussianNorm(length, mean=12.315 , dev=5.18887):
-  norm = 1/(dev*math.sqrt(2*math.pi))
   var = pow(dev,2)
+  norm = 1/(dev*math.sqrt(2*math.pi*var))
   return norm*math.exp(-pow(length-mean,2)/(2*var))
