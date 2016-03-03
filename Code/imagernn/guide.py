@@ -1,6 +1,7 @@
 __author__ = 'Wout&Thijs'
 
 import pickle
+import numpy as np
 import os
 
 def get_guide_size(guide_type,lda=None):
@@ -9,7 +10,7 @@ def get_guide_size(guide_type,lda=None):
     if guide_type=="lda":
        return lda
     if guide_type=="imageprojection":
-        return 256
+        return 4083
 
 def get_guide(guide_type,im,L=None):
     if guide_type=="image":
@@ -29,8 +30,9 @@ def get_cca_projection(im):
     return ccamodel.getTransformedVector(im)
 
 def get_image_projection(image):
-    cca = pickle.load(open(os.path.dirname(__file__) + "/../data/trainingCCA.p"))
-    weights = cca.ws[0]
+    # cca = pickle.load(open(os.path.dirname(__file__) + "/../data/trainingCCA.p"))
+    # weights = cca.ws[0]
+    weights = np.loadtxt('../cca/imageprojection.txt', delimiter = ',')
     return np.dot(image, weights)
     # return cca.transform(image.reshape(1,-1))
 

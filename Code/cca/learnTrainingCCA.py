@@ -34,6 +34,20 @@ def preprocess():
     pickle.dump(pair, pair_file)
     pair_file.close()
 
+def create_mat_files():
+    print "Loading data into memory"
+    load_from = open("imagesentencematrix.p", 'rb')
+    matrixpair = pickle.load(load_from)
+    load_from.close()
+    images = np.array(matrixpair.images)
+    print "Image dimensions " + str(images.shape)
+    sentences = np.array(matrixpair.sentences)
+    print "Sentence dimensions " + str(sentences.shape)
+    np.savetxt("sentences.txt", sentences)
+    np.savetxt("images.txt", images)
+    # scipy.io.savemat('images.mat', {"images":images})
+    # scipy.io.savemat('sentences.mat', {"sentences":sentences})
+
 class image_sentence_matrix_pair:
     def __init__(self, images, sentences):
         self.images = images
