@@ -264,6 +264,7 @@ class LSTMGenerator:
           y1 = np.log(1e-20 + p1) # and back to log domain
           #TODO hier algemener maken
           if(normalization=="gauss"):
+            print "norm"
             y1 = y1/gaussianNorm(len(b[1]))
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
