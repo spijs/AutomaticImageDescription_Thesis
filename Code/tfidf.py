@@ -11,6 +11,8 @@ import operator
 def getOccurenceVectorsAndImages():
     vocabulary = readVocabulary("cca/training_dictionary.txt")
     idf = {}
+    for word in vocabulary:
+        idf[word] = 0
     dataprovider = getDataProvider('flickr30k')
     pairGenerator = dataprovider.iterImageSentencePair()
     stopwords = getStopwords()
@@ -20,7 +22,6 @@ def getOccurenceVectorsAndImages():
         if current % 1000 ==0:
             print "Processing pair " + str(current)
         sentence = remove_common_words(pair['sentence']['tokens'],stopwords)
-        wordcount = 0
         done = []
         for word in sentence:
             stemmed = stem(word.decode('utf-8')).lower()
