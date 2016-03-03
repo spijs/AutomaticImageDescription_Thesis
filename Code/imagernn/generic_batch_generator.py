@@ -229,12 +229,13 @@ class GenericBatchGenerator:
     if lda_enabled:
        L = np.row_stack(x['image']['topics'] for x in batch)
     We = model['We']
-    Wlda = model['Wlda']
+    if lda_enabled:
+      Wlda = model['Wlda']
+      lda = L.dot(Wlda)
     be = model['be']
     Xe = F.dot(We) + be # Xe becomes N x image_encoding_size
     #print('L shape', L.shape)
     #print('Wlda shape', Wlda.shape)
-    lda = L.dot(Wlda)
     generator_str = params['generator']
     Generator = decodeGenerator(generator_str)
     Ys = []

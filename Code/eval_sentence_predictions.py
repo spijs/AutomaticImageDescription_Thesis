@@ -54,11 +54,11 @@ def main(params):
     n+=1
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
-    kwparams = { 'beam_size' : params['beam_size'] }
+    kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'] }
     if not params['lda'] == 0:
         Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
     else:
-        Ys = BatchGenerator.predict([{'image':img}], model, checkpoint_params, **kwparams)
+        Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
 
     img_blob = {} # we will build this up
     img_blob['img_path'] = img['local_file_path']
