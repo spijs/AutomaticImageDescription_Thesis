@@ -6,9 +6,9 @@
 \select@language {dutch}
 \select@language {dutch}
 \contentsline {chapter}{Voorwoord}{i}{chapter*.1}
-\contentsline {chapter}{Samenvatting}{iii}{chapter*.2}
-\contentsline {chapter}{L"yst van figuren en tabellen}{iv}{chapter*.3}
-\contentsline {chapter}{Lijst van afkortingen en symbolen}{v}{chapter*.6}
+\contentsline {chapter}{Samenvatting}{iv}{chapter*.2}
+\contentsline {chapter}{L"yst van figuren en tabellen}{v}{chapter*.3}
+\contentsline {chapter}{Lijst van afkortingen en symbolen}{vi}{chapter*.6}
 \contentsline {chapter}{\chapternumberline {1}Inleiding}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Lorem ipsum 4--5}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Lorem ipsum 6--7}{1}{section.1.2}
@@ -37,21 +37,30 @@
 \contentsline {section}{\numberline {3.2}Statistiek}{15}{section.3.2}
 \contentsline {subsection}{\numberline {3.2.1}Latent Dirichlet Allocation}{15}{subsection.3.2.1}
 \contentsline {subsection}{\numberline {3.2.2}Stacked Canonical Correlation Analysis}{15}{subsection.3.2.2}
-\contentsline {chapter}{\chapternumberline {4}Het laatste hoofdstuk}{17}{chapter.4}
-\contentsline {section}{\numberline {4.1}Eerste onderwerp in dit hoofdstuk}{17}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Een item}{17}{subsection.4.1.1}
-\contentsline {section}{\numberline {4.2}Tweede onderwerp in dit hoofdstuk}{17}{section.4.2}
-\contentsline {section}{\numberline {4.3}Besluit van dit hoofdstuk}{17}{section.4.3}
-\contentsline {chapter}{\chapternumberline {5}Besluit}{19}{chapter.5}
-\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{23}{appendix.A}
-\contentsline {section}{\numberline {A.1}Meer lorem}{23}{section.A.1}
-\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{23}{subsection.A.1.1}
-\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{24}{subsection.A.1.2}
-\contentsline {section}{\numberline {A.2}Lorem 51}{24}{section.A.2}
-\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{25}{appendix.B}
-\contentsline {section}{\numberline {B.1}Lorem 20-24}{25}{section.B.1}
-\contentsline {section}{\numberline {B.2}Lorem 25-27}{26}{section.B.2}
-\contentsline {chapter}{Bibliografie}{27}{section*.37}
+\contentsline {chapter}{\chapternumberline {4}Methodologie}{17}{chapter.4}
+\contentsline {section}{\numberline {4.1}Startpunt Karpathy}{17}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Recurrent Neuraal Netwerk}{17}{subsection.4.1.1}
+\contentsline {paragraph}{Afbeeldingsrepresentatie}{17}{section*.42}
+\contentsline {paragraph}{Van afbeelding naar beschrijving}{17}{section*.43}
+\contentsline {subsection}{\numberline {4.1.2}Long Short Term Memory Netwerk}{18}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Toevoeging van LDA topicverdeling aan RNN}{18}{section.4.2}
+\contentsline {section}{\numberline {4.3}gLSTM}{18}{section.4.3}
+\contentsline {section}{\numberline {4.4}Normalizatie van beam search}{18}{section.4.4}
+\contentsline {chapter}{\chapternumberline {5}Het laatste hoofdstuk}{19}{chapter.5}
+\contentsline {section}{\numberline {5.1}Eerste onderwerp in dit hoofdstuk}{19}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Een item}{19}{subsection.5.1.1}
+\contentsline {section}{\numberline {5.2}Tweede onderwerp in dit hoofdstuk}{19}{section.5.2}
+\contentsline {section}{\numberline {5.3}Besluit van dit hoofdstuk}{19}{section.5.3}
+\contentsline {chapter}{\chapternumberline {6}Besluit}{21}{chapter.6}
+\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{25}{appendix.A}
+\contentsline {section}{\numberline {A.1}Meer lorem}{25}{section.A.1}
+\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{25}{subsection.A.1.1}
+\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{26}{subsection.A.1.2}
+\contentsline {section}{\numberline {A.2}Lorem 51}{26}{section.A.2}
+\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{27}{appendix.B}
+\contentsline {section}{\numberline {B.1}Lorem 20-24}{27}{section.B.1}
+\contentsline {section}{\numberline {B.2}Lorem 25-27}{28}{section.B.2}
+\contentsline {chapter}{Bibliografie}{29}{section*.45}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
