@@ -1,6 +1,7 @@
 __author__ = 'Wout & thijs'
 
 import numpy as np
+import math
 import code
 
 from imagernn.utils import initw
@@ -249,7 +250,7 @@ class LSTMGenerator:
       while True:
         beam_candidates = []
         for b in beams:
-          ixprev = b[1][-1] if b[1] else 0 # start off with the word where this beam left off
+          ixprev = b[1][-1] if b[1] else 0 # start off with the word where this beam left off else first word is 0
           if ixprev == 0 and b[1]:
             # this beam predicted end token. Keep in the candidates but don't expand it out any more
             beam_candidates.append(b)
@@ -260,6 +261,8 @@ class LSTMGenerator:
           e1 = np.exp(y1 - maxy1) # for numerical stability shift into good numerical range
           p1 = e1 / np.sum(e1)
           y1 = np.log(1e-20 + p1) # and back to log domain
+          #TODO hier y1 aanpassen
+          y1 = y1/gaussianNorm(len(b[1]))
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
@@ -271,7 +274,7 @@ class LSTMGenerator:
           break
       # strip the intermediates
       predictions = [(b[0], b[1]) for b in beams]
-    else:
+    else: # Deze else gebruiken we nooit!
       # greedy inference. lets write it up independently, should be bit faster and simpler
       ixprev = 0
       nsteps = 0
@@ -298,3 +301,11 @@ def ymax(y):
   y1 = np.log(1e-20 + p1) # guard against zero probabilities just in case
   ix = np.argmax(y1)
   return (ix, y1[ix])
+
+# Flickr30k
+# Mean: 12.315055172413793
+# Std.Dev : 5.188878248688354
+def gaussianNorm(length, mean=12.315 , dev=5.18887):
+  norm = 1/(dev*math.sqrt(2*math.pi))
+  var = pow(dev,2)
+  return norm*math.exp(-pow(length-mean,2)/(2*var))
