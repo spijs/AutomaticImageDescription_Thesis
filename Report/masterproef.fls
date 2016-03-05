@@ -354,6 +354,9 @@ INPUT ./Images/lda.png
 OUTPUT hst-methodology.aux
 INPUT hst-methodology.tex
 INPUT hst-methodology.tex
+INPUT Images/vgg16.PNG
+INPUT ./Images/vgg16.PNG
+INPUT ./Images/vgg16.PNG
 INPUT Images/karpathy.PNG
 INPUT ./Images/karpathy.PNG
 INPUT ./Images/karpathy.PNG
