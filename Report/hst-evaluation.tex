@@ -1,7 +1,7 @@
 \chapter{Evaluatie}
 \label{hoofdstuk:evaluatie}
 Dit hoofdstuk behandelt enkele gebruikte methodes om de ontwikkelde systemen te evalueren. Twee van deze methodes vinden hun oorsprong in de computervertaling. Ze zijn ontwikkeld om automatisch de kwaliteit van vertalingen te meten. Het doel van deze evaluatiealgoritmes is om zo goed als mogelijk menselijke evaluatiescores te benaderen. De laatste vorm van evaluatie kijkt naar statistieken van de gegenereerde zinnen.
- 
+
 
 \section{Automatische evaluatie}
 Ideaal gezien beoordelen meerdere mensen elke zin om tot een betrouwbare evaluatie te komen. Deze beoordeling kan bijvoorbeeld door een score te geven op de kwaliteit van elke zin. Een andere optie is om proefpersonen te laten oordelen of een automatisch gegenereerde zin beter, hetzelfde of slechter is dan de overeenkomstige referentiezin. Het nadeel van elk van deze methodes is de nood aan meerdere proefpersonen die voor elke gebruikte methode of instelling van de netwerken, alle duizend zinnen van de validatieverzameling of de testverzameling moet beoordelen. Het is duidelijk dat dit een kostelijke operatie is. Daarvoor bieden automatische evaluatiealgoritmes een oplossing.
@@ -14,7 +14,7 @@ Om die reden bekijken we ook nog enkele statistieken van de gegenereerde zinnen 
 Kort gesteld berekent Bleu scores van computervertalingen op basis van overeenkomst van woorden of aangesloten woorden met de referentiezinnen. Verschillende vormen van Bleu kunnen worden gebruikt naargelang het aantal n-grams. Het gebruik van Bleu heeft echter wel enkele nadelen.
 
 \subsection{Algoritme}
-Om de n-gram Bleu-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision}. Dit is een vorm van precisie die rekening houdt met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \textttt{the} nooit vijfmaal voorkomt in een referentiezin. De berekening van \textit{modified n-gram precision} gebeurt door eerst het maximum te nemen van het aantal keer dat een specifieke woordsequentie voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal voorkomens van deze sequentie in de gegenereerde zin. Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk woord in de vertaalde zin opgeteld en gedeeld door het totaal aantal woorden in de gegenereerde zin.
+Om de n-gram Bleu-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision}. Dit is een vorm van precisie die rekening houdt met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. De berekening van \textit{modified n-gram precision} gebeurt door eerst het maximum te nemen van het aantal keer dat een specifieke woordsequentie voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal voorkomens van deze sequentie in de gegenereerde zin. Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk woord in de vertaalde zin opgeteld en gedeeld door het totaal aantal woorden in de gegenereerde zin.
 
 \begin{equation}
 p_{modified}(s) =
@@ -23,15 +23,15 @@ p_{modified}(s) =
 \end{equation}
 Vanuit deze formule volgt een score voor een volledige corpus van gegenereerde zinnen als volgt:
 \begin{equation}
-p_{n} = 
+p_{n} =
 \frac{\sum\limits_{C \in \{Candidates\} } \sum\limits_{ngram \in C} Count_{clip}(ngram)}{\sum\limits_{C' \in \{Candidates\} } \sum\limits_{ngram' \in C'} Count(ngram')}
 \label{formule:corpus_modified}
 \end{equation}
 
-Vanuit deze scores voor $i=1$ tot en met $n$ is het mogelijk om een n-gram Bleu-score te bepalen. Dit gebeurt door het gemiddelde logaritme te nemen met uniforme gewichten, wat overeenkomt met het geometrisch gemiddelde van de modified n-gram precisions. 
+Vanuit deze scores voor $i=1$ tot en met $n$ is het mogelijk om een n-gram Bleu-score te bepalen. Dit gebeurt door het gemiddelde logaritme te nemen met uniforme gewichten, wat overeenkomt met het geometrisch gemiddelde van de modified n-gram precisions.
 Deze score dwingt echter niet de juiste lengte van de zin. Om die reden bepaalt de paper een extra multiplicatieve factor namelijk de Brevity Penalty ($BP$). Voor elke gegenereerde zin bepaalt het algoritme de referentiezin met de dichtstbijzijnde lengte. De lengte daarvan noemt de paper de "beste match lengte". Vervolgens worden zowel de lengtes van de genereerde zinnen als de beste match lengte opgeteld respectievelijk $c$ en $r$. Berekenen van de Brevity Penalty kan met volgende formule:
 \begin{equation}BP=
-\[ \begin{cases} 
+\[ \begin{cases}
 1 & if\ c > r \\
 e^{☻-r/c} & else
 \end{cases}
@@ -80,7 +80,7 @@ bent, dan is het ook logisch om het hoofdstuk af te ronden met een
 overzicht ervan. Voor hoofdstukken zoals de inleiding en het
 literatuuroverzicht is dit niet strikt nodig.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "masterproef"
-%%% End: 
+%%% End:

@@ -1,4 +1,6 @@
-This is BibTeX, Version 0.99dThe top-level auxiliary file: masterproef.aux
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: masterproef.aux
 A level-1 auxiliary file: inleiding.aux
 A level-1 auxiliary file: hst-related.aux
 White space in argument---line 80 of file hst-related.aux
@@ -7,6 +9,8 @@ White space in argument---line 80 of file hst-related.aux
 I'm skipping whatever remains of this command
 A level-1 auxiliary file: hst-theorie.aux
 A level-1 auxiliary file: hst-methodology.aux
+A level-1 auxiliary file: hst-evaluation.aux
+A level-1 auxiliary file: hst-results.aux
 A level-1 auxiliary file: hfdst-n.aux
 A level-1 auxiliary file: besluit.aux
 A level-1 auxiliary file: app-A.aux
@@ -38,6 +42,7 @@ Warning--I didn't find a database entry for "Yang"
 Warning--I didn't find a database entry for "Elliott"
 Warning--I didn't find a database entry for "Karpathy1"
 Warning--I didn't find a database entry for "Donahue"
+Warning--I didn't find a database entry for "pratchett06:_good_omens"
 Warning--I didn't find a database entry for "h2g2"
 Warning--empty journal in Arge2015
 Warning--empty journal in Bernardi
@@ -49,4 +54,45 @@ Warning--empty journal in Mao2014
 Warning--there's a number but no volume in Mikolov2010
 Warning--empty journal in Google
 Warning--empty journal in Xu2015
+You've used 27 entries,
+            2118 wiz_defined-function locations,
+            722 strings with 9321 characters,
+and the built_in function-call counts, 10789 in all, are:
+= -- 1050
+> -- 635
+< -- 12
++ -- 249
+- -- 222
+* -- 796
+:= -- 1796
+add.period$ -- 82
+call.type$ -- 27
+change.case$ -- 191
+chr.to.int$ -- 0
+cite$ -- 37
+duplicate$ -- 381
+empty$ -- 695
+format.name$ -- 222
+if$ -- 2219
+int.to.chr$ -- 0
+int.to.str$ -- 27
+missing$ -- 28
+newline$ -- 138
+num.names$ -- 54
+pop$ -- 199
+preamble$ -- 1
+purify$ -- 165
+quote$ -- 0
+skip$ -- 297
+stack$ -- 0
+substring$ -- 612
+swap$ -- 107
+text.length$ -- 12
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 106
+warning$ -- 10
+while$ -- 103
+width$ -- 29
+write$ -- 287
 (There was 1 error message)
