@@ -1,0 +1,86 @@
+\chapter{Evaluatie}
+\label{hoofdstuk:evaluatie}
+Dit hoofdstuk behandelt enkele gebruikte methodes om de ontwikkelde systemen te evalueren. Twee van deze methodes vinden hun oorsprong in de computervertaling. Ze zijn ontwikkeld om automatisch de kwaliteit van vertalingen te meten. Het doel van deze evaluatiealgoritmes is om zo goed als mogelijk menselijke evaluatiescores te benaderen. De laatste vorm van evaluatie kijkt naar statistieken van de gegenereerde zinnen.
+ 
+
+\section{Automatische evaluatie}
+Ideaal gezien beoordelen meerdere mensen elke zin om tot een betrouwbare evaluatie te komen. Deze beoordeling kan bijvoorbeeld door een score te geven op de kwaliteit van elke zin. Een andere optie is om proefpersonen te laten oordelen of een automatisch gegenereerde zin beter, hetzelfde of slechter is dan de overeenkomstige referentiezin. Het nadeel van elk van deze methodes is de nood aan meerdere proefpersonen die voor elke gebruikte methode of instelling van de netwerken, alle duizend zinnen van de validatieverzameling of de testverzameling moet beoordelen. Het is duidelijk dat dit een kostelijke operatie is. Daarvoor bieden automatische evaluatiealgoritmes een oplossing.
+
+In wat volgt bespreken we eerst twee algoritmes uit de computervertaling namelijk Bleu en METEOR. \todo{bleu en meteor} Deze algoritmes zijn bruikbaar omdat de gegenereerde zinnen kunnen worden beschouwd als "vertalingen" van de afbeeldingen. Het is aangetoond dat de twee methodes correleren met menselijke evaluaties van gegenereerde zinnen. Van de gebruikte methodes heeft METEOR de hoogste correlatie. \todo{referentie elliot en keller}
+Geen van beide algoritmes is echter perfect voor het meten van de kwaliteit.
+Om die reden bekijken we ook nog enkele statistieken van de gegenereerde zinnen om hieruit andere interessante fenomenen af te leiden.
+
+\section{Bleu}
+Kort gesteld berekent Bleu scores van computervertalingen op basis van overeenkomst van woorden of aangesloten woorden met de referentiezinnen. Verschillende vormen van Bleu kunnen worden gebruikt naargelang het aantal n-grams. Het gebruik van Bleu heeft echter wel enkele nadelen.
+
+\subsection{Algoritme}
+Om de n-gram Bleu-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision}. Dit is een vorm van precisie die rekening houdt met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \textttt{the} nooit vijfmaal voorkomt in een referentiezin. De berekening van \textit{modified n-gram precision} gebeurt door eerst het maximum te nemen van het aantal keer dat een specifieke woordsequentie voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal voorkomens van deze sequentie in de gegenereerde zin. Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk woord in de vertaalde zin opgeteld en gedeeld door het totaal aantal woorden in de gegenereerde zin.
+
+\begin{equation}
+p_{modified}(s) =
+\frac{\sum\limits_{ngram \in s} Count_{clip}(ngram)}{\sum\limits_{ngram' \in s} Count(ngram')}
+\label{formule:ngramprecision}
+\end{equation}
+Vanuit deze formule volgt een score voor een volledige corpus van gegenereerde zinnen als volgt:
+\begin{equation}
+p_{n} = 
+\frac{\sum\limits_{C \in \{Candidates\} } \sum\limits_{ngram \in C} Count_{clip}(ngram)}{\sum\limits_{C' \in \{Candidates\} } \sum\limits_{ngram' \in C'} Count(ngram')}
+\label{formule:corpus_modified}
+\end{equation}
+
+Vanuit deze scores voor $i=1$ tot en met $n$ is het mogelijk om een n-gram Bleu-score te bepalen. Dit gebeurt door het gemiddelde logaritme te nemen met uniforme gewichten, wat overeenkomt met het geometrisch gemiddelde van de modified n-gram precisions. 
+Deze score dwingt echter niet de juiste lengte van de zin. Om die reden bepaalt de paper een extra multiplicatieve factor namelijk de Brevity Penalty ($BP$). Voor elke gegenereerde zin bepaalt het algoritme de referentiezin met de dichtstbijzijnde lengte. De lengte daarvan noemt de paper de "beste match lengte". Vervolgens worden zowel de lengtes van de genereerde zinnen als de beste match lengte opgeteld respectievelijk $c$ en $r$. Berekenen van de Brevity Penalty kan met volgende formule:
+\begin{equation}BP=
+\[ \begin{cases} 
+1 & if\ c > r \\
+e^{☻-r/c} & else
+\end{cases}
+\]
+\end{equation}
+
+De uiteindelijke Bleu-N score is dan gelijk aan:
+\begin{equation}
+BLEU = BP\cdot exp(\sum\limits_{n=1}^N w_nlog(p_n))
+\end{equation}
+Hierbij is $w_n$ gelijk aan $1/N$ wanneer het uniforme geometrisch gemiddelde wordt genomen.
+
+\subsection{Nadelen en gebruik}
+De BLEU-score is de meest gebruikte gebruikte evaluatiemethode in de literatuur. De meeste papers die afbeeldingsbeschrijvingen genereren bespreken Bleu-1 tot Bleu-4 scores. De literatuur lijkt het echter niet eens over het gebruik van de Brevity Penalty. Sommige papers vermelden expliciet dat ze het niet gebruiken, maar andere volgen de paper van Papinemi volledig. Door dit verschil in evaluatie is het vergelijken van systemen niet altijd eerlijk. Wanneer de gegenereerde zinnen lang genoeg zijn komen de scores wel overeen.
+In onze experimenten stellen we de Brevity Penalty steeds gelijk aan 1.
+
+In \todo{cite elliott} toont Elliot et al. aan dat BLEU slechts een matige correlatie heeft met menselijke beoordeling.
+Hiervoor zijn meerdere verklaringen mogelijk. Zo kijkt BLEU enkel naar exacte woordmatches maar houdt het geen rekening mee met semantisch gelijkaardige woorden. Zo geeft bijvoorbeeld het gebruik van een synoniem geen hogere score terwijl dit bij menselijke evaluaties geen probleem is. Ook werkwoorden die semantische informatie bevatten die in de referentiezin als substantief voorkomen geven problemen. Voorbeelden van zulke situaties:
+\\
+
+Reference 1: \texttt{Two boys are on their bikes.}
+
+Candiate 2: \texttt{Two boys are on their bicycles.}
+
+Reference 2: \texttt{A man is skiing down a hill.}
+
+Candidate 2: \texttt{A man is going down a hill on his skis}
+\\
+
+METEOR is daarom een evaluatiealgoritme met als doel om foute evaluaties als deze te vermijden.
+
+\section{Meteor}
+Figuren worden gebruikt om illustraties toe te voegen. Dit is dan ook de
+manier om beeldmateriaal toe te voegen zoals getoond wordt in
+figuur~\ref{fig:logo}.
+
+\section{Statistieken}
+Tabellen kunnen gebruikt worden om informatie op een overzichtelijke te
+groeperen. Een tabel is echter geen rekenblad! Vergelijk maar eens
+tabel~\ref{tab:verkeerd} en tabel~\ref{tab:juist}. Welke tabel vind jij het
+duidelijkst?
+
+\section{Besluit van dit hoofdstuk}
+Als je in dit hoofdstuk tot belangrijke resultaten of besluiten gekomen
+bent, dan is het ook logisch om het hoofdstuk af te ronden met een
+overzicht ervan. Voor hoofdstukken zoals de inleiding en het
+literatuuroverzicht is dit niet strikt nodig.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "masterproef"
+%%% End: 
