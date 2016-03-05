@@ -31,11 +31,10 @@ p_{n} =
 Vanuit deze scores voor $i=1$ tot en met $n$ is het mogelijk om een n-gram Bleu-score te bepalen. Dit gebeurt door het gemiddelde logaritme te nemen met uniforme gewichten, wat overeenkomt met het geometrisch gemiddelde van de modified n-gram precisions.
 Deze score dwingt echter niet de juiste lengte van de zin. Om die reden bepaalt de paper een extra multiplicatieve factor namelijk de Brevity Penalty ($BP$). Voor elke gegenereerde zin bepaalt het algoritme de referentiezin met de dichtstbijzijnde lengte. De lengte daarvan noemt de paper de "beste match lengte". Vervolgens worden zowel de lengtes van de genereerde zinnen als de beste match lengte opgeteld respectievelijk $c$ en $r$. Berekenen van de Brevity Penalty kan met volgende formule:
 \begin{equation}BP=
-\[ \begin{cases}
-1 & if\ c > r \\
-e^{☻-r/c} & else
+ \begin{cases}
+1 & if c > r \\
+e^{1-r/c} & else
 \end{cases}
-\]
 \end{equation}
 
 De uiteindelijke Bleu-N score is dan gelijk aan:
