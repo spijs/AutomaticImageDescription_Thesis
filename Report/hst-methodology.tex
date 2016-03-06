@@ -32,10 +32,21 @@ De berekende vector representatie van de afbeelding dient als input voor een rec
 
 Het genereren van captions gebeurt op basis van beam search. Hierbij wordt op basis van de afbeelding een ranking gemaakt van de meest waarschijnlijke eerste woorden voor de zin. De eerste $n$ woorden dienen dan als startpunt van de voorspelling van het tweede woord. Over alle mogelijke sets van twee woorden wordt opnieuw een rangschikking gemaakt, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin wordt gebruikt als eindresultaat.
 
-
 \subsection{Long Short Term Memory Netwerk}
 
-\section{LDA}
+\section{Latent Dirichlet Analysis}
+Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschrijvingen heeft een groot voordeel in de taak van het genereren van nieuwe beschrijvingen. Deze sectie beschrijft welk proces wij hebben gevolgd om op basis van LDA extra semantische informatie te verkrijgen om te verwerken in onze implementatie en hoe de evaluatie van dit proces verliep.
+
+\subsubsection{Berekening van topicverdeling}
+\label{subs:Berekening van topicverdeling}
+Het leren van het gebruikte LDA model gebeurt op een gemodificeerde versie van de Flickr30k dataset. De vijf captions worden gecombineerd tot \'e\'en zin, waarna stopwoorden worden verwijderd en de woorden door een Porter stemmer worden gestemd. Deze zinnen worden dan gebruikt als input voor het algoritme. De afbeeldingen worden niet gebruikt, omdat er enkel op basis van tekst wordt gewerkt. Het doel is om op basis van een zin te kunnen bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een topic verdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
+
+Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}.
+
+\subsubsection{Evaluatie}
+\label{subs:Evaluatie}
+
+
 
 \section{Toevoeging van LDA topicverdeling aan RNN}
 
