@@ -41,7 +41,7 @@ class MeteorScore(EvaluationStrategy):
          f= open('meteor_references.txt','w')
          for lof_references in references:
              for reference in lof_references:
-                 f.write(self.print_list(nltk.word_tokenize(reference))+'\n')
+                 f.write(str(nltk.word_tokenize(reference))+'\n')
          f.close()
 
     def print_list(self,list):
