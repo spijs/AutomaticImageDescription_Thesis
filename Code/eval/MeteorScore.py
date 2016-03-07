@@ -29,7 +29,7 @@ class MeteorScore(EvaluationStrategy):
          lines_iterator = iter(process.stdout.readline, b"")
          fline = ""
          for line in lines_iterator:
-             #print line
+             print line
              fline = line
          result = fline.split("            ")
          return result[1]
