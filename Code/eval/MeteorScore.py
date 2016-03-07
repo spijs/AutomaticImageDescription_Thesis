@@ -26,7 +26,7 @@ class MeteorScore(EvaluationStrategy):
          self.write_references(references)
          self.write_sentences(sentences)
 
-         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -r 5 -l en -norm"
+         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences meteor_references -r 5 -l en -norm"
          process = sp.Popen(command,stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
          lines_iterator = iter(process.stdout.readline, b"")
          fline = ""
@@ -39,9 +39,16 @@ class MeteorScore(EvaluationStrategy):
     ''' Writes a list containing lists of 5 references to a txt-file'''
     def write_references(self,references):
          f= codecs.open('meteor_references','w','utf-8')
+         i=0
          for lof_references in references:
+             i= i+1
+             j=0
              for reference in lof_references:
-                 f.write(reference+'\n')
+                 j=j+1
+                 if(i==len(references) and j==5):
+                    f.write(reference)
+                 else:
+                    f.write(reference+'\n')
          f.close()
 
     def print_list(self,list):
@@ -58,8 +65,13 @@ class MeteorScore(EvaluationStrategy):
     ''' Writes 5 copies of the sentences in a list to a txt-file '''
     def write_sentences(self,sentences):
         f = codecs.open('meteor_sentences','w','utf-8')
+        i = 0
         for sentence in sentences:
-            f.write(sentence+'\n')
+            i+=1
+            if i==len(sentences):
+                f.write(sentence)
+            else:
+                f.write(sentence+'\n')
         f.close()
 
     ''' Writes one sentence 5 times to a txt-file'''
