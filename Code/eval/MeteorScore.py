@@ -38,10 +38,10 @@ class MeteorScore(EvaluationStrategy):
 
     ''' Writes a list containing lists of 5 references to a txt-file'''
     def write_references(self,references):
-         f= open('meteor_references.txt','w')
+         f= codecs.open('meteor_references.txt','w','utf-8')
          for lof_references in references:
              for reference in lof_references:
-                 f.write(str(nltk.word_tokenize(reference))+'\n')
+                 f.write(reference+'\n')
          f.close()
 
     def print_list(self,list):
