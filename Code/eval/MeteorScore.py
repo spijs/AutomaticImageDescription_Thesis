@@ -41,8 +41,19 @@ class MeteorScore(EvaluationStrategy):
          f= open('meteor_references.txt','w')
          for lof_references in references:
              for reference in lof_references:
-                 f.write(nltk.word_tokenize(reference)+'\n')
+                 f.write(self.print_list(nltk.word_tokenize(reference))+'\n')
          f.close()
+
+    def print_list(self,list):
+        s = ""
+        start = True
+        for word in list:
+            if start:
+                s = word
+            else:
+                s= s + " " + word
+            start=False
+        return s
 
     ''' Writes 5 copies of the sentences in a list to a txt-file '''
     def write_sentences(self,sentences):
