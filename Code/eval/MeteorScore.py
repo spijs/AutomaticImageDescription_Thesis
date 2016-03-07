@@ -38,7 +38,7 @@ class MeteorScore(EvaluationStrategy):
 
     ''' Writes a list containing lists of 5 references to a txt-file'''
     def write_references(self,references):
-         f= codecs.open('meteor_references.txt','w','utf-8')
+         f= codecs.open('meteor_references','w','utf-8')
          for lof_references in references:
              for reference in lof_references:
                  f.write(reference+'\n')
@@ -57,7 +57,7 @@ class MeteorScore(EvaluationStrategy):
 
     ''' Writes 5 copies of the sentences in a list to a txt-file '''
     def write_sentences(self,sentences):
-        f = codecs.open('meteor_sentences.txt','w','utf-8')
+        f = codecs.open('meteor_sentences','w','utf-8')
         for sentence in sentences:
             for i in range(5):
                 f.write(sentence+'\n')
