@@ -2,6 +2,8 @@ __author__ = 'spijs'
 
 from evaluationStrategy import EvaluationStrategy
 import subprocess as sp
+import codecs
+import nltk
 
 ''' METEOR Scores as defined in https://www.cs.cmu.edu/~alavie/METEOR/ '''
 class MeteorScore(EvaluationStrategy):
@@ -29,7 +31,7 @@ class MeteorScore(EvaluationStrategy):
          lines_iterator = iter(process.stdout.readline, b"")
          fline = ""
          for line in lines_iterator:
-             #print line
+             print line
              fline = line
          result = fline.split("            ")
          return result[1]
@@ -39,7 +41,7 @@ class MeteorScore(EvaluationStrategy):
          f= open('meteor_references.txt','w')
          for lof_references in references:
              for reference in lof_references:
-                 f.write(reference+'\n')
+                 f.write(nltk.word_tokenize(reference)+'\n')
          f.close()
 
     ''' Writes 5 copies of the sentences in a list to a txt-file '''
