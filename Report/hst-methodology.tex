@@ -39,13 +39,17 @@ Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschri
 
 \subsubsection{Berekening van topicverdeling}
 \label{subs:Berekening van topicverdeling}
-Het leren van het gebruikte LDA model gebeurt op een gemodificeerde versie van de Flickr30k dataset. De vijf captions worden gecombineerd tot \'e\'en zin, waarna stopwoorden worden verwijderd en de woorden door een Porter stemmer worden gestemd. Deze zinnen worden dan gebruikt als input voor het algoritme. De afbeeldingen worden niet gebruikt, omdat er enkel op basis van tekst wordt gewerkt. Het doel is om op basis van een zin te kunnen bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een topic verdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
+Het leren van het gebruikte LDA model gebeurt op een aangepaste versie van de Flickr30k dataset. De vijf captions worden gecombineerd tot \'e\'en zin, waarna stopwoorden worden verwijderd en de woorden door een Porter stemmer\todo{reference naar porter stemmer ?} worden gestemd. Deze zinnen worden dan gebruikt als input voor het algoritme. De afbeeldingen worden niet gebruikt, omdat er enkel op basis van tekst wordt gewerkt. Het doel is om op basis van een zin te kunnen bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een topicverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
 
-Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}.
+Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}. Op basis van de zinnen uit de trainingsset berekent het algoritme de topic-woord verdelingen en de sentence-topic verdelingen. Dit model dient dan als transformatie voor de zinnen uit de test- en validatieset. De ``ground truth'' waarden van de sentence-topic verdelingen voor test- en validatieset worden berekend en opgeslagen.
+
+Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om een topicverdeling af te leiden. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een topicverdeling. Hiervoor gebruiken we een simpel perceptron. Op basis van de eerder berekende ``ground truth'' waarden voor de test- en validatieset leert dit perceptron een mapping van afbeeldingsvector naar topicverdeling. Door middel van terugpropagatie worden de gewichten aangepast. Een vergelijking van negatieve logwaarschijnlijkheid leidt tot een optimalisatie van het aantal hidden layers en van de trainingstijd van het netwerk. Dit netwerk kan dan op het moment van testing zeer snel bepalen welke topicverdeling bij de afbeelding hoort. 
 
 \subsubsection{Evaluatie}
 \label{subs:Evaluatie}
+De correctheid van de berekende topicverdelingen is uiteraard een kritiek punt in de performantie van ons systeem. Daarom hebben we manueel twee testen uitgevoerd. Een eerste test gaat over de optimalisatie van het aantal gebruikte topics. Bij de tweede test controleren we of de topicverdelingen die voorspeld worden door het perceptron wel passen bij de gegeven afbeelding.
 
+Het optimaliseren van het aantal topics gebeurt op basis van manuele analyse van de woorden die voorkomen in elk topic. Op basis van de tien meest voorkomende woorden per topic proberen we een overkoepelend concept te benoemen. Hoe kleiner het aantal topics, hoe moeilijker het is om een sluitende omschrijving van elk topic te vinden. Concreet hebben we getest met 50, 80 en 120 topics.
 
 
 \section{Toevoeging van LDA topicverdeling aan RNN}

@@ -45,10 +45,10 @@
 \contentsline {subsection}{\numberline {4.1.2}Long Short Term Memory Netwerk}{19}{subsection.4.1.2}
 \contentsline {section}{\numberline {4.2}Latent Dirichlet Analysis}{19}{section.4.2}
 \contentsline {subsubsection}{Berekening van topicverdeling}{19}{section*.46}
-\contentsline {subsubsection}{Evaluatie}{19}{section*.47}
-\contentsline {section}{\numberline {4.3}Toevoeging van LDA topicverdeling aan RNN}{19}{section.4.3}
-\contentsline {section}{\numberline {4.4}gLSTM}{19}{section.4.4}
-\contentsline {section}{\numberline {4.5}Normalizatie van beam search}{19}{section.4.5}
+\contentsline {subsubsection}{Evaluatie}{20}{section*.48}
+\contentsline {section}{\numberline {4.3}Toevoeging van LDA topicverdeling aan RNN}{20}{section.4.3}
+\contentsline {section}{\numberline {4.4}gLSTM}{20}{section.4.4}
+\contentsline {section}{\numberline {4.5}Normalizatie van beam search}{20}{section.4.5}
 \contentsline {chapter}{\chapternumberline {5}Evaluatie}{21}{chapter.5}
 \contentsline {section}{\numberline {5.1}Automatische evaluatie}{21}{section.5.1}
 \contentsline {section}{\numberline {5.2}Bleu}{21}{section.5.2}
@@ -83,7 +83,7 @@
 \contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{37}{appendix.B}
 \contentsline {section}{\numberline {B.1}Lorem 20-24}{37}{section.B.1}
 \contentsline {section}{\numberline {B.2}Lorem 25-27}{38}{section.B.2}
-\contentsline {chapter}{Bibliografie}{39}{section*.52}
+\contentsline {chapter}{Bibliografie}{39}{section*.53}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
