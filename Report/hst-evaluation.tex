@@ -63,21 +63,29 @@ Candidate 2: \texttt{A man is going down a hill on his skis}
 METEOR is daarom een evaluatiealgoritme met als doel om foute evaluaties als deze te vermijden.
 
 \section{Meteor}
-Figuren worden gebruikt om illustraties toe te voegen. Dit is dan ook de
-manier om beeldmateriaal toe te voegen zoals getoond wordt in
-figuur~\ref{fig:logo}.
+Elliott et al. \todo{cite} toonden aan dat zeker unigram Bleu (B1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde Bleu-scores hebben slechts een matige correlatie. METEOR is een metriek die specifiek ontworpen is om de tekortkomingen van Bleu te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen, correleert METEOR het beste met menselijke evaluatie.
 
-\section{Statistieken}
-Tabellen kunnen gebruikt worden om informatie op een overzichtelijke te
-groeperen. Een tabel is echter geen rekenblad! Vergelijk maar eens
-tabel~\ref{tab:verkeerd} en tabel~\ref{tab:juist}. Welke tabel vind jij het
-duidelijkst?
+\subsection{Algoritme}
+Meteor \todo{cite meteor!} evalueert vertaalde zinnen door ze te aligneren met de referenties en hiervan per zin een score te berekenen. Bij het berekenen van de score wordt net zoals bij Bleu gekeken naar de precisie. Daarnaast heeft in contrast met Bleu ook de recall een invloed. De paper bevat een implementatie in de vorm van een JAR-bestand, zodat er geen twijfel bestaat over het gebruik van het algoritme.
 
-\section{Besluit van dit hoofdstuk}
-Als je in dit hoofdstuk tot belangrijke resultaten of besluiten gekomen
-bent, dan is het ook logisch om het hoofdstuk af te ronden met een
-overzicht ervan. Voor hoofdstukken zoals de inleiding en het
-literatuuroverzicht is dit niet strikt nodig.
+Concreet probeert het algoritme twee zinnen te aligneren met behulp van vier matchers. Als eerste is er een match wanneer de woordvormen exact dezelfde zijn. Als tweede is er een match wanneer met een Snowball Stemmer (\todo{cite porter 2001} porter) 'gestemde' woorden gelijk zijn. Een derde matcher kijkt naar overeenkomsten in de WordNet synoniemenlijst van elk woord. \todo{cite miller en felbaum} Als laatste vormen frases een match wanneer ze in zogenoemde frasetabellen voorkomen.
+Elke matcher heeft een bepaald gewicht. In de experimenten gebruiken we de standaardgewichten 0.85, 0.2 ,0.6 en 0.75.
+
+Uiteindelijk worden alle matches gegeneraliseerd tot frase matches met een bepaalde startpositie en eindlengte. Een van de doel van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarnaast moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen. De uiteindelijke Meteor score bestaat dan uit de F-score vermenigvuldigd met een penalisatiefactor op basis van het aantal chunks.
+
+\begin{equation}
+Score = (1 - Pen)*F_{mean}
+\end{equation} 
+\begin{equation}
+Pen = \gamma (\frac{ch}{m})^\theta
+\end{equation}
+\begin{equation}
+F_{mean} = \frac{PR}{\alpha P + (1- \alpha)R}
+\end{equation}
+
+Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gealigneerde unigrams ($m$) tussen kandidaat- en referentiezin.
+
+Wanneer er meerdere referenties zijn, bepaalt het maximum van de individuele scores voor elke referentie de score van de vertaling.
 
 %%% Local Variables:
 %%% mode: latex
