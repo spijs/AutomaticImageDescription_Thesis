@@ -60,7 +60,7 @@ class MeteorScore(EvaluationStrategy):
         f = open('meteor_sentences.txt','w')
         for sentence in sentences:
             for i in range(5):
-                f.write(sentence+'\n')
+                f.write(str(nltk.word_tokenize(sentence))+'\n')
         f.close()
 
     ''' Writes one sentence 5 times to a txt-file'''
