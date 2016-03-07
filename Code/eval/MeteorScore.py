@@ -26,7 +26,7 @@ class MeteorScore(EvaluationStrategy):
          self.write_references(references)
          self.write_sentences(sentences)
 
-         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -l en -norm"
+         command = "java -Xmx2G -jar meteor/meteor-1.5.jar meteor_sentences.txt meteor_references.txt -r 5 -l en -norm"
          process = sp.Popen(command,stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
          lines_iterator = iter(process.stdout.readline, b"")
          fline = ""
@@ -59,8 +59,7 @@ class MeteorScore(EvaluationStrategy):
     def write_sentences(self,sentences):
         f = codecs.open('meteor_sentences','w','utf-8')
         for sentence in sentences:
-            for i in range(5):
-                f.write(sentence+'\n')
+            f.write(sentence+'\n')
         f.close()
 
     ''' Writes one sentence 5 times to a txt-file'''
