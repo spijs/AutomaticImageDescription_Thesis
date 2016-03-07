@@ -57,7 +57,7 @@ class MeteorScore(EvaluationStrategy):
 
     ''' Writes 5 copies of the sentences in a list to a txt-file '''
     def write_sentences(self,sentences):
-        f = open('meteor_sentences.txt','w')
+        f = codecs.open('meteor_sentences.txt','w','utf-8')
         for sentence in sentences:
             for i in range(5):
                 f.write(str(nltk.word_tokenize(sentence))+'\n')
