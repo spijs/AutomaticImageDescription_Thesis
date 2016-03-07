@@ -59,8 +59,7 @@ class MeteorScore(EvaluationStrategy):
     def write_sentences(self,sentences):
         f = codecs.open('meteor_sentences','w','utf-8')
         for sentence in sentences:
-            for i in range(5):
-                f.write(sentence+'\n')
+            f.write(sentence+'\n')
         f.close()
 
     ''' Writes one sentence 5 times to a txt-file'''
