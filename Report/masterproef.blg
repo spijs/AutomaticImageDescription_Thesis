@@ -7,6 +7,8 @@ White space in argument---line 80 of file hst-related.aux
 I'm skipping whatever remains of this command
 A level-1 auxiliary file: hst-theorie.aux
 A level-1 auxiliary file: hst-methodology.aux
+A level-1 auxiliary file: hst-evaluation.aux
+A level-1 auxiliary file: hst-results.aux
 A level-1 auxiliary file: hfdst-n.aux
 A level-1 auxiliary file: besluit.aux
 A level-1 auxiliary file: app-A.aux
@@ -38,6 +40,7 @@ Warning--I didn't find a database entry for "Yang"
 Warning--I didn't find a database entry for "Elliott"
 Warning--I didn't find a database entry for "Karpathy1"
 Warning--I didn't find a database entry for "Donahue"
+Warning--I didn't find a database entry for "pratchett06:_good_omens"
 Warning--I didn't find a database entry for "h2g2"
 Warning--empty journal in Arge2015
 Warning--empty journal in Bernardi
