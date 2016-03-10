@@ -75,4 +75,4 @@ def read_vocabulary(filename='vocabulary.txt'):
 
 
 vocabulary = read_vocabulary()
-create_perturbed_json(25)
+create_perturbed_json(15)
