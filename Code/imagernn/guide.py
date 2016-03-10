@@ -32,7 +32,7 @@ def get_cca_projection(im):
 def get_image_projection(image, size):
     # cca = pickle.load(open(os.path.dirname(__file__) + "/../data/trainingCCA.p"))
     # weights = cca.ws[0]
-    weights = np.loadtxt('../cca/imageprojection_'+str(size)+'.txt', delimiter = ',')
+    weights = np.loadtxt('cca/imageprojection_'+str(size)+'.txt', delimiter = ',')
     return np.dot(image, weights)
     # return cca.transform(image.reshape(1,-1))
 

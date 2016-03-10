@@ -1,5 +1,6 @@
 function trainingCCA()
 
+disp('reading data from files')
 images = dlmread('images.txt');
 sentences = dlmread('sentences.txt');
 size(images)
