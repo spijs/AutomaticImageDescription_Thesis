@@ -1,5 +1,5 @@
 \chapter{Methodologie}
-Dit hoofdstuk beschrijft het proces van de implementatie van ons systeem. Een eerste sectie handelt over een bestaande implementatie, waarop ons systeem is gebaseerd. Een tweede sectie beschrijft onze eigen extensie van de code van Karpathy, meer specifiek hoe we LDA topic verdelingen gebruiken om extra semantische informatie toe te voegen. Een derde sectie gaat over onze implementatie van het eerder vernoemde gLSTM netwerk zoals voorgesteld door Jia \todo{reference?}. De laatste sectie beschrijft hoe wij een normalisatie hebben toegevoegd aan de beam search om zinnen te maken (zoals voorgesteld door Jia \todo{ref}).
+Dit hoofdstuk beschrijft de implementatie van ons systeem. Een eerste sectie handelt over een bestaande implementatie, waarop ons systeem is gebaseerd. Een tweede sectie beschrijft onze eigen extensie van de code van Karpathy, meer specifiek hoe we LDA topic verdelingen gebruiken om extra semantische informatie toe te voegen. Een derde sectie gaat over onze implementatie van het eerder vernoemde gLSTM netwerk zoals voorgesteld door Jia \todo{reference?}. De laatste sectie beschrijft hoe wij een normalisatie hebben toegevoegd aan de beam search om zinnen te maken (zoals voorgesteld door Jia \todo{ref}).
 
 \section{Startpunt Karpathy} \todo{Betere titel}
 Het startpunt van onze implementatie is de code aangereikt door A. Karpathy op zijn github pagina. Die bevat een implementatie van het recurrente neurale netwerk beschreven in \todo{reference naar karpathy}, alsook een implementatie die gebaseerd is op \todo{reference vinyals}. Op basis hiervan hebben wij een aantal extensies ge\"implementeerd.
@@ -49,7 +49,14 @@ Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om
 \label{subs:Evaluatie}
 De correctheid van de berekende topicverdelingen is uiteraard een kritiek punt in de performantie van ons systeem. Daarom hebben we manueel twee testen uitgevoerd. Een eerste test gaat over de optimalisatie van het aantal gebruikte topics. Bij de tweede test controleren we of de topicverdelingen die voorspeld worden door het perceptron wel passen bij de gegeven afbeelding.
 
-Het optimaliseren van het aantal topics gebeurt op basis van manuele analyse van de woorden die voorkomen in elk topic. Op basis van de tien meest voorkomende woorden per topic proberen we een overkoepelend concept te benoemen. Hoe kleiner het aantal topics, hoe moeilijker het is om een sluitende omschrijving van elk topic te vinden. Concreet hebben we getest met 50, 80 en 120 topics.
+Het optimaliseren van het aantal topics gebeurt op basis van manuele analyse van de woorden die voorkomen in elk topic. Op basis van de tien meest voorkomende woorden per topic proberen we een overkoepelend concept te benoemen. Hoe kleiner het aantal topics, hoe moeilijker het is om een sluitende omschrijving van elk topic te vinden. Concreet hebben we getest met 50, 80 en 120 topics. Bij 50 topics is er een terugkerend probleem: topics lijken samengevoegd te zijn. Heel concreet zijn er volgende topics (enkel de 10 meest voorkomende woorden zijn weergegeven): \\
+\texttt{jump air leap high midair bubble blow fly wed bride}
+\\
+waarbij er duidelijk referenties zijn naar springen, bellen blazen en trouwen. Een ander treffend voorbeeld is \\
+\texttt{talk man drink cellphone phone hold glass bottle bar beer}
+\\ dat duidelijk refereert naar praten en drinken. 
+
+Bij het gebruik van 80 topics is dit fenomeen amper aanwezig, en bij het gebruik van 120 topics zijn er meerdere topics waar de top 10 uit ongeveer dezelfde woorden bestaat. Aangezien enkel de top 10 woorden werden geanalyseerd is het waarschijnlijk dat er tussen de verschillende gelijkaardige topics kleine nuances te zien zijn. Op basis hiervan hebben we besloten om het systeem te trainen met verdelingen met 80 en 120 topics. Meer dan 120 trekt naar onze mening de topics te hard uit elkaar, waardoor ook de kansverdeling over de verschillende topics harder wordt afgevlakt. Er zou zich dan een probleem kunnen vormen tijdens het genereren dat bepaalde woorden niet worden gebruikt omdat de topics net niet goed genoeg zijn terwijl de woorden wel perfect kunnen beschrijven wat er op de foto staat.
 
 
 \section{Toevoeging van LDA topicverdeling aan RNN}
