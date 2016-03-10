@@ -5,8 +5,9 @@ __author__ = 'Wout & thijs'
 
 from imagernn.data_provider import getDataProvider
 import json
+import random
 
-def create_perturbed_json():
+def create_perturbed_json(thresh):
     dataset = json.load(open('data/flickr30k/dataset.json', 'r'))
     new_images = []
     # group images by their train/val/test split into a dictionary -> list structure
@@ -16,7 +17,7 @@ def create_perturbed_json():
         for sentence in sentences:
             tokens = sentence['tokens']
             if split=='train':
-                sentence['tokens'] = _perturb_tokens(tokens)
+                sentence['tokens'] = _perturb_tokens(tokens,thresh)
         img['sentences'] = sentences
         new_images.append(img)
     dict = {'images':new_images}
@@ -25,13 +26,18 @@ def create_perturbed_json():
 
 
 
-def _perturb_tokens(tokens):
-    return tokens
+def _perturb_tokens(tokens, thresh):
+    new_tokens =[]
+    for token in tokens:
+        r = random.randint(0,99)
+        if r < thresh:
+            new_tokens.append(_pick_random_word())
+        else:
+            new_tokens.append(token)
 
-
-
-
-
+def _pick_random_word():
+    r = random.randint(0,len(vocabulary)-1)
+    return vocabulary[r]
 
 
 def create_vocabulary(params):
@@ -49,9 +55,23 @@ def create_vocabulary(params):
             else:
                 dict[word]+=1
     for word in dict:
-            if(dict[word] >= 5):
+            if(dict[word] >= 1):
                 result.append(word)
     f = open("vocabulary.txt", "w+")
     for w in result:
         f.writelines(w+'\n')
-    print('created vocabulay')
+    print('created vocabulary')
+
+def read_vocabulary(filename='vocabulary.txt'):
+    result = []
+    voc = open(filename)
+    line = voc.readline()
+    while line:
+        result.append(line[0:-1])
+        line = voc.readline()
+    return result
+
+
+
+create_perturbed_json(25)
+vocabulary = read_vocabulary()
