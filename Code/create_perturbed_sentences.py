@@ -7,7 +7,7 @@ from imagernn.data_provider import getDataProvider
 import json
 
 def create_perturbed_json():
-    dataset = json.load(open('data/flickr30k/flickr30k/dataset.json', 'r'))
+    dataset = json.load(open('data/flickr30k/dataset.json', 'r'))
     new_images = []
     # group images by their train/val/test split into a dictionary -> list structure
     for img in dataset['images']:
@@ -17,7 +17,7 @@ def create_perturbed_json():
             img['tokens'] = _perturbe_tokens(tokens)
         new_images.append(img)
     dict = {'images':new_images}
-    with open('data/flickr30k/flickr30k/pert_dataset.json', 'w') as fp:
+    with open('data/flickr30k/pert_dataset.json', 'w') as fp:
         json.dump(dict, fp)
 
 
