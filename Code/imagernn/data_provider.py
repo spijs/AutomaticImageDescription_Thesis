@@ -8,7 +8,7 @@ import codecs
 from collections import defaultdict
 
 class BasicDataProvider:
-    def __init__(self, dataset):
+    def __init__(self, dataset, pert):
         print 'Initializing data provider for dataset %s...' % (dataset, )
         self.topics = None
         # !assumptions on folder structure
@@ -16,7 +16,10 @@ class BasicDataProvider:
         self.image_root = os.path.join('data', dataset, 'imgs')
 
         # load the dataset into memory
-        dataset_path = os.path.join(self.dataset_root, 'dataset.json')
+        if not pert:
+            dataset_path = os.path.join(self.dataset_root, 'dataset.json')
+        else:
+            dataset_path = os.path.join(self.dataset_root, 'pert_dataset.json')
         print 'BasicDataProvider: reading %s' % (dataset_path, )
         self.dataset = json.load(open(dataset_path, 'r'))
 
@@ -176,10 +179,10 @@ class BasicDataProvider:
 
     def getTopic(self, imgName):
         return self.topics[imgName]
-def getDataProvider(dataset):
+def getDataProvider(dataset,pert):
     """ we could intercept a special dataset and return different data providers """
     assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
-    return BasicDataProvider(dataset)
+    return BasicDataProvider(dataset,pert)
 
 
 

@@ -125,7 +125,7 @@ def main(params):
   host = socket.gethostname() # get computer hostname
 
   # fetch the data provider
-  dp = getDataProvider(dataset)
+  dp = getDataProvider(dataset,params['pert'])
   #LDA
   if params['lda']:
       print 'loading topics, number:', str(params['lda'])
@@ -298,6 +298,8 @@ if __name__ == "__main__":
   parser.add_argument('--lda_feed_once', dest='lda_feed_once', type=int, default = 0, help='feed lda to the rnn only single time?')
   #cca-specific params
   parser.add_argument('--cca', dest='cca', type=int, default=0, help = 'the size of cca to be used')
+  #perturb params
+  parser.add_argument('--pert',dest='pert', type=int, default=0,help= '=0 if you do not use the perturbed dataset')
   # optimization parameters
   parser.add_argument('-c', '--regc', dest='regc', type=float, default=1e-8, help='regularization strength')
   parser.add_argument('-m', '--max_epochs', dest='max_epochs', type=int, default=50, help='number of epochs to train for')
