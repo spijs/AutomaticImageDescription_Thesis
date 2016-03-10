@@ -34,6 +34,7 @@ def _perturb_tokens(tokens, thresh):
             new_tokens.append(_pick_random_word())
         else:
             new_tokens.append(token)
+    return new_tokens
 
 def _pick_random_word():
     r = random.randint(0,len(vocabulary)-1)
