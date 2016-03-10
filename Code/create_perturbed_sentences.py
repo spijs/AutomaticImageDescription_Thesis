@@ -12,9 +12,12 @@ def create_perturbed_json():
     # group images by their train/val/test split into a dictionary -> list structure
     for img in dataset['images']:
         split = img['split']
-        tokens = img['tokens']
-        if split=='train':
-            img['tokens'] = _perturbe_tokens(tokens)
+        sentences = img['sentences']
+        for sentence in sentences:
+            tokens = sentence['tokens']
+            if split=='train':
+                sentence['tokens'] = _perturb_tokens(tokens)
+        img['sentences'] = sentences
         new_images.append(img)
     dict = {'images':new_images}
     with open('data/flickr30k/pert_dataset.json', 'w') as fp:
@@ -22,7 +25,7 @@ def create_perturbed_json():
 
 
 
-def _perturbe_tokens(tokens):
+def _perturb_tokens(tokens):
     return tokens
 
 
