@@ -4,6 +4,7 @@ import json
 import os
 import random
 import scipy.io
+import numpy as np
 import codecs
 from collections import defaultdict
 
@@ -67,6 +68,9 @@ class BasicDataProvider:
             f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+'.txt')
             self.topics = self.create_dist_dict(f, self.topics)
         print 'amount of topics', len(self.topics)
+
+    def load_weights(self,nb_components):
+        return np.loadtxt('cca/imageprojection_'+str(nb_components)+'.txt', delimiter = ',')
 
     def create_dist_dict(self, filename, dict):
         if os.path.isfile(filename):

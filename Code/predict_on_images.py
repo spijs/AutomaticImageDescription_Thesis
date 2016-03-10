@@ -67,8 +67,9 @@ def main(params):
     img['feat'] = features[:, n]
     #img['local_file_path'] =img_names[n]
 
+    ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
     # perform the work. heavy lifting happens inside
-    kwparams = { 'beam_size' : params['beam_size'] }
+    kwparams = { 'beam_size' : params['beam_size'], 'ccaweights' : ccaweights }
     Ys = BatchGenerator.predict([{'image':img}], model, checkpoint_params, **kwparams)
 
     # build up the output

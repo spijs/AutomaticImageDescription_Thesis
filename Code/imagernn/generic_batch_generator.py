@@ -71,7 +71,7 @@ class GenericBatchGenerator:
         if params['lda']:
           guide_size = get_guide_size(guide_input,params['lda'])
         else:
-          guide_size = get_guide_size(guide_input,params['cca'])
+          guide_size = get_guide_size(guide_input,misc['ccaweights'])
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, guide_size, output_size)
     merge_init_structs(init_struct, generator_init_struct)
     return init_struct
@@ -118,7 +118,7 @@ class GenericBatchGenerator:
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
       if guide_input=='cca':
-        guide = get_guide(guide_input,F[i,:],params.get('cca'))
+        guide = get_guide(guide_input,F[i,:],misc['ccaweights'])
       else:
         guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled!=0 and not guide_input:
@@ -220,7 +220,7 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       if guide_input=='cca':
-        guide = get_guide(guide_input,F[i,:],params.get('cca'))
+        guide = get_guide(guide_input,F[i,:],kwparams['ccaweights'])
       else:
         guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled and not guide_input:

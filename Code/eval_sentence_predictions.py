@@ -50,11 +50,13 @@ def main(params):
   n = 0
   all_references = []
   all_candidates = []
+
+  ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
   for img in dp.iterImages(split = 'test', max_images = max_images):
     n+=1
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
-    kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'] }
+    kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'], 'ccaweights' : ccaweights }
     if not params['lda'] == 0:
         Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
     else:

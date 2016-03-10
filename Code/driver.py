@@ -130,8 +130,15 @@ def main(params):
   if params['lda']:
       print 'loading topics, number:', str(params['lda'])
       dp.load_topic_models(dataset,params['lda'])
-  misc = {} # stores various misc items that need to be passed around the framework
 
+
+  # stores various misc items that need to be passed around the framework
+  misc = {}
+  #CCA
+  if params['cca']:
+      print 'loading cca weight matrix'
+      misc['ccaweights']= dp.load_cca_weights(params['cca'])
+      
   # go over all training sentences and find the vocabulary we want to use, i.e. the words that occur
   # at least word_count_threshold number of times
   misc['wordtoix'], misc['ixtoword'], bias_init_vector = preProBuildWordVocab(dp.iterSentences('train'), word_count_threshold)

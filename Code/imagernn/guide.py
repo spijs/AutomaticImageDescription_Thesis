@@ -10,7 +10,7 @@ def get_guide_size(guide_type,lda=None):
     if guide_type=="lda":
        return lda
     if guide_type=="cca":
-        return lda
+        return lda.shape[1]
 
 def get_guide(guide_type,im,L=None):
     if guide_type=="image":
@@ -29,10 +29,9 @@ def get_cca_projection(im):
     ccamodel = pickle.load(open("stackedCCAModel.p"))
     return ccamodel.getTransformedVector(im)
 
-def get_image_projection(image, size):
+def get_image_projection(image, weights):
     # cca = pickle.load(open(os.path.dirname(__file__) + "/../data/trainingCCA.p"))
     # weights = cca.ws[0]
-    weights = np.loadtxt('cca/imageprojection_'+str(size)+'.txt', delimiter = ',')
     return np.dot(image, weights)
     # return cca.transform(image.reshape(1,-1))
 
