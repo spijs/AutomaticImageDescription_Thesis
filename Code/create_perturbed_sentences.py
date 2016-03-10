@@ -22,7 +22,7 @@ def create_vocabulary(params):
                 dict[word]+=1
     for word in dict:
             if(dict[word] >= 5):
-                result.append(dict[word])
+                result.append(word)
     f = open("vocabulary.txt", "w+")
     for w in result:
         f.writelines(w+'\n')
