@@ -9,7 +9,7 @@ def get_guide_size(guide_type,lda=None):
         return 4096
     if guide_type=="lda":
        return lda
-    if guide_type=="imageprojection":
+    if guide_type=="cca":
         return lda
 
 def get_guide(guide_type,im,L=None):
@@ -17,7 +17,7 @@ def get_guide(guide_type,im,L=None):
         return get_image_guide(im)
     if guide_type=="snippetcca":
 	    return get_cca_projection(im)
-    if guide_type=="imageprojection":
+    if guide_type=="cca":
         return get_image_projection(im, L)
     if guide_type=="lda":
         return L
