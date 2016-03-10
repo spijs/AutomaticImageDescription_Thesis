@@ -296,6 +296,8 @@ if __name__ == "__main__":
   parser.add_argument('--lda', dest='lda', type=int, default=0, help = 'use lda topic distribution as input using the provided number of topics.')
   parser.add_argument('--guide', dest='guide', type=str, default=None, help='Which guide to use when using glstm.')
   parser.add_argument('--lda_feed_once', dest='lda_feed_once', type=int, default = 0, help='feed lda to the rnn only single time?')
+  #cca-specific params
+  parser.add_argument('--cca', dest='cca', type=int, default=0, help = 'the size of cca to be used')
   # optimization parameters
   parser.add_argument('-c', '--regc', dest='regc', type=float, default=1e-8, help='regularization strength')
   parser.add_argument('-m', '--max_epochs', dest='max_epochs', type=int, default=50, help='number of epochs to train for')

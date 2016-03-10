@@ -68,7 +68,10 @@ class GenericBatchGenerator:
     if(generator != 'glstm'):
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
     else:
-        guide_size = get_guide_size(guide_input,params['lda'])
+        if params['lda']:
+          guide_size = get_guide_size(guide_input,params['lda'])
+        else:
+          guide_size = get_guide_size(guide_input,params['cca'])
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, guide_size, output_size)
     merge_init_structs(init_struct, generator_init_struct)
     return init_struct
@@ -114,7 +117,10 @@ class GenericBatchGenerator:
       ix = [0] + [ wordtoix[w] for w in x['sentence']['tokens'] if w in wordtoix ]
       Xs = np.row_stack( [Ws[j, :] for j in ix] )
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if guide_input=='cca':
+        guide = get_guide(guide_input,F[i,:],params.get('cca'))
+      else:
+        guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled!=0 and not guide_input:
         guide = lda[i,:]
       # forward prop through the RNN
@@ -213,7 +219,10 @@ class GenericBatchGenerator:
     guide_input = params.get('guide',None)
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if guide_input=='cca':
+        guide = get_guide(guide_input,F[i,:],params.get('cca'))
+      else:
+        guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled and not guide_input:
         guide = lda[i,:]
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
@@ -242,7 +251,10 @@ class GenericBatchGenerator:
     guide_input = params.get('guide',None)
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
-      guide = get_guide(guide_input,F[i,:],L=L[i,:])
+      if guide_input=='cca':
+        guide = get_guide(guide_input,F[i,:],params.get('cca'))
+      else:
+        guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled and not guide_input:
         guide = lda[i,:]
         print 'guide = lda'

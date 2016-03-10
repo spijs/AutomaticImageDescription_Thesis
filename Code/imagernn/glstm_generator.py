@@ -2,6 +2,7 @@ __author__ = 'spijs'
 
 import numpy as np
 import code
+import math
 
 from imagernn.utils import initw
 
@@ -207,6 +208,7 @@ class gLSTMGenerator:
     """
     tanhC_version = params['tanhC_version']
     beam_size = kwargs.get('beam_size', 1)
+    normalization = kwargs.get('normalization',None)
 
     WLSTM = model['WLSTM']
     d = model['Wd'].shape[0] # size of hidden layer
@@ -247,34 +249,35 @@ class gLSTMGenerator:
     # a lot of experience with these models. This implements my current understanding but I'm not
     # sure how to handle beams that predict END tokens. TODO: research this more.
     if beam_size > 1:
-      # log probability, indices of words predicted in this beam so far, and the hidden and cell states
-      beams = [(0.0, [], h, c)]
+      #normalized log probability, log probability, indices of words predicted in this beam so far, and the hidden and cell states
+      beams = [(0.0, 0.0, [], h, c)]
       nsteps = 0
       while True:
         beam_candidates = []
         for b in beams:
-          ixprev = b[1][-1] if b[1] else 0 # start off with the word where this beam left off
-          if ixprev == 0 and b[1]:
+          ixprev = b[2][-1] if b[2] else 0 # start off with the word where this beam left off else first word is 0
+          if ixprev == 0 and b[2]:
             # this beam predicted end token. Keep in the candidates but don't expand it out any more
             beam_candidates.append(b)
             continue
-          (y1, h1, c1) = LSTMtick(Ws[ixprev], b[2], b[3])
+          (y1, h1, c1) = LSTMtick(Ws[ixprev], b[3], b[4])
           y1 = y1.ravel() # make into 1D vector
           maxy1 = np.amax(y1)
           e1 = np.exp(y1 - maxy1) # for numerical stability shift into good numerical range
           p1 = e1 / np.sum(e1)
           y1 = np.log(1e-20 + p1) # and back to log domain
+          #TODO hier algemener maken
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
-            beam_candidates.append((b[0] + y1[wordix], b[1] + [wordix], h1, c1))
+            beam_candidates.append(((b[1] + y1[wordix])/normalize(normalization,len(b[2])),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
         beam_candidates.sort(reverse = True) # decreasing order
         beams = beam_candidates[:beam_size] # truncate to get new beams
         nsteps += 1
         if nsteps >= 20: # bad things are probably happening, break out
           break
       # strip the intermediates
-      predictions = [(b[0], b[1]) for b in beams]
+      predictions = [(b[0], b[2]) for b in beams]
     else:
       # greedy inference. lets write it up independently, should be bit faster and simpler
       ixprev = 0
@@ -302,3 +305,22 @@ def ymax(y):
   y1 = np.log(1e-20 + p1) # guard against zero probabilities just in case
   ix = np.argmax(y1)
   return (ix, y1[ix])
+
+# Flickr30k
+# Mean: 12.315055172413793
+# Std.Dev : 5.188878248688354
+def gaussianNorm(length, mean=12.315 , dev=5.18887):
+  var = pow(dev,2)
+  norm = 1/(dev*math.sqrt(2*math.pi*var))
+  return norm*math.exp(-pow(length-mean,2)/(2*var))
+
+def minhinge(length, mean=12.315):
+    return math.min(mean,length);
+
+def normalize(form,length):
+    if form=="gauss":
+        return gaussianNorm(length)
+    elif form == "minhinge":
+        return minhinge(length)
+    else:
+        return 1
