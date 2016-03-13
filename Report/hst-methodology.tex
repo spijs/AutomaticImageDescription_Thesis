@@ -72,6 +72,15 @@ Bij het gebruik van 80 topics is dit fenomeen amper aanwezig, en bij het gebruik
 
 \section{Toevoeging van LDA topicverdeling aan RNN}
 
+\section{Canonical Correlation Analysis}
+Het toevoegen van extra semantische informatie kan gebeuren op verschillende manieren. Een eerste optie is LDA, zoals eerder beschreven. Er kan echter ook gebruik gemaakt worden van CCA. Waar LDA focust op het blootleggen van verbanden tussen de woorden uit de captions, berekent CCA een ruimte die tussen de afbeelding en de zin ligt.
+
+Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Met behulp van het eerder vernoemde VGGNet berekenen we de afbeeldingsvectoren voor de traininggset. De bijhorende zinnen worden voorgesteld door een tf-idf gewogen vector, zoals eerder beschreven. Belangrijk is dat alle zinnen apart worden beschouwd. Waar bij LDA de vij zinnen per afbeelding worden gereduceerd tot \'e\'en zin, blijven ze hier apart. Dit om ervoor te zorgen dat de mapping rekening houdt met de verschillende zinnen. Meer concreet houdt dit in dat elke foto maximaal gecorreleerd dient te zijn met vijf verschillende zinnen uit de trainingsset.
+
+Een deel van de rijkdom van de dataset gaat verloren als er gebruikt wordt gemaakt van een aaneensluiting van de verschillende zinnen. Bij LDA doet dit probleem zich niet voor, en is het zelfs beter om de zinnen bij elkaar te voegen, aangezien de topicverdeling per afbeelding wordt beoogd, en niet per zin. Synoniemen en afgeleiden worden beschouwd als deel van hetzelfde document, juist door de aaneensluiting van de zinnen.
+
+Na het berekenen van de representaties van afbeeldingen en zinnen worden de correlatiecomponenten berekend. Dit gebeurt met de \texttt{MATLAB}-implementatie van het canonical correlation algoritme. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en bescrhijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. Voor onze experimenten maken we enkel gebruik van de projectie voor afbeeldingen, aangezien jia \todo{REF REF REF} aantoont dat de beste resultaten bereikt worden met het gebruik van enkel de afbeeldingsprojectie. 
+
 \section{gLSTM}
 
 
