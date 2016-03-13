@@ -82,7 +82,57 @@ Een deel van de rijkdom van de dataset gaat verloren als er gebruikt wordt gemaa
 Na het berekenen van de representaties van afbeeldingen en zinnen worden de correlatiecomponenten berekend. Dit gebeurt met de \texttt{MATLAB}-implementatie van het canonical correlation algoritme. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en bescrhijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. Voor onze experimenten maken we enkel gebruik van de projectie voor afbeeldingen, aangezien jia \todo{REF REF REF} aantoont dat de beste resultaten bereikt worden met het gebruik van enkel de afbeeldingsprojectie. 
 
 \section{gLSTM}
+\subsection{Guided LSTM}
+Guided Long Short Term Memory (gLSTM) is een recente uitbreiding van het LSTM model ge\"introduceerd door Jia et al. \todo{ref} In dit model extraheren ze eerst semantische informatie van elke afbeelding. Deze informatie dient dan als extra input of "gids" voor het LSTM-blok. 
 
+Na het bestuderen van bestaande LSTM-modellen ontdekten de auteurs dat de gegenereerde zinnen "semantische drift" vertonen. Dit wil zeggen dat naarmate de zin evolueert, de betekenis van volgende woorden steeds minder met de input-afbeelding te maken heeft. Ze vermoeden dat dit komt door twee tegenwerkende krachten. Enerzijds moet de zin de afbeelding beschrijven, anderzijds moet de zin passen in het taalmodel. Om die reden introduceren ze een semantische gids, die ervoor moet zorgen dat het model na enkele woorden op het juiste pad blijft. Dit gebeurt door aan woorden die semantisch verbonden zijn aan de afbeelding een positieve bias te geven.
 
+Ze gebruiken vier verschillende semantische gidsen in hun experimenten. Als eerste model gebruiken ze een "retrieval-based" gids. Hierbij zoeken ze eerst naar zinnen die gerelateerd zijn aan de afbeelding. Vervolgens verzamelen ze daaruit de zinnen met de hoogste rang. Deze zinnen vormen dan de extra input.
+Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de projectie van de afbeeldingsrepresentatie in de gemeenschappelijke ruimte. Daarna worden de dichtstbijzijnde geprojecteerde zinnen gezocht op basis van cosinusgelijkheid. Ook hier vormen de hoogst scorende zinnen de extra input.
+Een derde model gebruikt de CCA-projectie van de afbeelding in de gemeenschappelijke ruimte rechtstreeks als gids.
+Als laatste model gebruiken ze de afbeeldingsrepresentatie zelf als gids. 
 
-\section{Normalizatie van beam search}
+Om dit te implementeren starten ze net als in deze masterproef van de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de volgende formules. Hierbij zijn de rode delen toevoegingen ten opzichte van Vinyals\todo{ref} \todo{misschien referentie naar deze formules in theorie?}:
+
+%
+\begin{eqnarray}
+\vspace{-3mm}
+\label{glstm-memory-start}
+i_l' & = & \sigma (W_{ix} x_l + W_{im} m_{l-1} \color{red}{+ W_{iq} g}) \label{glstm-input} \\
+f_l' & = & \sigma (W_{fx} x_l + W_{fm} m_{l-1} \color{red}{+ W_{fq} g}) \\
+o_l' & = & \sigma (W_{ox} x_l + W_{om} m_{l-1} \color{red}{+ W_{oq} g}) \\
+c_l' & = & f_l' \odot c_{l-1}' + i_l' \odot h(W_{cx} x_l + \nonumber \\
+&   & + W_{cm} m_{l-1} \color{red}{+ W_{cq} g}) \\
+m_l & = & o_l' \odot c_l' 
+\label{glstm-memory}
+\vspace{-3mm}
+\end{eqnarray}
+
+Hierbij is $g$ de vectorvoorstelling van de semantische informatie. De gids is onafhankelijk van de tijdstap en werkt dus globaal voor elke afbeelding. Figuur \ref{fig:glstm} geeft een visuele voorstelling van de gLSTM-blok.
+
+\begin{figure}[tb][h]
+	\centering
+	\includegraphics[width=\linewidth]{Images/glstm.pdf}
+	\caption{LSTM-blok in het zwart. Uitbreidingen van gLSTM in het rood.}
+	\label{fig:glstm}
+\end{figure}
+
+Jia et al. bekomen zeer goede resultaten. De eerste drie gidsen zorgen voor verbetering op hun baseline. Enkel de afbeelding als gids zorgt voor verslechtering. De rechtstreekse CCA-projectie presteert het beste.
+
+\subsection{gLSTM met LDA en CCA}
+Net als Jia implementeren we de gLSTM als een uitbreiding van LSTM overeenstemmend met formules \ref{glstm-memory-start}-\ref{glstm-memory}.
+Om te kunnen vergelijken met hun paper kan onze implementatie ook de CCA-projectie als gids gebruiken.
+Daarnaast veronderstellen we dat LDA een goede bron van semantische informatie is. Het bevat immers een verdeling van de onderwerpen die aanwezig zijn in de afbeelding. Daarom kan LDA ook als gids worden gekozen.
+We maken dus twee modellen zodat het mogelijk is om na te gaan of LDA een betere gids is dan CCA in onze configuratie van de gLSTM.
+ 
+\section{Normalisatie van beam search}
+Naast het introduceren van gLSTM's breiden Jia et al. \todo{ref} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leidden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de log-likelihood van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, gaat het algoritme sneller kiezen om te stoppen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde log-likelihood van elk woord als criterium.
+
+\begin{equation}
+p = \frac{1}{\Omega(\ell)}\sum_{l=1}^{\ell} \log p(s_l | x, s_{1:l}, \theta)
+\label{eq:log-sentence-norm}
+\end{equation}
+
+In de paper bestuderen ze meerdere functies voor $\Omega$. Wij implementeren de twee meest performante:
+Enerzijds de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moeten gegenereerde zinnen gelijkaardige lengtes hebben aan deze uit het corpus. 
+Anderzijds de min-hinge normalisatie. Met deze methode is de normalisatiefactor gelijk aan de gemiddelde lengte van het trainingscorpus als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$. 
