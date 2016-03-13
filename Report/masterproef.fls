@@ -327,6 +327,9 @@ INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmbx12.tfm
 OUTPUT hst-probleem.aux
 INPUT hst-probleem.tex
 INPUT hst-probleem.tex
+INPUT Images/iconic.jpg
+INPUT ./Images/iconic.jpg
+INPUT ./Images/iconic.jpg
 OUTPUT hst-related.aux
 INPUT hst-related.tex
 INPUT hst-related.tex
