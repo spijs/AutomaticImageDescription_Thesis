@@ -13,3 +13,7 @@ Report/Presentatie December/main.synctex.gz
 Report/*.pdf
 Report/*.synctex.gz
 Report/*.log
+Report/*.aux
+Report/*.fdb_latexmk
+Report/*.bbl
+Report/*.out
