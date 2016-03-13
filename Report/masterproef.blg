@@ -1,7 +1,8 @@
 This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: masterproef.aux
-A level-1 auxiliary file: inleiding.aux
+A level-1 auxiliary file: hst-inleiding.aux
+A level-1 auxiliary file: hst-probleem.aux
 A level-1 auxiliary file: hst-related.aux
 White space in argument---line 80 of file hst-related.aux
  : \citation{Xu
@@ -56,7 +57,7 @@ Warning--empty journal in Google
 Warning--empty journal in Xu2015
 You've used 27 entries,
             2118 wiz_defined-function locations,
-            722 strings with 9321 characters,
+            723 strings with 9341 characters,
 and the built_in function-call counts, 10789 in all, are:
 = -- 1050
 > -- 635

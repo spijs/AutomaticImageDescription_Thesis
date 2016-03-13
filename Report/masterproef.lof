@@ -12,19 +12,20 @@
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Perceptron met vijf inputs en drie outputs}}{10}{figure.3.1}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Feedforward Neuraal Netwerk met twee verborgen lagen}}{10}{figure.3.2}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Ontrolling van een recurrent neuraal netwerk}}{12}{figure.3.3}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Convolutioneel Neuraal Netwerk gebruikt door \cite {Krizhevsky2012a} voor classificatie van afbeeldingen}}{13}{figure.3.4}
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Long Short Term Memory geheugenblok}}{14}{figure.3.5}
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Grafische weergave van LDA}}{16}{figure.3.6}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Max pooling met 2x2 filter en stapgrootte 2}}{18}{figure.4.1}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Globale structuur VGGNet met 16 layers}}{18}{figure.4.2}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Generatie van caption met recurrent neuraal netwerk}}{19}{figure.4.3}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Perceptron met vijf inputs en drie outputs}}{12}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Feedforward Neuraal Netwerk met twee verborgen lagen}}{12}{figure.4.2}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Ontrolling van een recurrent neuraal netwerk}}{14}{figure.4.3}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Convolutioneel Neuraal Netwerk gebruikt door \cite {Krizhevsky2012a} voor classificatie van afbeeldingen}}{15}{figure.4.4}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Long Short Term Memory geheugenblok}}{16}{figure.4.5}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Grafische weergave van LDA}}{18}{figure.4.6}
+\addvspace {10pt}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Max pooling met 2x2 filter en stapgrootte 2}}{20}{figure.5.1}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Globale structuur VGGNet met 16 layers}}{20}{figure.5.2}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Generatie van caption met recurrent neuraal netwerk}}{21}{figure.5.3}
 \addvspace {10pt}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Het KU~Leuven logo.}}{27}{figure.6.1}
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Het KU~Leuven logo.}}{29}{figure.7.1}
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}
