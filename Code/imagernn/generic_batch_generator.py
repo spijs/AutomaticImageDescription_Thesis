@@ -255,8 +255,7 @@ class GenericBatchGenerator:
         guide = get_guide(guide_input,F[i,:],kwparams.get('ccaweights'))
       else:
         guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      print 'guide_input = %s' % guide_input
-      if lda_enabled and not guide_input:
+      if lda_enabled and not (guide_input=="image" or guide_input=="None"):
         guide = lda[i,:]
         print 'guide = lda'
       gen_Y = Generator.predict(Xi, guide, model, model['Ws'], params, **kwparams)
