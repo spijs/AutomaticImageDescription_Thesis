@@ -28,6 +28,7 @@ def main(params):
 
   best_bleu = 0
   best = ""
+  overview = ""
   for _,_,files in os.walk(checkpoint_path):
       for f in files:
 
@@ -94,7 +95,9 @@ def main(params):
           if(bleu_4>best_bleu):
               best = f
               best_bleu = bleu_4
+          overview = overview + "\n" + f + " " + bleu_4
           os.chdir(owd)
+  print overview
   print 'Best bleu score for %s : %s' % (best,best_bleu)
 
 if __name__ == "__main__":
