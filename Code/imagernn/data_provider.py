@@ -183,7 +183,7 @@ class BasicDataProvider:
 
     def getTopic(self, imgName):
         return self.topics[imgName]
-def getDataProvider(dataset,pert):
+def getDataProvider(dataset,pert=None):
     """ we could intercept a special dataset and return different data providers """
     assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
     return BasicDataProvider(dataset,pert)
