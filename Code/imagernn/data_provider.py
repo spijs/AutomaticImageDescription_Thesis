@@ -17,7 +17,7 @@ class BasicDataProvider:
         self.image_root = os.path.join('data', dataset, 'imgs')
 
         # load the dataset into memory
-        if not pert:
+        if not pert==None:
             dataset_path = os.path.join(self.dataset_root, 'dataset.json')
         else:
             dataset_path = os.path.join(self.dataset_root, 'pert_dataset.json')
