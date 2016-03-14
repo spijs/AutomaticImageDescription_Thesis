@@ -51,7 +51,7 @@ def main(params):
   all_references = []
   all_candidates = []
 
-  if 'cca' in params:
+  if params['cca']:
     ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
   else:
     ccaweights = None
@@ -126,7 +126,7 @@ if __name__ == "__main__":
   parser.add_argument('-m', '--max_images', type=int, default=-1, help='max images to use')
   parser.add_argument('-d', '--dump_folder', type=str, default="", help='dump the relevant images to a separate folder with this name?')
   parser.add_argument('--lda', type=int, default = 0, help = 'number of topics to be used')
-  parser.add_argument('--cca', type=int, default = 0, help = 'number of ccs to be used')
+  parser.add_argument('--cca', type=int, default = None, help = 'number of ccs to be used')
   parser.add_argument('--normalization', type=str, default=None, help='length normalization to be used')
 
   args = parser.parse_args()
