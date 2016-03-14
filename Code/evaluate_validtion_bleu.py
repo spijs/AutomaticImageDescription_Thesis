@@ -28,7 +28,8 @@ def main(params):
 
   best_bleu = 0
   best = ""
-  for _,_,f in os.walk(checkpoint_path):
+  _,_,files = os.walk(checkpoint_path)
+  for f in files:
 
       print 'loading checkpoint %s' % (f, )
       checkpoint = pickle.load(open(checkpoint_path+'/'+f, 'rb'))
