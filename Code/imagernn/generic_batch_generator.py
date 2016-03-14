@@ -121,7 +121,7 @@ class GenericBatchGenerator:
         guide = get_guide(guide_input,F[i,:],misc['ccaweights'])
       else:
         guide = get_guide(guide_input,F[i,:],L=L[i,:])
-      if lda_enabled!=0 and not guide_input:
+      if (lda_enabled!=0 and not guide_input) or (lda_enabled!=0 and guide_input=="image"):
         guide = lda[i,:]
       # forward prop through the RNN
       gen_Y, gen_cache = Generator.forward(Xi, Xs,guide, model, params, predict_mode = predict_mode)
