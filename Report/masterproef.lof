@@ -24,9 +24,10 @@
 \contentsline {figure}{\numberline {5.1}{\ignorespaces Max pooling met 2x2 filter en stapgrootte 2}}{20}{figure.5.1}
 \contentsline {figure}{\numberline {5.2}{\ignorespaces Globale structuur VGGNet met 16 layers}}{20}{figure.5.2}
 \contentsline {figure}{\numberline {5.3}{\ignorespaces Generatie van caption met recurrent neuraal netwerk}}{21}{figure.5.3}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces LSTM-blok in het zwart. Uitbreidingen van gLSTM in het rood.}}{25}{figure.5.4}
 \addvspace {10pt}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Het KU~Leuven logo.}}{29}{figure.7.1}
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Het KU~Leuven logo.}}{31}{figure.7.1}
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}

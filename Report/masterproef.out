@@ -21,7 +21,7 @@
 \BOOKMARK [1][-]{section.5.3}{Toevoeging van LDA topicverdeling aan RNN}{chapter.5}% 21
 \BOOKMARK [1][-]{section.5.4}{Canonical Correlation Analysis}{chapter.5}% 22
 \BOOKMARK [1][-]{section.5.5}{gLSTM}{chapter.5}% 23
-\BOOKMARK [1][-]{section.5.6}{Normalizatie van beam search}{chapter.5}% 24
+\BOOKMARK [1][-]{section.5.6}{Normalisatie van beam search}{chapter.5}% 24
 \BOOKMARK [0][-]{chapter.6}{Evaluatie}{}% 25
 \BOOKMARK [1][-]{section.6.1}{Automatische evaluatie}{chapter.6}% 26
 \BOOKMARK [1][-]{section.6.2}{BLEU}{chapter.6}% 27
@@ -38,9 +38,5 @@
 \BOOKMARK [1][-]{section.8.3}{Besluit van dit hoofdstuk}{chapter.8}% 38
 \BOOKMARK [0][-]{chapter.9}{Besluit}{}% 39
 \BOOKMARK [0][-]{appendix.A}{De eerste bijlage}{}% 40
-\BOOKMARK [1][-]{section.A.1}{Meer lorem}{appendix.A}% 41
-\BOOKMARK [1][-]{section.A.2}{Lorem 51}{appendix.A}% 42
-\BOOKMARK [0][-]{appendix.B}{De laatste bijlage}{}% 43
-\BOOKMARK [1][-]{section.B.1}{Lorem 20-24}{appendix.B}% 44
-\BOOKMARK [1][-]{section.B.2}{Lorem 25-27}{appendix.B}% 45
-\BOOKMARK [0][-]{section*.70}{Bibliografie}{}% 46
+\BOOKMARK [0][-]{appendix.B}{De laatste bijlage}{}% 41
+\BOOKMARK [0][-]{section*.74}{Bibliografie}{}% 42
