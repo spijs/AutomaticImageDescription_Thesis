@@ -53,6 +53,7 @@ def main(params):
 
   if params['cca']:
     ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
+    misc['ccaweights'] = ccaweights
   else:
     ccaweights = None
   for img in dp.iterImages(split = 'test', max_images = max_images):

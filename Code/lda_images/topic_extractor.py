@@ -12,7 +12,7 @@ class TopicExtractor:
     def __init__(self, dataset, nbOfTopics,iterations=1500):
         self.nbOfTopics=nbOfTopics
         self.iterations=iterations
-        self.dataprovider = getDataProvider(dataset, nbOfTopics)
+        self.dataprovider = getDataProvider(dataset)
         self.nbOfWordOccurences = 5 #TODO niet langer hardcoden?
 
     ''' Returns a list containing all the considered english stopwords'''
