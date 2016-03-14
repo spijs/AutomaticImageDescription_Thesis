@@ -252,7 +252,7 @@ class GenericBatchGenerator:
     for i,x in enumerate(batch):
       Xi = Xe[i,:]
       if guide_input=='cca':
-        guide = get_guide(guide_input,F[i,:],params.get('cca'))
+        guide = get_guide(guide_input,F[i,:],kwparams.get('ccaweights'))
       else:
         guide = get_guide(guide_input,F[i,:],L=L[i,:])
       if lda_enabled and not guide_input:
