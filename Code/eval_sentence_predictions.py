@@ -51,7 +51,7 @@ def main(params):
   all_references = []
   all_candidates = []
 
-  if params['cca']:
+  if 'cca' in params:
     ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
   else:
     ccaweights = None
