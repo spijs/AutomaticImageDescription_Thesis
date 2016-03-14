@@ -51,7 +51,10 @@ def main(params):
   all_references = []
   all_candidates = []
 
-  ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
+  if params['cca']:
+    ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
+  else:
+    ccaweights = None
   for img in dp.iterImages(split = 'test', max_images = max_images):
     n+=1
     print 'image %d/%d:' % (n, max_images)
