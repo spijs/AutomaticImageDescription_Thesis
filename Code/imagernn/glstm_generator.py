@@ -315,7 +315,7 @@ def gaussianNorm(length, mean=12.315 , dev=5.18887):
   return norm*math.exp(-pow(length-mean,2)/(2*var))
 
 def minhinge(length, mean=12.315):
-    return math.min(mean,length);
+    return min(mean,length*1.0)/length
 
 def normalize(form,length):
     if form=="gauss":
