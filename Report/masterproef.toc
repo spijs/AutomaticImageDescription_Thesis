@@ -55,42 +55,38 @@
 \contentsline {section}{\numberline {5.3}Toevoeging van LDA topicverdeling aan RNN}{23}{section.5.3}
 \contentsline {section}{\numberline {5.4}Canonical Correlation Analysis}{23}{section.5.4}
 \contentsline {section}{\numberline {5.5}gLSTM}{23}{section.5.5}
-\contentsline {section}{\numberline {5.6}Normalizatie van beam search}{23}{section.5.6}
-\contentsline {chapter}{\chapternumberline {6}Evaluatie}{25}{chapter.6}
-\contentsline {section}{\numberline {6.1}Automatische evaluatie}{25}{section.6.1}
-\contentsline {section}{\numberline {6.2}BLEU}{25}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}Algoritme}{26}{subsection.6.2.1}
-\contentsline {subsection}{\numberline {6.2.2}Nadelen en gebruik}{27}{subsection.6.2.2}
-\contentsline {section}{\numberline {6.3}METEOR}{27}{section.6.3}
-\contentsline {subsection}{\numberline {6.3.1}Algoritme}{28}{subsection.6.3.1}
-\contentsline {subsection}{\numberline {6.3.2}Gebruik en nadelen}{28}{subsection.6.3.2}
-\contentsline {chapter}{\chapternumberline {7}Een volgend hoofdstuk}{29}{chapter.7}
-\contentsline {section}{\numberline {7.1}Eerste onderwerp in dit hoofdstuk}{29}{section.7.1}
-\contentsline {subsection}{\numberline {7.1.1}Een item}{29}{subsection.7.1.1}
-\contentsline {section}{\numberline {7.2}Figuren}{29}{section.7.2}
-\contentsline {section}{\numberline {7.3}Tabellen}{29}{section.7.3}
-\contentsline {section}{\numberline {7.4}Lorem ipsum}{30}{section.7.4}
-\contentsline {subsection}{\numberline {7.4.1}Lorem ipsum dolor sit amet, consectetur adipiscing elit}{30}{subsection.7.4.1}
-\contentsline {subsection}{\numberline {7.4.2}Praesent auctor venenatis posuere}{31}{subsection.7.4.2}
-\contentsline {subsection}{\numberline {7.4.3}Cras vulputate ultricies venenatis}{31}{subsection.7.4.3}
-\contentsline {subsection}{\numberline {7.4.4}Donec nibh ante, consectetur et posuere id, tempus nec arcu}{31}{subsection.7.4.4}
-\contentsline {subsection}{\numberline {7.4.5}Morbi et mauris tempus purus ornare vehicula}{32}{subsection.7.4.5}
-\contentsline {section}{\numberline {7.5}Besluit van dit hoofdstuk}{32}{section.7.5}
-\contentsline {chapter}{\chapternumberline {8}Het laatste hoofdstuk}{33}{chapter.8}
-\contentsline {section}{\numberline {8.1}Eerste onderwerp in dit hoofdstuk}{33}{section.8.1}
-\contentsline {subsection}{\numberline {8.1.1}Een item}{33}{subsection.8.1.1}
-\contentsline {section}{\numberline {8.2}Tweede onderwerp in dit hoofdstuk}{33}{section.8.2}
-\contentsline {section}{\numberline {8.3}Besluit van dit hoofdstuk}{33}{section.8.3}
-\contentsline {chapter}{\chapternumberline {9}Besluit}{35}{chapter.9}
-\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{39}{appendix.A}
-\contentsline {section}{\numberline {A.1}Meer lorem}{39}{section.A.1}
-\contentsline {subsection}{\numberline {A.1.1}Lorem 15--17}{39}{subsection.A.1.1}
-\contentsline {subsection}{\numberline {A.1.2}Lorem 18--19}{40}{subsection.A.1.2}
-\contentsline {section}{\numberline {A.2}Lorem 51}{40}{section.A.2}
-\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{41}{appendix.B}
-\contentsline {section}{\numberline {B.1}Lorem 20-24}{41}{section.B.1}
-\contentsline {section}{\numberline {B.2}Lorem 25-27}{42}{section.B.2}
-\contentsline {chapter}{Bibliografie}{43}{section*.70}
+\contentsline {subsection}{\numberline {5.5.1}Guided LSTM}{23}{subsection.5.5.1}
+\contentsline {subsection}{\numberline {5.5.2}gLSTM met LDA en CCA}{24}{subsection.5.5.2}
+\contentsline {section}{\numberline {5.6}Normalisatie van beam search}{24}{section.5.6}
+\contentsline {chapter}{\chapternumberline {6}Evaluatie}{27}{chapter.6}
+\contentsline {section}{\numberline {6.1}Automatische evaluatie}{27}{section.6.1}
+\contentsline {section}{\numberline {6.2}BLEU}{27}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Algoritme}{28}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}Nadelen en gebruik}{29}{subsection.6.2.2}
+\contentsline {section}{\numberline {6.3}METEOR}{29}{section.6.3}
+\contentsline {subsection}{\numberline {6.3.1}Algoritme}{30}{subsection.6.3.1}
+\contentsline {subsection}{\numberline {6.3.2}Gebruik en nadelen}{30}{subsection.6.3.2}
+\contentsline {chapter}{\chapternumberline {7}Een volgend hoofdstuk}{31}{chapter.7}
+\contentsline {section}{\numberline {7.1}Eerste onderwerp in dit hoofdstuk}{31}{section.7.1}
+\contentsline {subsection}{\numberline {7.1.1}Een item}{31}{subsection.7.1.1}
+\contentsline {section}{\numberline {7.2}Figuren}{31}{section.7.2}
+\contentsline {section}{\numberline {7.3}Tabellen}{31}{section.7.3}
+\contentsline {section}{\numberline {7.4}Lorem ipsum}{32}{section.7.4}
+\contentsline {subsection}{\numberline {7.4.1}Lorem ipsum dolor sit amet, consectetur adipiscing elit}{32}{subsection.7.4.1}
+\contentsline {subsection}{\numberline {7.4.2}Praesent auctor venenatis posuere}{33}{subsection.7.4.2}
+\contentsline {subsection}{\numberline {7.4.3}Cras vulputate ultricies venenatis}{33}{subsection.7.4.3}
+\contentsline {subsection}{\numberline {7.4.4}Donec nibh ante, consectetur et posuere id, tempus nec arcu}{33}{subsection.7.4.4}
+\contentsline {subsection}{\numberline {7.4.5}Morbi et mauris tempus purus ornare vehicula}{34}{subsection.7.4.5}
+\contentsline {section}{\numberline {7.5}Besluit van dit hoofdstuk}{34}{section.7.5}
+\contentsline {chapter}{\chapternumberline {8}Het laatste hoofdstuk}{35}{chapter.8}
+\contentsline {section}{\numberline {8.1}Eerste onderwerp in dit hoofdstuk}{35}{section.8.1}
+\contentsline {subsection}{\numberline {8.1.1}Een item}{35}{subsection.8.1.1}
+\contentsline {section}{\numberline {8.2}Tweede onderwerp in dit hoofdstuk}{35}{section.8.2}
+\contentsline {section}{\numberline {8.3}Besluit van dit hoofdstuk}{35}{section.8.3}
+\contentsline {chapter}{\chapternumberline {9}Besluit}{37}{chapter.9}
+\contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{41}{appendix.A}
+\contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{43}{appendix.B}
+\contentsline {chapter}{Bibliografie}{45}{section*.74}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
