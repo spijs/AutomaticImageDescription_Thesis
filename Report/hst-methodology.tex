@@ -32,7 +32,7 @@ De representatie die wordt gebruik door Karpathy is het resultaat van het netwer
 VGGNet is momenteel het best presterende CNN voor afbeeldingsrepresentatie. Wij gebruiken in ons systeem dan ook de afbeeldingsvectors die berekend zijn met VGGNet. De gebruikte implementatie komt van Caffe \todo{Reference Caffe}.
 
 \paragraph{Van afbeelding naar beschrijving}
-De berekende vector representatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training van het netwerk wordt op basis van de afbeelding, in combinatie met een speciale startvector die het begin van een zin aangeeft, het eerste woord voorspeld. Daarna wordt op basis van het eerste woord van de zin een voorspelling gemaakt voor het tweede woord. Dit proces herhaalt zich tot het einde van de zin bereikt is. Terugpropagatie op basis van stochastic gradient descent zorgt voor de juiste wijzigingen aan de gewichten van het netwerk. Een eenvoudige weergave van hoe het RNN een beschrijving genereert is te zien op figuur \ref{fig:rnntraining}.
+De berekende vector representatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training van het netwerk wordt op basis van de afbeelding, in combinatie met een speciale startvector die het begin van een zin aangeeft, het eerste woord voorspeld. Daarna wordt op basis van het eerste woord van de zin een voorspelling gemaakt voor het tweede woord. Dit proces herhaalt zich tot het einde van de zin bereikt is. Terugpropagatie op basis van stochastic gradient descent zorgt voor de juiste wijzigingen aan de gewichten van het netwerk. Een eenvoudige weergave van hoe het RNN een beschrijving genereert is te zien op figuur \ref{fig:rnntraining}. 
 
 \begin{figure}[tb]
     \centering
@@ -40,6 +40,24 @@ De berekende vector representatie van de afbeelding dient als input voor een rec
     \caption{Generatie van caption met recurrent neuraal netwerk}
 \label{fig:rnntraining}
 \end{figure}
+
+Formeel gezien berekent het netwerk op basis van input vectors (woorden) $(x_1,x_2,...,x_T)$ een reeks van verborgen vectors $(h_1,h_2,...,h_t)$. Deze verborgen vectors dienen daarna als de basis voor output $(y_1,y_2,...,y_t)$. Deze outputs worden verkregen door formule \eqref{eq:rnn} te itereren voor $t = 1$ tot $T$. 
+
+\begin{equation}
+\begin{aligned}
+     b_v &= W_{hi} [CNN_{\theta_c}(I)] \\
+     h_t &= f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v) \\
+     y_t &= softmax( W_{oh} h_t + b_o)
+\end{aligned}
+\label{eq:rnn}
+\end{equation}
+
+In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}, x_i$ en $b_h, b_o$ parameters die het netwerk leert. $CNN_{\theta_c}(I)$ is de output van de laatste laag van VGGNet en $f$ is een activatiefunctie. De output komt overeen met een kansverdeling over de verschillende woorden uit de dataset. Er is ook \'e\'en extra dimensie toegevoegd voor het END symbool dat het einde van een zin aangeeft. Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvector het beste resultaat geeft. Om dit te verifieren hebben wij beide situaties vergeleken. Bij het gebruik van de afbeelding in elke stap verandert het tweede deel van formule \eqref{eq:rnn} in formule \eqref{eq:rnnfeedalways}.
+
+\begin{equation}
+     h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + b_v)
+\label{eq:rnnfeedalways}
+\end{equation}
 
 Het genereren van captions gebeurt op basis van beam search. Hierbij wordt op basis van de afbeelding een ranking gemaakt van de meest waarschijnlijke eerste woorden voor de zin. De eerste $n$ woorden dienen dan als startpunt van de voorspelling van het tweede woord. Over alle mogelijke sets van twee woorden wordt opnieuw een rangschikking gemaakt, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin wordt gebruikt als eindresultaat.
 
@@ -71,6 +89,22 @@ Bij het gebruik van 80 topics is dit fenomeen amper aanwezig, en bij het gebruik
 
 
 \section{Toevoeging van LDA topicverdeling aan RNN}
+De eerder berekende topicverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de topicverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. 
+
+\begin{equation}
+    h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v +\mathbbm{1}{(t=1)} \odot W_lL
+    \label{eq:rnnldaonce}
+\end{equation}
+
+Er kan ook gekozen worden om de topicverdeling elke stap toe te voegen, wat leidt tot formule \eqref{eq:rnnldaall}. Het lijkt ons interessant om te experimenteren met het al dan niet altijd toevoegen van de topic informatie. Dit kan, in tegenstelling tot het steeds toevoegen van de afbeelding, een verbetering betekenen. De informatie uit de topicverdeling is afgeleid van de afbeelding, maar bevat informatie van een lagere dimensionaliteit. Het herhaaldelijk meegeven van de topic vector zorgt dat het netwerk elke stap de semantische informatie binnenkrijgt. 
+
+
+\begin{equation}
+    h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v + W_lL
+    \label{eq:rnnldaall}
+\end{equation}
+
+
 
 \section{Canonical Correlation Analysis}
 Het toevoegen van extra semantische informatie kan gebeuren op verschillende manieren. Een eerste optie is LDA, zoals eerder beschreven. Er kan echter ook gebruik gemaakt worden van CCA. Waar LDA focust op het blootleggen van verbanden tussen de woorden uit de captions, berekent CCA een ruimte die tussen de afbeelding en de zin ligt.
