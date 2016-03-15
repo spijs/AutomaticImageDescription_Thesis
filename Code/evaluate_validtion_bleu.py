@@ -90,7 +90,7 @@ def main(params):
           process = sp.Popen('./multi-bleu.perl reference < output',stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
           lines_iterator = iter(process.stdout.readline, b"")
           for line in lines_iterator:
-                fourth = line.split("/")[4]
+                fourth = line.split("/")[3]
                 bleu_4  = fourth.split(" ")[0]
           if(bleu_4>best_bleu):
               best = f
