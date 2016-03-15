@@ -53,6 +53,15 @@ class BasicDataProvider:
             img['topics'] = self.topics[img['filename']]
         return img
 
+    '''
+    Returns a dictionary mapping image names to  image features
+    '''
+    def getImageDict(self, split):
+        imagedict = {}
+        for i,img in enumerate(self.split[split]):
+            imagedict[img['filename']] = self._getImage(img)['feat']
+        return imagedict
+
     def _getSentence(self, sent):
         """ create a sentence structure for the driver """
         # NOOP for now
