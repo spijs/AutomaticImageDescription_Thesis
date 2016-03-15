@@ -17,7 +17,7 @@
 \contentsline {section}{\numberline {2.2}Datasets}{3}{section.2.2}
 \contentsline {paragraph}{Flickr8k}{3}{section*.9}
 \contentsline {paragraph}{Flickr30k}{3}{section*.11}
-\contentsline {paragraph}{MS COCO}{4}{section*.15}
+\contentsline {paragraph}{MS COCO}{4}{section*.14}
 \contentsline {chapter}{\chapternumberline {3}Gerelateerd Werk}{5}{chapter.3}
 \contentsline {section}{\numberline {3.1}Afbeelding representaties}{5}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}Oorpsronkelijke CV modellen}{6}{subsection.3.1.1}
@@ -34,9 +34,9 @@
 \contentsline {chapter}{\chapternumberline {4}Theoretische Achtergrond}{11}{chapter.4}
 \contentsline {section}{\numberline {4.1}Neurale Netwerken}{11}{section.4.1}
 \contentsline {subsection}{\numberline {4.1.1}Feed Forward Neurale Netwerken}{11}{subsection.4.1.1}
-\contentsline {paragraph}{Perceptron}{11}{section*.34}
-\contentsline {paragraph}{Feed Forward Netwerk}{11}{section*.35}
-\contentsline {paragraph}{Training}{12}{section*.36}
+\contentsline {paragraph}{Perceptron}{11}{section*.33}
+\contentsline {paragraph}{Feed Forward Netwerk}{11}{section*.34}
+\contentsline {paragraph}{Training}{12}{section*.35}
 \contentsline {subsection}{\numberline {4.1.2}Recurrente Neurale Netwerken}{14}{subsection.4.1.2}
 \contentsline {subsection}{\numberline {4.1.3}Convolutionele Neurale Netwerken}{14}{subsection.4.1.3}
 \contentsline {subsection}{\numberline {4.1.4}Long Short Term Memory Neurale Netwerken}{16}{subsection.4.1.4}
@@ -46,18 +46,18 @@
 \contentsline {chapter}{\chapternumberline {5}Methodologie}{19}{chapter.5}
 \contentsline {section}{\numberline {5.1}Startpunt Karpathy}{19}{section.5.1}
 \contentsline {subsection}{\numberline {5.1.1}Recurrent Neuraal Netwerk}{19}{subsection.5.1.1}
-\contentsline {paragraph}{Afbeeldingsrepresentatie}{19}{section*.52}
-\contentsline {paragraph}{Van afbeelding naar beschrijving}{20}{section*.55}
-\contentsline {subsection}{\numberline {5.1.2}Long Short Term Memory Netwerk}{21}{subsection.5.1.2}
-\contentsline {section}{\numberline {5.2}Latent Dirichlet Analysis}{21}{section.5.2}
-\contentsline {subsubsection}{Berekening van topicverdeling}{21}{section*.56}
-\contentsline {subsubsection}{Evaluatie}{22}{section*.58}
+\contentsline {paragraph}{Afbeeldingsrepresentatie}{19}{section*.51}
+\contentsline {paragraph}{Van afbeelding naar beschrijving}{20}{section*.54}
+\contentsline {subsection}{\numberline {5.1.2}Long Short Term Memory Netwerk}{22}{subsection.5.1.2}
+\contentsline {section}{\numberline {5.2}Latent Dirichlet Analysis}{22}{section.5.2}
+\contentsline {subsubsection}{Berekening van topicverdeling}{22}{section*.55}
+\contentsline {subsubsection}{Evaluatie}{22}{section*.57}
 \contentsline {section}{\numberline {5.3}Toevoeging van LDA topicverdeling aan RNN}{23}{section.5.3}
 \contentsline {section}{\numberline {5.4}Canonical Correlation Analysis}{23}{section.5.4}
-\contentsline {section}{\numberline {5.5}gLSTM}{23}{section.5.5}
-\contentsline {subsection}{\numberline {5.5.1}Guided LSTM}{23}{subsection.5.5.1}
-\contentsline {subsection}{\numberline {5.5.2}gLSTM met LDA en CCA}{24}{subsection.5.5.2}
-\contentsline {section}{\numberline {5.6}Normalisatie van beam search}{24}{section.5.6}
+\contentsline {section}{\numberline {5.5}gLSTM}{24}{section.5.5}
+\contentsline {subsection}{\numberline {5.5.1}Guided LSTM}{24}{subsection.5.5.1}
+\contentsline {subsection}{\numberline {5.5.2}gLSTM met LDA en CCA}{25}{subsection.5.5.2}
+\contentsline {section}{\numberline {5.6}Normalisatie van beam search}{25}{section.5.6}
 \contentsline {chapter}{\chapternumberline {6}Evaluatie}{27}{chapter.6}
 \contentsline {section}{\numberline {6.1}Automatische evaluatie}{27}{section.6.1}
 \contentsline {section}{\numberline {6.2}BLEU}{27}{section.6.2}
@@ -86,7 +86,7 @@
 \contentsline {chapter}{\chapternumberline {9}Besluit}{37}{chapter.9}
 \contentsline {appendix}{\chapternumberline {A}De eerste bijlage}{41}{appendix.A}
 \contentsline {appendix}{\chapternumberline {B}De laatste bijlage}{43}{appendix.B}
-\contentsline {chapter}{Bibliografie}{45}{section*.74}
+\contentsline {chapter}{Bibliografie}{45}{section*.73}
 \select@language {dutch}
 \select@language {dutch}
 \select@language {dutch}
