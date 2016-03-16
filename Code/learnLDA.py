@@ -1,7 +1,8 @@
 __author__ = 'Wout & thijs'
 
 import argparse
-from lda_images.lda_learner import *
+#from lda_images.lda_learner import *
+from lda_images.new_lda_learner import *
 
 # given a dataset and an amount of topics, train a neural network
 # to map image representations onto topic distribtutions
