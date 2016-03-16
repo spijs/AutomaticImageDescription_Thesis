@@ -32,7 +32,7 @@ class LDANetworkLearner:
         train_feats = self.createFeatureMatrix(training_names, training_feat_dict)
 
         self.layers = [Layer("Sigmoid", name = 'hidden',units=self.hidden), Layer("Softmax", name = 'out')]
-        self.network = Regressor(self.layers, learning_rate = self.rate, n_iter = nbIter, valid_set = (val_feats, val_distributions), verbose = True)
+        self.network = Regressor(self.layers, learning_rate = self.rate, n_iter = nbIter, valid_set = (val_feats, np.array(val_distributions)), verbose = True)
 
         self.network.fit(train_feats, training_distributions)
     def load_dist(self, split):
