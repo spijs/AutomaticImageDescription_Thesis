@@ -3,7 +3,7 @@ from sknn.mlp import MultiLayerPerceptron
 __author__ = 'Wout & thijs'
 from imagernn.data_provider import getDataProvider
 from lda_images.ff_nn import *
-import numpy
+import numpy as np
 from sknn.mlp import *
 import copy
 import sys
@@ -48,7 +48,7 @@ class LDANetworkLearner:
         feat_mat = []
         for name in names:
             feat_mat.append(featuredict[name])
-        return feat_mat
+        return np.array(feat_mat)
 
     def create_dist_dict(self, filename):
         # dict = {}
