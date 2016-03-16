@@ -18,7 +18,6 @@ class LDANetworkLearner:
 
         # self.network = FeedForwardNetwork(4096,hidden , nbOfTopics, layers-1, rate)
         self.hidden = hidden
-        self.layers = layers-1
         self.rate = rate
 
 
@@ -34,7 +33,7 @@ class LDANetworkLearner:
         self.layers = [Layer("Sigmoid", name = 'hidden',units=self.hidden), Layer("Softmax", name = 'out')]
         self.network = Regressor(self.layers, learning_rate = self.rate, n_iter = nbIter, valid_set = (val_feats, np.array(val_distributions)), verbose = True)
 
-        self.network.fit(train_feats, training_distributions)
+        self.network.fit(train_feats, np.array(training_distributions))
     def load_dist(self, split):
         filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(
             self.nbOfTopics) + '_' + split + '.txt'
