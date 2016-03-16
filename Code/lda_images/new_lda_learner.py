@@ -31,7 +31,7 @@ class LDANetworkLearner:
         val_feats = self.createFeatureMatrix(val_names, val_feat_dict)
         train_feats = self.createFeatureMatrix(training_names, training_feat_dict)
 
-        self.layers = [Layer("Sigmoid", name = 'hidden',units=256), Layer("Softmax", name = 'out')]
+        self.layers = [Layer("Sigmoid", name = 'hidden',units=self.hidden), Layer("Softmax", name = 'out')]
         self.network = Regressor(self.layers, learning_rate = self.rate, n_iter = nbIter, valid_set = (val_feats, val_distributions), verbose = True)
 
         self.network.fit(train_feats, training_distributions)
