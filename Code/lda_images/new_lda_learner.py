@@ -26,6 +26,7 @@ class LDANetworkLearner:
         val_names, val_distributions = self.load_dist("val")
         training_feat_dict = self.dataprovider.getImageDict('train')
         val_feat_dict = self.dataprovider.getImageDict('val')
+        test_feats = np.array(self.dataprovider.getImageDict('test').values())
 
         val_feats = self.createFeatureMatrix(val_names, val_feat_dict)
         train_feats = self.createFeatureMatrix(training_names, training_feat_dict)
@@ -34,6 +35,13 @@ class LDANetworkLearner:
         self.network = Regressor(self.layers, learning_rate = self.rate, n_iter = nbIter, valid_set = (val_feats, np.array(val_distributions)), verbose = True)
 
         self.network.fit(train_feats, np.array(training_distributions))
+
+        val_end = self.network.predict(val_feats)
+        test_end = self.network.predict(test_feats)
+        print test_end
+        #TODO hier save_split_values oproepen voor allebei
+
+
     def load_dist(self, split):
         filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(
             self.nbOfTopics) + '_' + split + '.txt'
@@ -83,6 +91,14 @@ class LDANetworkLearner:
                 distribution.extend([m])
         return imgname, distribution
 
-    def learnOneStep(self, image, distribution):
-        self.network.forward(image)
-        self.network.backward(distribution)
+    #TODO versie van oude nog
+    def save_split_values(self):
+        for split in ['test', 'val']:
+            set = self.dataprovider.iterImageSentencePair(split = split)
+            file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'
+                        +str(self.nbOfTopics)+'_'+split+'.txt', 'w')
+            numpy.set_printoptions(suppress=True)
+            for pair in set:
+                prediction = self.bestNetwork.predict(pair['image']['feat'])
+                img = pair['image']['filename']
+                file.write(img + ' ' + str(prediction) + '\n')
