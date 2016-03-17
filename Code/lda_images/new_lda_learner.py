@@ -26,6 +26,7 @@ class LDANetworkLearner:
         val_names, val_distributions = self.load_dist("val")
         training_feat_dict = self.dataprovider.getImageDict('train')
         val_feat_dict = self.dataprovider.getImageDict('val')
+        test_names = self.dataprovider.getImageDict('test').keys()
         test_feats = np.array(self.dataprovider.getImageDict('test').values())
 
         val_feats = self.createFeatureMatrix(val_names, val_feat_dict)
@@ -38,6 +39,8 @@ class LDANetworkLearner:
 
         val_end = self.network.predict(val_feats)
         test_end = self.network.predict(test_feats)
+        self.save_split_values(test_names, test_end, 'test')
+        self.save_split_values(val_names, val_end, 'val')
         print test_end
         #TODO hier save_split_values oproepen voor allebei
 
@@ -91,14 +94,15 @@ class LDANetworkLearner:
                 distribution.extend([m])
         return imgname, distribution
 
-    #TODO versie van oude nog
-    def save_split_values(self):
-        for split in ['test', 'val']:
-            set = self.dataprovider.iterImageSentencePair(split = split)
-            file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'
-                        +str(self.nbOfTopics)+'_'+split+'.txt', 'w')
-            numpy.set_printoptions(suppress=True)
-            for pair in set:
-                prediction = self.bestNetwork.predict(pair['image']['feat'])
-                img = pair['image']['filename']
-                file.write(img + ' ' + str(prediction) + '\n')
+    '''
+    Given a list of names, a list of numbers and a string representing the split, write the values to disk
+    in an orderly manner
+    '''
+    def save_split_values(self, names, values, split):
+        file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'
+                        +str(self.nbOfTopics)+'_'+split+'_'+str(self.hidden)+'.txt', 'w')
+        for i in range(len(names)):
+            np.set_printoptions(suppress=True)
+            prediction = values[i]
+            img = names[i]
+            file.write(img + ' ' + str(prediction) + '\n')
