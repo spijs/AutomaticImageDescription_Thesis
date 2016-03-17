@@ -28,7 +28,7 @@ De laatste layers van het netwerk zijn standaard (volledig verbonden) layers, ge
 \end{figure}
 
 
-De representatie die wordt gebruik door Karpathy is het resultaat van het netwerk voor de softmax layer wordt toegepast. Dit leidt tot een 4096-dimensionele vector, waarbij elke dimensie kan worden gezien als een bepaald concept dat al dan niet aanwezig is in de afbeelding. Deze dimensionaliteit is dezelfde voor alle afbeeldingen, als gevolg van een herschaling van de afbeeldingen tot een 512 op 512 pixel formaat vooraleer de vector wordt berekend.
+De representatie die wordt gebruik door Karpathy is het resultaat van het netwerk voor de softmax layer wordt toegepast. Dit leidt tot een 4096-dimensionele vector, waarbij elke dimensie kan worden gezien als een bepaald concept dat al dan niet aanwezig is in de afbeelding. Deze dimensionaliteit is dezelfde voor alle afbeeldingen, onafhankelijk van de grootte van de input. Dit komt door een herschaling alvorens de afbeeldingsvector te berekenen.
 
 VGGNet is momenteel het best presterende CNN voor afbeeldingsrepresentatie. Wij gebruiken in ons systeem dan ook de afbeeldingsvectors die berekend zijn met VGGNet. De gebruikte implementatie komt van Caffe \todo{Reference Caffe}.
 
@@ -42,7 +42,9 @@ De berekende vector representatie van de afbeelding dient als input voor een rec
 \label{fig:rnntraining}
 \end{figure}
 
-Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. Er worden random afbeeldingen met 1 van de 5 bijhorende beschrijvingen aan het netwerk gegeven. De eerder vermeldde terugpropagatie zorgt voor de juiste aanpassing aan de gewichten. Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. Op basis van de BLEU-4 score (zie verder) berekend op de gegenereerde zinnen voor de validatieset bepalen we dan of er verbetering is sinds de vorige iteratie, en of de training al dan niet dient te stoppen. Eerder in het proces maakten we gebruik van de perplexity berekend op de validatie set, maar het blijkt dat een lagere validatieperplexity niet automatisch leidt tot een beter scorend systeem.
+Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. Er worden random afbeeldingen met 1 van de 5 bijhorende beschrijvingen aan het netwerk gegeven. De eerder vermeldde terugpropagatie zorgt voor de juiste aanpassing aan de gewichten. Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexity berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Wanner we merken dat er geen daling meer is in perplexity zetten we het trainingsproces stop.
+
+De code van Karpathy voorziet ook de optie om gebruik te maken van ReLu encoders, deze werken volgens formule $ReLu(x) = max(x,0)$. Er is ook de optie om te kiezen hoe groot de verborgen laag van het RNN moet zijn, alsook de optie om de afbeeldingsrepresentatie al dan niet elke stap toe te voegen.
 
 Formeel gezien berekent het netwerk op basis van input vectors (woorden) $(x_1,x_2,...,x_T)$ een reeks van verborgen vectors $(h_1,h_2,...,h_t)$. Deze verborgen vectors dienen daarna als de basis voor output $(y_1,y_2,...,y_t)$. Deze outputs worden verkregen door formule \eqref{eq:rnn} te itereren voor $t = 1$ tot $T$.
 
@@ -62,11 +64,22 @@ In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}, x_i$ en $b_h, b_o$ 
 \label{eq:rnnfeedalways}
 \end{equation}
 
-
-
 Het genereren van captions gebeurt op basis van beam search. Hierbij wordt op basis van de afbeelding een ranking gemaakt van de meest waarschijnlijke eerste woorden voor de zin. De eerste $n$ woorden dienen dan als startpunt van de voorspelling van het tweede woord. Over alle mogelijke sets van twee woorden wordt opnieuw een rangschikking gemaakt, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin wordt gebruikt als eindresultaat.
 
 \subsection{Long Short Term Memory Netwerk}
+\label{sec:lstm}
+Een tweede implementatie die we gebruikt hebben als startpunt voor onze extensies is beschreven in \todo{ref vinyalszzszzsszzz}. Het betreft een implementatie van een Long Short Term Memory neuraal netwerk. 
+
+De gebruikte afbeeldingsrepresentatie is dezelfde als bij de RNN implementatie. We gebruiken de 4096-dimensionale feature vectors berekend met VGGNet. 
+
+\paragraph{Van afbeelding naar beschrijving}
+De afbeeldingsvector dient als input voor een LSTM implementatie. Dit is, zoals eerder beschreven, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. De gebruikte formules, samen met verduidelijking, zijn te vinden in sectie \todo{reference naar sectie over LSTM}.
+
+De training van het netwerk verloopt net als bij de RNN implementatie. Op basis van de Flickr30k training set leert het netwerk, en bij elke volledige doorloop van de trainingset berekenen we de perplexity van de resultaten op de validatieset. Karpathy voorziet in zijn code ook de mogelijkheid om de $\tanh$ te berekenen van de geheugenwaarde van de cel alvorens de output te berekenen. 
+
+Het genereren van nieuwe beschrijvingen voor de testset gebeurt op exact dezelfde manier als bij RNN. Met beam search bepalen we de meest waarschijnlijke uitkomst van het netwerk.
+
+
 
 \section{Latent Dirichlet Analysis}
 Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschrijvingen heeft een groot voordeel in de taak van het genereren van nieuwe beschrijvingen. Deze sectie beschrijft welk proces wij hebben gevolgd om op basis van LDA extra semantische informatie te verkrijgen om te verwerken in onze implementatie en hoe de evaluatie van dit proces verliep.
