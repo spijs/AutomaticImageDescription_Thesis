@@ -7,9 +7,9 @@ Het startpunt van onze implementatie is de code aangereikt door A. Karpathy op z
 Een eerste implementatie waarvan we zijn vertrokken is beschreven in Karpathy\todo{ref!}. Hij beschrijft een systeem dat op basis van een afbeelding een beschrijvende zin genereert. Dit gebeurt in twee stappen. Eerst wordt de afbeelding door middel van een CNN omgezet naar een vector representatie. Deze vector dient vervolgens als input voor een recurrent neuraal netwerk dat een grammaticaal correcte beschrijving genereert.
 
 \paragraph{Afbeeldingsrepresentatie}
-Het dataformaat van een afbeelding (2D matrix met een RGB waarde voor elke pixel) is onpraktisch om te gebruiken in neurale netwerken, aangezien die gebruik maken van gevectoriseerde input. Er is dus nood aan een vectorrepresentatie van de gebruikte afbeeldingen. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk.
+Het dataformaat van een afbeelding (2D matrix met een RGB waarde voor elke pixel) is onpraktisch om te gebruiken in neurale netwerken, aangezien die algemeen gesproken gevectoriseerde input vragen. Er is dus nood aan een vectorrepresentatie van de gebruikte afbeeldingen. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN).
 
-Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \todo{ref VGGNet}. Dit netwerk maakt gebruik van 16 layers, bestaande uit groepen van convolutionele layers afgewisseld met max-pool layers. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2.
+Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \todo{ref VGGNet}. Dit netwerk maakt gebruik van 16 layers, wat ervoor zorgt dat er een extreem diep netwerk is, wat complexere verbanden kan leren. De lagen bestaan uit groepen van convolutionele layers afgewisseld met max-pool layers. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} \todo{Reference: afbeelding van wikimedia} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
 
 \begin{figure}[tb]
     \centering
@@ -18,14 +18,15 @@ Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \todo{r
     \label{fig:maxpool}
 \end{figure}
 
-De laatste layers van het netwerk zijn standaard (volledig verbonden) layers, gevolgd door een softmax layer om de output van het netwerk te normaliseren. Figuur \ref{fig:vggnet} toont een vereenvoudigde weergave van de architectuur van VGGNet.
+De laatste layers van het netwerk zijn standaard (volledig verbonden) layers, gevolgd door een softmax layer om de output van het netwerk te normaliseren. Figuur \ref{fig:alexvgg} toont een vereenvoudigde weergave van de architectuur van VGGNet, in vergelijking met het vroeger zeer populaire AlexNet \todo{reference naar paper voor afbeelding, en naar alexnet, vggnet}.
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=\linewidth]{Images/vgg16.PNG}
-    \caption{Globale structuur VGGNet met 16 layers}
-    \label{fig:vggnet}
+    \includegraphics[width=\linewidth]{Images/alex_vgg.eps}
+    \caption{Vergelijking van de architectuur van AlexNet en VGGNet}
+    \label{fig:alexvgg}
 \end{figure}
+
 
 De representatie die wordt gebruik door Karpathy is het resultaat van het netwerk voor de softmax layer wordt toegepast. Dit leidt tot een 4096-dimensionele vector, waarbij elke dimensie kan worden gezien als een bepaald concept dat al dan niet aanwezig is in de afbeelding. Deze dimensionaliteit is dezelfde voor alle afbeeldingen, als gevolg van een herschaling van de afbeeldingen tot een 512 op 512 pixel formaat vooraleer de vector wordt berekend.
 
@@ -110,12 +111,10 @@ De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k \tod
 
 \begin{figure}
     \centering
-    \begin{subfigure}[b]{0.47\textwidth}
-        \includegraphics[width=\textwidth]{Images/coco_example1.png}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.47\textwidth}
-        \includegraphics[width=\textwidth]{Images/coco_example2.png}
-    \end{subfigure}
+    \subfloat{
+        \includegraphics[width=0.47\linewidth]{Images/coco_example1.png}}\hfill
+    \subfloat{
+        \includegraphics[width=0.47\linewidth]{Images/coco_example2.png}}
     \caption{Voorbeelden van geannoteerde afbeeldingen uit MS COCO dataset. Elk gekleurd object behoort tot \'e\'en van de objectcategorie\"en gedefinieerd door de makers.}
     \label{fig:cocoexamples}
 \end{figure}
