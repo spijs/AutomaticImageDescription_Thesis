@@ -42,6 +42,8 @@ De berekende vector representatie van de afbeelding dient als input voor een rec
 \label{fig:rnntraining}
 \end{figure}
 
+Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. Er worden random afbeeldingen met 1 van de 5 bijhorende beschrijvingen aan het netwerk gegeven. De eerder vermeldde terugpropagatie zorgt voor de juiste aanpassing aan de gewichten. Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. Op basis van de BLEU-4 score (zie verder) berekend op de gegenereerde zinnen voor de validatieset bepalen we dan of er verbetering is sinds de vorige iteratie, en of de training al dan niet dient te stoppen. Eerder in het proces maakten we gebruik van de perplexity berekend op de validatie set, maar het blijkt dat een lagere validatieperplexity niet automatisch leidt tot een beter scorend systeem.
+
 Formeel gezien berekent het netwerk op basis van input vectors (woorden) $(x_1,x_2,...,x_T)$ een reeks van verborgen vectors $(h_1,h_2,...,h_t)$. Deze verborgen vectors dienen daarna als de basis voor output $(y_1,y_2,...,y_t)$. Deze outputs worden verkregen door formule \eqref{eq:rnn} te itereren voor $t = 1$ tot $T$.
 
 \begin{equation}
@@ -59,6 +61,8 @@ In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}, x_i$ en $b_h, b_o$ 
      h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + b_v)
 \label{eq:rnnfeedalways}
 \end{equation}
+
+
 
 Het genereren van captions gebeurt op basis van beam search. Hierbij wordt op basis van de afbeelding een ranking gemaakt van de meest waarschijnlijke eerste woorden voor de zin. De eerste $n$ woorden dienen dan als startpunt van de voorspelling van het tweede woord. Over alle mogelijke sets van twee woorden wordt opnieuw een rangschikking gemaakt, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin wordt gebruikt als eindresultaat.
 
@@ -131,7 +135,7 @@ Om de data bruikbaar te maken voor verwerking zijn de tekstbestanden uitgelezen,
 
 Op basis van de CCA-uitbreiding beschreven in sectie \ref{sub:stackedcca} berekenen we een geaugmenteerde versie van de afbeeldingen uit de Flickr30k dataset. De extra informatie uit de overeenkomsten tussen bounding boxes en frasen zit vervat in een eerste gemeenschappelijke CCA ruimte. Op basis van \todo{ref naar SAE paper} berekenen we een representatie van de trainingsafbeeldingen, waarin ook de informatie uit de Entities dataset aanwezig is.
 
-Aangezien de Entities dataset enorm groot is, was het nodig om een reductie van het aantal afbeeldingen uit te voeren. Deze reductie gebeurt op basis van de grootte van de bounding box. VGGNet vormt elke afbeelding om tot 512 bij 512 pixels alvorens de vectorrepresentatie te berekenen. Afbeeldingen van een te klein formaat leiden dus tot zeer verwrongen inputs voor VGGNet. Alle afbeeldingen kleiner dan 64 bij 64 pixels zijn dus weerhouden uit de dataset. Deze limiet is gebaseerd op het aspect van uitrekking, alsook het computationele aspect. Het is dus een afweging tussen in welke mate de vervorming optreedt en de limieten van haalbare grootte.
+Aangezien de Entities dataset enorm groot is, was het nodig om een reductie van het aantal afbeeldingen uit te voeren. Deze reductie gebeurt op basis van de grootte van de bounding box. Een deel van de bounding boxes zijn slechts enkele pixels hoog of breed, waardoor er amper informatie kan worden uit gehaald. Deze bounding boxes worden dus uit de dataset verwijderd. De limiet van zichtbaarheid en informatief zijn van een afbeelding staat ter discussie, maar wij hebben gekozen om alles kleiner dan 64 bij 64 pixels te verwijderen, wat resulteerde in 190,000 bounding boxes en corresponderende frases die we konden gebruiken. 
 
 Het berekenen van de CCA mapping tussen de bounding boxes en de frasen uit de Entities dataset verliep zonder problemen. De berekening van de augmentatie was ook probleemloos, maar tijdens het berekenen van de CCA mapping tussen de augmentaties van de Flickr30k foto's en hun beschrijvingen zijn we tot de conclusie gekomen dat het qua tijdsbestek onhaalbaar was om deze mapping te gebruiken in onze experimenten. 
 
