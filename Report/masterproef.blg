@@ -2,9 +2,9 @@ This is BibTeX, Version 0.99dThe top-level auxiliary file: masterproef.aux
 A level-1 auxiliary file: hst-inleiding.aux
 A level-1 auxiliary file: hst-probleem.aux
 A level-1 auxiliary file: hst-related.aux
-White space in argument---line 95 of file hst-related.aux
- : \citation{Xu
- :              Kul}
+White space in argument---line 31 of file hst-related.aux
+ : \citation{imagenet
+ :                    challenge}
 I'm skipping whatever remains of this command
 A level-1 auxiliary file: hst-theorie.aux
 A level-1 auxiliary file: hst-methodology.aux
@@ -36,11 +36,15 @@ Warning--I didn't find a database entry for "Devlin"
 Warning--I didn't find a database entry for "Kuznetsova"
 Warning--I didn't find a database entry for "Gupta"
 Warning--I didn't find a database entry for "Mason"
-Warning--I didn't find a database entry for "Xu"
+Warning--I didn't find a database entry for "Jia"
 Warning--I didn't find a database entry for "Yang"
 Warning--I didn't find a database entry for "Elliott"
+Warning--I didn't find a database entry for "Xu"
 Warning--I didn't find a database entry for "Karpathy1"
 Warning--I didn't find a database entry for "Donahue"
+Warning--I didn't find a database entry for "Vinyals"
+Warning--I didn't find a database entry for "karpathy2014deep"
+Warning--I didn't find a database entry for "baidu2014"
 Warning--I didn't find a database entry for "pratchett06:_good_omens"
 Warning--empty journal in Arge2015
 Warning--empty journal in Bernardi

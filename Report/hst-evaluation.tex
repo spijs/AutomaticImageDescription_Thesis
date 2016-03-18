@@ -86,12 +86,12 @@ Uiteindelijk worden alle matches gegeneraliseerd tot frase matches met een bepaa
 Score = (1 - Pen)*F_{mean}
 \end{equation} 
 \begin{equation}
-Pen = \gamma (\frac{ch}{m})^\theta \todo{is gamma een functie? of een constante? zelfde voor alfa}
+Pen = \gamma (\frac{ch}{m})^\theta 
 \end{equation}
 \begin{equation}
 F_{mean} = \frac{PR}{\alpha P + (1- \alpha)R}
 \end{equation}
-
+\todo{is gamma een functie? of een constante? zelfde voor alfa}
 Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gealigneerde unigrams ($m$) tussen kandidaat- en referentiezin.
 
 Wanneer er meerdere referenties zijn, bepaalt het maximum van de individuele scores voor elke referentie de score van de vertaling.
