@@ -18,7 +18,7 @@ Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig.
     \label{formule:neuron}
 \end{equation}
 
-Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk een verschillende transferfunctie kunnen gebruiken ($f_i$).
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk een verschillende transferfunctie $f_i$ kunnen gebruiken.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -55,7 +55,7 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 
 \paragraph{Feed Forward Netwerk}
 \label{par:concept}
-Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met tussen de input en output \'e\'en of meer verborgen lagen. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een output laag te gebruiken met meerdere knopen. \cite{Bishop:1995:NNP:525960}
+Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een output laag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netweken met een enkele output. \cite{Bishop:1995:NNP:525960}
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -140,7 +140,7 @@ De formule om de gewichten te updaten ziet er in het algemene geval uit als volg
 \begin{equation}
   w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)df_i\hat{h}_i
 \end{equation}
-Hierbij stelt $\sigma$ de learning rate voor. Hoe groter de learning rate, hoe groter de verandering in elke iteratie.
+Hierbij stelt $\sigma$ de learning rate voor. De learning rate bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
 Indien er een logistische transferfunctie wordt gebruikt geeft dit het volgende resultaat:
 \begin{equation}
     w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i

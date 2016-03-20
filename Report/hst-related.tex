@@ -1,19 +1,23 @@
 \chapter{Gerelateerd Werk}
 \label{hoofdstuk:related}
 Het automatisch genereren van beschrijvingen voor ongeziene afbeeldingen is een complex proces. Het combineert zowel computervisie (CV) als natuurlijke taalverwerking (NLP)\todo{moet dees in ne lijst van afkortingen ofzo? }. Vele modellen zijn al voorgesteld die telkens elementen uit beide onderzoeksvelden combineren. Daarom volgt er eerst een opdeling van de gerelateerde literatuur op basis van de gebruikte technieken in deze twee domeinen. 
+
 Dit onderzoeksdomein werd eerst niet beschouwd als generatieprobleem maar als opvraag- of retrievalprobleem. Hierbij zoekt een model naar de beste zin in een bestaande verzameling van zinnen op basis van de ingevoerde foto.\cite{Hodosh2013} Andere papers behandelen het probleem als een vertalingsprobleem naar analogie met automatisch vertalen. Hierbij gebruikt men een encoder-decoder framework waarbij de afbeelding als brontaal wordt beschouwd en het Engels als doeltaal.
+
 Dit hoofdstuk bevat een overzicht van de gebruikte technologie aan de computervisie en NLP kant voor het genereren van beschrijvingen. Daarnaast bespreken we de verschillende manieren waarop deze technologi\"en in de literatuur ge\"integreerd worden in \'e\'en model.
 
-\section{Afbeelding representaties}
+\section{Representatie van afbeeldingen}
 Alle huidige modellen gebruiken technieken uit computervisie om nuttige features af te leiden uit afbeeldingen. Features bevatten onder andere gedetecteerde acties, sc\`enes en objecten met hun attributen en relaties.\cite{Bernardi} Deze features vormen de basis voor een representatie van de afbeelding die als input dient voor het generatie (of retrieval) model. 
 
 Eerst volgt een bespreking van technieken die in het verleden zijn gebruikt. Daarna volgt een beschrijving van Convolutionele Neurale Netwerken (CNN), die in de meer recente literatuur veelvuldig voorkomen.
 
 
 \subsection{Oorspronkelijke CV modellen}
-De literatuur gebruikt meerdere technieken uit computervisie om nuttige features of eigenschappen af te leiden uit afbeeldingen. Features die in de vroegste papers over dit onderwerp voorkomen zijn bijvoorbeeld sc\`ene classificaties, object detecties en attribuut classifiers \cite{Farhadi2010,Yang2011,Patterson2014}. Concreet traint men modellen om voor elke afbeelding een bepaalde sc\`ene (bvb. restaurant, slaapkamer, keuken) af te leiden. Ook modellen die verschillende objecten detecteren en benoemen zijn hier van nut. Van zulke gevonden objecten kunnen classifiers ook nog nuttige attributen zoals kleur afleiden. Om zulke voorspellingen te doen gebruiken verschillende oudere papers bestaande classifiers en detectors zoals \cite{Felzenszwalb2008} Im2Text \cite{Ordonez2011} en GIST \cite{Oliva2006}. Ee\'n of meerdere van deze features kan dan rechtstreeks de representatie vormen van een afbeelding. Daarnaast vormen in enkele werken \cite{Farhadi2010,Yang2011,Li2011,Mitchell2012} deze features enkel de input voor abstracte afbeeldingsrepresentaties in de vorm van tupels. Deze tupels bevatten dan objecten, acties tussen objecten, sc\`ene types en/of ruimtelijke relaties.
+De literatuur gebruikt meerdere technieken uit computervisie om nuttige features of eigenschappen af te leiden uit afbeeldingen. Features die in de vroegste papers over dit onderwerp voorkomen zijn bijvoorbeeld sc\`ene classificaties, object detecties en attribuut classifiers \cite{Farhadi2010,Yang2011,Patterson2014}. Concreet traint men modellen om voor elke afbeelding een bepaalde sc\`ene (bvb. restaurant, slaapkamer, keuken) af te leiden. 
 
-Een andere manier om afbeeldingen te representeren zijn Visual Dependency Representations (VDR) zoals voorgesteld door \cite{Elliott2013}. Dit model werkt naar analogie met een afhankelijkheidsgrammatica in de taal. VDR's gebruiken een afhankelijkheidsgraaf om de ruimtelijke relaties tussen de objecten in een foto voor te stellen. Elke relatie tussen twee objecten krijgt dan een ruimtelijk positie als label. Mogelijke relaties zijn bijvoorbeeld \texttt{op, boven, onder, naast, ...} VDR's kunnen geleerd worden op basis van geannoteerde training data, automatisch met objectherkenning \cite{Elliott2015} of nog met andere informatie die in de abstracte sc\`ene zit. \cite{Gilberto2015} 
+Ook modellen die verschillende objecten detecteren en benoemen zijn hier van nut. Van zulke gevonden objecten kunnen classifiers ook nog nuttige attributen zoals kleur afleiden. Om zulke voorspellingen te doen gebruiken verschillende oudere papers bestaande classifiers en detectors zoals \cite{Felzenszwalb2008} Im2Text \cite{Ordonez2011} en GIST \cite{Oliva2006}. Ee\'n of meerdere van deze features kan dan rechtstreeks de representatie vormen van een afbeelding. Daarnaast vormen deze features in enkele werken \cite{Farhadi2010,Yang2011,Li2011,Mitchell2012} enkel de input voor abstracte afbeeldingsrepresentaties in de vorm van tupels. Deze tupels bevatten dan objecten, acties tussen objecten, sc\`ene types en/of ruimtelijke relaties.
+
+Een andere manier om afbeeldingen te representeren is het gebruik van Visual Dependency Representations (VDR) zoals voorgesteld door \cite{Elliott2013}. Dit model werkt naar analogie met een afhankelijkheidsgrammatica in de taal. VDR's gebruiken een afhankelijkheidsgraaf om de ruimtelijke relaties tussen de objecten in een foto voor te stellen. Elke relatie tussen twee objecten krijgt dan een ruimtelijk positie als label. Mogelijke relaties zijn bijvoorbeeld \texttt{op, boven, onder, naast, ...} Het leren van VDR's kan op basis van geannoteerde training data, automatisch met objectherkenning \cite{Elliott2015} of nog met andere informatie die in de abstracte sc\`ene zit. \cite{Gilberto2015} 
 
 \subsection{CV met behulp van neurale netwerken}
 Naast deze meer traditionele manieren om informatie uit afbeeldingen af te leiden, bieden neurale netwerken een alternatieve oplossing.
@@ -24,17 +28,24 @@ De gebruikte CNN's binnen het automatisch afbeeldingen beschrijven zijn netwerke
 
 Regionale CNN's vormen een variatie op CNN die het ook mogelijk om een afbeelding op te delen in verschillende interessante regio's. Hiermee is het mogelijk om voor elke regio een representatie te maken.\cite{Karpathy2015}\cite{Mitchell2015} 
 
-\section{Caption representaties}
+\section{Representatie van captions}
 Het is niet eenvoudig om rechtstreeks met zinnen als een geheel te werken. Om die redenen zijn er verschillende manieren om ook een zin op een alternatieve wijze voor te stellen.
 De meeste modellen vertrekken van een vector representatie voor individuele woorden. In de literatuur zijn er verschillende manieren om die woorden dan nog samen te voegen tot een zin.
 
 \subsection{Voorstellen van woorden}
- Een voorstelling van woorden als vector vergemakkelijkt enerzijds de verdere verwerking en kan anderzijds ook semantische informatie bevatten zoals bij bijvoorbeeld word2vec.\cite{Mikolov2013} 
- Een mogelijke tweede voorstelling is een one-hot encodering waarin elk woord wordt voorgesteld door een vector met als grootte het aantal woorden in het vocabularium. Deze vector is volledig 0 behalve op \'e\'en rij dat overeenkomt met het woord. Het is mogelijk om deze representatie verder uit breiden met een gewichtsmatrix om zo ook de semantische informatie van de woorden te leren. Deze gewichtsmatrix kan willekeurig worden ge\"initialiseerd of eerst worden geleerd op bestaande corpora.\cite{Lebret2013}\cite{Google}\cite{Mao2014a} Daarna kunnen de gekende woorden en zinnen uit de dataset de gewichten nog verfijnen.  Een andere mogelijkheid is om bestaande word embeddings te gebruiken zoals word2vec. Word2vec mapt ook elk woord op een vector, maar heeft enkele mooie eigenschappen. Zo mapt het bijvoorbeeld semantisch gelijkaardige woorden op nabijgelegen posities in de vectorruimte.\cite{mikolov} Deze voorgedefin\"ieerde vectoren hebben als nadeel dat niet voor elk woord uit de beschrijvingen een vector representatie beschikbaar is. Het is wel mogelijk om zelf deze vectoren te leren op basis van de eigen dataset.
+ Een voorstelling van woorden als vector vergemakkelijkt enerzijds de verdere verwerking en kan anderzijds ook semantische informatie bevatten zoals bij bijvoorbeeld \texttt{word2vec}.\cite{Mikolov2013} 
+ Een mogelijke tweede voorstelling is een one-hot encodering waarin elk woord wordt voorgesteld door een vector met als grootte het aantal woorden in het vocabularium. Deze vector is volledig 0 behalve op \'e\'en rij die overeenkomt met het woord. Het is mogelijk om deze representatie verder uit breiden met een gewichtsmatrix om zo ook de semantische informatie van de woorden te leren. Deze gewichtsmatrix kan willekeurig worden ge\"initialiseerd of eerst worden geleerd op bestaande corpora.\cite{Lebret2013}\cite{Google}\cite{Mao2014a} Daarna kunnen de gekende woorden en zinnen uit de dataset de gewichten nog verfijnen.  
+
+ Een andere mogelijkheid is om bestaande word embeddings te gebruiken zoals \texttt{word2vec}. Dat algoritme mapt ook elk woord op een vector, maar heeft enkele mooie eigenschappen. Zo mapt het bijvoorbeeld semantisch gelijkaardige woorden op nabijgelegen posities in de vectorruimte.\cite{mikolov} Deze voorgedefin\"ieerde vectoren hebben als nadeel dat niet voor elk woord uit de beschrijvingen een vector representatie beschikbaar is. Het is wel mogelijk om zelf deze vectoren te leren op basis van de gebruikte dataset.
+
  De meeste werken in de literatuur rapporteren dat one-hotcodering in combinatie met een te leren gewichtsmatrix betere resultaten oplevert. Daarnaast hebben sommige semantisch gelijkaardige woorden zoals kleuren gelijkaardige vectoren, terwijl deze in een afbeelding toch uitgesproken verschillend zijn.\cite{Karpathy2015}
  
  \subsection{Voorstellen van zinnen}
- Verschillende mogelijkheden bestaan om de zinnen voor te stellen wanneer de woordvectoren gekend zijn. Een eerste mogelijkheid gebruikt een afhankelijkheidsparser en stelt de zinnen voor als een volledige afhankelijkheidsboom.\cite{Socher}\todo{fix cite} \cite{Karpathy} gebruikt ook een afhankelijkheidsparser, maar probeert hier een verzameling van triplets uit te halen. Zo een triplet bestaat uit twee entiteiten die verbonden zijn door een actie. Een volgende mogelijkheid is om de woordvectoren op te tellen.\cite{Lebret}\todo{cite} Hierdoor gaat informatie uit de woordvolgorde wel verloren. Een vaak gebruikt taalmodel in de meer recente NLP-literatuur zijn Recurrente Neurale Netwerken (RNN).\cite{Mikolov2010} Dit zijn neurale netwerken die goed overweg kunnen met sequenti\"ele data zoals taal.\cite{Kiros} gebruikt  de verborgen lagen van een RNN zin samen met nog extra informatie over de zin zoals POS-tags als representatie. De meer recente modellen stellen een zin voor als de sequentie van de woordvectoren in die zin.
+ Verschillende mogelijkheden bestaan om de zinnen voor te stellen wanneer de woordvectoren gekend zijn. Een eerste mogelijkheid gebruikt een afhankelijkheidsparser en stelt de zinnen voor als een volledige afhankelijkheidsboom.\cite{Socher}\todo{fix cite} \cite{Karpathy} gebruikt ook een afhankelijkheidsparser, maar probeert hier een verzameling van triplets uit te halen. Zo een triplet bestaat uit twee entiteiten die verbonden zijn door een actie. 
+
+ Een volgende mogelijkheid is om de woordvectoren op te tellen.\cite{Lebret}\todo{cite} Hierdoor gaat informatie uit de woordvolgorde wel verloren. 
+
+ Een vaak gebruikt taalmodel in de meer recente NLP-literatuur zijn Recurrente Neurale Netwerken (RNN).\cite{Mikolov2010} Dit zijn neurale netwerken die goed overweg kunnen met sequenti\"ele data zoals taal.\cite{Kiros} gebruikt  de verborgen lagen van een RNN zin samen met nog extra informatie over de zin zoals POS-tags als representatie. De meer recente modellen stellen een zin voor als de sequentie van de woordvectoren in die zin.
  
 \section{Van afbeeldingsrepresentaties naar beschrijvingen}
 Verschillende methodes kunnen worden gebruikt om vanuit de representaties van de afbeelding en bijbehorende referentiezinnen een model te trainen dat in staat is om ongeziene afbeeldingen om te zetten tot correcte beschrijvingen. 
@@ -78,13 +89,13 @@ Recente state-of-the-art modellen uit het automatisch vertalen gebruiken mechani
 In de setting van het beschrijven van afbeeldingen komt dit dan neer op een mechanisme dat aangeeft welke regio's in de afbeelding belangrijk zijn. In de decoder zorgt dit aandachtsmechanisme voor een extra contextvector als input voor een neuraal netwerk. Dit aandachtsmodel geeft bovendien een mooie visuele voorstelling van waar het model bepaalde woorden ziet (figuur \ref{fig:attention-example}). Binnen het automatisch beschrijven van afbeeldingen bereiken deze modellen \todo{cite Xu en Jin} voorlopig de beste resultaten.
 
 
-% \begin{figure}[tb]
-% 	\centering
-% 	\includegraphics[width=\linewidth]{Images/good_Xu.pdf}
-% 	\caption{Voorbeelden van aandacht op correcte regio. (Wit in de afbeelding is de gefocuste regio, onderlijnde tekst is het overeenkomstige woord.)}
-% 	\label{fig:attention-example}
-% 		 \todo[inline]{cite Xu!}
-% \end{figure}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{Images/good_Xu.pdf}
+	\caption{Voorbeelden van aandacht op correcte regio. (Wit in de afbeelding is de gefocuste regio, onderlijnde tekst is het overeenkomstige woord.)}
+	\label{fig:attention-example}
+		 \todo[inline]{cite Xu!}
+\end{figure}
 
 
 
