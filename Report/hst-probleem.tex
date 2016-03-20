@@ -13,7 +13,7 @@ Het genereren van beschrijvingen is dicht gerelateerd aan andere, eerder onderzo
 
 Het automatisch herkennen van objecten in afbeeldingen vormt een van de meer onderzochte vraagstukken in het domein van computer vision. Zoals eerder gezegd, is er niet enkel nood aan algoritmes om vormen te detecteren in afbeeldingen, maar moet er ook een adequate labeling zijn. Een zeer gelijkaardig probleem is het classificeren van een volledige afbeelding, waarbij de hele afbeelding een label krijgt in plaats van de gedetecteerde objecten.
 
-De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: ``Genereer een vloeiende Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''. In het vervolg van deze masterproef proberen wij dan ook een oplossing aan te reiken voor dit complexe probleem. 
+De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: ``Genereer een vloeiende Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''. In het vervolg van deze masterproef proberen wij dan ook een oplossing aan te reiken voor dit complexe probleem.
 
 \section{Datasets}
 \label{sec:Datasets}
@@ -35,9 +35,9 @@ Deze dataset \todo{referenceeeeeee} is een uitbreiding van Flickr8k. In totaal z
 
 \paragraph{MS COCO}
 \label{par:MS COCO}
-De Microsoft Common Objects in COntext dataset(MS COCO) \todo{reference} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. De afbeeldingen zijn geselecteerd vanop \texttt{flickr.com}
+De Microsoft Common Objects in COntext dataset (MS COCO) \todo{reference} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. De afbeeldingen zijn geselecteerd vanop \texttt{flickr.com}
 
-MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Bijgevolg leiden ze ook tot minder interessante beschrijvingen. Non-iconische afbeeldingen brengen algemeen gezien een compositie van verschillende objecten en personen, gefotografeerd vanuit een niet-canonische hoek. Figuur \ref{fig:cocotypes} toont duidelijk het verschil tussen iconische en non-iconische afbeeldingen.
+MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Bijgevolg leiden ze ook tot minder interessante beschrijvingen. Non-iconische afbeeldingen brengen algemeen gezien een compositie van verschillende objecten en personen, gefotografeerd vanuit een niet-canonische hoek. MS COCO bevat voornamelijk niet-iconische afbeeldingen. Figuur \ref{fig:cocotypes} toont duidelijk het verschil tussen iconische en non-iconische afbeeldingen.
 
 \begin{figure}[tb]
     \centering
@@ -48,12 +48,12 @@ MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een o
 
 Een ander belangrijk deel van de COCO dataset zijn annotaties. Oudere datasets legden de focus op classificatie, bounding boxes en segmentatie, terwijl MS COCO probeert om elk belangrijk object op de foto te annoteren. De afbeeldingen zijn gebaseerd op een lijst van object categorie\"en en zijn specifiek geselecteerd om niet-iconische sc\`enes te bevatten.
 
-Het genereren van de beschrijvingen bij de foto's gebeurt met Amazon Mechanical Turk workers, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving. \todo{reference naar coco generation paper voor afbeelding} Op figuur \ref{fig:coco_ui} is te zien op welke wijze de proefpersonen een beschrijving moesten ingeven. 
+Het genereren van de beschrijvingen bij de foto's gebeurt met Amazon Mechanical Turk workers, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving. \todo{reference naar coco generation paper voor afbeelding} Op figuur \ref{fig:coco_ui} is te zien op welke wijze de proefpersonen een beschrijving moesten ingeven.
 
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.8\linewidth]{Images/coco_UI.PNG}
+    \includegraphics[width=0.8\linewidth]{Images/coco_UI.png}
     \caption{User interface voor het ingeven van afbeeldingsbeschrijvingen MS COCO}
     \label{fig:coco_ui}
 \end{figure}
