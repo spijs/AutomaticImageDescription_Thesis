@@ -5,18 +5,20 @@ Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aan
 \section{Neurale Netwerken}
 Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor de varianten die wij gebruiken. Daarna lichten we enkele meer complexe netwerken toe: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
 
+Algemeen gesproken dient een neuraal netwerk als een simulatie van menselijke hersenen. De structuur van een neuraal netwerk probeert de werking van de neuronen en synapsen in het menselijke brein na te bootsen. Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan in verbinding met elkaar en communiceren met elkaar door middel van elektrische potentiaal. Afhankelijk van de aan- of afwezigheid van potentiaal over de inkomende verbindingen transmit een neuron al dan niet een signaal naar het volgende neuron. Deze eenheden zijn zeer makkelijk softwarematig te simuleren.
+
 \subsection{Feed Forward Neurale Netwerken}
 \paragraph{Perceptron} % (fold)
 \label{par:perceptron}
 
-Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, gewijzigd met een transferfunctie $f$ (formule \ref{formule:neuron}).
+Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd met een transferfunctie $f$ (formule \ref{formule:neuron}).
 
 \begin{equation}
-    y = f(\sum\limits_{i=1}^{n}w_ix_i)
+    y = f(\sum\limits_{i=1}^{n}w_i x_i)
     \label{formule:neuron}
 \end{equation}
 
-Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs.
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk een verschillende transferfunctie $f_i$ kunnen gebruiken.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -31,11 +33,11 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
     %input neurons
     \foreach \name / \y in {1,...,5}
         \path[yshift=0.5cm]
-            node[input neuron] (I-\name) at (0,-\y cm) {};
+            node[input neuron] (I-\name) at (0,-\y cm){};
 
     %output neurons
     \foreach \name / \y in {1,...,3}
-        \node[output neuron] (O-\name) at (\layersep,-\y-0.5) {};
+        \node[output neuron] (O-\name) at (\layersep,-\y-0.5) {$f_{\name}$};
 
     %links
     \foreach \source in {1,...,5}
@@ -53,7 +55,7 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 
 \paragraph{Feed Forward Netwerk}
 \label{par:concept}
-Een feedforward neuraal netwerk is het eenvoudigste neurale netwerk. Het is een perceptron met tussen de input en output een aantal verborgen lagen. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). \cite{Bishop:1995:NNP:525960}
+Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een output laag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netweken met een enkele output. \cite{Bishop:1995:NNP:525960}
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -112,21 +114,25 @@ Een feedforward neuraal netwerk is het eenvoudigste neurale netwerk. Het is een 
 
 \paragraph{Training} % (fold)
 \label{par:training}
-Het trainen van een feedforward netwerk gebeurt meestal met een techniek die terugpropagatie heet. Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde output $\mathbf{\hat{y}}$ bij input $\mathbf{x}$:
+Het trainen van een feedforward netwerk gebeurt meestal met een techniek die terugpropagatie heet. Deze techniek maakt gebruik van de fout op de berekende output. Op basis van deze fout gebeuren er aanpassingen aan de gewichten in omgekeerde richting: eerst de gewichten van de laatste laag, dan de voorlaatste, \ldots 
+
+Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de waarden verborgen knopen $\mathbf{\hat{h}}$ en voorspelde outputvector $\mathbf{\hat{y}}$ bij inputvector $\mathbf{x}$:
 \begin{equation}
     \mathbf{\hat{h}} = f(\mathbf{Wx})
 \end{equation}
 \begin{equation}
     \boldsymbol{\hat{y}} = f(\boldsymbol{W'\hat{h}}) = f(\boldsymbol{\hat{h}'}) = f(\boldsymbol{W'f(\boldsymbol{Wx})})
 \end{equation}
-Waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen respectievelijk input en verborgen laag, en verborgen laag en output voorstellen. Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input en output gebeuren.
+waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen respectievelijk input en verborgen laag, en verborgen laag en output voorstellen. 
+
+Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte verborgen vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input en berekende output gebeuren.
 
 Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd door gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Hiervoor wordt de eerste afgeleide van de transferfunctie gebruikt:
 
 \begin{equation}
-df = \frac{d}{d\hat{h}'}f(\hat{h}')
+df = \frac{d}{d\hat{h_i}'}f(\hat{h_i}')
 \end{equation}
-In het geval van een logistische transferfunctie geeft dit volgende vector:
+In het geval van een logistische transferfunctie $f(x) = \frac{1}{1 + \mathrm e^{-x}}$ geeft dit volgende vector:
 \begin{equation}
   \mathbf{df} = \frac{d}{d\hat{h}'}\mathbf{\hat{y}} = \mathbf{\hat{y}}(1-\mathbf{\hat{y}})
 \end{equation}
@@ -134,7 +140,7 @@ De formule om de gewichten te updaten ziet er in het algemene geval uit als volg
 \begin{equation}
   w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)df_i\hat{h}_i
 \end{equation}
-Hierbij stelt $\sigma$ de learning rate voor. Hoe groter de learning rate, hoe groter de verandering in elke iteratie.
+Hierbij stelt $\sigma$ de learning rate voor. De learning rate bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
 Indien er een logistische transferfunctie wordt gebruikt geeft dit het volgende resultaat:
 \begin{equation}
     w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
@@ -152,7 +158,7 @@ Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzig
 \end{equation}
 
 Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}.
-Deze techniek wordt toegepast voor elk paar van inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen.
+Deze techniek wordt toegepast voor elk paar van inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen of naar complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
 % paragraph training (end)
 
 % RNN
