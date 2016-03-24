@@ -182,7 +182,7 @@ Na het berekenen van de representaties van afbeeldingen en zinnen worden de corr
 
 \section{gLSTM}
 \subsection{Guided LSTM}
-Guided Long Short Term Memory (gLSTM) is een recente uitbreiding van het LSTM model ge\"introduceerd door Jia et al. \todo{ref} In dit model extraheren ze eerst semantische informatie van elke afbeelding. Deze informatie dient dan als extra input of "gids" voor het LSTM-blok.
+Guided Long Short Term Memory (gLSTM) is een recente uitbreiding van het LSTM model ge\"introduceerd door Jia et al. \todo{ref} In dit model extraheren ze eerst semantische informatie van elke afbeelding. Deze informatie dient dan als extra input of ``gids'' voor het LSTM-blok.
 
 Na het bestuderen van bestaande LSTM-modellen ontdekten de auteurs dat de gegenereerde zinnen "semantische drift" vertonen. Dit wil zeggen dat naarmate de zin evolueert, de betekenis van volgende woorden steeds minder met de input-afbeelding te maken heeft. Ze vermoeden dat dit komt door twee tegenwerkende krachten. Enerzijds moet de zin de afbeelding beschrijven, anderzijds moet de zin passen in het taalmodel. Om die reden introduceren ze een semantische gids, die ervoor moet zorgen dat het model na enkele woorden op het juiste pad blijft. Dit gebeurt door aan woorden die semantisch verbonden zijn aan de afbeelding een positieve bias te geven.
 
