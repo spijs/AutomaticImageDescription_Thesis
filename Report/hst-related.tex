@@ -41,6 +41,7 @@ De meeste modellen vertrekken van een vector representatie voor individuele woor
  De meeste werken in de literatuur rapporteren dat one-hotcodering in combinatie met een te leren gewichtsmatrix betere resultaten oplevert. Daarnaast hebben sommige semantisch gelijkaardige woorden zoals kleuren gelijkaardige vectoren, terwijl deze in een afbeelding toch uitgesproken verschillend zijn.\cite{Karpathy2015}
  
  \subsection{Voorstellen van zinnen}
+ \todo{Voorstellen van zinnen paper Mikolov ook er nog bij?}
  Verschillende mogelijkheden bestaan om de zinnen voor te stellen wanneer de woordvectoren gekend zijn. Een eerste mogelijkheid gebruikt een afhankelijkheidsparser en stelt de zinnen voor als een volledige afhankelijkheidsboom.\cite{Socher2014} Karpathy\cite{Karpathy2014} gebruikt ook een afhankelijkheidsparser, maar probeert hier een verzameling van triplets uit te halen. Zo een triplet bestaat uit twee entiteiten die verbonden zijn door een actie. 
 
  Een volgende mogelijkheid is om de woordvectoren op te tellen.\cite{Lebret2013} Hierdoor gaat informatie uit de woordvolgorde wel verloren. 
@@ -64,46 +65,37 @@ Naast het rechtstreeks gebruiken van de beschrijvingen van de meest gelijkaardig
 Enkele werken proberen een gemeenschappelijke afbeelding-zin ruimte te leren zodat het mogelijk wordt om zowel de representatie van zinnen als afbeelding te mappen naar dezelfde ruimte. Dit laat toe om afbeeldingen en zinnen rechtstreeks te vergelijken met een afstandsmaat zoals bijvoorbeeld de cosinusgelijkenis. Dit is zeer nuttig voor onder andere image retrieval en sentence retrieval.\todo{afspreken wat juiste termen hier net zijn} Het leren van multimodale modellen kan onder andere met Canonical Correlation Analysis (CCA)\cite{Hodosh2013} en neurale netwerken. \cite{Mao2014,Karpathy2014,Kiros2013}
 
 \subsection{Template gebaseerd}
-Een volgende aanpak baseert zich op templates om zinnen te genereren. Op basis van de gebruikte afbeeldingsvoorstelling vult een algoritme de overeenstemmende voorgedefinieerde template in.\cite{Yang2011} Hiervoor is het dikwijls nodig om bijkomende complexe modellen te trainen zoals bijvoorbeeld bij\cite{Elliott2013}. Het nadeel van deze methode is dat de gegenereerde zinnen wel syntactisch correct zijn, maar dikwijls onnatuurlijk aanvoelen voor mensen. Om deze methode te verbeteren kunnen gegenereerde of vooraf gekende zinfragmenten helpen bij het recombineren van fragmenten om nieuwe beschrijvingen te genereren. \cite{Mitchell2012}\cite{Kuznetsova2012}
+Een volgende aanpak baseert zich op templates om zinnen te genereren. Op basis van de gebruikte afbeeldingsvoorstelling vult een algoritme de overeenstemmende voorgedefinieerde template in.\cite{Yang2011} Hiervoor is het dikwijls nodig om bijkomende complexe modellen te trainen zoals bijvoorbeeld bij\cite{Elliott2013}. Het nadeel van deze methode is dat de gegenereerde zinnen wel syntactisch correct zijn, maar dikwijls onnatuurlijk aanvoelen voor mensen. Om deze methode te verbeteren kunnen gegenereerde of vooraf gekende zinfragmenten helpen bij het recombineren van fragmenten om nieuwe beschrijvingen te genereren. \cite{Mitchell2012,Kuznetsova2012}
 
 \subsection{Neurale netwerken}
-De meest recente en best scorende modellen gebruiken echter neurale netwerken voor de generatie van nieuwe zinnen. Deze modellen zijn in staat om compleet nieuwe en voor mensen vlotte zinnen te produceren. Recurrente Neurale Netwerken (RNN) \ref{Mikolov} winnen in de literatuur aan populariteit als taalmodel. RNN's zijn in staat om sequenti\"ele data te genereren op basis van een zekere input. LSTM's (Long Short Term Memory) vormen een uitbreiding op de RNN's en houden informatie bij die ze gedurende een langere termijn kunnen bijhouden in een geheugencel. Beide modellen verwachten een sequentie van woordrepresentaties als input, maar kunnen ook uitgebreid worden met extra informatie. \cite{Kiros}\cite{Xu}\cite{Socher} \todo{Jia}
+De meest recente en best scorende modellen gebruiken neurale netwerken voor de generatie van beschrijvingen. Deze taalmodellen zijn in staat om compleet nieuwe en voor mensen vlotte zinnen te produceren. Recurrente Neurale Netwerken (RNN)\cite{Mikolov2010} winnen in de literatuur aan populariteit als taalmodel. RNN's zijn in staat om sequenti\"ele data te genereren op basis van een zekere input. LSTM's (Long Short Term Memory)\cite{SeppHochreiter1997} vormen een uitbreiding op de RNN's en houden informatie bij die ze gedurende een langere termijn kunnen bijhouden in een geheugencel. Beide modellen verwachten een sequentie van woordrepresentaties als input, maar kunnen ook uitgebreid worden met extra informatie als invoer. \cite{Kiros2014,Xu2015,Socher2014,Jin2015,Fernando2015} \todo{Hier concreter zijn misschien?}
 
-Een eerste verzameling van modellen met neurale netwerken volgen het encoder-decoder principe uit de automatische vertaling.\cite{Kiros} De encoder transformeert een afbeelding naar een gemeenschappelijke (multimodale) representatie. De decoder transformeert vervolgens deze multimodale representatie naar een zin in natuurlijke taal. Door het multimodale karakter van deze modellen is image en sentence retrieval ook mogelijk. Er bestaan zowel encoder-decoder modellen met LSTM's\cite{Kiros} als met RNN's\cite{Karpathy1}\cite{Mao}.
+Een eerste verzameling van modellen met neurale netwerken volgen het encoder-decoder principe uit de automatische vertaling.\cite{Kiros2014} De encoder transformeert een afbeelding naar een nieuwe (multimodale) representatie. De decoder transformeert vervolgens deze multimodale representatie naar een zin in natuurlijke taal. Door het multimodale karakter van deze modellen is image en sentence retrieval ook mogelijk.\todo{Uitleggen} Er bestaan zowel encoder-decoder modellen met LSTM's\cite{Kiros2014} als met RNN's\cite{Karpathy2014,Mao2014a}.
 
 Een tweede categorie gebruikt zowel de afbeeldingsrepresentatie als de sequentie van 
-woordrepresenties als input bij het trainen van het netwerk. Ook hier bestaan er modellen met LSTM \cite{Donahue,Vinyals} en RNN\cite{Karpathy}.
+woordrepresenties als input bij het trainen van het netwerk. Ook hier bestaan er modellen met LSTM \cite{Donahue2015,Google} en RNN\cite{Karpathy2015}. \todo{te vaag}
 
-Trainen van het netwerk gebeurt met terugpropagatie doorheen het netwerk. Het is mogelijk om de fouten ook verder door te propageren naar de gewichtsvectoren van de woordrepresentaties of naar de gewichten van een CNN.
-Alle neurale netwerken hebben een softmax als laatste laag. Deze laag zorgt ervoor dat het netwerk een kansverdeling genereert voor elk volgende woord.
-Het selecteren van het woord voor de generatie gebeurt met samplen of met beam search op deze verdeling. Zowel het begin als het einde van de zin wordt gekenmerkt met een specifiek stopwoord.
+Trainen van het netwerk gebeurt met terugpropagatie doorheen het netwerk. Het is mogelijk om de fouten ook verder door te propageren naar de gewichtsvectoren van de woordrepresentaties of naar de gewichten van een CNN. Die methode optimaliseert op die manier alle waarden op de gebruikte dataset, maar kan computationeel kostelijk zijn.
+Alle neurale netwerken hebben een softmax\todo{aanhalingstekens} als laatste laag. Deze laag zorgt ervoor dat het netwerk een kansverdeling genereert voor elk volgende woord.\todo{mss ook iets duidelijker nog?}
+Het selecteren van het woord voor de generatie gebeurt met samplen of met beam search op deze verdeling.\todo{Ook hier concreter?} Zowel het begin als het einde van de zin wordt gekenmerkt met een specifiek stopwoord.
 
 \subsection{Statistische taalmodellen}
+\todo[inline]{Misschien nog uitgebreider?}
 Naast de neurale netwerken behoren ook de statistische taalmodellen tot de best scorende modellen.
-Deze modellen proberen op basis van entropie een taal zo goed mogelijk te beschrijven. Zo leert \cite{Fang} een lijst met waarschijnlijke woorden uit de afbeeldingsrepresentatie en combineert deze met een uitgebreid taalmodel. Dit taalmodel is geleerd op basis van de beschrijvingen in de training data. In een volgende stap zoeken ze de zinnen die het meest waarschijnlijk zijn gegeven de woorden in de afbeelding. Vervolgens sorteren ze de gegeneerde zinnen op basis van een aantal additionele features. Dit model is net als de modellen met neurale netwerken in staat om nieuwe en vlotte zinnen te vormen. De prestatie is gelijkaardig aan die van de neurale netwerken.
+Deze modellen proberen op basis van entropie een taal zo goed mogelijk te beschrijven.\todo{wat is entropie etc?} Zo leert \cite{Mitchell2015} een lijst met waarschijnlijke woorden uit de afbeeldingsrepresentatie en combineert deze met een uitgebreid taalmodel. Dit taalmodel is geleerd op basis van de beschrijvingen in de training data. In een volgende stap zoeken ze de zinnen die het meest waarschijnlijk zijn gegeven de woorden in de afbeelding. Vervolgens sorteren ze de gegeneerde zinnen op basis van een aantal additionele features. Dit model is net als de modellen met neurale netwerken in staat om nieuwe en vlotte zinnen te vormen. De prestatie is gelijkaardig aan die van de neurale netwerken.
 
-Lebret \cite{Lebret} toonde bovendien aan dat ook met een veel eenvoudiger taalmodel toch redelijk goede resultaten kunnen worden bekomen. Dit model extraheert alle zinfragmenten (phrases)\todo{what word to use?} uit de training data en leert daarmee een eenvoudig 3-gram taalmodel. In tegenstelling tot alle voorgaande modellen gebeurt training van de multimodale transformatie met negatieve sampling. Ook hier gebeurt er nog een hersortering.
+Lebret \cite{Lebret2015} toonde bovendien aan dat ook met een veel eenvoudiger taalmodel toch redelijk goede resultaten kunnen worden bekomen. Dit model extraheert alle zinfragmenten (phrases)\todo{what word to use?} uit de training data en leert daarmee een eenvoudig 3-gram taalmodel. In tegenstelling tot alle voorgaande modellen gebeurt training van de multimodale transformatie met negatieve sampling. Ook hier gebeurt er nog een hersortering.
 
 \subsection{Aandachtgebaseerde modellen}
 Recente state-of-the-art modellen uit het automatisch vertalen gebruiken mechanismes die aandachtgebaseerd zijn. Concreet betekent dit dat de decoder zelf beslist welke stukken uit de zin meer aandacht vereisen.
-In de setting van het beschrijven van afbeeldingen komt dit dan neer op een mechanisme dat aangeeft welke regio's in de afbeelding belangrijk zijn. In de decoder zorgt dit aandachtsmechanisme voor een extra contextvector als input voor een neuraal netwerk. Dit aandachtsmodel geeft bovendien een mooie visuele voorstelling van waar het model bepaalde woorden ziet (figuur \ref{fig:attention-example}). Binnen het automatisch beschrijven van afbeeldingen bereiken deze modellen \todo{cite Xu en Jin} voorlopig de beste resultaten.
-
+In de setting van het beschrijven van afbeeldingen komt dit dan neer op een mechanisme dat aangeeft welke regio's in de afbeelding belangrijk zijn. In de decoder zorgt dit aandachtsmechanisme voor een extra contextvector als input voor een neuraal netwerk. Dit aandachtsmodel geeft bovendien een mooie visuele voorstelling van waar het model bepaalde woorden ziet (figuur \ref{fig:attention-example}). Binnen het automatisch beschrijven van afbeeldingen bereiken deze modellen\cite{Xu2015,Jin2015} voorlopig de beste resultaten.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/good_Xu.pdf}
-	\caption{Voorbeelden van aandacht op correcte regio. (Wit in de afbeelding is de gefocuste regio, onderlijnde tekst is het overeenkomstige woord.)}
+	\caption{Voorbeelden van aandacht op correcte regio. (Wit in de afbeelding is de gefocuste regio, onderlijnde tekst is het overeenkomstige woord.)\cite{Xu2015}}
 	\label{fig:attention-example}
-		 \todo[inline]{cite Xu!}
 \end{figure}
-
-
-
-
-
-
-
-
 
 %%% Local Variables: 
 %%% mode: latex
