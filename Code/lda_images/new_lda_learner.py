@@ -100,7 +100,7 @@ class LDANetworkLearner:
     '''
     def save_split_values(self, names, values, split):
         file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'
-                        +str(self.nbOfTopics)+'_'+split+'_'+str(self.hidden)+'.txt', 'w')
+                        +str(self.nbOfTopics)+'_'+split+'.txt', 'w')
         for i in range(len(names)):
             np.set_printoptions(suppress=True)
             prediction = values[i]
