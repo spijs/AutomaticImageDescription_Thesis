@@ -3,15 +3,15 @@
 Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aanpak zo goed mogelijk te begrijpen. Het bevat een beschrijving van de gebruikte neurale netwerken en van een aantal concepten uit de statistiek.
 
 \section{Neurale Netwerken}
-Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor de varianten die wij gebruiken. Daarna lichten we enkele meer complexe netwerken toe: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
-
 Algemeen gesproken dient een neuraal netwerk als een simulatie van menselijke hersenen. De structuur van een neuraal netwerk probeert de werking van de neuronen en synapsen in het menselijke brein na te bootsen. Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan in verbinding met elkaar en communiceren met elkaar door middel van elektrische potentiaal. Afhankelijk van de aan- of afwezigheid van potentiaal over de inkomende verbindingen transmit een neuron al dan niet een signaal naar het volgende neuron. Deze eenheden zijn zeer makkelijk softwarematig te simuleren.
+
+Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor de varianten die wij gebruiken. Daarna lichten we enkele meer complexe netwerken toe: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
 
 \subsection{Feed Forward Neurale Netwerken}
 \paragraph{Perceptron} % (fold)
 \label{par:perceptron}
 
-Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd met een transferfunctie $f$ (formule \ref{formule:neuron}).
+Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd met een transferfunctie $f$ (formule \ref{formule:neuron}). Typische voorbeelden van transferfuncties zijn de logistische functie en de hyperbolische tangensfunctie.
 
 \begin{equation}
     y = f(\sum\limits_{i=1}^{n}w_i x_i)
@@ -55,7 +55,7 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 
 \paragraph{Feed Forward Netwerk}
 \label{par:concept}
-Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een output laag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netweken met een enkele output. \cite{Bishop:1995:NNP:525960}
+Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een output laag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netweken met een enkele output. \cite{Bishop:1995:NNP:525960}\todo[inline]{bisshop boek citen}
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -116,14 +116,14 @@ Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. He
 \label{par:training}
 Het trainen van een feedforward netwerk gebeurt meestal met een techniek die terugpropagatie heet. Deze techniek maakt gebruik van de fout op de berekende output. Op basis van deze fout gebeuren er aanpassingen aan de gewichten in omgekeerde richting: eerst de gewichten van de laatste laag, dan de voorlaatste, \ldots 
 
-Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de waarden verborgen knopen $\mathbf{\hat{h}}$ en voorspelde outputvector $\mathbf{\hat{y}}$ bij inputvector $\mathbf{x}$:
+Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de waarden van de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde outputvector $\mathbf{\hat{y}}$ bij inputvector $\mathbf{x}$:
 \begin{equation}
     \mathbf{\hat{h}} = f(\mathbf{Wx})
 \end{equation}
 \begin{equation}
     \boldsymbol{\hat{y}} = f(\boldsymbol{W'\hat{h}}) = f(\boldsymbol{\hat{h}'}) = f(\boldsymbol{W'f(\boldsymbol{Wx})})
 \end{equation}
-waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen respectievelijk input en verborgen laag, en verborgen laag en output voorstellen. 
+waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen respectievelijk input en verborgen laag, en verborgen laag en output voorstellen. $f$ is telkens de transferfunctie. In deze formule is ze gelijk voor elke laag, maar er zijn verschillende functies mogelijk.
 
 Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte verborgen vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input en berekende output gebeuren.
 
@@ -212,7 +212,7 @@ LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het a
 % LDA
 \subsection{Latent Dirichlet Allocation}
 \todo[inline]{referentie naar Blei!}
-Latent Dirichlet Allocation is een generatief probabilistisch model voor discrete data. E\'en van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. Dit concept veronderstelt dat elk document een zekere kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben dan een kansverdeling over alle mogelijke woorden. Zo kan de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat worden geschreven als een som over alle verschillende onderwerpen (formule \ref{formule:lda}).
+Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch model voor discrete data. E\'en van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. Dit concept veronderstelt dat elk document een zekere kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben dan een kansverdeling over alle mogelijke woorden. Zo kan de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat worden geschreven als een som over alle verschillende onderwerpen (formule \ref{formule:lda}).
 \todo[inline]{Ofwel herschrijven ofwel uitbreiden, ik vind het niet zo duidelijk}
 \begin{equation}
     P(w_i | d_j) = \sum\limits_{k=0}^{n_{topics}}P(w_i|topic_k)P(topic_k|d_j)
