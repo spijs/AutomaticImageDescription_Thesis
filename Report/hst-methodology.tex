@@ -77,14 +77,19 @@ De gebruikte afbeeldingsrepresentatie is dezelfde als bij de RNN implementatie. 
 \paragraph{Van afbeelding naar beschrijving}
 De afbeeldingsvector dient als input voor een LSTM implementatie. Dit is, zoals eerder beschreven, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. De gebruikte formules, samen met theoretische verduidelijking van het concept, zijn te vinden in sectie \ref{sub:lstm}.
 
-De training van het netwerk verloopt net als bij de RNN implementatie. Op basis van de Flickr30k training set leert het netwerk, en bij elke volledige doorloop van de trainingset berekenen we de perplexity van de resultaten op de validatieset. Karpathy voorziet in zijn code ook de mogelijkheid om de $\tanh$ te berekenen van de geheugenwaarde van de cel alvorens de output te berekenen. 
+De training van het netwerk verloopt net als bij de RNN implementatie. Het netwerk leert op basis van de Flickr30k training set en bij elke volledige doorloop van de trainingset berekenen we de perplexity van de resultaten op de validatieset. Dit kan gebruikt worden als een criterium om de training stop te zetten. Verder in deze thesis beschrijven we een betere manier om te bepalen wanneer de training moet stoppen. 
 
-Het genereren van nieuwe beschrijvingen voor de testset gebeurt op exact dezelfde manier als bij RNN. Met beam search bepalen we de meest waarschijnlijke uitkomst van het netwerk.
+\todo[inline]{de volgende zin heb k hier gezet, maar het hoort ni echt ergens bij :P }
+Karpathy voorziet in zijn code ook de mogelijkheid om de hyperbolische tangens te berekenen van de geheugenwaarde van de cel alvorens de output te berekenen. 
+
+Het genereren van nieuwe beschrijvingen voor ongeziene foto's gebeurt op exact dezelfde manier als bij RNN. Met beam search bepalen we de meest waarschijnlijke uitkomst van het netwerk.
 
 
 
 \section{Latent Dirichlet Analysis}
-Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschrijvingen heeft een groot voordeel in de taak van het genereren van nieuwe beschrijvingen. Deze sectie beschrijft welk proces wij hebben gevolgd om op basis van LDA extra semantische informatie te verkrijgen om te verwerken in onze implementatie en hoe de evaluatie van dit proces verliep.
+Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschrijvingen heeft een groot voordeel in de taak van het genereren van nieuwe beschrijvingen. De topicverdelingen bevatten extra semantische informatie die zeer bruikbaar kunnen zijn voor het genereren van beschrijvingen.
+
+ Deze sectie beschrijft welk proces wij hebben gevolgd om op basis van LDA extra semantische informatie te verkrijgen om te verwerken in onze implementatie en hoe de evaluatie van dit proces verliep.
 
 \subsubsection{Berekening van topicverdeling}
 \label{subs:Berekening van topicverdeling}
@@ -189,9 +194,9 @@ Na het berekenen van de representaties van afbeeldingen en zinnen worden de corr
 \subsection{Guided LSTM}
 Guided Long Short Term Memory (gLSTM) is een recente uitbreiding van het LSTM model ge\"introduceerd door Jia et al. \todo{ref} In dit model extraheren ze eerst semantische informatie van elke afbeelding. Deze informatie dient dan als extra input of ``gids'' voor het LSTM-blok.
 
-Na het bestuderen van bestaande LSTM-modellen ontdekten de auteurs dat de gegenereerde zinnen "semantische drift" vertonen. Dit wil zeggen dat naarmate de zin evolueert, de betekenis van volgende woorden steeds minder met de input-afbeelding te maken heeft. Ze vermoeden dat dit komt door twee tegenwerkende krachten. Enerzijds moet de zin de afbeelding beschrijven, anderzijds moet de zin passen in het taalmodel. Om die reden introduceren ze een semantische gids, die ervoor moet zorgen dat het model na enkele woorden op het juiste pad blijft. Dit gebeurt door aan woorden die semantisch verbonden zijn aan de afbeelding een positieve bias te geven.
+Na het bestuderen van bestaande LSTM-modellen ontdekten de auteurs dat de gegenereerde zinnen ``semantische drift'' vertonen. Dit wil zeggen dat naarmate de zin evolueert, de betekenis van volgende woorden steeds minder met de input-afbeelding te maken heeft. Ze vermoeden dat dit komt door twee tegenwerkende krachten. Enerzijds moet de zin de afbeelding beschrijven, anderzijds moet de zin passen in het taalmodel. Om die reden introduceren ze een semantische gids, die ervoor moet zorgen dat het model na enkele woorden op het juiste pad blijft. Dit gebeurt door aan woorden die semantisch verbonden zijn aan de afbeelding een positieve bias te geven.
 
-Ze gebruiken vier verschillende semantische gidsen in hun experimenten. Als eerste model gebruiken ze een "retrieval-based" gids. Hierbij zoeken ze eerst naar zinnen die gerelateerd zijn aan de afbeelding. Vervolgens verzamelen ze daaruit de zinnen met de hoogste rang. Deze zinnen vormen dan de extra input.
+Ze gebruiken vier verschillende semantische gidsen in hun experimenten. Als eerste model gebruiken ze een ``retrieval-based'' gids. Hierbij zoeken ze eerst naar zinnen die gerelateerd zijn aan de afbeelding. Vervolgens verzamelen ze daaruit de zinnen met de hoogste rang. Deze zinnen vormen dan de extra input.
 Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de projectie van de afbeeldingsrepresentatie in de gemeenschappelijke ruimte. Daarna worden de dichtstbijzijnde geprojecteerde zinnen gezocht op basis van cosinusgelijkheid. Ook hier vormen de hoogst scorende zinnen de extra input.
 Een derde model gebruikt de CCA-projectie van de afbeelding in de gemeenschappelijke ruimte rechtstreeks als gids.
 Als laatste model gebruiken ze de afbeeldingsrepresentatie zelf als gids.
