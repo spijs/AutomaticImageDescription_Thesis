@@ -57,14 +57,16 @@ Formeel gezien berekent het netwerk op basis van input vectors (woorden) $(x_1,x
 \label{eq:rnn}
 \end{equation}
 
-In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}, x_i$ en $b_h, b_o$ parameters die het netwerk leert. $CNN_{\theta_c}(I)$ is de output van de laatste laag van VGGNet en $f$ is een activatiefunctie. De output komt overeen met een kansverdeling over de verschillende woorden uit de dataset. Er is ook \'e\'en extra dimensie toegevoegd voor het END symbool dat het einde van een zin aangeeft. Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvector het beste resultaat geeft. Om dit te verifieren hebben wij beide situaties vergeleken. Bij het gebruik van de afbeelding in elke stap verandert het tweede deel van formule \eqref{eq:rnn} in formule \eqref{eq:rnnfeedalways}.
+In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}$ en $b_h, b_o$ parameters die het netwerk leert. De $W_{xy}$ zijn gewichtsmatrices, terwijl $b_i$ bias vectoren zijn. $CNN_{\theta_c}(I)$ is de output van de laatste laag van VGGNet en $f$ is een activatiefunctie. De output komt overeen met een kansverdeling over de verschillende woorden uit de dataset. Er is ook \'e\'en extra dimensie toegevoegd voor het END symbool dat het einde van een zin aangeeft. 
+
+Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvector het beste resultaat geeft. Om dit te verifieren hebben wij beide situaties vergeleken. Bij het gebruik van de afbeelding in elke stap verandert het tweede deel van formule \eqref{eq:rnn} in formule \eqref{eq:rnnfeedalways}.
 
 \begin{equation}
      h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + b_v)
 \label{eq:rnnfeedalways}
 \end{equation}
 
-Het genereren van captions gebeurt op basis van beam search. Hierbij wordt op basis van de afbeelding een ranking gemaakt van de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de voorspelling van het tweede woord. Over alle mogelijke sets van twee woorden wordt opnieuw een rangschikking gemaakt, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin het eindresultaat vormt.
+Het genereren van captions gebeurt op basis van beam search. Hierbij wordt op basis van de afbeelding een ranking gemaakt van de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de voorspelling van het tweede woord. Over alle mogelijke sets van twee woorden wordt opnieuw een rangschikking gemaakt, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin het eindresultaat vormt. 
 
 \subsection{Long Short Term Memory Netwerk}
 \label{sec:lstm}
@@ -73,7 +75,7 @@ Een tweede implementatie die we gebruikt hebben als startpunt voor onze extensie
 De gebruikte afbeeldingsrepresentatie is dezelfde als bij de RNN implementatie. We gebruiken de 4096-dimensionale feature vectors berekend met VGGNet. 
 
 \paragraph{Van afbeelding naar beschrijving}
-De afbeeldingsvector dient als input voor een LSTM implementatie. Dit is, zoals eerder beschreven, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. De gebruikte formules, samen met verduidelijking, zijn te vinden in sectie \todo{reference naar sectie over LSTM}.
+De afbeeldingsvector dient als input voor een LSTM implementatie. Dit is, zoals eerder beschreven, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. De gebruikte formules, samen met theoretische verduidelijking van het concept, zijn te vinden in sectie \ref{sub:lstm}.
 
 De training van het netwerk verloopt net als bij de RNN implementatie. Op basis van de Flickr30k training set leert het netwerk, en bij elke volledige doorloop van de trainingset berekenen we de perplexity van de resultaten op de validatieset. Karpathy voorziet in zijn code ook de mogelijkheid om de $\tanh$ te berekenen van de geheugenwaarde van de cel alvorens de output te berekenen. 
 
@@ -154,14 +156,15 @@ Het berekenen van de CCA mapping tussen de bounding boxes en de frasen uit de En
 
 
 \section{Toevoeging van LDA topicverdeling aan RNN}
-De eerder berekende topicverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de topicverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt.
+De eerder berekende topicverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de topicverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnnldaonce} aan. De $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de topicverdeling.
 
 \begin{equation}
-    h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v +\mathbbm{1}{(t=1)} \odot W_lL
+    h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v +\color{red}{\mathbbm{1}{(t=1)} \odot W_lL}
+    \color{black}
     \label{eq:rnnldaonce}
 \end{equation}
 
-Er kan ook gekozen worden om de topicverdeling elke stap toe te voegen, wat leidt tot formule \eqref{eq:rnnldaall}. Het lijkt ons interessant om te experimenteren met het al dan niet altijd toevoegen van de topic informatie. Dit kan, in tegenstelling tot het steeds toevoegen van de afbeelding, een verbetering betekenen. De informatie uit de topicverdeling is afgeleid van de afbeelding, maar bevat informatie van een lagere dimensionaliteit. Het herhaaldelijk meegeven van de topic vector zorgt dat het netwerk elke stap de semantische informatie binnenkrijgt.
+Er kan ook gekozen worden om de topicverdeling elke stap toe te voegen, wat leidt tot formule \eqref{eq:rnnldaall}. Het lijkt ons interessant om te experimenteren met het al dan niet altijd toevoegen van de topic informatie. Dit kan, in tegenstelling tot het steeds toevoegen van de afbeelding, een verbetering betekenen. De informatie uit de topicverdeling is afgeleid van de afbeelding, maar bevat informatie van een lagere dimensionaliteit. Het herhaaldelijk meegeven van de topic vector zorgt dat het netwerk elke stap de semantische informatie binnenkrijgt. Voor een gedetailleerde beschrijving van de uitgevoerde experimenten, en een vergelijking tussen de verschillende settings verwijzen we u door naar hoofstuk \ref{cha:resultaten}.
 
 
 \begin{equation}
@@ -174,7 +177,9 @@ Er kan ook gekozen worden om de topicverdeling elke stap toe te voegen, wat leid
 \section{Canonical Correlation Analysis}
 Het toevoegen van extra semantische informatie kan gebeuren op verschillende manieren. Een eerste optie is LDA, zoals eerder beschreven. Er kan echter ook gebruik gemaakt worden van CCA. Waar LDA focust op het blootleggen van verbanden tussen de woorden uit de captions, berekent CCA een ruimte die tussen de afbeelding en de zin ligt.
 
-Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Met behulp van het eerder vernoemde VGGNet berekenen we de afbeeldingsvectoren voor de traininggset. De bijhorende zinnen worden voorgesteld door een tf-idf gewogen vector, zoals eerder beschreven. Belangrijk is dat alle zinnen apart worden beschouwd. Waar bij LDA de vij zinnen per afbeelding worden gereduceerd tot \'e\'en zin, blijven ze hier apart. Dit om ervoor te zorgen dat de mapping rekening houdt met de verschillende zinnen. Meer concreet houdt dit in dat elke foto maximaal gecorreleerd dient te zijn met vijf verschillende zinnen uit de trainingsset.
+Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Met behulp van het eerder vernoemde VGGNet berekenen we de afbeeldingsvectoren voor de traininggset. De bijhorende zinnen worden voorgesteld door een tf-idf gewogen vector, zoals eerder beschreven. Deze voorstelling is gebaseerd op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met de frequentie. Ten tweede is het gewicht invers gerelateerd aan het aantal documenten waar het in voorkomt. Een woord dat in alle documenten voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de documenten voorkomt.
+
+ Belangrijk is dat alle zinnen apart worden beschouwd. Waar bij LDA de vij zinnen per afbeelding worden gereduceerd tot \'e\'en zin, blijven ze hier apart. Dit om ervoor te zorgen dat de mapping rekening houdt met de verschillende zinnen, moest er sprake zijn van heel verschillende formuleringen van dezelfde concepten. Meer concreet houdt dit in dat elke foto maximaal gecorreleerd dient te zijn met vijf verschillende zinnen uit de trainingsset.
 
 Een deel van de rijkdom van de dataset gaat verloren als er gebruikt wordt gemaakt van een aaneensluiting van de verschillende zinnen. Bij LDA doet dit probleem zich niet voor, en is het zelfs beter om de zinnen bij elkaar te voegen, aangezien de topicverdeling per afbeelding wordt beoogd, en niet per zin. Synoniemen en afgeleiden worden beschouwd als deel van hetzelfde document, juist door de aaneensluiting van de zinnen.
 

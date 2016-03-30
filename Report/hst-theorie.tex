@@ -197,6 +197,7 @@ Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is
 
 % LSTM
 \subsection{Long Short Term Memory Neurale Netwerken}
+\label{sub:lstm}
 Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Op figuur \ref{fig:lstm} is te zien hoe een LSTM-blok er uitziet.\cite{Google}\cite{SeppHochreiter1997}
 
 \begin{figure}[tb]
@@ -206,7 +207,10 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
     \label{fig:lstm}
 \end{figure}
 
+\todo[inline]{hier nog formules toevoegen}
+
 LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken over een langere periode dan een gewone RNN informatie kan onthouden. Hierdoor is het mogelijk om sequenties met events die gescheiden zijn door een langere periode, te modelleren.
+
 
 \section{Statistiek}
 
@@ -236,7 +240,7 @@ Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van 
 Canonical Correlation Analysis (CCA) is een methode die gebruikt wordt om een covariantiematrix van twee datasets te berekenen. Dit houdt in dat er een projectie wordt gemaakt naar een gemeenschappelijke ruimte voor beide datasets. De projecties van overeenkomstige waarden zijn na berekening van de modellen maximaal gecorreleerd. In het onderzoek naar image captioning kan dit bijvoorbeeld leiden tot een multimodale mapping van afbeeldings- en beschrijvingsrepresentatie.
 \todo[inline]{Referentie voor CCA}
 
-Stacked Auxiliary Embedding \cite{Gong2014} kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
+Stacked Auxiliary Embedding \todo[inline]{cite!!} kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
 
 Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Uit de extra dataset volgt een eerste set van CCA projecties ($A$, $B$). Daarna volgt een projectie van de originele dataset ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$, resulterend in projecties $AX$ en $BY$. Vervolgens transformeren we $AX$ en $BY$ volgens de niet-lineaire functie $\phi(x)$, zoals voorgesteld in de originele paper.
 
