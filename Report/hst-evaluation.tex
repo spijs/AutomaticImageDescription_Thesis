@@ -8,7 +8,7 @@ Om verschillende systemen te kunnen vergelijken, moet er een manier zijn om de g
 
 Ideaal gezien beoordelen meerdere mensen elke zin om tot een betrouwbare evaluatie van beide eigenschappen te komen. Deze beoordeling kan bijvoorbeeld door een score te geven op de kwaliteit van elke zin. Een andere optie is om proefpersonen te laten oordelen of een automatisch gegenereerde zin beter, gelijkaardig of slechter is dan de overeenkomstige referentiezin. Het nadeel van elk van deze methodes is de nood aan meerdere proefpersonen die voor elke gebruikte methode of instelling van de netwerken, alle duizend zinnen van de validatieverzameling of de testverzameling moet beoordelen. Het is duidelijk dat dit een kostelijke operatie is. Daarvoor bieden automatische evaluatiealgoritmes een oplossing. Het nadeel van deze methodes is dat ze niet perfect overeenkomen met de menselijke evaluatie.
 
-In wat volgt bespreken we eerst twee algoritmes uit de computervertaling, namelijk BLEU en METEOR.\cite{Papineni2001,Denkowski2007a} Deze algoritmes zijn bruikbaar omdat de gegenereerde zinnen kunnen worden beschouwd als ``vertalingen'' van de afbeeldingen. Het is aangetoond dat de twee methodes correleren met menselijke evaluaties van gegenereerde zinnen. Van de gebruikte methodes heeft METEOR de hoogste correlatie. \cite{Elliott2014}
+In wat volgt bespreken we eerst twee algoritmes uit de computervertaling, namelijk BLEU en Meteor.\cite{Papineni2001,Denkowski2007a} Deze algoritmes zijn bruikbaar omdat de gegenereerde zinnen kunnen worden beschouwd als ``vertalingen'' van de afbeeldingen. Het is aangetoond dat de twee methodes correleren met menselijke evaluaties van gegenereerde zinnen. Van de gebruikte methodes heeft Meteor de hoogste correlatie. \cite{Elliott2014}
 Geen van beide algoritmes is echter perfect voor het meten van de kwaliteit.
 Om die reden bekijken we ook nog enkele statistieken van de gegenereerde zinnen om hieruit andere interessante fenomenen af te leiden.
 Als laatste onderdeel volgt een bespreking van een methode die de laatste twee jaar in onbruik is geraakt binnen dit onderzoeksdomein. Deze methode is gebaseerd op een rangschikking van zinnen en afbeeldingen. Deze rangschikking leidt tot een numerieke score voor de bekomen resultaten.
@@ -69,10 +69,10 @@ Candidate 2: \texttt{A man is going down a hill on his skis}
 \\
 
 
-METEOR is een evaluatiealgoritme met als doel het vermijden van dergelijke foute evaluaties.
+Meteor is een evaluatiealgoritme met als doel het vermijden van dergelijke foute evaluaties.
 
-\section{METEOR}
-Elliott et al.\cite{Elliott2014} toonden aan dat zeker unigram BLEU (B1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. METEOR is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen, correleert METEOR het beste met menselijke evaluatie.
+\section{Meteor}
+Elliott et al.\cite{Elliott2014} toonden aan dat zeker unigram BLEU (B1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. Meteor is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen, correleert Meteor het beste met menselijke evaluatie.
 
 \subsection{Algoritme}
 Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met de referenties en hiervan per zin een score te berekenen. Bij het berekenen van de score wordt net zoals bij BLEU gekeken naar de precisie. Daarnaast heeft in contrast met BLEU ook de recall een invloed. De paper bevat een implementatie in de vorm van een JAR-bestand, zodat er geen twijfel bestaat over het gebruik van het algoritme.
@@ -80,7 +80,7 @@ Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met 
 Concreet probeert het algoritme twee zinnen te aligneren met behulp van vier matchers. Als eerste is er een match wanneer de woordvormen exact dezelfde zijn. Als tweede is er een match wanneer met een Snowball Stemmer \cite{porter2001snowball} ``gestemde'' woorden gelijk zijn. Een derde matcher kijkt naar overeenkomsten in de WordNet synoniemenlijst van elk woord. \cite{Miller1990} Als laatste vormen frases een match wanneer ze in zogenoemde frasetabellen \todo{mss voorbeeldje van ne frasetabel dabei} voorkomen.
 Elke matcher heeft een bepaald gewicht. In de experimenten gebruiken we de standaardgewichten 0.85, 0.2 ,0.6 en 0.75.
 
-Uiteindelijk worden alle matches gegeneraliseerd tot frase matches met een bepaalde startpositie en eindlengte. Een van de doelen van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarnaast moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen. De uiteindelijke METEOR score bestaat dan uit de F-score vermenigvuldigd met een penalisatiefactor op basis van het aantal chunks.
+Uiteindelijk worden alle matches gegeneraliseerd tot frase matches met een bepaalde startpositie en eindlengte. Een van de doelen van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarnaast moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen. De uiteindelijke Meteor score bestaat dan uit de F-score vermenigvuldigd met een penalisatiefactor op basis van het aantal chunks.
 
 
 \begin{equation}
@@ -98,10 +98,10 @@ Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gea
 Wanneer er meerdere referenties zijn, bepaalt het maximum van de individuele scores voor elke referentie de score van de vertaling.
 
 \subsection{Gebruik en nadelen}
-Zoals al aangehaald toonden Elliott en Keller in 2014 al aan dat van de bestudeerde evaluatiemethodes METEOR de hoogste correlatie heeft met menselijke beoordelingen voor afbeeldingsbeschrijvingen. Om deze reden rappor
+Zoals al aangehaald toonden Elliott en Keller in 2014 al aan dat van de bestudeerde evaluatiemethodes Meteor de hoogste correlatie heeft met menselijke beoordelingen voor afbeeldingsbeschrijvingen. Om deze reden rappor
 teren wij ook de resultaten met dit algoritme. In de literatuur blijven BLEU-scores echter de meest gerapporteerde resultaten.
 
-Ondanks dat het het meest performante algoritme is, vertoont METEOR nog steeds slechts matige correlatie met menselijke beoordelingen. Verder onderzoek naar betere automatische evaluatie kan dus nuttig zijn. Daarnaast vereist het tabellen en synoniemenlijsten die niet voor elke taal beschikbaar zijn. Voor het Engels is deze informatie echter wel beschikbaar. 
+Ondanks dat het het meest performante algoritme is, vertoont Meteor nog steeds slechts matige correlatie met menselijke beoordelingen. Verder onderzoek naar betere automatische evaluatie kan dus nuttig zijn. Daarnaast vereist het tabellen en synoniemenlijsten die niet voor elke taal beschikbaar zijn. Voor het Engels is deze informatie echter wel beschikbaar. 
 
 
 \section{Extra informatie uit de gegenereerde zinnen}

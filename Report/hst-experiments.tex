@@ -10,6 +10,8 @@ We vermoeden echter dat Karpathy gebruik maakt van een brevity penalty \todo{quo
 
 De verschillende modellen zijn getraind met de volgende instellingen: leersnelheid 0.0001, type solver rmsprop, decay rate 0.999, epsilon smoothing 1e-8, batch-size 100, gradient clipping 5, dropout in encoder en decoder 0.5. \todo{Dit fixen :D}
 
+Tijdens het trainen van de modellen slaagt het systeem op vaste momenten het huidige netwerk op samen met de perplexity van de validatieset. Karpathy kiest als finaal model voor het netwerk met de beste perplexity. Uit enkele eenvoudige testen blijkt dat de perplexity slechts beperkt overeenkomt met de BLEU-score. Om die reden kiezen wij voor onze modellen het netwerk dat de beste BLEU-4 score op de validatieset heeft als finaal model voor elke configuratie.
+
 Beam search is het algoritme dat zorgt voor het genereren van de zinnen. In onze experimenten is de beam-grootte steeds 50.
 BLEU-scores (1-4), METEOR-scores en enkele statistieken dienen als evaluatiemetriek. Deze scores zijn berekend met behulp van steeds vijf referentiezinnen.
 
