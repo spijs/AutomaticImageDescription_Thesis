@@ -18,11 +18,11 @@ import sys
 def preprocess():
     dataset = "flickr30k"
     os.chdir("..")
-    dataprovider = getDataProvider(dataset)
+    dataprovider = getDataProvider(dataset, pert=1)
     os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     print "Reading Vocabulary..."
-    vocabulary = readVocabulary("training_dictionary.txt")
+    vocabulary = readVocabulary("training_dictionary_pert.txt")
     print "Done"
     print "Creating sentence vectors..."
     occurrences, idf, images = getOccurenceVectorsAndImages(vocabulary, img_sentence_pair_generator)
@@ -30,21 +30,21 @@ def preprocess():
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrences, idf)
     pair = image_sentence_matrix_pair(images, weightedVectors)
-    pair_file = open("imagesentencematrix.p", 'wb')
+    pair_file = open("imagesentencematrix_pert.p", 'wb')
     pickle.dump(pair, pair_file)
     pair_file.close()
 
 def create_mat_files():
     print "Loading data into memory"
-    load_from = open("imagesentencematrix.p", 'rb')
+    load_from = open("imagesentencematrix_pert.p", 'rb')
     matrixpair = pickle.load(load_from)
     load_from.close()
     images = np.array(matrixpair.images)
     print "Image dimensions " + str(images.shape)
     sentences = np.array(matrixpair.sentences)
     print "Sentence dimensions " + str(sentences.shape)
-    np.savetxt("sentences.txt", sentences)
-    np.savetxt("images.txt", images)
+    np.savetxt("sentences_pert.txt", sentences)
+    np.savetxt("images_pert.txt", images)
     # scipy.io.savemat('images.mat', {"images":images})
     # scipy.io.savemat('sentences.mat', {"sentences":sentences})
 
