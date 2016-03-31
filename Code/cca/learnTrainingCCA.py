@@ -22,7 +22,7 @@ def preprocess():
     os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     print "Reading Vocabulary..."
-    vocabulary = readVocabulary("training_dictionary.txt")
+    vocabulary = readVocabulary("training_dictionary_pert.txt")
     print "Done"
     print "Creating sentence vectors..."
     occurrences, idf, images = getOccurenceVectorsAndImages(vocabulary, img_sentence_pair_generator)
