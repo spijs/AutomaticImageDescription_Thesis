@@ -18,7 +18,7 @@ from data_provider import getDataProvider
 def main(params):
     dataset = params['dataset']
     os.chdir("..")
-    dataprovider = getDataProvider(dataset)
+    dataprovider = getDataProvider(dataset, pert = 1)
     os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     dict = {}
@@ -36,7 +36,7 @@ def main(params):
     for word in dict:
             if(dict[word] >= 5):
                 result[word]=dict[word]
-    f = open("training_dictionary.txt", "w+")
+    f = open("training_dictionary_pert.txt", "w+")
     for w in result.keys():
         f.writelines(w+'\n')
     print('finished')

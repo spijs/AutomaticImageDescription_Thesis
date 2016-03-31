@@ -18,7 +18,7 @@ import sys
 def preprocess():
     dataset = "flickr30k"
     os.chdir("..")
-    dataprovider = getDataProvider(dataset)
+    dataprovider = getDataProvider(dataset, pert=1)
     os.chdir("cca")
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
     print "Reading Vocabulary..."
