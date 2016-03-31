@@ -66,6 +66,8 @@ def remove_common_words(sentence,stopwords):
                 result.append(word.lower())
         return result
 
+
+
 ''' Parses the given arguments'''
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
