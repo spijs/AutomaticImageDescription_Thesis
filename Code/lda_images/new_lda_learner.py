@@ -11,10 +11,11 @@ import sys
 class LDANetworkLearner:
 
 
-    def __init__(self, dataset, nbOfTopics, rate,hidden,layers):
+    def __init__(self, dataset, nbOfTopics, rate,hidden,layers, pert):
         self.nbOfTopics=nbOfTopics
         self.dataset = dataset
-        self.dataprovider = getDataProvider(dataset)
+        self.dataprovider = getDataProvider(dataset, pert)
+        self.pert = pert
 
         # self.network = FeedForwardNetwork(4096,hidden , nbOfTopics, layers-1, rate)
         self.hidden = hidden
@@ -46,8 +47,11 @@ class LDANetworkLearner:
 
 
     def load_dist(self, split):
+        pert_str = ''
+        if self.pert:
+            pert_str ='_pert_'
         filename = 'lda_images/models/image_topic_distribution_' + self.dataset + 'top' + str(
-            self.nbOfTopics) + '_' + split + '.txt'
+            self.nbOfTopics) + '_' + split + pert_str +  '.txt'
         return self.create_dist_dict(filename)
 
     '''
@@ -99,8 +103,11 @@ class LDANetworkLearner:
     in an orderly manner
     '''
     def save_split_values(self, names, values, split):
+        pert_str = ''
+        if self.pert:
+            pert_str ='_pert'
         file = open('lda_images/models/image_topic_distribution_'+self.dataset+'_top'
-                        +str(self.nbOfTopics)+'_'+split+'.txt', 'w')
+                        +str(self.nbOfTopics)+'_'+split+ pert_str + '.txt', 'w')
         for i in range(len(names)):
             np.set_printoptions(suppress=True)
             prediction = values[i]
