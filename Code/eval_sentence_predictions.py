@@ -33,7 +33,7 @@ def main(params):
     os.system('mkdir -p ' + dump_folder)
     
   # fetch the data provider
-  dp = getDataProvider(dataset)
+  dp = getDataProvider(dataset, params['pert'])
   dp.load_topic_models(dataset, params['lda'])
 
   misc = {}
@@ -52,7 +52,10 @@ def main(params):
   all_candidates = []
 
   if params['cca']:
-    ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
+    pert_str = ''
+    if params['pert']:
+      pert_str = '_pert'
+    ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+pert_str+'.txt', delimiter = ',')
     misc['ccaweights'] = ccaweights
   else:
     ccaweights = None
@@ -128,6 +131,7 @@ if __name__ == "__main__":
   parser.add_argument('-d', '--dump_folder', type=str, default="", help='dump the relevant images to a separate folder with this name?')
   parser.add_argument('--lda', type=int, default = 0, help = 'number of topics to be used')
   parser.add_argument('--cca',dest='cca', type=int, default = 0, help = 'number of ccs to be used')
+  parser.add_argument('-pert', '--pert', dest='pert', type = int, default = 0, help = '=0 if you dont want to use perturbed dataset')
   parser.add_argument('--normalization', type=str, default=None, help='length normalization to be used')
 
   args = parser.parse_args()

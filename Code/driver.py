@@ -137,7 +137,7 @@ def main(params):
   #CCA
   if params['cca']:
       print 'loading cca weight matrix'
-      misc['ccaweights']= dp.load_cca_weights(params['cca'])
+      misc['ccaweights']= dp.load_cca_weights(params['cca'], params['pert'])
       
   # go over all training sentences and find the vocabulary we want to use, i.e. the words that occur
   # at least word_count_threshold number of times

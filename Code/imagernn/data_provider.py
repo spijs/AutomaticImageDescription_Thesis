@@ -78,8 +78,11 @@ class BasicDataProvider:
             self.topics = self.create_dist_dict(f, self.topics)
         print 'amount of topics', len(self.topics)
 
-    def load_cca_weights(self,nb_components):
-        return np.loadtxt('cca/imageprojection_'+str(nb_components)+'.txt', delimiter = ',')
+    def load_cca_weights(self,nb_components, pert = None):
+        pert_str = ''
+        if pert:
+            pert_str = '_pert'
+        return np.loadtxt('cca/imageprojection_'+str(nb_components)+pert_str+'.txt', delimiter = ',')
 
     def create_dist_dict(self, filename, dict):
         if os.path.isfile(filename):
