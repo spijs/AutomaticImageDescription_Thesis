@@ -17,6 +17,9 @@ class gLSTMGenerator:
     model = {}
     # Recurrent weights: take x_t, h_{t-1}, and bias unit
     # and produce the 3 gates and the input to cell signal
+    print "input size " + str(input_size)
+    print "hidden size " + str(hidden_size)
+    print "guide size " + str(guide_size)
     model['WLSTM'] = initw(input_size + hidden_size + 1 + guide_size, 4 * hidden_size)
     # Decoder weights (e.g. mapping to vocabulary)
     model['Wd'] = initw(hidden_size, output_size) # decoder
