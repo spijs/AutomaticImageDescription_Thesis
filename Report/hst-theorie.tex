@@ -3,9 +3,11 @@
 Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aanpak zo goed mogelijk te begrijpen. Het bevat een beschrijving van de gebruikte neurale netwerken en van een aantal concepten uit de statistiek.
 
 \section{Neurale Netwerken}
-Algemeen gesproken dient een neuraal netwerk als een simulatie van menselijke hersenen. De structuur van een neuraal netwerk probeert de werking van de neuronen en synapsen in het menselijke brein na te bootsen. Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan in verbinding met elkaar en communiceren met elkaar door middel van elektrische potentiaal. Afhankelijk van de aan- of afwezigheid van potentiaal over de inkomende verbindingen transmit een neuron al dan niet een signaal naar het volgende neuron. Deze eenheden zijn zeer makkelijk softwarematig te simuleren.
+Algemeen gesproken dient een neuraal netwerk als een simulatie van menselijke hersenen. De structuur van een neuraal netwerk probeert de werking van de neuronen en synapsen in het menselijke brein na te bootsen. Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan in verbinding met elkaar en communiceren met elkaar door middel van elektrische potentiaal. Afhankelijk van de aan- of afwezigheid van potentiaal over de inkomende verbindingen stuurt een neuron al dan niet een signaal door naar het volgende neuron. Deze eenheden zijn zeer makkelijk softwarematig te simuleren.
+Elk artificieel neuraal netwerk heeft een trainingsfase nodig waarin het de juiste gewichten leert. Na deze training kan het netwerk ongeziene input omvormen tot de juiste output.
 
-Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor de varianten die wij gebruiken. Daarna lichten we enkele meer complexe netwerken toe: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
+
+Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor een aantal gebruikte varianten. Daarna volgt een toelichting van enkele meer complexe netwerken: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
 
 \subsection{Feed Forward Neurale Netwerken}
 \paragraph{Perceptron} % (fold)
@@ -18,7 +20,7 @@ Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig.
     \label{formule:neuron}
 \end{equation}
 
-Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk een verschillende transferfunctie $f_i$ kunnen gebruiken.
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk een verschillende transferfunctie $f_i$ gebruiken.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -53,9 +55,9 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 \end{figure}
 
 
-\paragraph{Feed Forward Netwerk}
+\paragraph{Feedforward Netwerk}
 \label{par:concept}
-Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een output laag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netweken met een enkele output. \cite{Bishop:1995:NNP:525960}\todo[inline]{bisshop boek citen}
+Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output. \cite{Bishop:1995:NNP:525960} Daarnaast hoeft een knoop niet alle outputs van een vorige laag te gebruiken. Wanneer het niet volledig verbonden is, komt dit immers neer op een gewicht van 0 voor de niet-verbonden knopen.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -114,7 +116,7 @@ Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. He
 
 \paragraph{Training} % (fold)
 \label{par:training}
-Het trainen van een feedforward netwerk gebeurt meestal met een techniek die terugpropagatie heet. Deze techniek maakt gebruik van de fout op de berekende output. Op basis van deze fout gebeuren er aanpassingen aan de gewichten in omgekeerde richting: eerst de gewichten van de laatste laag, dan de voorlaatste, \ldots 
+Het trainen van een feedforward netwerk gebeurt meestal met een techniek die terugpropagatie heet. Deze techniek vergelijkt de verwachte output bij een gekende input met de berekende output. Op basis van dit verschil gebeuren er aanpassingen aan de gewichten in omgekeerde richting: eerst de gewichten van de laatste laag, dan de voorlaatste, \ldots 
 
 Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de waarden van de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde outputvector $\mathbf{\hat{y}}$ bij inputvector $\mathbf{x}$:
 \begin{equation}
@@ -127,7 +129,7 @@ waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen re
 
 Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte verborgen vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input en berekende output gebeuren.
 
-Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd door gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Hiervoor wordt de eerste afgeleide van de transferfunctie gebruikt:
+Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd met behulp van gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Hiervoor wordt de eerste afgeleide van de transferfunctie gebruikt:
 
 \begin{equation}
 df = \frac{d}{d\hat{h_i}'}f(\hat{h_i}')
@@ -140,14 +142,12 @@ De formule om de gewichten te updaten ziet er in het algemene geval uit als volg
 \begin{equation}
   w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)df_i\hat{h}_i
 \end{equation}
-Hierbij stelt $\sigma$ de learning rate voor. De learning rate bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
+Hierbij stelt $\sigma$ de leersnelheid (learning rate) voor. De leersnelheid bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
 Indien er een logistische transferfunctie wordt gebruikt geeft dit het volgende resultaat:
 \begin{equation}
     w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
 \end{equation}
-\todo[inline]{eerst algemene formule en dan logistische als voorbeeld? OK denk ik nu. mss nog wa meer fluff}
-\todo[inline]{sigma (= learning rate?) niet besproken OK nu denk ik}
-Vervolgens zorgt gradient descent voor een aanpassing van \myvector{\hat{h}}. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus \myvector{W} wordt gewijzigd zodat de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}} weergeeft:
+Vervolgens zorgt gradient descent voor een aanpassing van \myvector{\hat{h}}. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus wijzigt het algoritme \myvector{W} wordt zodat de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}} weergeeft:
 \todo[inline]{Misschien ergens kort gradient descent ofwel uitleggen ofwel referencen? REFERENCE TOEVOEGEN VOOR GRADIENT DESCENT}
 \begin{equation}
     \Delta h_i = \sum\limits_{j}(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)w'_{ji}
@@ -158,12 +158,35 @@ Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzig
 \end{equation}
 
 Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}.
-Deze techniek wordt toegepast voor elk paar van inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen of naar complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
+Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag. Een zelfde techniek maakt het trainen mogelijk van complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
 % paragraph training (end)
+
+\paragraph{Softmax}
+\todo{SCHRIJVEN}
+
+% CNN
+\subsection{Convolutionele Neurale Netwerken}
+\label{sec:CNN}
+Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch- ge\" inspireerde trainbare architectuur die invariante afbeeldingskarakteristieken kan leren.\cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{Ciresan2012}\cite{Zhou2015}
+
+Een CNN is een 'Deep Learning' architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een 'feature map' noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.\todo{types lagen verder uitdiepen?}
+
+Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau rechthoekige regio's uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
+
+E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een paper\cite{Krizhevsky2012a} die CNN's gebruikt voor het oplossen van de ImageNet challenge.\cite{Russakovsky2014}
+Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categori\"en. De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitten te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die op dezelfde en recentere wedstrijden nog betere resultaten bekomen.
+
+Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is publiek beschikbaar met behulp van Caffe\cite{Jia2014}. De feature maps van verschillende outputlagen van dit netwerk dienen als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de laatste laag voor de classificatielaag worden beschouwd als een representatievector voor de hele afbeelding. Output van de andere lagen is een representatie voor afbeeldingskenmerken op een niveau lager dan de volledige afbeelding.
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{Images/cnn.PNG}
+	\caption{Convolutioneel Neuraal Netwerk gebruikt door \cite{Krizhevsky2012a} voor classificatie van afbeeldingen}
+	\label{fig:AlexNet}
+\end{figure}
 
 % RNN
 \subsection{Recurrente Neurale Netwerken}
-Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen lagen. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over de verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.
+Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is dat de output van de vorige stap wordt teruggekoppeld naar de verborgen lagen. Op figuur \ref{fig:rnn} is te zien hoe een RNN ontrold wordt over verschillende tijdstippen. Dit zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.
 
 \begin{figure}[tb]
     \centering
@@ -174,31 +197,12 @@ Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neur
 
 Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om taal te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze encodering kan gebruik maken van one-hot codering, ze kan random zijn, of er kan gebruik gemaakt worden van word embeddings zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}. Deze codering zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
 
-% CNN
-\subsection{Convolutionele Neurale Netwerken}
-\label{sec:CNN}
-Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch- ge\" inspireerde trainbare architectuur die invariante afbeeldingskarakteristieken kan leren. \cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{Ciresan2012}\cite{Zhou2015}
-
-Een CNN is een 'Deep Learning' architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een 'feature map' noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding van alle mogelijke locaties van de input. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
-
-Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau kleine rechthoekjes uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
-
-E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een paper\cite{Krizhevsky2012a} die CNN's gebruikt voor het oplossen van de ImageNet challenge.\cite{Russakovsky2014}
-Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categori\"en. De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitten te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die op dezelfde en recentere wedstrijden nog betere resultaten bekomen.
-
-Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is publiek beschikbaar met behulp van Caffe\cite{Jia2014}. De feature maps van verschillende outputlagen van dit netwerk dienen als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de laatste laag voor de classificatielaag worden beschouwd als een representatievector voor de hele afbeelding. Output van andere lagen is een representatie voor lagere  afbeeldingskenmerken.
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth]{Images/cnn.PNG}
-    \caption{Convolutioneel Neuraal Netwerk gebruikt door \cite{Krizhevsky2012a} voor classificatie van afbeeldingen}
-	\label{fig:AlexNet}
-\end{figure}
-
+\todo{Heel stuk over problemen RNN en oplossingen zoals Relu's etc!!}
 
 % LSTM
 \subsection{Long Short Term Memory Neurale Netwerken}
 \label{sub:lstm}
-Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Op figuur \ref{fig:lstm} is te zien hoe een LSTM-blok er uitziet.\cite{Google}\cite{SeppHochreiter1997}
+Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Figuur \ref{fig:lstm} toont hoe een LSTM-blok er uitziet.\cite{Google}\cite{SeppHochreiter1997}
 
 \begin{figure}[tb]
     \centering
@@ -209,23 +213,23 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
 
 \todo[inline]{hier nog formules toevoegen !!!!}
 
-LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken over een langere periode dan een gewone RNN informatie kan onthouden. Hierdoor is het mogelijk om sequenties met events die gescheiden zijn door een langere periode, te modelleren.
+LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken over een langere periode dan een gewone RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk.
 
 
 \section{Statistiek}
 
 % LDA
 \subsection{Latent Dirichlet Allocation}
-\todo[inline]{referentie naar Blei!}
-Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch model voor discrete data. E\'en van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. Dit concept veronderstelt dat elk document een zekere kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben dan een kansverdeling over alle mogelijke woorden. Zo kan de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat worden geschreven als een som over alle verschillende onderwerpen (formule \ref{formule:lda}).
-\todo[inline]{Ofwel herschrijven ofwel uitbreiden, ik vind het niet zo duidelijk}
+Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch model voor discrete data. E\'en van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. Dit concept veronderstelt dat elk document een zekere kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben op hun beurt een kansverdeling over alle mogelijke woorden. Zo beschrijft formule \ref{formule:lda} de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat. 
+
 \begin{equation}
     P(w_i | d_j) = \sum\limits_{k=0}^{n_{topics}}P(w_i|topic_k)P(topic_k|d_j)
     \label{formule:lda}
 \end{equation}
 
 Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ word een kansverdeling over de onderwerpen gesampled per document ($\theta$), alsook een kansverdeling over de woorden voor elk onderwerp ($\phi$). Uit $\theta$ wordt voor elke positie $i$ in een document $j$ een onderwerp gesampled ($z_{ji}$). Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$. Trainen van een LDA model gebeurt met een Markov chain Monte Carlo algoritme zoals bijvoorbeeld Gibbs sampling, en leidt tot de verdelingen $\theta$ en $\phi$.
-\todo[inline]{misschien uitleg over dirichlet priors of een referentie}
+\todo[inline]{wat is mcmc/gibbs, wat zijn dirichlet priors?}
+\todo[inline]{Misschien hier ook al stilstaan bij hoe wij het net gebruiken? Van document naar topicverdeling}
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lda.png}
@@ -238,7 +242,7 @@ Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van 
 \subsection{Stacked Canonical Correlation Analysis}
 \label{sub:stackedcca}
 Canonical Correlation Analysis (CCA) is een methode die gebruikt wordt om een covariantiematrix van twee datasets te berekenen. Dit houdt in dat er een projectie wordt gemaakt naar een gemeenschappelijke ruimte voor beide datasets. De projecties van overeenkomstige waarden zijn na berekening van de modellen maximaal gecorreleerd. In het onderzoek naar image captioning kan dit bijvoorbeeld leiden tot een multimodale mapping van afbeeldings- en beschrijvingsrepresentatie.
-\todo[inline]{Referentie voor CCA}
+\todo[inline]{Referentie voor CCA} \todo{Iets over de training?, hoe wordt dit berekend?}
 
 Stacked Auxiliary Embedding \todo[inline]{cite!!} kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
 
