@@ -10,6 +10,19 @@ Dit hoofdstuk bevat een overzicht van de verschillende experimenten die zijn uit
 \section{Vergelijking met literatuur} % (fold)
 \label{sec:vergelijking_met_literatuur}
 
+\begin{table}
+	\begin{tabular}{llllll}
+		~                     & B1   & B2   & B3   & B4   & Meteor \\ \hline
+		Google NIC\cite{Google}            & 66.3 & 42.3 & 27.7 & 18.3 & ~      \\
+		gLSTM CCA + gauss\cite{Fernando2015}     & 64.6 & 44.6 & 30.5 & 20.6 & 17.91  \\
+		gLSTM CCA + polyn.\cite{Fernando2015}    & 59.8 & 41.3 & 29.3 & 19.2 & 18.58  \\
+		Xu attention\cite{Xu2015}         & 66.9 & 43.9 & 29.6 & 19.9 & 18.46  \\
+		Karpathy\cite{Karpathy2015}              & 57.3 & 36.9 & 24   & 15.7 & ~      \\
+		Attention+scenevector\cite{Jin2015} & \textbf{67}   & \textbf{47.5} & \textbf{33}   & \textbf{24.3} & \textbf{19.4}   \\
+	\end{tabular}
+	\label{table:results_literature}
+	\caption{Vergelijking van state-of-the-art resultaten met onze resultaten}
+\end{table}
 % section vergelijking_met_literatuur (end)
 
 \section{Ruisgevoeligheid van CCA en LDA} % (fold)
