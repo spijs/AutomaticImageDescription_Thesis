@@ -70,12 +70,13 @@ class BasicDataProvider:
 
     def load_topic_models(self,dataset,topics):
          # load the topic distributions into memory
-        pert_string =''
+        pert_string = train_string = ''
         if self.pert:
             pert_string = '_pert'
+            train_string = '_'
         topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
         self.topics = {}
-        train_file = topic_root+str(topics)+'_train'+pert_string+'.txt'
+        train_file = topic_root+str(topics)+'_train'+pert_string+train_string+'.txt'
         self.topics = self.create_dist_dict(train_file, self.topics)
         for split in ['test', 'val']:
             f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+pert_string+'.txt')
