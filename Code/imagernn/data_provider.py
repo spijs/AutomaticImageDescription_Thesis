@@ -12,6 +12,7 @@ class BasicDataProvider:
     def __init__(self, dataset, pert):
         print 'Initializing data provider for dataset %s...' % (dataset, )
         self.topics = None
+        self.pert= pert
         # !assumptions on folder structure
         self.dataset_root = os.path.join('data', dataset)
         self.image_root = os.path.join('data', dataset, 'imgs')
@@ -69,12 +70,15 @@ class BasicDataProvider:
 
     def load_topic_models(self,dataset,topics):
          # load the topic distributions into memory
+        pert_string =''
+        if self.pert:
+            pert_string = '_pert'
         topic_root = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'top')
         self.topics = {}
-        train_file = topic_root+str(topics)+'_train.txt'
+        train_file = topic_root+str(topics)+'_train'+pert_string+'.txt'
         self.topics = self.create_dist_dict(train_file, self.topics)
         for split in ['test', 'val']:
-            f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+'.txt')
+            f = os.path.join('lda_images/models/image_topic_distribution_'+dataset+'_top'+str(topics)+'_'+split+pert_string+'.txt')
             self.topics = self.create_dist_dict(f, self.topics)
         print 'amount of topics', len(self.topics)
 
