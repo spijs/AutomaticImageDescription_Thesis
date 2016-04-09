@@ -74,9 +74,9 @@
     function start() {
       myParam = location.search.split('data=')[1];
       if(! myParam){
-        myParam = 'result';
+        myParam = 'result_struct.json';
       }
-      loadDataset(myParam+'_struct.json');
+      loadDataset(myParam);
     }
 
     function writeHeader() {
