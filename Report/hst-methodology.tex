@@ -1,11 +1,18 @@
 \chapter{Methodologie}
-\todo[inline]{inleiding moet herschreven worden zodat effectief de structuur van heel het hoofdstuk er in zit - ongeveer gedaan}
-Dit hoofdstuk beschrijft hoe de eerder beschreven theoretische componenten samen een automatische generator van beschrijvingen kunnen vormen. Een eerste sectie handelt over een bestaande implementatie, dat het startpunt vormt van ons systeem. De volgende twee secties handelen over mogelijkheden om extra semantische informatie toe te voegen: LDA, het gebruik van de Flickr30k Entities dataset en CCA. Daarnaast beschrijft dit hoofdstuk ook uitvoerig de de toevoeging van deze informatie aan de bestaande netwerken. Enerzijds behandelt dit de toevoeging aan het eenvoudige RNN, anderzijds bespreekt het onze implementatie van het eerder vernoemde gLSTM netwerk zoals voorgesteld door Jia\cite{Jia2014}. De voorlaatste sectie beschrijft een normalisatiemethode voor beam-search zoals ook in dezelfde deze paper is beschreven. Het einde van dit hoofdstuk bespreekt nog een ander type van neuraal netwerk, dat de moeite waard was om te bekijken.
+
+Dit hoofdstuk beschrijft hoe de voorgaande theoretische componenten samen een automatische generator van afbeeldingsbeschrijvingen kunnen vormen. De eerste sectie behandelt een bestaande implementatie, die het startpunt vormt van het nieuwe systeem. De volgende secties bekijken uitbreidingen hierop samen met hun implementatie. 
+
+De meeste uitbreidingen hebben als doel om extra semantische informatie aan het taalmodel toe te voegen. Op deze manier blijft het model over kennis beschikken van de originele afbeelding. \todo{Waarom dit nuttig is etc. verdient volgens mij meer aandacht}Eerst volgt een bespreking van hoe het mogelijk is om semantische kennis te extraheren met behulp van LDA. De volgende sectie bespreekt de Flickr30k Entities dataset als een tweede mogelijke bron van informatie. CCA vormt een laatste manier waarin een multimodale vector deze informatie biedt.
+
+Vervolgens beschouwt dit hoofdstuk op welke wijze deze informatie kan bijdragen tot de twee gebruikte taalmodellen. Dit kan als vector rechtstreeks in het RNN of als een semantische gids in het LSTM-netwerk. 
+
+De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De voorlaatste sectie beschrijft een normalisatiemethode voor beam-search. Dit hoofdstuk sluit af met de implementatie van een ander type van neuraal netwerk, dat volgens de auteurs ervan veel veelbelovende eigenschappen heeft.
+
 
 \section{Startpunt implementatie} \todo{Betere titel}
 \todo[inline]{Dingen die ik nog mis:
 		batches, solver, rmsprop, checkpoints, Python}
-Het startpunt van onze implementatie is de code aangereikt door A. Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een implementatie van het recurrente neurale netwerk beschreven in \cite{Karpathy2015}, alsook een implementatie die gebaseerd is op het werk van Vinyals et al.\cite{Google}. Vertrekkende van deze code hebben wij een aantal extensies ge\"implementeerd. \todo{Laatste zin voelt beetje te informeel :p}
+Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een implementatie van het recurrente neurale netwerk beschreven in \cite{Karpathy2015}, alsook een implementatie die gebaseerd is op het werk van Vinyals et al.\cite{Google}. Vertrekkende van deze code hebben wij een aantal extensies ge\"implementeerd. \todo{Laatste zin voelt beetje te informeel :p}
 
 \subsection{Recurrent Neuraal Netwerk}
 Een eerste implementatie, dat ons startpunt vormt, is beschreven door Karpathy \cite{Karpathy2015}. Hij beschrijft een systeem dat op basis van een afbeelding een beschrijvende zin genereert. Dit gebeurt in twee stappen. Eerst wordt de afbeelding door middel van een CNN omgezet naar een vector representatie. Deze vector dient vervolgens als input voor een recurrent neuraal netwerk dat een grammaticaal correcte beschrijving genereert.
@@ -34,12 +41,12 @@ De laatste lagen van het netwerk zijn standaard (volledig verbonden) lagen, gevo
 \end{figure}
 
 
-De representatie die wordt gebruik door Karpathy is het resultaat van VGGNet voor het toepassen van de softmaxlaag. Dit leidt tot een 4096-dimensionele vector, waarbij elke dimensie kan worden gezien als een bepaald concept dat al dan niet aanwezig is in de afbeelding. Deze dimensionaliteit is dezelfde voor alle afbeeldingen, onafhankelijk van de grootte van de input. Dit komt door een herschaling alvorens de afbeeldingsvector te berekenen.
+De representatie die wordt gebruik door Karpathy is de output van VGGNet van de laag voor de softmaxlaag. Dit leidt tot een 4096-dimensionele vector, waarbij elke dimensie kan worden beschouwd als een bepaald concept dat al dan niet aanwezig is in de afbeelding. Deze dimensionaliteit is dezelfde voor alle afbeeldingen, onafhankelijk van de grootte van de input. Dit komt door een herschaling alvorens de afbeeldingsvector te berekenen.
 
 VGGNet is momenteel het best presterende CNN voor afbeeldingsrepresentatie. Wij gebruiken in ons systeem dan ook de afbeeldingsvectoren die berekend zijn met VGGNet. Het berekenen van deze vectoren kan met een implementatie in Caffe.\cite{Jia2014}.
 
 \paragraph{Woordrepresentatie}
-Voor het voorstellen van woorden stelt onder andere \todo{de juiste citen} vast dat het gebruik van word embeddings geen toegevoegd waarde brengt. Om die reden gebruikt Karpathy een one-hot encoding waarbij \'e\'en specifieke code behoort tot het start- en stopwoord. Vooraleer het woord als input dient, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix en een sommatie met een biasvector. Deze gewichtsmatrix en vector trainen mee tijdens de terugpropagatie van het netwerk. Op deze manier is het mogelijk dat semantische verbanden tussen de woordrepresentaties net als bij word embeddings, toch aanwezig zijn.
+Voor het voorstellen van woorden stelt onder andere \todo{de juiste citen} vast dat word embeddings geen toegevoegd waarde brengen. Om die reden gebruikt Karpathy een one-hot encoding waarbij \'e\'en specifieke code behoort tot het start- en stopwoord. Karpathy kiest ervoor om enkel woorden die meer dan vijf keer voorkomen te gebruiken in zijn model. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix en een sommatie met een biasvector. Deze gewichtsmatrix en vector trainen mee tijdens de terugpropagatie van het netwerk. Op deze manier is het mogelijk dat semantische verbanden tussen de woordrepresentaties net als bij word embeddings, toch aanwezig zijn.
 
 \paragraph{Van afbeelding naar beschrijving}
 De berekende vector representatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training voorspelt het netwerk het eerste woord op basis van de afbeeldingsvector en een speciale vector die de start van een zin voorstelt. Op basis hiervan voorspelt het model dan wat het volgende woord is. Dit proces herhaalt zich tot het einde van de zin bereikt is. Terugpropagatie op basis van stochastic gradient descent zorgt voor de juiste wijzigingen aan de gewichten van het netwerk. Een eenvoudige weergave van hoe het RNN een beschrijving genereert is te zien op figuur \ref{fig:rnntraining}.
@@ -178,6 +185,19 @@ Op basis van de CCA-uitbreiding beschreven in sectie \ref{sub:stackedcca} bereke
 Het berekenen van de CCA mapping tussen de bounding boxes en de frasen uit de Entities dataset verliep zonder problemen. De berekening van de augmentatie was ook probleemloos, maar tijdens het berekenen van de CCA mapping tussen de augmentaties van de Flickr30k foto's en hun beschrijvingen zijn we tot de conclusie gekomen dat het, door de hoge dimensionaliteit, qua tijdsbestek onhaalbaar was om deze mapping te gebruiken in onze experimenten. 
 
 
+
+\section{Canonical Correlation Analysis}
+Het toevoegen van extra semantische informatie kan gebeuren op verschillende manieren. Een eerste optie is LDA, zoals eerder beschreven. Er kan echter ook gebruik gemaakt worden van CCA. Waar LDA focust op het blootleggen van verbanden tussen de woorden uit de captions, berekent CCA een ruimte die tussen de afbeelding en de zin ligt.
+
+Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Het eerder vernoemde VGGNet berekent de afbeeldingsvectoren voor de traininggset. Een door tf-idf gewogen vector stelt de bijhorende zinnen voor, zoals eerder beschreven. Deze voorstelling is gebaseerd op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met het aantal keer dat het woord voorkomt in het document (term frequentie of tf). Ten tweede is het gewicht invers gerelateerd aan het aantal documenten waar het in voorkomt (inverse doucment frequentie of idf). Een woord dat in alle documenten voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de documenten voorkomt.
+
+Belangrijk is dat alle zinnen apart worden beschouwd. Waar bij LDA de vijf zinnen per afbeelding worden gereduceerd tot \'e\'en zin, blijven ze hier apart. Dit om ervoor te zorgen dat de mapping rekening houdt met de verschillende zinnen, moest er sprake zijn van heel verschillende formuleringen van dezelfde concepten. Meer concreet houdt dit in dat elke foto maximaal gecorreleerd dient te zijn met vijf verschillende zinnen uit de trainingsset.
+
+Een deel van de rijkdom van de dataset gaat verloren als er gebruikt wordt gemaakt van een aaneensluiting van de verschillende zinnen. Bij LDA doet dit probleem zich niet voor, en is het zelfs beter om de zinnen bij elkaar te voegen, angezien we \'e\'en topicverdeling per afbeelding beogen, en niet per zin. Synoniemen en afgeleiden worden beschouwd als deel van hetzelfde document, juist door de aaneensluiting van de zinnen.
+
+Na het berekenen van de representaties van afbeeldingen en zinnen volgt een berekening van de correlatiecomponenten. Dit gebeurt met de \texttt{MATLAB}-implementatie van het canonical correlation algoritme. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en beschrijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. Voor onze experimenten maken we enkel gebruik van de projectie voor afbeeldingen, aangezien Jia et al.\cite{Fernando2015} aantonen dat het gebruik van enkel de afbeeldingsprojectie de beste resultaten oplevert.
+
+
 \section{Toevoeging van LDA topicverdeling aan RNN}
 De eerder berekende topicverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de topicverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. De $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de topicverdeling.
 
@@ -195,18 +215,6 @@ Er kan ook gekozen worden om de topicverdeling elke stap toe te voegen, wat leid
     \label{eq:rnnldaall}
 \end{equation}
 
-
-
-\section{Canonical Correlation Analysis}
-Het toevoegen van extra semantische informatie kan gebeuren op verschillende manieren. Een eerste optie is LDA, zoals eerder beschreven. Er kan echter ook gebruik gemaakt worden van CCA. Waar LDA focust op het blootleggen van verbanden tussen de woorden uit de captions, berekent CCA een ruimte die tussen de afbeelding en de zin ligt.
-
-Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Het eerder vernoemde VGGNet berekent de afbeeldingsvectoren voor de traininggset. Een door tf-idf gewogen vector stelt de bijhorende zinnen voor, zoals eerder beschreven. Deze voorstelling is gebaseerd op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met het aantal keer dat het woord voorkomt in het document (term frequentie of tf). Ten tweede is het gewicht invers gerelateerd aan het aantal documenten waar het in voorkomt (inverse doucment frequentie of idf). Een woord dat in alle documenten voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de documenten voorkomt.
-
-Belangrijk is dat alle zinnen apart worden beschouwd. Waar bij LDA de vijf zinnen per afbeelding worden gereduceerd tot \'e\'en zin, blijven ze hier apart. Dit om ervoor te zorgen dat de mapping rekening houdt met de verschillende zinnen, moest er sprake zijn van heel verschillende formuleringen van dezelfde concepten. Meer concreet houdt dit in dat elke foto maximaal gecorreleerd dient te zijn met vijf verschillende zinnen uit de trainingsset.
-
-Een deel van de rijkdom van de dataset gaat verloren als er gebruikt wordt gemaakt van een aaneensluiting van de verschillende zinnen. Bij LDA doet dit probleem zich niet voor, en is het zelfs beter om de zinnen bij elkaar te voegen, angezien we \'e\'en topicverdeling per afbeelding beogen, en niet per zin. Synoniemen en afgeleiden worden beschouwd als deel van hetzelfde document, juist door de aaneensluiting van de zinnen.
-
-Na het berekenen van de representaties van afbeeldingen en zinnen volgt een berekening van de correlatiecomponenten. Dit gebeurt met de \texttt{MATLAB}-implementatie van het canonical correlation algoritme. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en beschrijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. Voor onze experimenten maken we enkel gebruik van de projectie voor afbeeldingen, aangezien Jia et al.\cite{Fernando2015} aantonen dat het gebruik van enkel de afbeeldingsprojectie de beste resultaten oplevert.
 
 \section{gLSTM}
 \subsection{Guided LSTM}
@@ -234,7 +242,7 @@ m_l & = & o_l' \odot c_l'
 \label{glstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
-
+\todo{Formules bij LSTM zelf + meer uitleg bij gebruikte dinges}
 Hierbij is $g$ de vectorvoorstelling van de semantische informatie. De gids is onafhankelijk van de tijdstap en werkt dus globaal voor elke afbeelding. Figuur \ref{fig:glstm} geeft een visuele voorstelling van de gLSTM-blok.
 
 \begin{figure}[tb][h]
