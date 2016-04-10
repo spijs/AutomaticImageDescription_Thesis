@@ -11,18 +11,17 @@ De laatste twee secties bespreken nog twee toevoegingen die geen semantische inf
 
 \section{Startpunt implementatie} \todo{Betere titel}
 \todo[inline]{Dingen die ik nog mis:
-		batches, solver, rmsprop, checkpoints, Python}
-Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een implementatie van het recurrente neurale netwerk beschreven in \cite{Karpathy2015}, alsook een implementatie die gebaseerd is op het werk van Vinyals et al.\cite{Google}. Vertrekkende van deze code hebben wij een aantal extensies ge\"implementeerd. \todo{Laatste zin voelt beetje te informeel :p}
+		batches, solver, rmsprop, checkpoints}
+Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python implementatie van het recurrente neurale netwerk beschreven in \cite{Karpathy2015}, alsook een implementatie die gebaseerd is op het werk van Vinyals et al.\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
 
 \subsection{Recurrent Neuraal Netwerk}
-Een eerste implementatie, dat ons startpunt vormt, is beschreven door Karpathy \cite{Karpathy2015}. Hij beschrijft een systeem dat op basis van een afbeelding een beschrijvende zin genereert. Dit gebeurt in twee stappen. Eerst wordt de afbeelding door middel van een CNN omgezet naar een vector representatie. Deze vector dient vervolgens als input voor een recurrent neuraal netwerk dat een grammaticaal correcte beschrijving genereert.
+Een eerste implementatie, die ons startpunt vormt, is beschreven door Karpathy \cite{Karpathy2015}. Hij beschrijft een systeem dat op basis van een afbeelding een beschrijvende zin genereert. Dit gebeurt in twee stappen. Eerst wordt de afbeelding door middel van een CNN omgezet naar een vector representatie. Deze vector dient vervolgens als input voor een recurrent neuraal netwerk dat een grammaticaal correcte beschrijving genereert.
 
 \paragraph{Afbeeldingsrepresentatie}
 
-\todo[inline]{Heel deze redenering slaagt op ni veel? dataformaat werkt ni goe voor neurale netwerken, dus gebruiken we een NEURAAL NETWERK om da om te vormen?}
-Het dataformaat van een afbeelding (2D matrix met een RGB waarde voor elke pixel) is onpraktisch om te gebruiken in neurale netwerken. Deze verwachten normaal gesproken vectoren als input. Er is dus nood aan een vectorrepresentatie van de gebruikte afbeeldingen. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN), zoals beschreven in \ref{sec:CNN}
+Een afbeelding (2D matrix met een RGB waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN), zoals beschreven in \ref{sec:CNN}
 
-Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} \todo{Reference: afbeelding van wikimedia} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
+Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} \todo{Reference: \url{https://en.wikipedia.org/wiki/Convolutional_neural_network#/media/File:Max_pooling.png}} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
 
 \begin{figure}[tb]
     \centering
@@ -46,7 +45,7 @@ De representatie die wordt gebruik door Karpathy is de output van VGGNet van de 
 VGGNet is momenteel het best presterende CNN voor afbeeldingsrepresentatie. Wij gebruiken in ons systeem dan ook de afbeeldingsvectoren die berekend zijn met VGGNet. Het berekenen van deze vectoren kan met een implementatie in Caffe.\cite{Jia2014}.
 
 \paragraph{Woordrepresentatie}
-Voor het voorstellen van woorden stelt onder andere \todo{de juiste citen} vast dat word embeddings geen toegevoegd waarde brengen. Om die reden gebruikt Karpathy een one-hot encoding waarbij \'e\'en specifieke code behoort tot het start- en stopwoord. Karpathy kiest ervoor om enkel woorden die meer dan vijf keer voorkomen te gebruiken in zijn model. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix en een sommatie met een biasvector. Deze gewichtsmatrix en vector trainen mee tijdens de terugpropagatie van het netwerk. Op deze manier is het mogelijk dat semantische verbanden tussen de woordrepresentaties net als bij word embeddings, toch aanwezig zijn.
+Voor het voorstellen van woorden stelt onder andere \todo{de juiste citen} vast dat word embeddings geen toegevoegd waarde brengen. Om die reden gebruikt Karpathy een one-hot encoding waarbij \'e\'en specifieke code behoort tot het start- en stopwoord. Karpathy kiest ervoor om enkel woorden die meer dan vijf keer voorkomen te gebruiken in zijn model. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix en een sommatie met een biasvector. Deze gewichtsmatrix en vector trainen mee tijdens de terugpropagatie van het netwerk. Op deze manier is het mogelijk dat semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig zijn.
 
 \paragraph{Van afbeelding naar beschrijving}
 De berekende vector representatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training voorspelt het netwerk het eerste woord op basis van de afbeeldingsvector en een speciale vector die de start van een zin voorstelt. Op basis hiervan voorspelt het model dan wat het volgende woord is. Dit proces herhaalt zich tot het einde van de zin bereikt is. Terugpropagatie op basis van stochastic gradient descent zorgt voor de juiste wijzigingen aan de gewichten van het netwerk. Een eenvoudige weergave van hoe het RNN een beschrijving genereert is te zien op figuur \ref{fig:rnntraining}.
@@ -61,7 +60,7 @@ De berekende vector representatie van de afbeelding dient als input voor een rec
 Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. 
 Op basis van een willekeurig gekozen afbeelding uit de trainingsset berekent het netwerk de beste zin. Het verschil tussen deze voorspelling en de correcte zin propageert terug door het netwerk en leidt tot de juiste aanpassing van de gewichten
 
- Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexity berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. \todo[inline]{Bij experimenten beschrijven hoe we de beste kiezen}
+Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexity berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Het systeem slaagt de tussentijdse resultaten op onder de vorm van checkpoints. Deze checkpoints bevatten alle nodige parameters om het opgeslagen model te evalueren. Er is ook de mogelijkheid om de training van het netwerk verder te zetten vanaf een bepaald checkpoint. \todo[inline]{Bij experimenten beschrijven hoe we de beste kiezen}
 
 De code van Karpathy voorziet ook de optie om gebruik te maken van ReLu encoders, deze werken volgens formule $ReLu(x) = max(x,0)$. Er is ook de optie om te kiezen hoe groot de verborgen laag van het RNN moet zijn, alsook de optie om de afbeeldingsrepresentatie al dan niet elke stap toe te voegen.
 
@@ -86,7 +85,9 @@ Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvec
 \end{equation}
 
 \todo{Dit is niet echt hoe het werkt}
-Het genereren van beschrijvingen gebeurt op basis van beam search. Hierbij bepaalt de output van het netwerk de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de voorspelling van het tweede woord. Alle mogelijke opeenvolgingen van twee woorden leiden tot een nieuwe rangschikking, waarvan de $n$ beste resultaten worden bijgehouden. Dit proces herhaalt zich tot elke vertakking van de zoekboom is onderzocht, waarna de beste gegenereerde zin het eindresultaat vormt. 
+\todo{nu wel denk ik? }
+Het genereren van beschrijvingen gebeurt op basis van beam search. Hierbij bepaalt de output van het netwerk de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de volgende iteratie. Op basis van deze woorden genereert het systeem alle mogelijke opeenvolgingen van twee woorden en voegt deze toe aan de lijst met zinnen bestaande uit \'e\'en woord. Het algoritme gaat door met de $n$ meest waarschijnlijke combinaties, die dus kunnen bestaan uit \'e\'en of twee woorden. Dit proces herhaalt zicht tot alle zinnen een END symbool voorspellen en dus volledig zijn, of tot een maximaal aantal iteraties bereikt is. 
+ 
 
 \subsection{Long Short Term Memory Netwerk}
 \label{sec:lstm}
@@ -97,10 +98,10 @@ De gebruikte afbeeldingsrepresentatie is dezelfde als bij de RNN implementatie. 
 \paragraph{Van afbeelding naar beschrijving}
 Anders dan het RNN van Karpathy, wordt de afbeeldingsrepresentatie beschouwd als het eerste woord in de zin. Daarnaast gebruikt het een LSTM als taalmodel, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. De gebruikte formules, samen met theoretische verduidelijking van het concept, zijn te vinden in sectie \ref{sub:lstm}.
 
-De training van het netwerk verloopt net als bij de RNN implementatie. Het netwerk leert op basis van de Flickr30k training set en bij elke volledige doorloop van de trainingset berekenent de software de perplexity van de resultaten op de validatieset. Dit kan dienen als een criterium om de training stop te zetten. Verder in deze thesis beschrijven we een betere manier om te bepalen wanneer de training moet stoppen.\todo{laatste zin zou k anders doen}
+De training van het netwerk verloopt net als bij de RNN implementatie. Het netwerk leert op basis van de Flickr30k training set en bij elke volledige doorloop van de trainingset berekenent de software de perplexity van de resultaten op de validatieset. Dit kan dienen als een criterium om de training stop te zetten. Voor een betere criterium om de training te stoppen verwijzen we u door naar hoofdstuk \ref{cha:experimenten} dat de experimenten in detail beschrijft. %Verder in deze thesis beschrijven we een betere manier om te bepalen wanneer de training moet stoppen.\todo{laatste zin zou k anders doen}
 
 \todo[inline]{de volgende zin heb k hier gezet, maar het hoort ni echt ergens bij :P }
-Karpathy voorziet in zijn code ook de mogelijkheid om de hyperbolische tangens te berekenen van de geheugenwaarde van de cel alvorens de output te berekenen. \todo[inline]{Is dit ni gewoon een andere activatiefunctie?}
+Karpathy voorziet in zijn code ook de mogelijkheid om de hyperbolische tangens te berekenen van de geheugenwaarde van de cel alvorens de output te berekenen. \todo[inline]{Is dit ni gewoon een andere activatiefunctie?} \todo[inline]{mss gewoon weglaten.}
 
 Het genereren van nieuwe beschrijvingen voor ongeziene foto's gebeurt op exact dezelfde manier als bij RNN. Beam search bepaalt de meest waarschijnlijke zin op basis van de uitkomst van het netwerk.
 
@@ -115,7 +116,7 @@ Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschri
 \label{subs:Berekening van topicverdeling}
 Het leren van het gebruikte LDA model gebeurt op de Flickr30k dataset. Een voorbereidingsproces bewerkt de data zodat deze klaar is voor LDA. Dit proces combineert de vijf captions tot \'e\'en zin, verwijdert stopwoorden stemt de woorden met behulp van een Porter stemmer. \todo{reference naar porter stemmer ?} Deze zinnen vormen de documenten voor het LDA algoritme. Het doel is om op basis van een document te kunnen bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een topicverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
 
-Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}. Op basis van de zinnen uit de trainingsset berekent het algoritme de topic-woord verdelingen en de sentence-topic verdelingen. Dit model dient dan als transformatie voor de zinnen uit de test- en validatieset.\todo{niet duidelijk wat hier wordt bedoeld} De ``ground truth'' waarden van de sentence-topic verdelingen voor test- en validatieset worden berekend en opgeslagen.
+Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}. Op basis van de zinnen uit de trainingsset berekent het algoritme de topic-woord verdelingen en de sentence-topic verdelingen. Deze verdelingen, berekend op de trainingsset, leiden tot de berekening van de topic-verdelingen voor de test- en validatieset. De ``ground truth'' waarden van de sentence-topic verdelingen voor test- en validatieset worden berekend en opgeslagen.
 
 Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om een topicverdeling af te leiden. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een topicverdeling. Hiervoor gebruiken we een simpel feed-forward neuraal netwerk. Op basis van de eerder berekende ``ground truth'' waarden voor de validatieset leert dit netwerk een mapping van afbeeldingsvector naar topicverdeling. Door middel van terugpropagatie worden de gewichten aangepast. Een vergelijking van negatieve logwaarschijnlijkheid leidt tot een optimalisatie van het aantal hidden layers en van de trainingssnelheid van het netwerk. Dit netwerk kan dan op het moment van testen zeer snel een topicverdeling bepalen voor een ongeziene afbeelding.
 
@@ -140,7 +141,7 @@ De dataset \emph{Flickr30k Entities}\cite{Plummer2015} is gebaseerd op de Flickr
 \label{sub:Dataset}
 Flickr30k Entities is ontstaan op basis van een eenvoudig idee. De makers zien in dat een ``standaard'' afbeeldingsbeschrijvend systeem een globaal verband leert tussen een foto en een zin, zonder echt rekening te houden met de overeenkomsten tussen entiteiten op de foto en in de zin. Er zijn vrij recent wel een aantal systemen ontwikkeld die een mapping maken van afbeeldingsregio's naar beschrijvingen. Deze systemen veronderstellen echter dat deze verbanden latent zijn. Hier probeert de nieuwe Entities dataset verandering in te brengen, door de verbanden tussen beschrijving en foto te expliciteren.
 
-De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k \todo{reference flickr30k} dataset met de bijhorende beschrijvingen. De makers brengen een uitbreiding hiervan, met een set van bijna 250,000 coreference chains, die verbanden aangeven tussen regio's uit de afbeeldingen en zinsdelen uit de beschrijvingen. Deze aanpak lijkt op wat de MS COCO \todo{ref ms coco} dataset biedt, maar de objecten in de COCO dataset zijn onafhankelijk van de beschrijvingen gedetecteerd. Figuur \ref{fig:entities} toont een aantal voorbeelden van annotaties en references uit de Entities dataset, terwijl figuur \ref{fig:cocoexamples} toont hoe de verschillende objecten in de COCO dataset worden opgeslagen. Het is duidelijk dat er bij de COCO dataset geen rechtstreeks verband is met de beschrijvingen. 
+De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k\cite{Young2014} dataset met de bijhorende beschrijvingen. De makers brengen een uitbreiding hiervan, met een set van bijna 250,000 coreference chains, die verbanden aangeven tussen regio's uit de afbeeldingen en zinsdelen uit de beschrijvingen. Deze aanpak lijkt op wat de MS COCO\cite{Lin2014} dataset biedt, maar de objecten in de COCO dataset zijn onafhankelijk van de beschrijvingen gedetecteerd. Figuur \ref{fig:entities} toont een aantal voorbeelden van annotaties en references uit de Entities dataset, terwijl figuur \ref{fig:cocoexamples} toont hoe de verschillende objecten in de COCO dataset worden opgeslagen. Het is duidelijk dat er bij de COCO dataset geen rechtstreeks verband is met de beschrijvingen. 
 
 \begin{figure}[!tb]
     \centering
@@ -150,8 +151,7 @@ De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k \tod
       \includegraphics[valign = T,width=.4\columnwidth]{Images/example_hat_text.pdf}&
       \includegraphics[valign = T,width=.4\columnwidth]{Images/example_parade_text.pdf}
   \end{tabular}
-  \todo[inline]{Reference naar entities paper}
-\caption{Voorbeelden van Flickr30k Entities annotaties. De kleur van de frases is overeenkomstig de kleur van de bounding boxes op de afbeelding.}
+\caption{Voorbeelden van Flickr30k Entities annotaties. De kleur van de frases is overeenkomstig de kleur van de bounding boxes op de afbeelding.}\cite{Plummer2015}}
 \label{fig:entities}
 \end{figure}
 
@@ -174,13 +174,11 @@ Deze dataset bevat zeer veel extra informatie verspreid over een grote hoeveelhe
 
 Deze reductie gebeurt op basis van de grootte van de bounding box. Een deel van de bounding boxes zijn slechts enkele pixels hoog of breed, waardoor een CNN hier weinig informatie kan uithalen. Deze bounding boxes worden dus uit de dataset verwijderd. De limiet van zichtbaarheid en informatief zijn van een afbeelding staat ter discussie, maar wij kozen om alles kleiner dan 64 bij 64 pixels te verwijderen, wat resulteerde in 190,000 te gebruiken bounding boxes en corresponderende frases. 
 
-De dataset is beschikbaar als tekstbestanden die weergeven welke bounding boxes op welke afbeelding te zien zijn, en met welke delen van de beschrijving elke box overeenkomt. Er zijn een aantal boxes die wel zijn opgenomen in de dataset, maar geen overeenkomstig zinsdeel hebben. Voor het gebruik als extra semantische informatie zijn deze boxes van mindere waarde, dus horen deze ook niet tot de bekeken verzameling. 
+De dataset is beschikbaar als tekstbestanden die weergeven welke bounding boxes op welke afbeelding te zien zijn, en met welke delen van de beschrijving elke box overeenkomt. Er zijn een aantal boxes die wel zijn opgenomen in de dataset, maar geen overeenkomstig zinsdeel hebben. De semantische meerwaarde van dergelijke boxes is miniem, dus horen deze ook niet tot de bekeken verzameling. 
 
 Om de data bruikbaar te maken voor verwerking leest een script de tekstbestanden uit, en slaat alle bounding boxes op als aparte afbeelding. Op basis van die afbeeldingen berekent de Caffe-implementatie van VGGNet een vectorrepresentatie. De overeenkomstige zinsdelen zijn omgezet naar een tf-idf gewogen vectorweergave. 
 
-Op basis van de CCA-uitbreiding beschreven in sectie \ref{sub:stackedcca} berekenen we een geaugmenteerde versie van de afbeeldingen uit de Flickr30k dataset. De extra informatie uit de overeenkomsten tussen bounding boxes en frasen zit vervat in een eerste gemeenschappelijke CCA ruimte. Op basis van \todo{ref naar SAE paper: ,deze: Gong2014?} berekenen we een representatie van de trainingsafbeeldingen, waarin ook de informatie uit de Entities dataset aanwezig is.
-
-
+Op basis van de CCA-uitbreiding beschreven in sectie \ref{sub:stackedcca} berekenen we een geaugmenteerde representatie van de afbeeldingen uit de Flickr30k dataset. De extra informatie uit de overeenkomsten tussen bounding boxes en frasen zit vervat in een eerste gemeenschappelijke CCA ruimte. Op basis van \cite{Gong2014} berekenen we een representatie van de trainingsafbeeldingen, waarin ook de informatie uit de Entities dataset aanwezig is.
 
 Het berekenen van de CCA mapping tussen de bounding boxes en de frasen uit de Entities dataset verliep zonder problemen. De berekening van de augmentatie was ook probleemloos, maar tijdens het berekenen van de CCA mapping tussen de augmentaties van de Flickr30k foto's en hun beschrijvingen zijn we tot de conclusie gekomen dat het, door de hoge dimensionaliteit, qua tijdsbestek onhaalbaar was om deze mapping te gebruiken in onze experimenten. 
 
@@ -199,7 +197,7 @@ Na het berekenen van de representaties van afbeeldingen en zinnen volgt een bere
 
 
 \section{Toevoeging van LDA topicverdeling aan RNN}
-De eerder berekende topicverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de topicverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. De $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de topicverdeling.
+De eerder berekende topicverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de topicverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de topicverdeling.
 
 \begin{equation}
     h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v +\color{red}{\mathbbm{1}{(t=1)} \odot W_lL}
@@ -243,6 +241,7 @@ m_l & = & o_l' \odot c_l'
 \vspace{-3mm}
 \end{eqnarray}
 \todo{Formules bij LSTM zelf + meer uitleg bij gebruikte dinges}
+\todo{gebruikte dinges. zo heerlijk specifiek}
 Hierbij is $g$ de vectorvoorstelling van de semantische informatie. De gids is onafhankelijk van de tijdstap en werkt dus globaal voor elke afbeelding. Figuur \ref{fig:glstm} geeft een visuele voorstelling van de gLSTM-blok.
 
 \begin{figure}[tb][h]
