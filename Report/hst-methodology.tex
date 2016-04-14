@@ -21,7 +21,7 @@ Een eerste implementatie, die ons startpunt vormt, is beschreven door Karpathy \
 
 Een afbeelding (2D matrix met een RGB waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN), zoals beschreven in \ref{sec:CNN}
 
-Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} \todo{Reference: \url{https://en.wikipedia.org/wiki/Convolutional_neural_network#/media/File:Max_pooling.png}} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
+Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} \todo{Reference} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
 
 \begin{figure}[tb]
     \centering
@@ -151,7 +151,7 @@ De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k\cite
       \includegraphics[valign = T,width=.4\columnwidth]{Images/example_hat_text.pdf}&
       \includegraphics[valign = T,width=.4\columnwidth]{Images/example_parade_text.pdf}
   \end{tabular}
-\caption{Voorbeelden van Flickr30k Entities annotaties. De kleur van de frases is overeenkomstig de kleur van de bounding boxes op de afbeelding.}\cite{Plummer2015}}
+\caption{Voorbeelden van Flickr30k Entities annotaties. De kleur van de frases is overeenkomstig de kleur van de bounding boxes op de afbeelding.\cite{Plummer2015}}
 \label{fig:entities}
 \end{figure}
 
