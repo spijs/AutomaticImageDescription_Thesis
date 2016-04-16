@@ -333,7 +333,7 @@ def idf_normalize(words,idf,nb_to_words,mean=12.315):
        sum += idf[stemmed]
     except Exception:
        pass #Do nothing
-  return sum/l
+  return sum/max(l,1)
 
 def normalize(form,words,idf,ixtoword):
     length = len(words)
