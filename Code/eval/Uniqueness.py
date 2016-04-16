@@ -11,6 +11,7 @@ class Uniqueness(EvaluationStrategy):
 
     def __init__(self,name):
         self.train_sentences  = self.load_sentences()
+        print self.train_sentences
         super(Uniqueness,self).__init__(name)
 
     def load_sentences(self):
