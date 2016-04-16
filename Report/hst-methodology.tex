@@ -120,6 +120,13 @@ Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem get
 
 Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om een topicverdeling af te leiden. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een topicverdeling. Hiervoor gebruiken we een simpel feed-forward neuraal netwerk. Op basis van de eerder berekende ``ground truth'' waarden voor de validatieset leert dit netwerk een mapping van afbeeldingsvector naar topicverdeling. Door middel van terugpropagatie worden de gewichten aangepast. Een vergelijking van negatieve logwaarschijnlijkheid leidt tot een optimalisatie van het aantal hidden layers en van de trainingssnelheid van het netwerk. Dit netwerk kan dan op het moment van testen zeer snel een topicverdeling bepalen voor een ongeziene afbeelding.
 
+Het uiteindelijke netwerk bestaat uit een inputlaag, een verborgen laag met 256 knopen en een outputlaag. De verborgen laag gebruikt de sigmo\"idefunctie \eqref{eq:sigmoid} als transferfunctie, terwijl de outputlaag een softmaxfunctie gebruikt, zoals uitgelegd in sectie \ref{par:softmax}.
+
+\begin{equation}
+    \sigma(t) = \frac{1}{1 + e^{-t}}
+    \label{eq:sigmoid}
+\end{equation}
+
 \subsubsection{Evaluatie}
 \label{subs:Evaluatie}
 \todo[inline]{herschrijven :(}

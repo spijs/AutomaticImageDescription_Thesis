@@ -161,7 +161,7 @@ Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door d
 Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag. Een zelfde techniek maakt het trainen mogelijk van complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
 % paragraph training (end)
 
-\paragraph{Softmaxlaag}
+\paragraph{Softmaxlaag}\label{par:softmax}
 De softmaxlaag is een laag die vaak als laatste laag in een neuraal netwerk voorkomt. Wanneer het netwerk meerdere outputs heeft, geeft de softmaxlaag een kansverdeling over de verschillende outputs terug in plaats van de oorspronkelijke outputvector. Concreet betekent dit dat de outputwaarden worden genormaliseerd op een manier dat elke waarde positief is en bovendien de som van alle waarden gelijk is aan 1. Dit is bijvoorbeeld nuttig bij het leren van een kansverdeling over een aantal discrete componenten. Ook bij classificatie van input die tegelijkertijd tot meerdere klassen kan behoren is dit van nut.
 In het geval van onze thesis komt een softmax voor als laatste laag bij de gebruikte CNN, als laatste laag in het netwerk om de topicverdeling te bepalen bij een LDA en als laatste laag in het gebruikte taalnetwerk.\todo{refereren naar secties?}
 
