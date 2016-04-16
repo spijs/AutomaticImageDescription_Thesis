@@ -5,6 +5,7 @@ import json
 from BleuScore import BleuScore
 from MeteorScore import MeteorScore
 from wordFrequency import WordFrequency
+from Uniqueness import Uniqueness
 
 
 def main(params):
@@ -28,8 +29,11 @@ def getStrategy(metric):
         return MeteorScore("meteor")
     elif(metric == "freq"):
         return WordFrequency("freq")
+    elif(metric == "unique"):
+        return Uniqueness("unique")
     else:
         return BleuScore("bleu")
+
 
 def calculate_individual_score(images,struct_path,n,evalStrategy):
     results = {}
