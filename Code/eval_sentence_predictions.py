@@ -64,10 +64,17 @@ def main(params):
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
     kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'], 'ccaweights' : ccaweights }
-    if not params['lda'] == 0:
-        Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
+    if params['normalization']=='idf':
+        idf = load_idf()
+        kwparams['idf']=idf
+        kwparams['words']=ixtoword
     else:
-        Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
+        kwparams['idf']=None
+        kwparams['words']=None
+    if not params['lda'] == 0:
+      Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
+    else:
+      Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
 
     img_blob = {} # we will build this up
     img_blob['img_path'] = img['local_file_path']
@@ -96,7 +103,7 @@ def main(params):
     all_references.append(references)
     all_candidates.append(candidate)
 
-    img_blob['candidate'] = {'text': candidate, 'logprob': top_prediction[0]}    
+    img_blob['candidate'] = {'text': candidate, 'logprob': top_prediction[0]}
     blob['imgblobs'].append(img_blob)
 
   # use perl script to eval BLEU score for fair comparison to other research work
@@ -120,6 +127,11 @@ def main(params):
   # dump result struct to file
   print 'saving result struct to %s' % (params['result_struct_filename'], )
   json.dump(blob, open(params['result_struct_filename'], 'w'))
+
+def load_idf():
+    input = open('idf.p','rb')
+    idf = pickle.load(input)
+    return idf
 
 if __name__ == "__main__":
 

@@ -3,6 +3,7 @@ __author__ = 'spijs'
 import numpy as np
 import code
 import math
+from nltk.stem.porter import *
 
 from imagernn.utils import initw
 
@@ -273,7 +274,7 @@ class gLSTMGenerator:
           top_indices = np.argsort(-y1)  # we do -y because we want decreasing order
           for i in xrange(beam_size):
             wordix = top_indices[i]
-            beam_candidates.append(((b[1] + y1[wordix])/normalize(normalization,len(b[2])),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
+            beam_candidates.append(((b[1] + y1[wordix])/normalize(normalization,b[2],kwargs['idf'],kwargs['words']),b[1] + y1[wordix], b[2] + [wordix], h1, c1))
         beam_candidates.sort(reverse = True) # decreasing order
         beams = beam_candidates[:beam_size] # truncate to get new beams
         nsteps += 1
@@ -322,10 +323,29 @@ def minhinge(length, mean=12.315):
       return mean
     return min(mean,length*1.0)/length
 
-def normalize(form,length):
+def idf_normalize(words,idf,nb_to_words):
+  sum = 0
+  for ix in words:
+    word = nb_to_words[ix]
+    stemmed = stem(word.decode('utf-8')).lower()
+    try:
+       sum += idf[stemmed]
+    except Exception:
+       pass #Do nothing
+  return sum
+
+def normalize(form,words,idf,ixtoword):
+    length = len(words)
     if form=="gauss":
         return gaussianNorm(length)
     elif form == "minhinge":
         return minhinge(length)
+    elif form == "idf":
+        return idf_normalize(words,idf,ixtoword)
     else:
         return 1
+
+''' stems a word by using the porter algorithm'''
+def stem(word):
+    stemmer = PorterStemmer()
+    return stemmer.stem(word)
