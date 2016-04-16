@@ -1,6 +1,6 @@
 __author__ = 'spijs'
 
-class EvaluationStrategy:
+class EvaluationStrategy(object):
     def __init__(self,name):
         self.name = name
 
