@@ -46,7 +46,7 @@ class Uniqueness(EvaluationStrategy):
         for train in self.train_sentences:
             if self.is_same_sentence(new_words,train):
                 return False
-        self.train_sentences.append(new_words) # Append this sentence to all the generated sentences
+        #self.train_sentences.append(new_words) # Append this sentence to all the generated sentences
         return True
 
     def is_same_sentence(self,s1,s2):
