@@ -14,7 +14,7 @@ class Uniqueness(EvaluationStrategy):
         super(Uniqueness,self).__init__(name)
 
     def load_sentences(self):
-        dataset = json.load(open('data/flickr30k/dataset.json', 'r'))
+        dataset = json.load(open('../data/flickr30k/dataset.json', 'r'))
         sentence_tokens =[]
         # group images by their train/val/test split into a dictionary -> list structure
         for img in dataset['images']:
