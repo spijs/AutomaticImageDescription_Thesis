@@ -335,6 +335,7 @@ def idf_normalize(words,idf,nb_to_words,mean=12.315):
        sum += idf[stemmed]
     except Exception:
        pass #Do nothing
+    print sum
   return sum
 
 def normalize(form,words,idf,ixtoword):
