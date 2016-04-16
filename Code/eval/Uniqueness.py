@@ -33,8 +33,11 @@ class Uniqueness(EvaluationStrategy):
     ''' Evaluates the METEOR score of an entire corpus '''
     def evaluate_total(self,sentences,references,n):
          nb_of_unique=0
+         i = 0
          for s in sentences:
-            if self.is_unique(s):
+             i += 1
+             print 'Currently at sentence: %i' % i
+             if self.is_unique(s):
                 nb_of_unique += 1
          return nb_of_unique
 
@@ -43,6 +46,7 @@ class Uniqueness(EvaluationStrategy):
         for train in self.train_sentences:
             if self.is_same_sentence(new_words,train):
                 return False
+        self.train_sentences.append([new_words]) # Append this sentence to all the generated sentences
         return True
 
     def is_same_sentence(self,s1,s2):
