@@ -326,6 +326,8 @@ def minhinge(length, mean=12.315):
 def idf_normalize(words,idf,nb_to_words,mean=12.315):
   sum = 1
   l = len(words)
+  if l > mean:
+    return 3*l
   for ix in words:
     word = nb_to_words[ix]
     stemmed = stem(word.decode('utf-8')).lower()
@@ -333,7 +335,7 @@ def idf_normalize(words,idf,nb_to_words,mean=12.315):
        sum += idf[stemmed]
     except Exception:
        pass #Do nothing
-  return 1/sum
+  return sum
 
 def normalize(form,words,idf,ixtoword):
     length = len(words)
