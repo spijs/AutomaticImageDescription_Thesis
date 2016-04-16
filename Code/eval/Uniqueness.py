@@ -25,6 +25,7 @@ class Uniqueness(EvaluationStrategy):
                 tokens = sentence['tokens']
                 if split=='train':
                     sentence_tokens.append(tokens)
+        return sentence_tokens
 
     ''' Evaluates the METEOR score of a single sentence, given its references'''
     def evaluate_sentence(self,sentence,references,n):
