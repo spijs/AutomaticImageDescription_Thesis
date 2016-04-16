@@ -20,7 +20,7 @@ Deze bevatten RNN uitgebreid met LDA, gLSTM met CCA voor verschillende groottes 
 
 \section{Ruisgevoeligheid van CCA en LDA} % (fold)
 \label{sec:ruisgevoeligheid_van_cca_en_lda}
-gLSTMS maken het mogelijk om extra semantische informatie aan het taalmodel te geven. Deze informatie kan uit verschillende bronnen komen. In deze masterproef bekeken we CCA en LDA. Naast de absolute scores die de twee modellen halen is het ook interessant om te kijken naar welk van de modellen het meest robuust is tegen perturbaties in de referentiezinnen.
+gLSTMs maken het mogelijk om extra semantische informatie aan het taalmodel te geven. Deze informatie kan uit verschillende bronnen komen. In deze masterproef bekeken we CCA en LDA. Naast de absolute scores die de twee modellen halen is het ook interessant om te kijken naar welk van de modellen het meest robuust is tegen perturbaties in de referentiezinnen.
 
 Om deze eigenschap te evalueren cre\"eren we een nieuwe dataset waarbij de referentiezinnen van de trainingsset perturbaties bevatten.
 Concreet wordt elk woord vervangen door een willekeurig woord in het vocabularium met een kans van 10\%. Hierna traint het netwerk op dezelfde manier als hierboven beschreven. Na deze training en generatie van resultaten op de testverzameling is het mogelijk om te vergelijken welk model relatief het meeste last heeft van deze extra ruis in de dataset.
