@@ -321,10 +321,11 @@ def gaussianNorm(length, mean=12.315 , dev=5.18887):
 def minhinge(length, mean=12.315):
     if length==0:
       return mean
-    return min(mean,length*1.0)/length
+    return min(mean,length*1.0)
 
-def idf_normalize(words,idf,nb_to_words):
-  sum = 0
+def idf_normalize(words,idf,nb_to_words,mean=12.315):
+  sum = 1
+  l = len(words)
   for ix in words:
     word = nb_to_words[ix]
     stemmed = stem(word.decode('utf-8')).lower()
@@ -332,7 +333,7 @@ def idf_normalize(words,idf,nb_to_words):
        sum += idf[stemmed]
     except Exception:
        pass #Do nothing
-  return sum
+  return 1/sum
 
 def normalize(form,words,idf,ixtoword):
     length = len(words)
