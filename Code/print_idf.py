@@ -10,7 +10,7 @@ def main():
     output = open('sorted_idf.txt','w')
     for pair in sorted_idf:
         print "Word: " + pair[0] + " IDF: " + str(pair[1])
-        output.write(pair[0] + ": " + str(pair[1]))
+        output.write(pair[0] + ": " + str(pair[1])+"\n")
     output.close()
 if __name__ == "__main__":
     main()
