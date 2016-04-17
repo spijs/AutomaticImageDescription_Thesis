@@ -64,7 +64,7 @@ def main(params):
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
     kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'], 'ccaweights' : ccaweights }
-    if params['normalization']=='idf':
+    if params['normalization']=='idf' or params['normalization']=='combined':
         idf = load_idf()
         kwparams['idf']=idf
         kwparams['words']=ixtoword

@@ -323,6 +323,21 @@ def minhinge(length, mean=12.315):
       return mean
     return min(mean,length*1.0)
 
+def combined(length,words,idf,nb_to_words, mean=12.315, dev=5.1887):
+  gauss = gaussianNorm(length)
+  sum = 1
+  l = len(words)
+  if l > mean:
+    return gauss
+  for ix in words:
+    word = nb_to_words[ix]
+    stemmed = stem(word.decode('utf-8')).lower()
+    try:
+       sum += idf[stemmed]
+    except Exception:
+       pass #Do nothing
+  return gauss*sum
+
 def idf_normalize(words,idf,nb_to_words,mean=12.315):
   sum = 1
   l = len(words)
@@ -345,6 +360,8 @@ def normalize(form,words,idf,ixtoword):
         return minhinge(length)
     elif form == "idf":
         return idf_normalize(words,idf,ixtoword)
+    elif form == "combined":
+        return combined(length,words,idf,ixtoword)
     else:
         return 1
 
