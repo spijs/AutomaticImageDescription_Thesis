@@ -279,7 +279,14 @@ De auteurs van de paper bestuderen meerdere functies voor $\Omega$. Wij implemen
 Enerzijds gebruiken we de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moeten gegenereerde zinnen gelijkaardige lengtes hebben aan deze uit het corpus. 
 Anderzijds implementeren we de min-hinge normalisatie. Met deze methode is de normalisatiefactor gelijk aan de gemiddelde lengte van het trainingscorpus ($\mu$) als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$.
 
-Een eigen implementatie van de $\Omega(\ell)$ functie is gebaseerd op de hoeveelheid informatie die in elk woord is vervat. Op basis van de trainingsset bepalen we de tf-idf gewichten van elk woord. Op basis van deze gewichten is het mogelijk om een score te berekenen voor de gegenereerde zinnen. Het doel hiervan is om de zinnn zoveel mogelijk informatie te laten bevatten. Hoe hoger de gecombineerde tf-idf score van een zin, hoe meer informatie. 
+Een eigen implementatie van de $\Omega(\ell)$ functie maakt gebruik van idf-gewichten. Deze gewichten zijn gebaseerd op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en zijn alle woorden gereduceerd met een Porter stemming algoritme. \todo{reference} De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
+
+\begin{equation}
+    idf_i = \log(\frac{N}{n_i})
+\end{equation}
+Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal afbeeldingen waar het woord $w_i$ voorkomt in de beschrijvingen.
+
+Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. \todo{aantal voorbeelden van begin en einde van de lijst toevoegen} Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderljike woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten
 \todo[inline]{meer}
 
 \section{FSMN}
@@ -294,5 +301,5 @@ Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, ver
 	\centering
 	\includegraphics[width=\linewidth]{Images/FSMN}
 	\caption{Algemene structuur van Feedforward Sequentieel Geheugen Neural Netwerken.}
-	\label{fig:glstm}
+	\label{fig:fsmn}
 \end{figure}
