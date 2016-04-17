@@ -286,8 +286,10 @@ Een eigen implementatie van de $\Omega(\ell)$ functie maakt gebruik van idf-gewi
 \end{equation}
 Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal afbeeldingen waar het woord $w_i$ voorkomt in de beschrijvingen.
 
-Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. \todo{aantal voorbeelden van begin en einde van de lijst toevoegen} Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderljike woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten
-\todo[inline]{meer}
+Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. \todo{aantal voorbeelden van begin en einde van de lijst toevoegen} Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderljike woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus zo minder veelzeggend zijn.
+\todo[inline]{voorbeelden + uitbreiden}
+
+Op basis van twee normalisatiefuncties hierboven beschreven is het mogelijk om een combinatie te maken. Het gebruik van zowel Gaussiaanse als idf-normalisatie zou kunnen leiden tot betere resultaten. Het idee hierachter is dat zowel korte zinnen als weinig informatieve zinnen een penalisatie ondervinden. Het berekenen van deze normalisatiefactor gebeurt door eerst de idf-gewichten van alle woorden in de zin op te tellen en deze som vervolgens te vermenigvuldigen met de waarde van de Gaussiaanse functie die hierboven is beschreven.
 
 \section{FSMN}
 E\'en van de eerste wijzigingen die we in deze thesis probeerden te implementeren, waren Feedforward Sequential Memory Neural Networks (FSMN)\cite{Zhang}. Deze netwerken vormen een uitbreiding op gewone feed-forward neurale netwerken. Dit netwerk kan afhankelijkheden op lange termijn leren zonder recurrente verbindingen te gebruiken. Het doet dit door sequenti\"ele geheugenblokken in de verborgen lagen van het feed-forward netwerk te steken. 
