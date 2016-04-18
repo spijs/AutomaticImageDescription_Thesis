@@ -116,16 +116,113 @@ Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschri
 \label{subs:Berekening van topicverdeling}
 Het leren van het gebruikte LDA model gebeurt op de Flickr30k dataset. Een voorbereidingsproces bewerkt de data zodat deze klaar is voor LDA. Dit proces combineert de vijf captions tot \'e\'en zin, verwijdert stopwoorden stemt de woorden met behulp van een Porter stemmer. \todo{reference naar porter stemmer ?} Deze zinnen vormen de documenten voor het LDA algoritme. Het doel is om op basis van een document te kunnen bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een topicverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
 
+\todo[inline]{Nog aanpassen}
 Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}. Op basis van de zinnen uit de trainingsset berekent het algoritme de topic-woord verdelingen en de sentence-topic verdelingen. Deze verdelingen, berekend op de trainingsset, leiden tot de berekening van de topic-verdelingen voor de test- en validatieset. De ``ground truth'' waarden van de sentence-topic verdelingen voor test- en validatieset worden berekend en opgeslagen.
+
+Het aantal topics is gebaseerd op manuele evaluatie, aangezien er geen metriek is die op een eenduidige manier de correctheid van probabilistische verdelingen, zoals document-topic-verdelingen.  
+
+Om evaluatie te vergemakkelijken hebben alle topics een naam gekregen. Op basis van de tien meest waarschijnlijke woorden, defini\"eren we voor elk topic een overkoepelend concept. Een voorbeeld van een trainingsafbeelding met de meest waarschijnlijke topics is te zien in figuur \ref{fig:ldatopics}. Voor extra voorbeelden verwijzen we u door naar appendix \ref{app:LDA}.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/5402085.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{ll}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{constuctor}             & 0.158 \\
+            \texttt{work}                   & 0.113 \\
+            \texttt{ground}                 & 0.113 \\
+            \texttt{men together}           & 0.113 \\
+            \texttt{work/metal/wood}        & 0.047\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+    \caption{Voorbeeldfoto met de vijf meest waarschijnlijke topics}
+    \label{fig:ldatopics}
+\end{figure}
+
+
+
 
 Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om een topicverdeling af te leiden. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een topicverdeling. Hiervoor gebruiken we een simpel feed-forward neuraal netwerk. Op basis van de eerder berekende ``ground truth'' waarden voor de validatieset leert dit netwerk een mapping van afbeeldingsvector naar topicverdeling. Door middel van terugpropagatie worden de gewichten aangepast. Een vergelijking van negatieve logwaarschijnlijkheid leidt tot een optimalisatie van het aantal hidden layers en van de trainingssnelheid van het netwerk. Dit netwerk kan dan op het moment van testen zeer snel een topicverdeling bepalen voor een ongeziene afbeelding.
 
 Het uiteindelijke netwerk bestaat uit een inputlaag, een verborgen laag met 256 knopen en een outputlaag. De verborgen laag gebruikt de sigmo\"idefunctie \eqref{eq:sigmoid} als transferfunctie, terwijl de outputlaag een softmaxfunctie gebruikt, zoals uitgelegd in sectie \ref{par:softmax}.
 
+Wanneer het systeem een ongeziene afbeelding krijgt, gebeurt het volgende: VGGNet zet de afbeelding om naar een vectorrepresentatie. Deze vector dient als input voor de verborgen laag van het neuraal netwerk. Daarna transformeert de softmaxfunctie output naar een kansverdeling over de verschillende topics. Dit proces is ge\"illustreerd in figuur \ref{fig:learningLDA}.
+
 \begin{equation}
     \sigma(t) = \frac{1}{1 + e^{-t}}
     \label{eq:sigmoid}
 \end{equation}
+
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=\linewidth]{Images/LDANetwerk.PNG}
+    \caption{Het proces om een ongeziene afbeelding te transformeren naar een topicverdeling}
+    \label{fig:learningLDA}
+\end{figure}
+
+Na het afronden van het trainingsproces zou het netwerk in staat moeten zijn om voor ongeziene afbeeldingen de bijhorende onderwerpsverdeling te genereren. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. Soms zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen topic is met een grote kans. Bij de correcte voorspelling is er een topic dat een veel grotere waarschijnlijkheid heeft dan de andere topics. Meer voorbeelden van correcte en incorrecte voorspellingen zijn te vinden in appendix \ref{app:LDApredictions}.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/2282260240.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{cl}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{girl}             & 0.235 \\
+            \texttt{dance/perform}                   & 0.096 \\
+            \texttt{playground}                 & 0.060 \\
+            \begin{tabular}{c}
+                \texttt{balloon/}\\
+                \texttt{stuffed animal}
+            \end{tabular}          & 0.041 \\
+            \texttt{children}        & 0.034\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+    \caption{Foto met de vijf meest waarschijnlijke topics -- correcte voorspelling}
+    \label{fig:ldalearningexample}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/3867804763.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{cl}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{musicians}             & 0.039 \\
+            \texttt{work}                   & 0.037 \\
+            \texttt{baby/toddler}                 & 0.031 \\
+            \texttt{clothing}           & 0.027 \\
+            \texttt{playground}        & 0.023\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+    \caption{Foto met de vijf meest waarschijnlijke topics -- incorrecte voorspelling}
+    \label{fig:wrongldalearning}
+\end{figure}
 
 \subsubsection{Evaluatie}
 \label{subs:Evaluatie}
