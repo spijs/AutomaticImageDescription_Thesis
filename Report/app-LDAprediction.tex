@@ -2,6 +2,7 @@
 \label{app:LDApredictions}
 Deze bijlage bevat een aantal voorbeelden van een aantal voorspelde topicverdelingen. We maken onderscheid tussen correcte, min of meer correcte en incorrecte voorspellingen.
 \section{Correcte voorspellingen}
+\todo[inline]{andere pakken}
 \begin{figure}[h]
     \centering
     \begin{minipage}[t]{.5\linewidth}
@@ -98,10 +99,105 @@ Deze bijlage bevat een aantal voorbeelden van een aantal voorspelde topicverdeli
             \hline
         \end{tabular}
     \end{minipage}
+\end{figure}
+
+\section{Min of meer correcte voorspellingen}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/4862204000.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{cl}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{sit/chair}             & 0.044 \\
+            \texttt{sit outside}                   & 0.041 \\
+            \texttt{dog}                 & 0.036 \\
+            \texttt{room/floor}           & 0.031 \\
+            \texttt{sleep/laydown}        & 0.027\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/3643021980.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{cl}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{baseball}             & 0.058 \\
+            \texttt{toddler}                   & 0.053 \\
+            \texttt{girl}                 & 0.50 \\
+            \texttt{playground}           & 0.049 \\
+            \texttt{photograph}        & 0.040\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/136693281.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{cl}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{dog+toy}             & 0.075 \\
+            \begin{tabular}{c}
+                \texttt{lawn/sunny/}\\
+                \texttt{outside}
+            \end{tabular}                    & 0.048    \\
+            \texttt{children}                 & 0.042 \\
+            \texttt{boy}           & 0.032   \\
+            \texttt{girl}        & 0.29\\
+            \hline
+        \end{tabular}
+    \end{minipage}
     \caption{caption}
     \label{fig:label}
 \end{figure}
 
-\section{Min of meer correcte voorspellingen}
-
 \section{Incorrecte voorspellingen}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{.5\linewidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\textwidth]{Images/LDA/7446693604.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{.5\textwidth}
+    \centering
+    \vspace{0pt}
+    \begin{tabular}{cl}
+            topic                           & waarschijnlijkheid\\
+            \hline
+            \texttt{constructor}             & 0.067 \\
+            \texttt{body of water}                   & 0.059 \\
+            \texttt{stairs/rail}                 & 0.056 \\
+            \texttt{boats}           & 0.040 \\
+            \texttt{cleaning}        & 0.026\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+    \caption{caption}
+    \label{fig:label}
+\end{figure}
