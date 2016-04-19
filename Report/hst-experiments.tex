@@ -8,7 +8,7 @@ Het doel van deze masterproef is om de basisresultaten van de paper en bijbehore
 
 We vermoeden echter dat Karpathy gebruik maakt van een brevity penalty \todo{quotes?} bij de BLEU-scores. In dit werk en in andere werken in de literatuur gebeurt dit echter niet. Om die reden doen we eerst experimenten met de standaard instellingen van de code van Karpathy voor zowel het RNN als LSTM model. De resultaten hiervan vormen dan de referentiewaarden die moeten worden verbeterd. 
 
-De verschillende modellen zijn getraind met de volgende instellingen: leersnelheid 0.0001, type solver rmsprop, decay rate 0.999, epsilon smoothing 1e-8, batch-size 100, gradient clipping 5, dropout in encoder en decoder 0.5. \todo{Dit fixen :D nee das kei mooi zo}
+De verschillende modellen zijn getraind met de volgende instellingen: leersnelheid 0.0001, type solver rmsprop, decay rate 0.999, epsilon smoothing 1e-8, batch-size 100, gradient clipping 5, dropout in encoder en decoder 0.5. \todo{Dit fixen :D nee das kei mooi zo, ofwel bij problemen met RNN, of bij methodologie.}
 
 Tijdens het trainen van de modellen slaagt het systeem op vaste momenten het huidige netwerk op samen met de perplexity van de validatieset. Karpathy kiest als finaal model voor het netwerk met de beste perplexity. Uit enkele eenvoudige testen blijkt dat de perplexity slechts beperkt overeenkomt met de BLEU-score. Om die reden kiezen wij voor onze modellen het netwerk dat de beste BLEU-4 score op de validatieset heeft als finaal model voor elke configuratie.
 

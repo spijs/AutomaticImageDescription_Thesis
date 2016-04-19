@@ -1,5 +1,6 @@
 \chapter{Probleembeschrijving}
 \label{chap:Probleembeschrijving}
+\todo[inline]{nalezen}
 
 Dit hoofdstuk beschrijft het probleem van automatische afbeeldingsbeschrijving. Een eerste sectie gaat over het concrete vraagstuk en hoe het gesitueerd is binnen de computerwetenschappen. Een tweede sectie beschrijft de meest gebruikte datasets voor het trainen en evalueren van systemen die een oplossing bieden voor dit probleem.
 
@@ -14,9 +15,12 @@ Het genereren van beschrijvingen is nauw gerelateerd aan andere, eerder onderzoc
 
 Het automatisch herkennen van objecten in afbeeldingen vormt een van de meest onderzochte vraagstukken in het domein van computervisie. Zoals eerder gezegd, is er niet enkel nood aan algoritmes om vormen te detecteren in afbeeldingen, maar moet er ook een adequate labeling van de gedetecteerde vormen zijn. Een zeer gelijkaardig probleem is het classificeren van een volledige afbeelding, waarbij de hele sc\'ene een label krijgt in plaats van de gedetecteerde objecten. 
 
-De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: ``Genereer een vloeiende, grammaticaal correcte Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''. In het vervolg van deze masterproef reiken wij dan ook een oplossing aan voor dit complexe probleem.
+De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: ``Genereer een vloeiende, grammaticaal correcte Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''. In het vervolg van deze masterproef reiken wij dan ook een oplossing aan voor dit complexe probleem.\todo{ook illustreren + meer uitleg over proberen om nieuwe zinnen te genereren , we maken taalmodel}
 
+
+\section{Toepassingen}
 Het oplossen van dit probleem heeft naast academische ook praktische toepassingen. Zo maakt een dergelijk systeem het mogelijk om voor slechtzienden te beschrijven wat er op de afbeeldingen van een webpagina staat. Daarnaast zijn ook toepassingen denkbaar voor het automatisch ordenen van foto's op basis van dezelfde woorden in de gegenereerde beschrijvingen. Denk maar aan een filter die afbeeldingen filtert met het woord ``sneeuw'' in de beschrijving. Meer algemeen maakt het ook het zoeken naar afbeeldingen op het web eenvoudiger. Zo wordt het mogelijk om naar sleutelwoorden of zinnen te zoeken in de automatisch gegenereerde beschrijvingen. Dit is meer direct dan zoeken op basis van de afbeeldingsnaam, tekst in de omgeving of tags van de afbeelding.
+
 
 \section{Datasets}
 \label{sec:Datasets}
@@ -24,7 +28,7 @@ Deze sectie beschrijft de drie meest gebruikte datasets voor training en evaluat
 
 \paragraph{Flickr8k}
 \label{par:Flickr8k}
-De Flickr8k dataset, zoals voorgesteld in \cite{Hodosh2013} bevat 8,092 foto's vanop \texttt{flickr.com}. De focus doorheen de afbeeldingen ligt op mensen en dieren (vooral honden) die een actie uitvoeren. De foto's zijn manueel geselecteerd om de grootst mogelijke vari\"eteit te garanderen.
+De Flickr8k dataset, zoals voorgesteld in \cite{Hodosh2013} bevat 8,092 foto's vanop \texttt{flickr.com}. De focus doorheen de afbeeldingen ligt op mensen en dieren (vooral honden) die een actie uitvoeren. De foto's zijn manueel geselecteerd om de grootst mogelijke vari\"eteit te garanderen. De afbeeldingen zijn geselecteerd vanop Flickr\footnote{\url{https://flickr.com}}, een online portaal voor het hosten van afbeeldingen.
 
 De bijhorende beschrijvingen zijn manueel opgesteld door mensen met Engels als moedertaal. De schrijvers maakten gebruik van Amazon Mechanical Turk workers\footnote{\url{http://www.mturk.com}}. Dit is een online platform om ``Human Intelligence Tasks'' te laten uitvoeren door mensen. Tegen een kleine betaling kan iedereen die dat wenst de taken oplossen. 
 
@@ -37,13 +41,14 @@ De dataset is verdeeld in drie delen, voor training, validatie en testen. De val
 
 \paragraph{Flickr30k}
 \label{par:Flickr30k}
-Deze dataset \cite{Young2014} is een uitbreiding van Flickr8k. In totaal zijn er 31,783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k\cite{Hodosh2013}. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29,783 in de trainingsset.
+Deze dataset \cite{Young2014} is een uitbreiding van Flickr8k. In totaal zijn er 31,783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k\cite{Hodosh2013}. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29,783 in de trainingsset. \todo{waarom meer foto's? meer data dus beter systeem}
+
 
 \paragraph{MS COCO}
 \label{par:MS COCO}
-De Microsoft Common Objects in COntext dataset (MS COCO) \cite{Lin2014} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. De afbeeldingen zijn geselecteerd vanop \texttt{flickr.com}
+De Microsoft Common Objects in COntext dataset (MS COCO) \cite{Lin2014} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. 
 
-MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische-object afbeeldingen bevatten een centraal geplaatst object. Iconische-scene afbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonische hoek. Dit komt overeen met wat mensen beschouwen als ``normale'' hoeken. Hoewel dit type afbeeldingen kan leiden tot zeer goede objectdetecties, is er weinig contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van iconische afbeeldingen minder interessant.
+MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische-object afbeeldingen bevatten een centraal geplaatst object. Iconische-scene afbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonische hoek. Dit komt overeen met wat mensen beschouwen als ``normale'' hoeken. \todo{canonische hoek uitleggen.} Hoewel dit type afbeeldingen kan leiden tot zeer goede objectdetecties, is er weinig contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van iconische afbeeldingen minder interessant. Bij de Flickr-datasets is er niet expliciet gefocust op het gebruik van niet-iconische afbeeldingen, dus is er meer vari\"eteit in 
 
 Non-iconische afbeeldingen brengen algemeen gezien een compositie van verschillende objecten en personen, gefotografeerd vanuit een niet-canonische hoek. MS COCO bevat voornamelijk niet-iconische afbeeldingen. Figuur \ref{fig:cocotypes} toont duidelijk het verschil tussen iconische en non-iconische afbeeldingen.
 
