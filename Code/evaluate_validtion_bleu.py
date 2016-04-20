@@ -58,6 +58,8 @@ def main(params):
             print 'image %d/%d:' % (n, max_images)
             references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
             kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'], 'ccaweights' : ccaweights }
+            kwparams['idf']=None
+            kwparams['words']=None
             if not params['lda'] == 0:
                 Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
             else:
