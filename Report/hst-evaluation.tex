@@ -14,12 +14,12 @@ Om die reden bekijken we ook nog enkele statistieken van de gegenereerde zinnen 
 Als laatste onderdeel volgt een bespreking van een methode die de laatste twee jaar in onbruik is geraakt binnen dit onderzoeksdomein. Deze methode is gebaseerd op een rangschikking van zinnen en afbeeldingen. Deze rangschikking leidt tot een numerieke score voor de bekomen resultaten.
 
 \section{BLEU}
-Kort gesteld berekent het BLEU-algoritme scores van computervertalingen op basis van overeenkomsten met de referentiezinnen. Deze overeenkomsten kunnen gaan over woorden of over aaneensluitingen van woorden. Verschillende vormen van BLEU kunnen worden gebruikt naargelang het aantal gebruikte n-grams \todo{deze zin is vaag, ma ik weet ni wa ge bedoelt dus ik kan het ni verbeteren}. Het gebruik van BLEU heeft echter wel enkele nadelen.
+Kort gesteld berekent het BLEU-algoritme scores van computervertalingen op basis van overeenkomsten met de referentiezinnen. Deze overeenkomsten bestaan uit gemeenschappelijke woorden of opeenvolgingen van gemeenschappelijke woorden. Verschillende vormen van BLEU kunnen worden gebruikt afhankelijk van het aantal gebruikte woorden in een opeenvolging (n-grams) \todo{deze zin is vaag, ma ik weet ni wa ge bedoelt dus ik kan het ni verbeteren -> beter?}. Het gebruik van BLEU heeft echter wel enkele nadelen.
 
 \subsection{Algoritme}
-Om de n-gram BLEU-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision}. Dit is een vorm van precisie die rekening houdt met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. 
+Om de n-gram BLEU-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision} of gewijzigde n-gram precisie. Dit is een vorm van precisie die rekening houdt met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. 
 
-De berekening van \textit{modified n-gram precision} gebeurt door eerst het maximum te nemen van het aantal keer dat een specifieke woordsequentie voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal voorkomens van deze sequentie in de gegenereerde zin. Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk woord in de vertaalde zin opgeteld en gedeeld door het totaal aantal woorden in de gegenereerde zin.
+De berekening van de gewijzigde n-gram precisie gebeurt door eerst het maximum te nemen van het aantal keer dat een specifieke woordsequentie voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal voorkomens ($Count(ngram)$) van deze sequentie in de gegenereerde zin $s$. Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk woord in de vertaalde zin opgeteld en gedeeld door het totaal aantal woorden in de gegenereerde zin.
 
 \begin{equation}
 p_{modified}(s) =
@@ -32,8 +32,9 @@ p_{n} =
 \frac{\sum\limits_{C \in \{Candidates\} } \sum\limits_{ngram \in C} Count_{clip}(ngram)}{\sum\limits_{C' \in \{Candidates\} } \sum\limits_{ngram' \in C'} Count(ngram')}
 \label{formule:corpus_modified}
 \end{equation}
+Hierin is $Candidates$ de verzameling van alle gegenereerde zinnen.
 
-Vanuit deze scores voor $i=1$ tot en met $n$ is het mogelijk om een n-gram BLEU-score te bepalen. Dit gebeurt door het gemiddelde logaritme te nemen met uniforme gewichten, wat overeenkomt met het geometrisch gemiddelde van de modified n-gram precisions.
+Vanuit deze scores voor $n=1$ tot en met $N$ is het mogelijk om een N-gram BLEU-score te bepalen. Dit gebeurt door het gemiddelde logaritme te nemen met uniforme gewichten $w_n$, wat overeenkomt met het geometrisch gemiddelde van de gewijzigde n-gram precisies.
 \begin{equation}
 BLEU = exp(\sum\limits_{n=1}^N w_nlog(p_n))
 \end{equation}
@@ -55,10 +56,10 @@ Hierbij is $w_n$ gelijk aan $1/N$ wanneer het uniforme geometrisch gemiddelde wo
 De BLEU-score is de meest gebruikte gebruikte evaluatiemethode in de literatuur. De meeste papers die afbeeldingsbeschrijvingen genereren bespreken BLEU-1 tot BLEU-4 scores. De literatuur lijkt het echter niet eens over het gebruik van de Brevity Penalty. Sommige papers vermelden expliciet dat ze het niet gebruiken, maar andere volgen de paper van Papinemi volledig. Door dit verschil in evaluatie is de vergelijking van verschillende systemen niet altijd eerlijk. Wanneer de gegenereerde zinnen lang genoeg zijn komen de scores wel overeen.
 In onze experimenten stellen we de Brevity Penalty steeds gelijk aan 1.
 
-Naast deze problemen zijn er verschillende implementaties met kleine onderlinge verschillen. In onze experimenten gebruiken we de \texttt{multi-BLEU.pl}\footnote{\url{https://github.com/moses-smt/mosesdecoder/blob/master/scripts/generic/multi-bleu.perl}} code uit de Moses decoder\cite{Koehn2006}.
+Naast deze problemen zijn er verschillende implementaties met kleine onderlinge verschillen. De meeste van deze verschillen vinden in hun oorsprong in het al dan niet toevoegen van normalisatie. Hierdoor zijn de concrete scores dus afhankelijk van de gebruikte implementatie. In onze experimenten gebruiken we de \texttt{multi-BLEU.pl}\footnote{\url{https://github.com/moses-smt/mosesdecoder/blob/master/scripts/generic/multi-bleu.perl}} code uit de Moses decoder\cite{Koehn2006} omdat Karpathy deze ook voorziet in zijn code.
 
 In \cite{Elliott2014} toont Elliot et al. aan dat BLEU slechts een matige correlatie heeft met menselijke beoordeling.
-Hiervoor zijn meerdere verklaringen mogelijk. Zo kijkt BLEU enkel naar exacte woordmatches maar houdt het geen rekening mee met semantisch gelijkaardige woorden. Zo geeft bijvoorbeeld het gebruik van een synoniem geen hogere score terwijl dit bij menselijke evaluaties geen probleem is. Ook werkwoorden die semantische informatie bevatten die in de referentiezin als substantief voorkomen geven problemen. Voorbeelden van zulke situaties waarbij zinnen slecht scoren volgens BLEU, maar inhoudelijk toch hetzelfde weergeven:
+Hiervoor zijn meerdere verklaringen mogelijk. Zo kijkt BLEU enkel naar exacte woordmatches maar houdt het geen rekening mee met semantisch gelijkaardige woorden. Het gebruik van een synoniem in plaats van hetzelfde woord bijvoorbeeld geeft geen hogere score, terwijl dit bij menselijke evaluaties wel zo is. Daarnaast krijgen woorden die weinig semantische waarde bevatten een evengrote score als woorden die veel meer informatie over de afbeelding geven. Concreet geeft dus een woord als \texttt{a} evenveel extra score als een woord als \texttt{ski}. Ook werkwoorden die semantische informatie bevatten die in de referentiezin als substantief voorkomen geven problemen. Hieronder volgen voorbeelden van situaties waarbij zinnen slecht scoren volgens BLEU, maar inhoudelijk toch hetzelfde weergeven.
 \\
 
 Reference 1: \texttt{Two boys are on their bikes.}
@@ -70,7 +71,6 @@ Reference 2: \texttt{A man is skiing down a hill.}
 Candidate 2: \texttt{A man is going down a hill on his skis}
 \\
 
-
 Meteor is een evaluatiealgoritme met als doel het vermijden van dergelijke foute evaluaties.
 
 \section{Meteor}
@@ -79,29 +79,27 @@ Elliott et al.\cite{Elliott2014} toonden aan dat zeker unigram BLEU (B1) slechts
 \subsection{Algoritme}
 Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met de referenties en hiervan per zin een score te berekenen. Bij het berekenen van de score wordt net zoals bij BLEU gekeken naar de precisie. Daarnaast heeft in contrast met BLEU ook de recall een invloed. De paper bevat een implementatie in de vorm van een JAR-bestand, zodat er geen twijfel bestaat over het gebruik van het algoritme.
 
-Concreet probeert het algoritme twee zinnen te aligneren met behulp van vier matchers. Als eerste is er een match wanneer de woordvormen exact dezelfde zijn. Als tweede is er een match wanneer met een Snowball Stemmer \cite{porter2001snowball} ``gestemde'' woorden gelijk zijn. Een derde matcher kijkt naar overeenkomsten in de WordNet synoniemenlijst van elk woord. \cite{Miller1990} Als laatste vormen frases een match wanneer ze in zogenoemde frasetabellen \todo{mss voorbeeldje van ne frasetabel dabei} voorkomen.
-Elke matcher heeft een bepaald gewicht. In de experimenten gebruiken we de standaardgewichten 0.85, 0.2 ,0.6 en 0.75.
+Concreet probeert het algoritme twee zinnen te aligneren met behulp van vier matchers. Als eerste is er een match wanneer de woordvormen exact dezelfde zijn. Als tweede is er een match wanneer met een Snowball Stemmer \cite{porter2001snowball} ``gestemde'' woorden gelijk zijn. Een derde matcher kijkt naar overeenkomsten in de WordNet synoniemenlijst van elk woord. \cite{Miller1990} Als laatste vormen frases of woordsequenties een match wanneer ze in zogenoemde parafrasetabellen voorkomen. Een parafrasetabel bevat paren tussen frases en parafrases die ermee overeenkomen. Parafrases zijn woordsequenties die dezelfde betekenis hebben dan de overeenkomstige frase, maar op een andere manier geformuleerd zijn.
+Elke matcher heeft een bepaald gewicht. De experimenten gebruiken de standaardgewichten 0.85, 0.2 ,0.6 en 0.75.
 
-Uiteindelijk worden alle matches gegeneraliseerd tot frase matches met een bepaalde startpositie en eindlengte. Een van de doelen van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarnaast moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen. De uiteindelijke Meteor score bestaat dan uit de F-score vermenigvuldigd met een penalisatiefactor op basis van het aantal chunks.
+Uiteindelijk worden alle matches gegeneraliseerd tot frase matches met een bepaalde startpositie en eindlengte. Een van de doelen van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarnaast moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen. De uiteindelijke Meteor score bestaat dan uit de F-score $F_{mean}$ vermenigvuldigd met een penalisatiefactor $Pen$ op basis van het aantal chunks.
 
 
 \begin{equation}
 Score = (1 - Pen)*F_{mean}
 \end{equation} 
 \begin{equation}
-Pen = \gamma (\frac{ch}{m})^\theta 
+Pen = \gamma (\frac{ch}{m})^\beta 
 \end{equation}
 \begin{equation}
 F_{mean} = \frac{PR}{\alpha P + (1- \alpha)R}
 \end{equation}
-\todo{is gamma een functie? of een constante? zelfde voor alfa}
-Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gealigneerde unigrams ($m$) tussen kandidaat- en referentiezin.
+Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gealigneerde unigrams ($m$) tussen kandidaat- en referentiezin. $m$ is het gemiddeld aantal gematchte woorden. $ch$ is het aantal chunks. $\alpha$,$\beta$ en $\gamma$ zijn vooraf getrainde parameters.
 
-Wanneer er meerdere referenties zijn, bepaalt het maximum van de individuele scores voor elke referentie de score van de vertaling.
+Wanneer er meerdere referenties zijn in het corpus, bepaalt het maximum van de individuele scores voor elke referentie de score van de vertaling.
 
 \subsection{Gebruik en nadelen}
-Zoals al aangehaald toonden Elliott en Keller in 2014 al aan dat van de bestudeerde evaluatiemethodes Meteor de hoogste correlatie heeft met menselijke beoordelingen voor afbeeldingsbeschrijvingen. Om deze reden rappor
-teren wij ook de resultaten met dit algoritme. In de literatuur blijven BLEU-scores echter de meest gerapporteerde resultaten.
+Zoals al aangehaald toonden Elliott en Keller in 2014 aan dat van de bestudeerde evaluatiemethodes Meteor de hoogste correlatie heeft met menselijke beoordelingen voor afbeeldingsbeschrijvingen. Om deze reden rapporteren wij ook de resultaten met dit algoritme. In de literatuur blijven BLEU-scores echter de meest gerapporteerde resultaten.
 
 Ondanks dat het het meest performante algoritme is, vertoont Meteor nog steeds slechts matige correlatie met menselijke beoordelingen. Verder onderzoek naar betere automatische evaluatie kan dus nuttig zijn. Daarnaast vereist het tabellen en synoniemenlijsten die niet voor elke taal beschikbaar zijn. Voor het Engels is deze informatie echter wel beschikbaar. 
 
@@ -113,12 +111,12 @@ Een eerste vorm van informatie ligt in de verdeling van de lengtes van de zinnen
 
 De gebruikte woordenschat en bijbehorende woordfrequenties bieden een tweede bron van informatie. Het aantal unieke woorden geeft een idee van hoe gevarieerd het woordgebruik is van het model. Als dit aantal aan de lage kant is, is de kans groter dat het model veel dezelfde uitdrukkingen en bij uitbreiding zinnen genereert. Daarnaast evalueren we ook het aantal voorkomens van de gebruikte woorden. Dit geeft dus informatie over de voorkeur voor bepaalde woorden. De vergelijking van deze voorkeur met deze van de referentiezinnen kan dan leiden tot het ontdekken van bepaalde eigenschappen van het model.
 
-Een derde optie bestaat erin om te kijken hoeveel unieke zinnen het systeem genereert. Onze implementatie biedt de mogelijkheid om de gegenereerde zinnen voor de testverzameling te vergelijken met die in de trainingsverzameling, alsook met zichzelf. Zo is het mogelijk om een beeld te vormen van hoe gevarieerd het systeem is in het genereren van zinnen. Een vergelijking van de trainingszinnen met de gegenereerde kan ook leiden tot een aantal conclusies over het systeem, in welke mate het getrainde systeem in staat is om ``nieuwe'' zinnen te leren.
+Een derde optie bestaat erin om te kijken hoeveel unieke zinnen het systeem genereert. Onze implementatie biedt de mogelijkheid om de gegenereerde zinnen voor de testverzameling te vergelijken met die in de trainingsverzameling. Dit geeft een beeld van in welke mate het model echt nieuwe zinnen genereert of gekende zinnen teruggeeft. Daarnaast is er de mogelijkheid om het aantal echt unieke zinnen te berekenen. Dit zijn zinnen die niet in de trainingsverzameling voorkomen of al gegenereerd zijn. Zo is het mogelijk om een beeld te vormen van hoe gevarieerd het systeem is in het genereren van zinnen. 
 
 \section{Afbeelding-zin rangschikking}
-Enkele oudere werken in de literatuur over automatische afbeeldingsbeschrijving gebruiken nog een andere vorm van evaluatie. Hierbij worden alle beschikbare beschrijvingen ge\"evalueerd door het geleerde model voor elke afbeelding. Hodosh introduceerde deze vorm van evolueren voor dit type van problemen.\cite{Hodosh2013} Op basis van deze evaluatie vormt men een rangschikking van de zinnen bij elke foto. Vervolgens vormt de positie $r$ van de eerste correcte zin de basis van de uiteindelijke score. \todo{referereer naar voorbeelden?} De eenvoudige maar veelgebruikte metriek $recall @ k$ wordt gebruikt voor evaluatie. Hierbij vormt het percentage van de afbeeldingen waarbij de correcte zin bij de eerste $k$ zinnen zit de uiteindelijke score. Ook de mediaan van de gevonden posities ($med\: r$)wordt dikwijls vermeld. Hetzelfde principe werkt ook in de omgekeerde richting. Hierbij gaat men van een zin via het model terug naar een rangschikking van afbeeldingen (image retrieval). Deze laatste manier van evalueren toont aan hoe het gebruikte model kan worden gebruikt om gekende afbeeldingen te zoeken op basis van nieuwe queries. 
+Enkele oudere werken in de literatuur over automatische afbeeldingsbeschrijving gebruiken nog een andere vorm van evaluatie. Hodosh introduceerde deze vorm van evolueren voor dit type van problemen.\cite{Hodosh2013} Hij defini\"eert twee types van evaluatie op basis van het opzoeken van een gezochte zin of afbeelding. Enerzijds met als startpunt een afbeelding, waarbij beschrijvende zinnen worden gezocht (sentence retrieval). Anderzijds zoekt men afbeeldingen op basis van een zin (image retrieval). Voor foto's bijvoorbeeld moet een systeem dan een rangschikking van de zinnen bij elke foto produceren. Vervolgens vormt de positie $r$ van de eerste correcte zin de basis van de score. De eenvoudige maar veelgebruikte metriek $recall @ k$ wordt gebruikt voor evaluatie. Hierbij vormt het percentage van de afbeeldingen waarbij de correcte zin bij de eerste $k$ zinnen zit de uiteindelijke score. Ook de mediaan van de gevonden posities ($med\: r$)wordt dikwijls vermeld. Hetzelfde principe werkt ook in de omgekeerde richting. Hierbij gaat men van een zin via het model terug naar een rangschikking van afbeeldingen. Deze laatste manier van evalueren toont aan hoe het gebruikte model kan worden gebruikt om gekende afbeeldingen te zoeken op basis van nieuwe queries. 
 
-Volgens \cite{Google} is de transformatie van generatie naar rangschikking echter niet gerechtvaardigd als evaluatiemethode. Naarmate afbeeldingen en daarbij ook het woordenboek complexer worden, groeit het aantal mogelijke zinnen exponentieel. Hierdoor daalt de likelihood van de voorgedefin\"ieerde zinnen, tenzij het aantal van deze zinnen ook exponentieel stijgt. Dit is geen realistische veronderstelling en maakt de evaluatie computationeel onhaalbaar. Omwille van deze redenering verdwijnt $recall @ k$ in de meer recente papers en gebruiken wij deze evaluatiemethode ook niet. Tabel \ref{table:recall} geeft een voorbeeld van de afbeelding-zin rangschikking in beide richtingen. Dit zijn de resultaten zoals weergegeven in de paper van Vinyals. Opvallend is hier dat de gevonden scores zeker niet veel beter zijn dan de referentiescores, terwijl zijn model wel veel beter scoort op de automatische evaluatiemethodes (BLEU-N). Van deze laatste methodes is bovendien de correlatie met menselijke evaluatie wel aangetoond.
+Volgens \cite{Google} is de transformatie van generatie naar rangschikking echter geen gerechtvaardigde evaluatiemethode. Naarmate afbeeldingen en daarbij ook het woordenboek complexer worden, groeit het aantal mogelijke zinnen exponentieel. Hierdoor daalt de likelihood van de voorgedefin\"ieerde zinnen, tenzij het aantal van deze zinnen ook exponentieel stijgt. Dit is geen realistische veronderstelling en maakt de evaluatie computationeel onhaalbaar. Omwille van deze redenering verdwijnt $recall @ k$ in de meer recente papers en gebruiken wij deze evaluatiemethode ook niet. Tabel \ref{table:recall} geeft een voorbeeld van de afbeelding-zin rangschikking in beide richtingen. Dit zijn de resultaten zoals weergegeven in de paper van Vinyals. Opvallend is hier dat de gevonden scores zeker niet veel beter zijn dan de referentiescores, terwijl zijn model wel veel beter scoort op de automatische evaluatiemethodes (BLEU-N). Van deze laatste methodes is bovendien de correlatie met menselijke evaluatie wel aangetoond.
 
 
 \begin{table}
