@@ -2,28 +2,34 @@
 \label{cha:experimenten}
 Dit hoofdstuk bevat een overzicht van de experimenten die zijn uitgevoerd. Een eerste sectie beschrijft experimenten die de modellen trainen en evalueren om absoluut betere resultaten te halen dan het basismodel. In een tweede sectie bekijken we het effect van ruis op twee gLSTM implementaties.
 
-\section{Eigen implementaties} % (fold)
+\section{Algemene instellingen} % (fold)
 \label{sec:eigen_implementaties_exp}
-Het doel van deze masterproef is om de basisresultaten van de paper en bijbehorende implementatie van Karpathy\cite{Karpathy2015} te verbeteren. Om die reden volgen we nauwgezet dezelfde types van experimenten. Daarom doet hetzelfde VGGNet met 16 lagen dienst als convolutioneel netwerk. Daarnaast voeren we alle experimenten uit op de Flickr30k dataset en gebruiken we dezelfde test-, train- en validatiedeelverzameling als deze in de paper. We trainen het netwerk en de toegevoegde uitbreidingen met behulp van de trainingset. Het afstellen van de parameters van deze modellen gebeurt op basis van scores op de validatieset. De uiteindelijke evaluatie gebeurt op de testset. Op deze manier is geen enkel model getraind op de test set en kan een correcte vergelijking gebeuren met de rest van de literatuur.
+Het doel van deze masterproef is om de basisresultaten van de paper en bijbehorende implementatie van Karpathy\cite{Karpathy2015} te verbeteren. Om die reden volgen we nauwgezet dezelfde types van experimenten. Daarom doet hetzelfde VGGNet met 16 lagen dienst als convolutioneel netwerk. Daarnaast vormt de  Flickr30k dataset de basis voor de experimenten met dezelfde test-, train- en validatiedeelverzameling als deze in de paper van Karpathy. We trainen het netwerk en de toegevoegde uitbreidingen met behulp van de trainingset. Het afstellen van de parameters van deze modellen gebeurt op basis van scores op de validatieset. De uiteindelijke evaluatie gebeurt op de testset. Op deze manier is geen enkel model getraind op de test set en kan een correcte vergelijking gebeuren met de rest van de literatuur.
 
-We vermoeden echter dat Karpathy gebruik maakt van een brevity penalty \todo{quotes?} bij de BLEU-scores. In dit werk en in andere werken in de literatuur gebeurt dit echter niet. Om die reden doen we eerst experimenten met de standaard instellingen van de code van Karpathy voor zowel het RNN als LSTM model. De resultaten hiervan vormen dan de referentiewaarden die moeten worden verbeterd. 
-
-De verschillende modellen zijn getraind met de volgende instellingen: leersnelheid 0.0001, type solver rmsprop, decay rate 0.999, epsilon smoothing 1e-8, batch-size 100, gradient clipping 5, dropout in encoder en decoder 0.5. \todo{Dit fixen :D nee das kei mooi zo}
+De verschillende modellen zijn getraind met de volgende instellingen: leersnelheid 0.0001, type solver \texttt{rmsprop}, decay rate 0.999, epsilon smoothing 1e-8, batch-grootte 100, gradient clipping 5, drop-out in encoder en decoder 0.5.
 
 Tijdens het trainen van de modellen slaagt het systeem op vaste momenten het huidige netwerk op samen met de perplexity van de validatieset. Karpathy kiest als finaal model voor het netwerk met de beste perplexity. Uit enkele eenvoudige testen blijkt dat de perplexity slechts beperkt overeenkomt met de BLEU-score. Om die reden kiezen wij voor onze modellen het netwerk dat de beste BLEU-4 score op de validatieset heeft als finaal model voor elke configuratie.
 
-Beam search is het algoritme dat zorgt voor het genereren van de zinnen. In onze experimenten is de beam-grootte steeds 50.
+Beam search is het algoritme dat zorgt voor het genereren van de zinnen. In de algemene experimenten is de beam-grootte steeds $50$.
 BLEU-scores (1-4), METEOR-scores en enkele statistieken dienen als evaluatiemetriek. Deze scores zijn berekend met behulp van steeds vijf referentiezinnen.
 
-Naast de referentiewaarden voeren we ook experimenten uit op onze eigen geschreven uitbreidingen.
-Deze bevatten RNN uitgebreid met LDA, gLSTM met CCA voor verschillende groottes van CCA-vector, gLSTM met LDA voor verschillende groottes van topics. Daarnaast bekijken we ook het effect van Gaussiaanse normalisatie en Min-Hinge normalisatie op elk van deze modellen.
+We vermoeden dat Karpathy gebruik maakt van een Brevity Penalty bij de BLEU-scores. In dit werk en in andere werken in de literatuur gebeurt dit echter niet.
+
+\section{Verbeteringen op startpunt}
+Karpathy gebruikte een Brevity Penalty bij de evaluatie van zijn resultaten in de originele paper. In dit werk gebeurt dit niet. Daarnaast is Karpathy's implementatie van de LSTM van Vinyals geen exacte kopie. Om die redenen is het niet mogelijk om een correcte vergelijking te maken met de resultaten in beide papers. Daarom is er een noodzaak aan eigen referentiewaarden. Zonder wijzigingen aan te brengen aan de originele code, zorgt een uitvoering met de algemene instellingen voor zowel RNN als LSTM voor deze referentiewaarden. Die waarden vormen de richtpunten, waarvoor een verbetering wordt gezocht.
+Daarna volgen experimenten met de zelf geschreven uitbreidingen. RNN bevat een uitbreiding met LDA. LSTM bevat uitbreidingen met als gids LDA en CCA.
+Na het trainen en evalueren van deze modellen, wordt ook het effect van Gaussiaanse normalisatie, Min-Hinge normalisatie en IDF-normalisatie getest.
+De resultaten van deze modellen worden dan vergeleken met de referentiewaarden.
+
+\section{Wijzigen van parameters}
+Naast het toevoegen van uitbreidingen aan het startpunt, loont het de moeite om te kijken wat het effect is op het wijzigen van de parameters op deze modellen. Bij LDA vormt het aantal topics de belangrijkste te controleren parameter. Bij CCA wordt de grootte van de gebruikte vector beschouwd. Ook het al dan niet invoeren van de afbeelding op elke tijdstap van het RNN is een te wijzigen parameter. Als laatste bekijken we het effect van verschillende gewichten voor de gecombineerde IDF-Gauss normalisatie.
 
 \section{Ruisgevoeligheid van CCA en LDA} % (fold)
 \label{sec:ruisgevoeligheid_van_cca_en_lda_exp}
-gLSTMs maken het mogelijk om extra semantische informatie aan het taalmodel te geven. Deze informatie kan uit verschillende bronnen komen. In deze masterproef bekeken we CCA en LDA. Naast de absolute scores die de twee modellen halen is het ook interessant om te kijken naar welk van de modellen het meest robuust is tegen perturbaties in de referentiezinnen.
+gLSTMs maken het mogelijk om extra semantische informatie aan het taalmodel te geven. Deze informatie kan uit verschillende bronnen komen. In deze masterproef bekeken we CCA en LDA. Naast de absolute scores die de twee modellen halen, is het ook interessant om te kijken naar welk van de modellen het meest robuust is tegen perturbaties in de referentiezinnen.
 
 Om deze eigenschap te evalueren cre\"eren we een nieuwe dataset waarbij de referentiezinnen van de trainingsset perturbaties bevatten.
-Concreet wordt elk woord vervangen door een willekeurig woord in het vocabularium met een kans van 10\%. Hierna traint het netwerk op dezelfde manier als hierboven beschreven. Na deze training en generatie van resultaten op de testverzameling is het mogelijk om te vergelijken welk model relatief het meeste last heeft van deze extra ruis in de dataset.
+Concreet wordt elk woord vervangen door een willekeurig woord in het vocabularium met een kans van 10\%. Hierna traint het netwerk op dezelfde manier als hierboven beschreven. Na deze training en generatie van resultaten op de testverzameling is het mogelijk om te vergelijken welk model het meeste last heeft van deze extra ruis in de dataset.
 
 % section besluit (end)
 

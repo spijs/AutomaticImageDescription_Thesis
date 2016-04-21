@@ -84,8 +84,7 @@ Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvec
 \label{eq:rnnfeedalways}
 \end{equation}
 
-\todo{Dit is niet echt hoe het werkt}
-\todo{nu wel denk ik? }
+\todo{Checken hoe het werkt}
 Het genereren van beschrijvingen gebeurt op basis van beam search. Hierbij bepaalt de output van het netwerk de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de volgende iteratie. Op basis van deze woorden genereert het systeem alle mogelijke opeenvolgingen van twee woorden en voegt deze toe aan de lijst met zinnen bestaande uit \'e\'en woord. Het algoritme gaat door met de $n$ meest waarschijnlijke combinaties, die dus kunnen bestaan uit \'e\'en of twee woorden. Dit proces herhaalt zicht tot alle zinnen een END symbool voorspellen en dus volledig zijn, of tot een maximaal aantal iteraties bereikt is. 
  
 
