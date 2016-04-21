@@ -151,7 +151,6 @@ Indien er een logistische transferfunctie wordt gebruikt geeft dit het volgende 
 Elke stap zorgt deze gradient ervoor dat aanpassing van de gewichten ervoor zorgt dat, bij dezelfde input, de output dichter bij het gewenste resultaat zal liggen.
 
 Vervolgens zorgt gradient descent voor een aanpassing van \myvector{\hat{h}}. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus wijzigt het algoritme \myvector{W} zodat de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}} weergeeft:
-\todo[inline]{Misschien ergens kort gradient descent ofwel uitleggen ofwel referencen? REFERENCE TOEVOEGEN VOOR GRADIENT DESCENT}
 \begin{equation}
     \Delta h_i = \sum\limits_{j}(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)w'_{ji}
 \end{equation}
@@ -160,13 +159,15 @@ Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzig
     w_{ji} = w_{ji} + \sigma(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
 \end{equation}
 
+\todo{boek van blockeel quoten}
+
 Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}.
 Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag. Een zelfde techniek maakt het trainen mogelijk van complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
 % paragraph training (end)
 
 \paragraph{Softmaxlaag}\label{par:softmax}
 De softmaxlaag is een laag die vaak als laatste laag in een neuraal netwerk voorkomt. Wanneer het netwerk meerdere outputs heeft, geeft de softmaxlaag een kansverdeling over de verschillende outputs terug in plaats van de oorspronkelijke outputvector. Concreet betekent dit dat de outputwaarden worden genormaliseerd op een manier dat elke waarde positief is en bovendien de som van alle waarden gelijk is aan 1. Dit is bijvoorbeeld nuttig bij het leren van een kansverdeling over een aantal discrete componenten. Ook bij classificatie van input die tegelijkertijd tot meerdere klassen kan behoren is dit van nut.
-In het geval van onze thesis komt een softmax voor als laatste laag bij de gebruikte CNN, als laatste laag in het netwerk om de topicverdeling te bepalen bij een LDA en als laatste laag in het gebruikte taalnetwerk.\todo{refereren naar secties?}
+In het geval van onze thesis komt een softmax voor als laatste laag bij de gebruikte CNN, als laatste laag in het netwerk om de topicverdeling te bepalen bij een LDA en als laatste laag in het gebruikte taalnetwerk.\todo{refereren naar secties?} \todo{afgeleide ook uitleggen voor backprop + formule}
 
 De softmaxlaag is eigenlijk de softmaxfunctie in formule \ref{formula-softmax}. Hierbij is $o$ de outputvector van grootte $n$.
 \begin{equation}
@@ -182,7 +183,7 @@ Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch ge\" in
 
 Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.\todo{types lagen verder uitdiepen?}
 
-Eerst is er een filter bank laag, die een aantal features kan detecteren in de input. Daarna volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een \emph{rectified sigmoid} bevatten, al dan niet gecombineerd met een normalisatie. \todo[inline]{komt bijna letterlijk uit LeCun 2010, maar hij refereert door naar andere papers, die er ook bij zetten? } De laatste laag in het niveau is een feature pooling laag die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde.
+Eerst is er een filter bank laag, die een aantal features kan detecteren in de input. Daarna volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een ``rectified sigmoid'' bevatten, al dan niet gecombineerd met een normalisatie. \todo[inline]{meer schrijven over deze lagen } De laatste laag in het niveau is een feature pooling laag die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde.
 
 Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau rechthoekige regio's uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
 
@@ -200,7 +201,7 @@ Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is
 % RNN
 \subsection{Recurrente Neurale Netwerken}
 \todo[inline]{we hebben buiten word2vec geen enekele referentie in dit stuk?}
-Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van de output van de vorige stap naar de verborgen lagen. Op figuur \ref{fig:rnn} \todo{reference voor afbeeldng}is een ontrolling van een RNN over verschillende tijdstippen te zien. $U,V$ en $W$ stellen gewichtsmatrices voor.
+Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van de output van de vorige stap naar de verborgen lagen. Op figuur \ref{fig:rnn} \todo{reference voor afbeeldng + meer uitleg over wat een ontrolling is} is een ontrolling van een RNN over verschillende tijdstippen te zien. $U,V$ en $W$ stellen gewichtsmatrices voor.
 
 De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.
 
@@ -211,9 +212,9 @@ De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onth
     \label{fig:rnn}
 \end{figure}
 
-Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om zinnen te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen random zijn, of het kunnen word embeddings zijn zoals bijvoorbeeld \emph{word2vec}\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
+Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om zinnen te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen random zijn, of het kunnen word embeddings zijn zoals bijvoorbeeld \texttt{word2vec}\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie \todo{concreet zeggen hoe dit gebeurt}.
 
-\todo{Heel stuk over problemen RNN en oplossingen zoals Relu's etc!!}
+\todo{Problemen met RNN: dropout, er is ene goeie paper die vier toevoegingen doet}
 
 % LSTM
 \subsection{Long Short Term Memory Neurale Netwerken}
@@ -227,9 +228,22 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
     \label{fig:lstm}
 \end{figure}
 
-\todo[inline]{hier nog formules toevoegen !!!!}
+\begin{eqnarray}
+\vspace{-3mm}
+\label{glstm-memory-start}
+i_t' & = & \sigma (W_{ix} x_t + W_{im} m_{t-1}) \label{glstm-input} \\
+f_t' & = & \sigma (W_{fx} x_t + W_{fm} m_{t-1}) \\
+o_t' & = & \sigma (W_{ox} x_t + W_{om} m_{t-1}) \\
+c_t' & = & f_t' \odot c_{t-1}' + i_t' \odot h(W_{cx} x_t + \nonumber \\
+&   & + W_{cm} m_{t-1}) \\
+m_t & = & o_t' \odot c_t'\\
+p_{t+1} = SoftMax(m_t)
+\label{glstm-memory}
+\vspace{-3mm}
+\end{eqnarray}
+\todo[inline]{figuur uitleggen, formules bij methodology}
 
-LSTM netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM netwerken over een langere periode dan een gewone RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk.
+LSTM-netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM-netwerken over een langere periode dan een gewoon RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk.
 
 
 \section{Statistiek}
@@ -243,13 +257,14 @@ Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch mod
     \label{formule:lda}
 \end{equation}
 
-Het generatieve aspect van LDA is te zien in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ word een kansverdeling over de onderwerpen gesampled per document ($\theta$), alsook een kansverdeling over de woorden voor elk onderwerp ($\phi$). Uit $\theta$ wordt voor elke positie $i$ in een document $j$ een onderwerp gesampled ($z_{ji}$). Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$. Trainen van een LDA model gebeurt met een Markov chain Monte Carlo algoritme zoals bijvoorbeeld Gibbs sampling, en leidt tot de verdelingen $\theta$ en $\phi$.
+Een  \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ word een kansverdeling over de onderwerpen gesampled per document ($\theta$), alsook een kansverdeling over de woorden voor elk onderwerp ($\phi$). Uit $\theta$ wordt voor elke positie $i$ in een document $j$ een onderwerp gesampled ($z_{ji}$). Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$. Trainen van een LDA model gebeurt met een Markov chain Monte Carlo algoritme zoals bijvoorbeeld Gibbs sampling, en leidt tot de verdelingen $\theta$ en $\phi$. \todo{herschrijven}
 
-Het trainen met Gibbs sampling begint met een random initialisatie van de topicverdeling voor elk document. Daarna itereert het algoritme over elk woord in elk document. Het berekent de kansverdeling over de verschillende topics, gebaseerd op de onderwerpen van de andere woorden in de collectie (update stap). Op basis van deze kansverdeling wordt een nieuw topic gesamplet voor het huidige woord. Dit proces van updaten en samplen herhaalt zich tot er convergentie plaatsvindt. De geleerde topicverdelingen voor elk woord dienen dan als basis voor de topicverdelingen voor elk document en de woordverdelingen per topic.
+Het trainen met Gibbs sampling begint met een random initialisatie van de topicverdeling voor elk document. Daarna itereert het algoritme over elk woord in elk document. Het berekent de kansverdeling over de verschillende topics, gebaseerd op de onderwerpen van de andere woorden in de collectie (update stap). Op basis van deze kansverdeling wordt een nieuw topic gesampled voor het huidige woord. Dit proces van updaten en samplen herhaalt zich tot er convergentie plaatsvindt. De geleerde topicverdelingen voor elk woord dienen dan als basis voor de topicverdelingen voor elk document en de woordverdelingen per topic. \todo{E en M formules toevoegen}
 
 Het meest interessante voor deze masterproef zijn de topicverdelingen per document. Deze kunnen gebruikt worden als extra semantische informatie. De systemen kunnen op basis van dergelijke topicverdelingen een verband leren tussen de topics die voorkomen in de beschrijvingen, en de concepten die aanwezig zijn op de afbeelding. 
 \todo[inline]{formules ook? is natuurlijk mooi, maar meer symbolen, en mss iets overkill?}
 \todo[inline]{wat is mcmc, wat zijn dirichlet priors?} 
+\todo[inline]{generative story toevoegen}
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lda.png}
@@ -259,12 +274,15 @@ Het meest interessante voor deze masterproef zijn de topicverdelingen per docume
 
 
 %  Stacked CCA
-\subsection{Stacked Canonical Correlation Analysis}
+\subsection{Canonical Correlation Analysis}
 \label{sub:stackedcca}
 Canonical Correlation Analysis (CCA) is een methode die gebruikt wordt om een covariantiematrix van twee datasets te berekenen. Dit houdt in dat er een projectie wordt gemaakt naar een gemeenschappelijke ruimte voor beide datasets. De projecties van overeenkomstige waarden zijn na berekening van de modellen maximaal gecorreleerd. In het onderzoek naar image captioning kan dit bijvoorbeeld leiden tot een multimodale mapping van afbeeldings- en beschrijvingsrepresentatie.
 \todo[inline]{Referentie voor CCA} \todo{Iets over de training?, hoe wordt dit berekend?}
 
-Stacked Auxiliary Embedding \cite{Gong2014} kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
+\paragraph{Stacked CCA}
+
+Stacked Auxiliary Embedding\cite{Gong2014} kan op basis van extra informatie een verbeterde mapping maken. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeterd worden door gebruik te maken van de informatie uit de extra dataset.
+\todo{DUIDELIJK zeggen dat we van gong stelen}
 
 Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Uit de extra dataset volgt een eerste set van CCA projecties ($A$, $B$). Daarna volgt een projectie van de originele dataset ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$, resulterend in projecties $AX$ en $BY$. Vervolgens transformeren we $AX$ en $BY$ volgens de niet-lineaire functie $\phi(x)$, zoals voorgesteld in de originele paper.
 
