@@ -228,7 +228,20 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
     \label{fig:lstm}
 \end{figure}
 
-\todo[inline]{figuur uitleggen, formules bij methodology}
+\begin{eqnarray}
+\vspace{-3mm}
+\label{glstm-memory-start}
+i_t' & = & \sigma (W_{ix} x_t + W_{im} m_{t-1}) \label{glstm-input} \\
+f_t' & = & \sigma (W_{fx} x_t + W_{fm} m_{t-1}) \\
+o_t' & = & \sigma (W_{ox} x_t + W_{om} m_{t-1}) \\
+c_t' & = & f_t' \odot c_{t-1}' + i_t' \odot h(W_{cx} x_t + \nonumber \\
+&   & + W_{cm} m_{t-1}) \\
+m_t & = & o_t' \odot c_t'\\
+p_{t+1} = SoftMax(m_t)
+\label{glstm-memory}
+\vspace{-3mm}
+\end{eqnarray}
+\todo[inline]{figuur + formules uitleggen}
 
 LSTM-netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM-netwerken over een langere periode dan een gewoon RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk.
 
