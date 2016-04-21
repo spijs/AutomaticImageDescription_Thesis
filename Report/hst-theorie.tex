@@ -132,7 +132,7 @@ Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte 
 Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd met behulp van gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Gradient descent is een eenvoudig optimalisatie algoritme dat kan dienen om het lokale minimum van een functie te vinden. De minimalisatie gebeurt op een ``gulzige'' manier, door elke stap wijzigingen aan te brengen in de richting van de steilste afdaling. Deze richting komt overeen met de eerste afgeleide van de transferfunctie, berekend in alle variabelen van de output van het netwerk: 
 
 \begin{equation}
-df_i = \frac{d}{d\hat{h_i}'}f(\hat{h_i}')
+df_i = \frac{\partial}{\partial\hat{h_i}'}f(\hat{h_i}')
 \end{equation}
 In het geval van een logistische transferfunctie $f(x) = \frac{1}{1 + \mathrm e^{-x}}$ geeft dit volgende vector van afgeleiden:
 \begin{equation}
@@ -158,32 +158,57 @@ Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzig
 \begin{equation}
     w_{ji} = w_{ji} + \sigma(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
 \end{equation}
+Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}. \cite{Blockeel}
 
-\todo{boek van blockeel quoten}
-
-Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}.
 Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag. Een zelfde techniek maakt het trainen mogelijk van complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
 % paragraph training (end)
 
 \paragraph{Softmaxlaag}\label{par:softmax}
 De softmaxlaag is een laag die vaak als laatste laag in een neuraal netwerk voorkomt. Wanneer het netwerk meerdere outputs heeft, geeft de softmaxlaag een kansverdeling over de verschillende outputs terug in plaats van de oorspronkelijke outputvector. Concreet betekent dit dat de outputwaarden worden genormaliseerd op een manier dat elke waarde positief is en bovendien de som van alle waarden gelijk is aan 1. Dit is bijvoorbeeld nuttig bij het leren van een kansverdeling over een aantal discrete componenten. Ook bij classificatie van input die tegelijkertijd tot meerdere klassen kan behoren is dit van nut.
-In het geval van onze thesis komt een softmax voor als laatste laag bij de gebruikte CNN, als laatste laag in het netwerk om de topicverdeling te bepalen bij een LDA en als laatste laag in het gebruikte taalnetwerk.\todo{refereren naar secties?} \todo{afgeleide ook uitleggen voor backprop + formule}
 
-De softmaxlaag is eigenlijk de softmaxfunctie in formule \ref{formula-softmax}. Hierbij is $o$ de outputvector van grootte $n$.
+De softmaxlaag is eigenlijk de softmaxfunctie $s$ in formule \eqref{formula-softmax}. Hierbij is $o$ de outputvector van grootte $n$.
 \begin{equation}
-softmax(o)_i = \frac{e^{o_i}}{\sum^{n}_{k=1}{e^{o_k}}}
+s(\textbf{o})_i = \frac{e^{o_i}}{\sum^{n}_{k=1}{e^{o_k}}}
 \label{formula-softmax}
 \end{equation}
 
+Het gebruik van softmax bij backpropagatie is zeer eenvoudig. De afgeleide van de softmaxfunctie is te zien in formule \eqref{softmax_derivative}. Hierbij is $\delta_{ik}$ de Kroneckerdelta, die gelijk is aan $1$ als $i = k$ en anders gelijk is aan $0$.
+
+\begin{equation}
+    \frac{\partial}{\partial o_k}s(\textbf{o})_i =  s(\textbf{o})_i(\delta_{ik} - s(\textbf{o})_k)
+    \label{softmax_derivative}
+\end{equation}
+
+Bij het gebruik van negatieve logprobabiliteit als foutenfunctie ($L_i$) komt dit neer op volgende zeer eenvoudige afgeleiden van de foutenfunctie:
+
+\begin{equation}
+    \frac{\partial L_i}{\partial o_k} = s(\textbf{o})_k - y_i
+\end{equation}
+met $\textbf{y}$ de correcte output\cite{Bishop:1995:NNP:525960}.
+
+In deze thesis komt een softmax voor als laatste laag bij de gebruikte CNN (sectie \ref{sec:usedcnn}), als laatste laag in het netwerk bij de voorspelling van LDA-topicverdelingen (sectie \ref{sec:LDAprediction}) en als laatste laag in de gebruikte taalnetwerken (sectie \ref{sec:rnn_methodology} en \ref{sec:lstm}).
 
 % CNN
 \subsection{Convolutionele Neurale Netwerken}
 \label{sec:CNN}
 Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren.\cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{Ciresan2012}\cite{Zhou2015}
 
-Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.\todo{types lagen verder uitdiepen?}
+Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
-Eerst is er een filter bank laag, die een aantal features kan detecteren in de input. Daarna volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een ``rectified sigmoid'' bevatten, al dan niet gecombineerd met een normalisatie. \todo[inline]{meer schrijven over deze lagen } De laatste laag in het niveau is een feature pooling laag die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde.
+Eerst is er een filter bank laag, die een aantal features kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de verschillende features met een aantal kernelfuncties. Elke filterlaag detecteert andere features op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van een dergelijke kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
+
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=.7\textwidth]{Images/cnnfilters.PNG}
+    \caption{96 convolutionele filters\cite{Krizhevsky2012a}}
+    \label{fig:cnnfilters}
+\end{figure}
+
+Daarna volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een ``rectified sigmoid'' bevatten, al dan niet gecombineerd met een normalisatie.
+
+De laatste laag in elk niveau is een feature pooling laag die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde.
+
+De laatste fase in een traditionele convolutionele architectuur bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
 
 Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau rechthoekige regio's uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
 
@@ -201,20 +226,26 @@ Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is
 % RNN
 \subsection{Recurrente Neurale Netwerken}
 \todo[inline]{we hebben buiten word2vec geen enekele referentie in dit stuk?}
-Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van de output van de vorige stap naar de verborgen lagen. Op figuur \ref{fig:rnn} \todo{reference voor afbeeldng + meer uitleg over wat een ontrolling is} is een ontrolling van een RNN over verschillende tijdstippen te zien. $U,V$ en $W$ stellen gewichtsmatrices voor.
+Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van de output van de vorige stap naar de verborgen lagen. Op figuur \ref{fig:rnn} is een ontrolling van een RNN over verschillende tijdstippen te zien. $U,V$ en $W$ stellen gewichtsmatrices voor. Het ontrollen van het netwerk komt neer op het uitschrijven van het netwerk over verschillende tijdstippen. De pijlen van links naar rechts op de afbeelding komen overeen met de terugkoppeling van de output uit de vorige stap.
 
 De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/rnn.PNG}
-    \caption{Ontrolling van een recurrent neuraal netwerk}
+    \caption{Ontrolling van een recurrent neuraal netwerk\cite{RNNTutorial}}
     \label{fig:rnn}
 \end{figure}
 
 Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om zinnen te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen random zijn, of het kunnen word embeddings zijn zoals bijvoorbeeld \texttt{word2vec}\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie \todo{concreet zeggen hoe dit gebeurt}.
 
-\todo{Problemen met RNN: dropout, er is ene goeie paper die vier toevoegingen doet}
+De twee meest voorkomende problemen bij het trainen van recurrente neurale netwerken zijn exploderende en uitdovende gradi\"enten, waarbij de gradi\"ent van de fout tijdens de training enorm toeneemt, respectievelijk afneemt. Hiervoor zijn een aantal mogelijke oplossingen.
+
+Een eerste oplossing is het gebruik van ``gradient clipping'' zoals voorgesteld door Pascanu et al. \todo{cite} Deze methode verkort de gradi\"entvector zodra de lengte van die vector boven een bepaalde drempel $t$ ligt. De update vindt dan plaats in de dezelfde richting, maar de norm is aangepast. Voor een vector $\mathbf{g}$ komt dit neer op volgende resulterende gradi\"entvector $\mathbf{\hat{g}}$:
+
+\begin{equation}
+    \mathbf{\hat{g}} = \frac{t}{||\mathbf{g}||}\mathbf{g}
+\end{equation}
 
 % LSTM
 \subsection{Long Short Term Memory Neurale Netwerken}
@@ -230,15 +261,15 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
 
 \begin{eqnarray}
 \vspace{-3mm}
-\label{glstm-memory-start}
-i_t' & = & \sigma (W_{ix} x_t + W_{im} m_{t-1}) \label{glstm-input} \\
+\label{lstm-memory-start}
+i_t' & = & \sigma (W_{ix} x_t + W_{im} m_{t-1}) \label{lstm-input} \\
 f_t' & = & \sigma (W_{fx} x_t + W_{fm} m_{t-1}) \\
 o_t' & = & \sigma (W_{ox} x_t + W_{om} m_{t-1}) \\
 c_t' & = & f_t' \odot c_{t-1}' + i_t' \odot h(W_{cx} x_t + \nonumber \\
 &   & + W_{cm} m_{t-1}) \\
 m_t & = & o_t' \odot c_t'\\
-p_{t+1} = SoftMax(m_t)
-\label{glstm-memory}
+p_{t+1} & = & SoftMax(m_t)
+\label{lstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
 \todo[inline]{figuur uitleggen, formules bij methodology}
