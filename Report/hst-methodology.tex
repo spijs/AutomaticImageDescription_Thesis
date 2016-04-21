@@ -10,18 +10,34 @@ Vervolgens beschouwt dit hoofdstuk op welke wijze deze informatie kan bijdragen 
 De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De voorlaatste sectie beschrijft een normalisatiemethode voor beam-search. Dit hoofdstuk sluit af met de implementatie van een ander type van neuraal netwerk, dat volgens de auteurs ervan veel veelbelovende eigenschappen heeft.
 
 
-\section{Startpunt implementatie} \todo{Betere titel}
-\todo[inline]{Dingen die ik nog mis: batches, solver, rmsprop}
-Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python implementatie van het recurrente neurale netwerk beschreven in \cite{Karpathy2015}, alsook een implementatie die gebaseerd is op het werk van Vinyals et al.\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
+\section{Startpunt}
+Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python implementatie van het recurrente neurale netwerk beschreven in \cite{Karpathy2015}, alsook een implementatie gebaseerd op het werk van Vinyals et al.\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
+
+\subsection{Algemeen systeem}
+Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijk systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiding van de data, het maken van tussentijdse back-ups en het aansturen van een ``oplosser''. Deze ``oplosser'' beheert de netwerken en controleert het trainingsproces. De netwerken worden getraind in batches. Hierbij traint het netwerk niet met steeds \'e\'en voorbeeld, maar met meerdere tegelijk. 
+Hij voorziet verschillende opties om dit gemeenschappelijk systeem te configureren. Hieronder volgt een overzicht van de belangrijkste parameters voor het trainen van het netwerk.
+\begin{itemize}
+	\item Grootte van de verborgen laag van de netwerken
+	\item Grootte van afbeeldings- en woordcodering
+	\item Aantal afbeeldingen in een batch
+	\item Type solver: rmsprop, adagrad, adadelta of vanilla
+	\item Decay rate
+	\item Al dan niet gradient clipping
+	\item Drop-out in encoder en decoder
+	\item Leersnelheid
+	\item Epsilon smoothing
+\end{itemize}
+Als CNN gebruikt hij een bestaand vooraf getraind netwerk.
 
 \subsection{Recurrent Neuraal Netwerk}
+\label{sec:rnn_methodology}
 Een eerste implementatie, die ons startpunt vormt, is beschreven door Karpathy \cite{Karpathy2015}. Hij beschrijft een systeem dat op basis van een afbeelding een beschrijvende zin genereert. Dit gebeurt in twee stappen. Eerst wordt de afbeelding door middel van een CNN omgezet naar een vector representatie. Deze vector dient vervolgens als input voor een recurrent neuraal netwerk dat een grammaticaal correcte beschrijving genereert.
 
 \paragraph{Afbeeldingsrepresentatie}
-
+\label{sec:usedcnn}
 Een afbeelding (2D matrix met een RGB waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN), zoals beschreven in \ref{sec:CNN}
 
-Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} \todo{Reference} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
+Het CNN dat momenteel het beste presteert is VGGNet, zoals beschreven in \cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
 
 \begin{figure}[tb]
     \centering
@@ -45,7 +61,7 @@ De representatie die wordt gebruik door Karpathy is de output van VGGNet van de 
 VGGNet is momenteel het best presterende CNN voor afbeeldingsrepresentatie. Wij gebruiken in ons systeem dan ook de afbeeldingsvectoren die berekend zijn met VGGNet. Het berekenen van deze vectoren kan met een implementatie in Caffe.\cite{Jia2014}.
 
 \paragraph{Woordrepresentatie}
-Voor het voorstellen van woorden stelt onder andere \todo{de juiste citen} vast dat word embeddings geen toegevoegd waarde brengen. Om die reden gebruikt Karpathy een one-hot encoding waarbij \'e\'en specifieke code behoort tot het start- en stopwoord. Karpathy kiest ervoor om enkel woorden die meer dan vijf keer voorkomen te gebruiken in zijn model. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix en een sommatie met een biasvector. Deze gewichtsmatrix en vector trainen mee tijdens de terugpropagatie van het netwerk. Op deze manier is het mogelijk dat semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig zijn.
+Voor het voorstellen van woorden stelt Karpathy\cite{Karpathy2015} vast dat voorgetrainde word embeddings geen toegevoegde waarde brengen. Om die reden gebruikt Karpathy een one-hotcodering waarbij \'e\'en specifieke code behoort tot het start- en stopwoord. Karpathy kiest ervoor om enkel woorden die meer dan vijf keer voorkomen te gebruiken in zijn model. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix $W_{hx}$ en een sommatie met een biasvector. Deze gewichtsmatrix en vector trainen mee tijdens de terugpropagatie van het netwerk. Op deze manier is het mogelijk dat semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig zijn.
 
 \paragraph{Van afbeelding naar beschrijving}
 De berekende vector representatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training voorspelt het netwerk het eerste woord op basis van de afbeeldingsvector en een speciale vector die de start van een zin voorstelt. Op basis hiervan voorspelt het model dan wat het volgende woord is. Dit proces herhaalt zich tot het einde van de zin bereikt is. Terugpropagatie op basis van stochastic gradient descent zorgt voor de juiste wijzigingen aan de gewichten van het netwerk. Een eenvoudige weergave van hoe het RNN een beschrijving genereert is te zien op figuur \ref{fig:rnntraining}.
@@ -60,7 +76,7 @@ De berekende vector representatie van de afbeelding dient als input voor een rec
 Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. 
 Op basis van een willekeurig gekozen afbeelding uit de trainingsset berekent het netwerk de beste zin. Het verschil tussen deze voorspelling en de correcte zin propageert terug door het netwerk en leidt tot de juiste aanpassing van de gewichten
 
-Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexity berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Het systeem slaagt de tussentijdse resultaten op onder de vorm van checkpoints. Deze checkpoints bevatten alle nodige parameters om het opgeslagen model te evalueren. Er is ook de mogelijkheid om de training van het netwerk verder te zetten vanaf een bepaald checkpoint. \todo[inline]{Bij experimenten beschrijven hoe we de beste kiezen}
+Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexity berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Het systeem slaagt de tussentijdse resultaten op onder de vorm van checkpoints. Deze checkpoints bevatten alle nodige parameters om het opgeslagen model te evalueren. Er is ook de mogelijkheid om de training van het netwerk verder te zetten vanaf een bepaald checkpoint.
 
 Formeel gezien berekent het netwerk op basis van input vectoren (woorden in de zin) $(x_1,x_2,...,x_T)$ een reeks van verborgen vectoren $(h_1,h_2,...,h_t)$. Deze verborgen vectoren dienen daarna als de basis voor output $(y_1,y_2,...,y_t)$. Deze outputs worden verkregen door formule \eqref{eq:rnn} te itereren voor $t = 1$ tot $T$.
 
@@ -74,7 +90,7 @@ Formeel gezien berekent het netwerk op basis van input vectoren (woorden in de z
 \end{equation}
 In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}$ en $b_h, b_o$ parameters die het netwerk leert. De $W_{xy}$ zijn gewichtsmatrices, terwijl $b_i$ bias vectoren zijn. $CNN_{\theta_c}(I)$ is de output van de laatste laag van VGGNet en $f$ is een activatiefunctie. $\delta_{t1}$ komt overeen met de Kroneckerdelta, die waarde $1$ heeft op tijdstip $t=1$. De output komt overeen met een kansverdeling over de verschillende woorden uit de dataset. Er is ook \'e\'en extra dimensie toegevoegd voor het END symbool dat het einde van een zin aangeeft. 
 
-De code van Karpathy voorziet ook de optie om gebruik te maken van ReLu encoders \todo{waar? kijk in code}, deze werken volgens formule $ReLu(x) = max(x,0)$. Er is ook de optie om te kiezen hoe groot de verborgen laag van het RNN moet zijn, alsook de optie om de afbeeldingsrepresentatie al dan niet tijdens elke stap toe te voegen.
+De code van Karpathy maakt ook op verschillende plaatsen gebruik van Rectified Linear Units of ReLu-encodering. Dit is een activatiefunctie die werkt volgens formule $ReLu(x) = max(x,0)$. De voornaamste reden hiervoor is effici\"entere gradientpropagatie. Het verlaagt het effect van verdwijnende gradi\"enten\cite{Glorot2011}. Er is ook de optie om te kiezen hoe groot de verborgen laag van het RNN moet zijn, alsook de optie om de afbeeldingsrepresentatie al dan niet tijdens elke stap toe te voegen.
 
 Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvector het beste resultaat geeft. Om dit te verifi\"eren hebben wij beide situaties vergeleken. Bij het gebruik van de afbeelding in elke stap verandert het tweede deel van formule \eqref{eq:rnn} in formule \eqref{eq:rnnfeedalways}.
 
@@ -83,8 +99,7 @@ Karpathy schrijft in zijn paper dat het eenmalig gebruiken van de afbeeldingsvec
 \label{eq:rnnfeedalways}
 \end{equation}
 
-\todo{Checken hoe het werkt}
-Het genereren van beschrijvingen gebeurt op basis van beam search. Hierbij bepaalt de output van het netwerk de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de volgende iteratie. Op basis van deze woorden genereert het systeem alle mogelijke opeenvolgingen van twee woorden en voegt deze toe aan de lijst met zinnen bestaande uit \'e\'en woord. Het algoritme gaat door met de $n$ meest waarschijnlijke combinaties, die dus kunnen bestaan uit \'e\'en of twee woorden. Dit proces herhaalt zicht tot alle zinnen een END symbool voorspellen en dus volledig zijn, of tot een maximaal aantal iteraties bereikt is. 
+Het genereren van beschrijvingen gebeurt op basis van het beam search algoritme. Hierbij bepaalt de output van het netwerk de meest waarschijnlijke eerste woorden voor de zin. De beste $n$ woorden uit die ranking dienen dan als startpunt van de volgende iteratie. Op basis van deze woorden genereert het systeem alle mogelijke opeenvolgingen van twee woorden en voegt deze toe aan de lijst met zinnen bestaande uit \'e\'en woord. Het algoritme gaat door met de $n$ meest waarschijnlijke combinaties, die dus kunnen bestaan uit \'e\'en of twee woorden. Dit proces herhaalt zicht tot alle zinnen een END symbool voorspellen en dus volledig zijn, of tot een maximaal aantal iteraties bereikt is. 
  
 
 \subsection{Long Short Term Memory Netwerk}
@@ -94,12 +109,25 @@ De code van Karpathy werkt ook met een tweede type van neuraal netwerk. Dit netw
 De gebruikte afbeeldingsrepresentatie is dezelfde als bij de RNN implementatie. We gebruiken de 4096-dimensionale feature vectors berekend met VGGNet. 
 
 \paragraph{Van afbeelding naar beschrijving}
-Anders dan het RNN van Karpathy, wordt de afbeeldingsrepresentatie beschouwd als het eerste woord in de zin. Daarnaast gebruikt het een LSTM als taalmodel, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. De gebruikte formules, samen met theoretische verduidelijking van het concept, zijn te vinden in sectie \ref{sub:lstm}.
+Anders dan het RNN van Karpathy, wordt de afbeeldingsrepresentatie beschouwd als het eerste woord in de zin. Ook de woordrepresentaties zijn dezelfde. Daarnaast gebruikt het een LSTM als taalmodel, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} is er controle over het al dan niet onthouden van bepaalde waarden. Onderstaande vergelijkingen tonen de ontrolprocedure van het netwerk. Figuur \ref{fig:vinyals:karpathy} geeft een schematische weergave. Hierin is $x_t$ het $t+1^{de}$ woord van een zin en loopt $t$ van $0$ tot $N-1$. $W_{hi}$ transformeert de afbeeldingstransformatie naar een compactere codering. $LSTM$ in de gebruikte formule, staat samen met theoretische verduidelijking van het concept in sectie \ref{sub:lstm}. $p_{t+1}$ is de kansverdeling voor het $t+1^{de}$ woord van de gegenereerde zin.
 
-De training van het netwerk verloopt net als bij de RNN implementatie. Het netwerk leert op basis van de Flickr30k training set en bij elke volledige doorloop van de trainingset berekenent de software de perplexity van de resultaten op de validatieset. Dit kan dienen als een criterium om de training stop te zetten. Voor een betere criterium om de training te stoppen verwijzen we u door naar hoofdstuk \ref{cha:experimenten} dat de experimenten in detail beschrijft. %Verder in deze thesis beschrijven we een betere manier om te bepalen wanneer de training moet stoppen.\todo{laatste zin zou k anders doen}
+\begin{eqnarray}
+\vspace{-3mm}
+x_{-1} = W_{hi}CNN(I)\\
+p_{t+1} = LSTM(x_t)
+\end{eqnarray}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=1\linewidth]{Images/vinyals_karpathy.PNG}
+	\caption{Ontrold LSTM-model}
+	\label{fig:vinyals:karpthy}
+\end{figure}
+
+De training van het netwerk verloopt net als bij de RNN implementatie. Hierbij loop $t$ van $-1$ tot $N-1$ waarbij de afbeelding dus als woord $-1$ wordt beschouwd. Het netwerk leert op basis van de Flickr30k training set en bij elke volledig doorlopen van de trainingset berekenent de software de perplexity van de resultaten op de validatieset. Dit kan dienen als een criterium om de training stop te zetten. Voor een betere criterium om de training te stoppen verwijzen we naar hoofdstuk \ref{cha:experimenten} dat de experimenten in detail beschrijft. %Verder in deze thesis beschrijven we een betere manier om te bepalen wanneer de training moet stoppen.\todo{laatste zin zou k anders doen}
+
 
 Het genereren van nieuwe beschrijvingen voor ongeziene foto's gebeurt op exact dezelfde manier als bij RNN. Het ``beam search'' algoritme bepaalt de meest waarschijnlijke zin op basis van de uitkomst van het netwerk.
-
 
 
 \section{Latent Dirichlet Analysis}
@@ -109,55 +137,58 @@ Het gebruik van Latent Dirichlet Analysis op een set van afbeeldingen en beschri
 
 \subsubsection{Berekening van LDA-model}
 \label{subs:Berekening van topicverdeling}
+Het leren van het gebruikte LDA model gebeurt op de Flickr30k dataset. Het algoritme om het LDA-model te bepalen beschouwt alle vijf beschrijvingen van een afbeelding achter elkaar als \'e\'en document. Net als in het voorbereiden van de data voor het taalmodel, houdt het enkel woorden over die meer dan vijf keer in de trainingsdata voorkomen. Vervolgens verwijdert het bovendien stopwoorden en stemt de woorden met behulp van een Porter stemmer. Beide voorbereidingstechnieken werden ge\"implementeerd met hulpmiddelen uit NLTK\footnote{http://www.nltk.org/}.
 
-\subsubsection{Leren van netwerk}
-Het leren van het gebruikte LDA model gebeurt op de Flickr30k dataset. Een voorbereidingsproces bewerkt de data zodat deze klaar is voor LDA. Dit proces combineert de vijf captions tot \'e\'en zin, verwijdert stopwoorden stemt de woorden met behulp van een Porter stemmer. \todo{reference naar porter stemmer mss best boek NLP} Deze zinnen vormen de documenten voor het LDA algoritme. Het doel is om op basis van een document te kunnen bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een topicverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
+Het doel van het LDA-model is om op basis van een document, te bepalen welke topics het sterkst aanwezig zijn. Het idee hierachter is dat een onderwerpverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste topic passen.
 
-\todo[inline]{lastig om te bepalen hoe goed het is. DUS: 80 90 100 120 topics, namen geven om te zien of het logisch is voorbeeld van naamgeving}
-Vervolgens begint het trainingsproces. Het aantal topics waarmee het systeem getraind wordt is variabel, en een schatting van het optimale aantal wordt gemaakt op basis van manuele evaluatie, zoals beschreven in sectie \ref{subs:Evaluatie}. Op basis van de zinnen uit de trainingsset berekent het algoritme de topic-woord verdelingen en de sentence-topic verdelingen. Deze verdelingen, berekend op de trainingsset, leiden tot de berekening van de topic-verdelingen voor de test- en validatieset. De ``ground truth'' waarden van de sentence-topic verdelingen voor test- en validatieset worden berekend en opgeslagen.
+Het leren van dit model gebeurt met de python-bibliotheek \texttt{lda}\footnote{https://pypi.python.org/pypi/lda} en werkt intern met Gibbs sampling.
 
-Het aantal topics is gebaseerd op manuele evaluatie, aangezien er geen metriek is die op een eenduidige manier de correctheid van probabilistische verdelingen, zoals document-topic-verdelingen.  
-
-Om evaluatie te vergemakkelijken hebben alle topics een naam gekregen. Op basis van de tien meest waarschijnlijke woorden, defini\"eren we voor elk topic een overkoepelend concept. \todo{voorbeelden} Een voorbeeld van een trainingsafbeelding met de meest waarschijnlijke topics is te zien in figuur \ref{fig:ldatopics}. Voor extra voorbeelden verwijzen we u door naar appendix \ref{app:LDA}.
+LDA heeft het aantal topics als belangrijke parameter. Het evalueren van een LDA-model is een niet-triviale en moeilijk te automatiseren taak. Om die reden is het bepalen van het beste aantal topics niet eenvoudig. Enkel indirecte evaluatie biedt de mogelijkheid om de prestatie van LDA indirect te bepalen. Jin et al.\cite{Jin2015} gebruiken ook LDA op dezelfde dataset en gebruiken 80 als aantal topics. Daarom beschouwen we aantallen van topics rond dit getal. 
+Om toch een idee te krijgen van hoe het model presteert gaan we als volgt te werk. Eerst bepaalt een script per onderwerp de tien belangrijkste woorden. Op basis van deze woorden krijgt elk onderwerp een onderwerpnaam dat een overkoepelend concept voorstelt. 
+Hierdoor is het enerzijds mogelijk om te kijken of de belangrijkste woorden in een onderwerp, een duidelijke link hebben. Anderzijds is het nu mogelijk voor elke afbeelding in de trainingsset de vijf belangrijkste topicnamen op te vragen. Een manuele evaluatie van de topics per afbeelding geeft opnieuw een idee over de prestatie van het LDA-model. Een voorbeeld van een trainingsafbeelding met de meest waarschijnlijke topics is te zien in figuur \ref{fig:ldatopics}. Voor extra voorbeelden verwijzen we naar appendix \ref{app:LDA}.
 
 \begin{figure}[h]
-    \centering
-    \begin{minipage}[t]{.5\linewidth}
-    \centering
-    \vspace{0pt}
-    \includegraphics[width=\textwidth]{Images/LDA/5402085.jpg}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{.5\textwidth}
-    \centering
-    \vspace{0pt}
-    \begin{tabular}{ll}
-            topic                           & waarschijnlijkheid\\
-            \hline
-            \texttt{constuctor}             & 0.158 \\
-            \texttt{work}                   & 0.113 \\
-            \texttt{ground}                 & 0.113 \\
-            \texttt{men together}           & 0.113 \\
-            \texttt{work/metal/wood}        & 0.047\\
-            \hline
-        \end{tabular}
-    \end{minipage}
-    \caption{Voorbeeldfoto met de vijf meest waarschijnlijke topics}
-    \label{fig:ldatopics}
+	\centering
+	\begin{minipage}[t]{.5\linewidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[width=\textwidth]{Images/LDA/5402085.jpg}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{.5\textwidth}
+		\centering
+		\vspace{0pt}
+		\begin{tabular}{ll}
+			topic                           & waarschijnlijkheid\\
+			\hline
+			\texttt{constuctor}             & 0.158 \\
+			\texttt{work}                   & 0.113 \\
+			\texttt{ground}                 & 0.113 \\
+			\texttt{men together}           & 0.113 \\
+			\texttt{work/metal/wood}        & 0.047\\
+			\hline
+		\end{tabular}
+	\end{minipage}
+	\caption{Voorbeeldfoto met de vijf meest waarschijnlijke topics}
+	\label{fig:ldatopics}
 \end{figure}
 
+\subsubsection{Leren van netwerk}
+\label{sec:LDAprediction}
+Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om een topicverdeling af te leiden. De beschrijvingen van de ongeziene afbeelding zijn niet gekend dus het LDA-model kan niet rechtstreeks worden gebruikt. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een topicverdeling. Hiervoor zorgt een simpel feed-forward neuraal netwerk. 
+Het netwerk zorgt voor de mapping van een afbeelding naar een onderwerpverdeling.
 
+De trainingsverzameling in combinatie met de gekende onderwerpverdeling vormt de trainingsdata voor dit netwerk. 
+Het geleerde LDA-model bepaalt vervolgens de onderwerpverdeling voor de zinnen in de validatieset. Deze topic-verdelingen vormt de testverzameling voor het LDA-netwerk. Het doel van het trainen van het netwerk is de fout tussen de voorspelde verdeling en de berekende verdeling van de validatieverzamelingte verkleinen. De uiteindelijke fout van het finale netwerk maakt het mogelijk om verschillende configuraties te vergelijken.
 
-
-Bij input van een nieuwe, ongeziene afbeelding moet het systeem in staat zijn om een topicverdeling af te leiden. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een topicverdeling. Hiervoor gebruiken we een simpel feed-forward neuraal netwerk. Op basis van de eerder berekende ``ground truth'' waarden voor de validatieset leert dit netwerk een mapping van afbeeldingsvector naar topicverdeling. Door middel van terugpropagatie worden de gewichten aangepast. Een vergelijking van negatieve logwaarschijnlijkheid leidt tot een optimalisatie van het aantal hidden layers en van de trainingssnelheid van het netwerk. Dit netwerk kan dan op het moment van testen zeer snel een topicverdeling bepalen voor een ongeziene afbeelding.
-
-Het uiteindelijke netwerk bestaat uit een inputlaag, een verborgen laag met 256 knopen en een outputlaag. De verborgen laag gebruikt de sigmo\"idefunctie \eqref{eq:sigmoid} als transferfunctie, terwijl de outputlaag een softmaxfunctie gebruikt, zoals uitgelegd in sectie \ref{par:softmax}.
-
-Wanneer het systeem een ongeziene afbeelding krijgt, gebeurt het volgende: VGGNet zet de afbeelding om naar een vectorrepresentatie. Deze vector dient als input voor de verborgen laag van het neuraal netwerk. Daarna transformeert de softmaxfunctie output naar een kansverdeling over de verschillende topics. Dit proces is ge\"illustreerd in figuur \ref{fig:learningLDA}.
-
+Het gebruikte netwerk bestaat uit een inputlaag, een verborgen laag met 256 knopen en een outputlaag. De verborgen laag gebruikt de sigmo\"idefunctie \eqref{eq:sigmoid} als transferfunctie, terwijl de outputlaag een softmaxfunctie gebruikt, zoals uitgelegd in sectie \ref{par:softmax}. Experimenteel vormde de leersnelheid 0.001 de beste compromis tussen resultaat en snelheid van het leren.
+Door middel van terugpropagatie leert het netwerk langzaamaan de gewichten. Dit netwerk kan op het moment van testen zeer snel een onderwerpverdeling bepalen voor een ongeziene afbeelding. Implementatie van het netwerk gebeurde met de python-bibliotheek \texttt{scikit-neuralnetwork}\footnote{https://scikit-neuralnetwork.readthedocs.org/en/latest/}
 \begin{equation}
-    \sigma(t) = \frac{1}{1 + e^{-t}}
-    \label{eq:sigmoid}
+\sigma(t) = \frac{1}{1 + e^{-t}}
+\label{eq:sigmoid}
 \end{equation}
+
+Wanneer het systeem een ongeziene afbeelding krijgt, gebeurt het volgende: VGGNet zet de afbeelding om naar een vectorrepresentatie. Deze vector dient als input voor de verborgen laag van het neuraal netwerk. Daarna transformeert de softmaxfunctie de output van de verborgen laag naar een kansverdeling over de verschillende topics. Dit proces is ge\"illustreerd in figuur \ref{fig:learningLDA}.
+
 
 \begin{figure}[tb]
     \centering
@@ -166,7 +197,7 @@ Wanneer het systeem een ongeziene afbeelding krijgt, gebeurt het volgende: VGGNe
     \label{fig:learningLDA}
 \end{figure}
 
-Na het afronden van het trainingsproces zou het netwerk in staat moeten zijn om voor ongeziene afbeeldingen de bijhorende onderwerpsverdeling te genereren. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. Soms zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen topic is met een grote kans. Bij de correcte voorspelling is er een topic dat een veel grotere waarschijnlijkheid heeft dan de andere topics. Meer voorbeelden van correcte en incorrecte voorspellingen zijn te vinden in appendix \ref{app:LDApredictions}.
+Na het afronden van het trainingsproces zou het netwerk in staat moeten zijn om voor ongeziene afbeeldingen de bijhorende onderwerpsverdeling te genereren. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. In uitzonderlijke gevallen zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen topic is met een grote kans. Bij de correcte voorspelling is er meestal een topic dat een veel grotere waarschijnlijkheid heeft dan de andere topics. Meer voorbeelden van correcte en incorrecte voorspellingen zijn te vinden in appendix \ref{app:LDApredictions}.
 
 \begin{figure}[h]
     \centering
@@ -221,22 +252,9 @@ Na het afronden van het trainingsproces zou het netwerk in staat moeten zijn om 
     \label{fig:wrongldalearning}
 \end{figure}
 
-\subsubsection{Evaluatie}
-\label{subs:Evaluatie}
-\todo[inline]{herschrijven :(}
-De correctheid van de berekende topicverdelingen is uiteraard een kritiek punt in de performantie van het systeem. Daarom hebben we manueel twee testen uitgevoerd. Een eerste test gaat over de optimalisatie van het aantal gebruikte topics. Bij de tweede test controleren we of de topicverdelingen die voorspeld worden door het perceptron wel passen bij de gegeven afbeelding.
-
-Het optimaliseren van het aantal topics gebeurt op basis van manuele analyse van de woorden die voorkomen in elk topic. Op basis van de tien meest voorkomende woorden per topic proberen we een overkoepelend concept te benoemen. Hoe kleiner het aantal topics, hoe moeilijker het is om een sluitende omschrijving van elk topic te vinden. Concreet hebben we getest met 50, 80 en 120 topics. Bij 50 topics is er een terugkerend probleem: topics lijken samengevoegd te zijn. Heel concreet zijn er volgende topics (enkel de 10 meest voorkomende woorden zijn weergegeven): \\
-\texttt{jump air leap high midair bubble blow fly wed bride}
-\\
-waarbij er duidelijk referenties zijn naar springen, bellen blazen en trouwen. Een ander treffend voorbeeld is \\
-\texttt{talk man drink cellphone phone hold glass bottle bar beer}
-\\ dat duidelijk refereert naar praten en drinken.
-
-Bij het gebruik van 80 topics is dit fenomeen amper aanwezig, en bij het gebruik van 120 topics zijn er meerdere topics waar de top 10 uit ongeveer dezelfde woorden bestaat. Aangezien enkel de top 10 woorden werden geanalyseerd is het waarschijnlijk dat er tussen de verschillende gelijkaardige topics kleine nuances te zien zijn. Op basis hiervan hebben we besloten om het systeem te trainen met verdelingen met 80 en 120 topics. Meer dan 120 trekt naar onze mening de topics te hard uit elkaar, waardoor ook de kansverdeling over de verschillende topics harder wordt afgevlakt. Er zou zich dan een probleem kunnen vormen tijdens het genereren dat bepaalde woorden niet worden gebruikt omdat de topics net niet goed genoeg zijn terwijl de woorden wel perfect kunnen beschrijven wat er op de foto staat.
 
 \section{Flickr30k Entities}
-De dataset \emph{Flickr30k Entities}\cite{Plummer2015} is gebaseerd op de Flickr30k dataset. Ze bevat een groot aantal annotaties en bounding boxes, alsook links tussen beide. In deze sectie beschrijven we deze dataset in meer detail. Vervolgens volgt een bespreking van de pogingen om deze grote hoeveelheid informatie te verwerken naar een handelbaar formaat. \todo{waarom is deze dataset nuttig?}
+De dataset \emph{Flickr30k Entities}\cite{Plummer2015} is gebaseerd op de Flickr30k dataset. Ze bevat een groot aantal annotaties en bounding boxes, alsook links tussen beide. Deze links kunnen een bron zijn van extra informatie. In deze sectie beschrijven we deze dataset in meer detail. Vervolgens volgt een bespreking van de pogingen om deze grote hoeveelheid informatie te verwerken naar een handelbaar formaat. 
 
 \subsection{Dataset}
 \label{sub:Dataset}
@@ -266,18 +284,24 @@ De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k\cite
     \label{fig:cocoexamples}
 \end{figure}
 
+\subsection{Nut}
+Flickr30k Entities vormt een dataset die een grote bron aan informatie bevat. Zo weet het direct waar in de afbeelding een woord of woordverzameling naar verwijst. Een netwerk dat deze informatie als extra input heeft, kan hieruit misschien extra informatie leren over bijvoorbeeld de grootte of locatie van bepaalde woorden in de afbeelding. Het kan ook een verrijking zijn voor bijvoorbeeld het ontdekken van ruimtelijke relaties. Daarnaast verwijzen meerdere formulaties soms naar dezelfde bounding box. Het is dus mogelijk dat het netwerk semantisch gelijkaardige woorden zoals \texttt{huis} en \texttt{gebouw} als zodanig gaat beschouwen.
 
 
 \subsection{Gebruik}
 \label{sub:Gebruik}
-\todo{probeer hier is nen hele hoop 'we's uit te halen...}
 Deze dataset bevat zeer veel extra informatie verspreid over een grote hoeveelheid references. Een probleem dat zich voordoet is dat sommige van de bounding boxes zo klein zijn dat er amper informatie uit te halen is. Daarom is er een reductie uitgevoerd van de dataset alvorens over te gaan tot het verwerken van de data. 
 
 Deze reductie gebeurt op basis van de grootte van de bounding box. Een deel van de bounding boxes zijn slechts enkele pixels hoog of breed, waardoor een CNN hier weinig informatie kan uithalen. Deze bounding boxes worden dus uit de dataset verwijderd. De limiet van zichtbaarheid en informatief zijn van een afbeelding staat ter discussie, maar wij kozen om alles kleiner dan 64 bij 64 pixels te verwijderen, wat resulteerde in 190,000 te gebruiken bounding boxes en corresponderende frases. 
 
 De dataset is beschikbaar als tekstbestanden die weergeven welke bounding boxes op welke afbeelding te zien zijn, en met welke delen van de beschrijving elke box overeenkomt. Er zijn een aantal boxes die wel zijn opgenomen in de dataset, maar geen overeenkomstig zinsdeel hebben. De semantische meerwaarde van dergelijke boxes is miniem, dus horen deze ook niet tot de bekeken verzameling. 
 
-Om de data bruikbaar te maken voor verwerking leest een script de tekstbestanden uit, en slaat alle bounding boxes op als aparte afbeelding. Op basis van die afbeeldingen berekent de Caffe-implementatie van VGGNet een vectorrepresentatie. De overeenkomstige zinsdelen zijn omgezet naar een tf-idf gewogen vectorweergave. Deze voorstelling is gebaseerd op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met het aantal keer dat het woord voorkomt in het document (term frequentie of tf). Ten tweede is het gewicht invers gerelateerd aan het aantal documenten waar het in voorkomt (inverse doucment frequentie of idf). Een woord dat in alle documenten voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de documenten voorkomt. \todo{formuleke bijzetten}
+Om de data bruikbaar te maken voor verwerking leest een script de tekstbestanden uit, en slaat alle bounding boxes op als aparte afbeelding. Op basis van die afbeeldingen berekent de Caffe-implementatie van VGGNet een vectorrepresentatie. De overeenkomstige zinsdelen zijn omgezet naar een tf-idf gewogen vectorweergave. Deze voorstelling is gebaseerd op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met het aantal keer dat het woord $i$ voorkomt in het document $j$ (term frequentie of $tf_{i,j}$). Ten tweede is het gewicht invers gerelateerd aan het aantal documenten $n_i$ waar het in voorkomt (inverse document frequentie of $idf_i$). Een woord dat in alle documenten voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de documenten voorkomt. Formule \ref{formule:tfidf} toont het uiteindelijke resultaat. Het totaal aantal verschillende woorden is hier $N$\cite{Jurafsky:2009:SLP:1214993}. 
+
+\begin{equation}
+\label{formule:tfidf}
+	tfidf_{i,j} = tf_{i,j}\cdot{idf_{i}} = tf_{i,j}\cdot{log(\frac{N}{n_i})}
+\end{equation}
 
 Op basis van de CCA-uitbreiding beschreven in sectie \ref{sub:stackedcca} berekenen we een geaugmenteerde representatie van de afbeeldingen uit de Flickr30k dataset. De extra informatie uit de overeenkomsten tussen bounding boxes en frasen zit vervat in een eerste gemeenschappelijke CCA ruimte. Op basis van \cite{Gong2014} berekenen we een representatie van de trainingsafbeeldingen, waarin ook de informatie uit de Entities dataset aanwezig is.
 
@@ -326,7 +350,7 @@ Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de pr
 Een derde model gebruikt de CCA-projectie van de afbeelding in de gemeenschappelijke ruimte rechtstreeks als gids.
 Als laatste model gebruiken ze de afbeeldingsrepresentatie zelf als gids.
 
-Om dit te implementeren starten ze net als in deze masterproef van de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de volgende formules. Hierbij zijn de rode delen toevoegingen ten opzichte van Vinyals et al.\cite{Google} \todo{misschien referentie naar deze formules in theorie?}:
+Om dit te implementeren starten ze net als in deze masterproef van de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de volgende formules. Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM \ref{lstm-memory-start}-\ref{lstm-memory}:
 
 %
 \begin{eqnarray}
@@ -341,9 +365,7 @@ m_l & = & o_l' \odot c_l'
 \label{glstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
-\todo{Formules bij LSTM zelf + meer uitleg bij gebruikte dinges}
-\todo{gebruikte dinges. zo heerlijk specifiek}
-Hierbij is $g$ de vectorvoorstelling van de semantische informatie. De gids is onafhankelijk van de tijdstap en werkt dus globaal voor elke afbeelding. Figuur \ref{fig:glstm} geeft een visuele voorstelling van de gLSTM-blok.
+Hierbij is $g$ de vectorvoorstelling van de semantische informatie. De gids is onafhankelijk van de tijdstap en werkt dus globaal voor elke afbeelding. $W_{iq}$, $W_{fq}$, $W_{oq}$ en $W_{cq}$ zijn extra gewichtsmatrices die het netwerk in de trainingsfase moet leren. Figuur \ref{fig:glstm} geeft een visuele voorstelling van de gLSTM-blok.
 
 \begin{figure}[tb][h]
 	\centering
@@ -356,33 +378,63 @@ Jia et al. bekomen zeer goede resultaten. De eerste drie gidsen zorgen voor verb
 
 \subsection{gLSTM met LDA en CCA}
 Net als Jia implementeren we de gLSTM als een uitbreiding van LSTM overeenstemmend met formules \ref{glstm-memory-start}-\ref{glstm-memory}.
-Om te kunnen vergelijken met hun paper kan onze implementatie ook de CCA-projectie als gids gebruiken.
-Daarnaast veronderstellen we dat LDA een goede bron van semantische informatie is. Het bevat immers een verdeling van de onderwerpen die aanwezig zijn in de afbeelding. Daarom kan LDA ook als gids worden gekozen.
-We maken dus twee modellen zodat het mogelijk is om na te gaan of LDA een betere gids is dan CCA in onze configuratie van de gLSTM.
+Om te kunnen vergelijken met hun paper kan de implementatie ook de CCA-projectie als gids gebruiken.
+Daarnaast is een veronderstelling dat LDA een goede bron van semantische informatie is. Het bevat immers een verdeling van de onderwerpen die aanwezig zijn in de afbeelding. Daarom kan LDA ook als gids worden gekozen.
+We voorzien dus twee modellen zodat het mogelijk is om na te gaan wat de betere gids is in deze configuratie van de gLSTM.
 
 \section{Normalisatie van beam search}
-Naast het introduceren van gLSTM's breiden Jia et al. \cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leidden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de log-likelihood van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde log-likelihood van elk woord als criterium.
-\todo[inline]{hier moet volgens mij meer uitleg bij de formule :(}
+Naast het introduceren van gLSTM's breiden Jia et al. \cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leidden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de log-likelihood van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen dan nog een woord toe te voegen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde log-likelihood van elk woord als criterium. Concreet betekent dit een extra normalisatiefactor $\Omega$ bij de berekening van de waarschijnlijkheid van een woordsequentie.
 
 \begin{equation}
-p = \frac{1}{\Omega(\ell)}\sum_{l=1}^{\ell} \log p(s_l | x, s_{1:l}, \theta)
+p = \frac{1}{\Omega(\ell)}\sum_{l=1}^{\ell} \log p(s_l | im, s_{1:l}, \theta)
 \label{eq:log-sentence-norm}
 \end{equation}
+
+In deze formule is $l$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $s_i$ is het $i^{de}$ woord in de sequentie, $im$ de afbeelding en $\theta$ de parameters van het model. 
 
 De auteurs van de paper bestuderen meerdere functies voor $\Omega$. Wij implementeren de twee meest performante.
 Enerzijds gebruiken we de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moeten gegenereerde zinnen gelijkaardige lengtes hebben aan deze uit het corpus. 
 Anderzijds implementeren we de min-hinge normalisatie. Met deze methode is de normalisatiefactor gelijk aan de gemiddelde lengte van het trainingscorpus ($\mu$) als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$.
 
-Een eigen implementatie van de $\Omega(\ell)$ functie maakt gebruik van idf-gewichten. Deze gewichten zijn gebaseerd op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en zijn alle woorden gereduceerd met een Porter stemming algoritme. \todo{reference} De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
+Een eigen implementatie van de $\Omega(\ell)$ functie maakt gebruik van idf-gewichten. Deze gewichten zijn gebaseerd op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en zijn alle woorden gereduceerd met een Porter stemming algoritme. De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
 
 \begin{equation}
     idf_i = \log(\frac{N}{n_i})
 \end{equation}
 Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal afbeeldingen waar het woord $w_i$ voorkomt in de beschrijvingen.
 
-Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. \todo{aantal voorbeelden van begin en einde van de lijst toevoegen} Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderljike woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus zo minder veelzeggend zijn.
-\todo[inline]{voorbeelden + uitbreiden}
+Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. Voorbeelden van woorden met laagste en hoogste IDF staan respectievelijk in tabel \ref{tbl:idf-laag} en tabel \ref{tbl:idf-hoog}. Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderlijke woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus zo minder veelzeggend zijn. Anderzijds zorgt dit er ook meteen voor dat korte zinnen niet langer de voorkeur krijgen.
+\todo[inline]{IDF-norm moet ook stoppen als lengte te groot is -> da nog toevoegen als geimplementeerd}
 
+\begin{table}[!htb]
+	\caption{Gestemde woorden samen met hun IDF-gewicht}
+	\begin{minipage}{.5\linewidth}
+		\caption{Woorden met laagste IDF}
+		\label{tbl:idf-laag}
+		\centering
+		\begin{tabular}{ll}
+    man    & 1.099 \\
+    two    & 1.946 \\
+    woman  & 1.946 \\
+    people & 2.198 \\
+    shirt  & 2.303 \\
+		\end{tabular}
+	\end{minipage}%
+	\begin{minipage}{.5\linewidth}
+		\centering
+		\caption{Woorden met hoogste IDF}
+		\label{tbl-idf-hoog}
+		\begin{tabular}{ll}
+	fingerless & 10.275\\
+	creamer& 10.275\\
+	vigor& 10.275\\
+	ghetto& 10.275\\
+	raceway& 10.275\\
+		\end{tabular}
+	\end{minipage} 
+\end{table}
+
+\todo[inline]{Dit updaten als we iets beter vinden}
 Op basis van twee normalisatiefuncties hierboven beschreven is het mogelijk om een combinatie te maken. Het gebruik van zowel Gaussiaanse als idf-normalisatie zou kunnen leiden tot betere resultaten. Het idee hierachter is dat zowel korte zinnen als weinig informatieve zinnen een penalisatie ondervinden. Het berekenen van deze normalisatiefactor gebeurt door eerst de idf-gewichten van alle woorden in de zin op te tellen en deze som vervolgens te vermenigvuldigen met de waarde van de Gaussiaanse functie die hierboven is beschreven.
 
 \section{FSMN}
