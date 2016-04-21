@@ -15,7 +15,16 @@ Het genereren van beschrijvingen is nauw gerelateerd aan andere, eerder onderzoc
 
 Het automatisch herkennen van objecten in afbeeldingen vormt een van de meest onderzochte vraagstukken in het domein van computervisie. Zoals eerder gezegd, is er niet enkel nood aan algoritmes om vormen te detecteren in afbeeldingen, maar moet er ook een adequate labeling van de gedetecteerde vormen zijn. Een zeer gelijkaardig probleem is het classificeren van een volledige afbeelding, waarbij de hele sc\'ene een label krijgt in plaats van de gedetecteerde objecten. 
 
-De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: ``Genereer een vloeiende, grammaticaal correcte Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''. In het vervolg van deze masterproef reiken wij dan ook een oplossing aan voor dit complexe probleem.\todo{ook illustreren + meer uitleg over proberen om nieuwe zinnen te genereren , we maken taalmodel}
+De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: ``Genereer een vloeiende, grammaticaal correcte Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''. Een concreet voorbeeld van twee afbeeldingen met gegenereerde zinnen is te zien in figuur \ref{fig:examplecaptions}.
+
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width= 0.85\linewidth]{Images/caption.PNG}
+    \caption{Twee afbeeldingen en hun gegenereerde beschrijving}
+    \label{fig:examplecaptions}
+\end{figure}
+
+Meer specifiek legt dit proefschrift de focus op het ontwikkelen van een taalmodel dat beter presteert dan een aantal recente systemen. Deze recente systemen vertonen vaak dezelfde gebreken: de gegenereerde zinnen zijn korter dan de zinnen uit de trainingsverzameling, en het aantal unieke woorden ligt vrij laag. Het is de bedoeling van deze masterproef om voor deze gebreken een oplossing te vinden. Dit gebeurt door het toevoegen van extra semantische informatie en het verbeteren van de zoekmethode om zinnen te maken.
 
 
 \section{Toepassingen}
@@ -41,14 +50,14 @@ De dataset is verdeeld in drie delen, voor training, validatie en testen. De val
 
 \paragraph{Flickr30k}
 \label{par:Flickr30k}
-Deze dataset \cite{Young2014} is een uitbreiding van Flickr8k. In totaal zijn er 31,783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k\cite{Hodosh2013}. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29,783 in de trainingsset. \todo{waarom meer foto's? meer data dus beter systeem}
+Deze dataset \cite{Young2014} is een uitbreiding van Flickr8k. Deze uitbreiding is ontstaan vanuit een van de basisprincipes in het machinaal leren: ``Hoe groter de trainingsset, hoe beter het getrainde systeem kan zijn''. In totaal zijn er 31,783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k\cite{Hodosh2013}. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29,783 in de trainingsset.
 
 
 \paragraph{MS COCO}
 \label{par:MS COCO}
 De Microsoft Common Objects in COntext dataset (MS COCO) \cite{Lin2014} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. 
 
-MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische-object afbeeldingen bevatten een centraal geplaatst object. Iconische-scene afbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonische hoek. Dit komt overeen met wat mensen beschouwen als ``normale'' hoeken. \todo{canonische hoek uitleggen.} Hoewel dit type afbeeldingen kan leiden tot zeer goede objectdetecties, is er weinig contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van iconische afbeeldingen minder interessant. Bij de Flickr-datasets is er niet expliciet gefocust op het gebruik van niet-iconische afbeeldingen, dus is er meer vari\"eteit in 
+MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische-object afbeeldingen bevatten een centraal geplaatst object. Iconische-scene afbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonische hoek. Canonische hoeken zijn die aanzichten waarbij de camera quasi loodrecht op de gefotografeerde sc\`ene staat, zij het een boven-, onder-, voor- of zijaanzicht. Hoewel dit type afbeeldingen kan leiden tot zeer goede objectdetecties, is er weinig contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van iconische afbeeldingen minder interessant. Bij de Flickr-datasets is er niet expliciet gefocust op het gebruik van niet-iconische afbeeldingen, dus is er meer vari\"eteit in 
 
 Non-iconische afbeeldingen brengen algemeen gezien een compositie van verschillende objecten en personen, gefotografeerd vanuit een niet-canonische hoek. MS COCO bevat voornamelijk niet-iconische afbeeldingen. Figuur \ref{fig:cocotypes} toont duidelijk het verschil tussen iconische en non-iconische afbeeldingen.
 
