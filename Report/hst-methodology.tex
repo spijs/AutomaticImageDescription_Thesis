@@ -386,7 +386,7 @@ We voorzien dus twee modellen zodat het mogelijk is om na te gaan wat de betere 
 Naast het introduceren van gLSTM's breiden Jia et al. \cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leidden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de log-likelihood van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen dan nog een woord toe te voegen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde log-likelihood van elk woord als criterium. Concreet betekent dit een extra normalisatiefactor $\Omega$ bij de berekening van de waarschijnlijkheid van een woordsequentie.
 
 \begin{equation}
-p = \frac{1}{\Omega(\ell)}\sum_{l=1}^{\ell} \log p(s_l | im, s_{1:l}, \theta)
+p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(s_l | im, s_{1:l}, \theta)
 \label{eq:log-sentence-norm}
 \end{equation}
 
