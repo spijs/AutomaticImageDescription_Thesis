@@ -37,11 +37,11 @@ Deze sectie beschrijft de drie meest gebruikte datasets voor training en evaluat
 
 \paragraph{Flickr8k}
 \label{par:Flickr8k}
-De Flickr8k dataset, zoals voorgesteld in \cite{Hodosh2013} bevat 8,092 foto's vanop \texttt{flickr.com}. De focus doorheen de afbeeldingen ligt op mensen en dieren (vooral honden) die een actie uitvoeren. De foto's zijn manueel geselecteerd om de grootst mogelijke vari\"eteit te garanderen. De afbeeldingen zijn geselecteerd vanop Flickr\footnote{\url{https://flickr.com}}, een online portaal voor het hosten van afbeeldingen.
+De Flickr8k dataset\cite{Hodosh2013}, bevat 8,092 foto's vanop \texttt{flickr.com}. De focus doorheen de afbeeldingen ligt op mensen en dieren (vooral honden) die een actie uitvoeren. De foto's zijn manueel geselecteerd om de grootst mogelijke vari\"eteit te garanderen. De afbeeldingen zijn geselecteerd vanop Flickr\footnote{\url{https://flickr.com}}, een online portaal voor het hosten van afbeeldingen.
 
 De bijhorende beschrijvingen zijn manueel opgesteld door mensen met Engels als moedertaal. De schrijvers maakten gebruik van Amazon Mechanical Turk workers\footnote{\url{http://www.mturk.com}}. Dit is een online platform om ``Human Intelligence Tasks'' te laten uitvoeren door mensen. Tegen een kleine betaling kan iedereen die dat wenst de taken oplossen. 
 
-Een voorafgaande test van de personen die de zinnen schrijven moet de correctheid van de beschrijvingen garanderen. Op basis van een aantal eenvoudige richtlijnen moesten de proefpersonen beschrijvingen voor de afbeeldingen opstellen. De vraag was om objecten en acties te beschrijven in een simpele, maar volledige zin met voldoende adjectieven. Er is geen harde restrictie op het aantal woorden in de beschrijvingen.\cite{Hockenmaier2014}
+Een voorafgaande test van de personen die de zinnen schrijven moet de correctheid van de beschrijvingen garanderen. Op basis van een aantal eenvoudige richtlijnen moesten de proefpersonen beschrijvingen voor de afbeeldingen opstellen. De vraag was om objecten en acties te beschrijven in een simpele, maar volledige zin met voldoende adjectieven. Er is geen harde restrictie op het aantal woorden in de beschrijvingen\cite{Hockenmaier2014}.
 
 Eenzelfde afbeelding kan tot verschillende beschrijvingen leiden: sommige mensen focussen op de actie, anderen leggen de nadruk op de persoon die de actie uitvoert, \ldots De zinnen \texttt{A man is skiing down a hill} en \texttt{A man is going down a hill on his skis} beschrijven dezelfde foto, maar doen dit op een verschillende manier. Om deze rijkdom in taal te kunnen weergeven zijn er meerdere zinnen per afbeelding opgenomen in de dataset.
 
@@ -50,12 +50,12 @@ De dataset is verdeeld in drie delen, voor training, validatie en testen. De val
 
 \paragraph{Flickr30k}
 \label{par:Flickr30k}
-Deze dataset \cite{Young2014} is een uitbreiding van Flickr8k. Deze uitbreiding is ontstaan vanuit een van de basisprincipes in het machinaal leren: ``Hoe groter de trainingsset, hoe beter het getrainde systeem kan zijn''. In totaal zijn er 31,783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k\cite{Hodosh2013}. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29,783 in de trainingsset.
+De Flickr30k dataset\cite{Young2014} is een uitbreiding van Flickr8k. Deze uitbreiding is ontstaan vanuit een van de basisprincipes in het machinaal leren: ``Hoe groter de trainingsset, hoe beter het getrainde systeem kan zijn''. In totaal zijn er 31,783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29,783 in de trainingsset.
 
 
 \paragraph{MS COCO}
 \label{par:MS COCO}
-De Microsoft Common Objects in COntext dataset (MS COCO) \cite{Lin2014} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. 
+De Microsoft Common Objects in COntext dataset (MS COCO)\cite{Lin2014} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330,000 afbeeldingen die elk vijf beschrijvingen hebben. 
 
 MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en non-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische-object afbeeldingen bevatten een centraal geplaatst object. Iconische-scene afbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonische hoek. Canonische hoeken zijn die aanzichten waarbij de camera quasi loodrecht op de gefotografeerde sc\`ene staat, zij het een boven-, onder-, voor- of zijaanzicht. Hoewel dit type afbeeldingen kan leiden tot zeer goede objectdetecties, is er weinig contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van iconische afbeeldingen minder interessant. Bij de Flickr-datasets is er niet expliciet gefocust op het gebruik van niet-iconische afbeeldingen, dus is er meer vari\"eteit in 
 
@@ -70,7 +70,7 @@ Non-iconische afbeeldingen brengen algemeen gezien een compositie van verschille
 
 Een ander belangrijk deel van de COCO dataset zijn annotaties. Oudere datasets legden de focus op classificatie, bounding boxes en segmentatie, terwijl MS COCO probeert om elk belangrijk object op de foto te annoteren. De afbeeldingen zijn gebaseerd op een lijst van object categorie\"en en zijn specifiek geselecteerd om niet-iconische sc\`enes te bevatten.
 
-Het genereren van de beschrijvingen bij de foto's gebeurt met Amazon Mechanical Turk workers, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving.\cite{Rampf2015} Figuur \ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
+Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mechanical Turk workers}, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving\cite{Rampf2015}. Figuur \ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
 
 
 \begin{figure}[tb]
