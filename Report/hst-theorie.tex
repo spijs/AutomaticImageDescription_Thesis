@@ -191,7 +191,7 @@ In deze thesis komt een softmax voor als laatste laag bij de gebruikte CNN (sect
 % CNN
 \subsection{Convolutionele Neurale Netwerken}
 \label{sec:CNN}
-Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren.\cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Girshick2014}\cite{Ciresan2012}\cite{Zhou2015}
+Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren.\cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Ciresan2012,Girshick2014,Zhou2015}
 
 Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
@@ -226,6 +226,7 @@ Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is
 % RNN
 \subsection{Recurrente Neurale Netwerken}
 \todo[inline]{we hebben buiten word2vec geen enekele referentie in dit stuk?}
+\todo[inline]{Referentie zoeken voor RNN}
 Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van de output van de vorige stap naar de verborgen lagen. Op figuur \ref{fig:rnn} is een ontrolling van een RNN over verschillende tijdstippen te zien. $U,V$ en $W$ stellen gewichtsmatrices voor. Het ontrollen van het netwerk komt neer op het uitschrijven van het netwerk over verschillende tijdstippen. De pijlen van links naar rechts op de afbeelding komen overeen met de terugkoppeling van de output uit de vorige stap.
 
 De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel.
@@ -248,7 +249,7 @@ Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor versch
     \label{formule:adagrad}
 \end{equation}
 
-Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen voorbeelden zijn met gradi\"ent $0.1$ voor een bepaalde parameter, en het tiende voorbeeld heeft waarde $-0.9$. Dan kan ``rmsprop''\cite{RMSprop} een oplossing bieden. Deze techniek maakt gebruik van een bewegend gemiddelde over alle voorbije gradi\"enten om ervoor te zorgen dat grote veranderingen in de gradi\"ent slechts een kleine verandering in de gewichten aanbrengen. Formules \eqref{rmsprop:start}-\eqref{formule:rmsprop} toont hoe dit exact in zijn werk gaat. $\rho$ is de smoothing paramater voor het bewegende gemiddelde, $\sigma$ is de leersnelheid, $a_t$ is het gemiddelde op tijdstip $t$, $dw$ is de gradi\"ent en $w$ is de gewichtsvector. Ook hier vermijdt $\epsilon$ een mogelijke deling door nul.
+Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen voorbeelden zijn met gradi\"ent $0.1$ voor een bepaalde parameter, en het tiende voorbeeld heeft waarde $-0.9$. Dan kan ``rmsprop''\cite{RMSprop} een oplossing bieden. Deze techniek maakt gebruik van een bewegend gemiddelde over alle voorbije gradi\"enten om ervoor te zorgen dat grote schommelingen in de gradi\"ent slechts een kleine verandering in de gewichten aanbrengen. Formules \eqref{rmsprop:start}-\eqref{formule:rmsprop} toont hoe dit exact in zijn werk gaat. $\rho$ is de smoothing paramater voor het bewegende gemiddelde, $\sigma$ is de leersnelheid, $a_t$ is het gemiddelde op tijdstip $t$, $dw$ is de gradi\"ent en $w$ is de gewichtsvector. Ook hier vermijdt $\epsilon$ een mogelijke deling door nul.
 
 \begin{eqnarray}
 \vspace{-3mm}
@@ -288,11 +289,13 @@ Op lange termijn is het voor een RNN moeilijk om informatie te onthouden, net do
 % LSTM
 \subsection{Long Short Term Memory Neurale Netwerken}
 \label{sub:lstm}
-Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Figuur \ref{fig:lstm} toont hoe een LSTM-blok er uitziet.\cite{Google,SeppHochreiter1997}
+Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elk LSTM blok heeft een aantal gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Figuur \ref{fig:lstm} toont hoe een LSTM-blok er uitziet.\cite{SeppHochreiter1997,Google}
 
-Op de figuur is duidelijk te zien hoe zowel input als output zijn teruggekoppeld naar de verschillende gates. \todo{verder uitleggen}
+Op de figuur is duidelijk te zien hoe zowel input als output zijn teruggekoppeld naar de verschillende gates. De waarde van die gates hangt dus af van zowel de vorige voorspelling, als van de nieuwe input.
 
-Formules \eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekeningen weer die elke stap gebeuren. \todo{uitleggen}
+Formules \eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekeningen weer die elke stap gebeuren. In deze formules zijn alle $W_{ij}$ gewichtsmatrices, $\sigma$ en $h$ zijn transferfuncties. $x$ is de input van het netwerk, $m_t$ is de output voor de softmaxlaag op tijdstip $t$ en $i'_t$, $f'_t$ en $o'_t$ zijn de waarden van respectievelijk input-, forget- en outputgate op tijdstip $t$. $c'_t$ is de waarde van de geheugencel op tijdstip $t$ en $p_t$ is de uiteindelijke voorspelling van het netwerk op tijdstip $t$. De $\odot$ operator stelt een puntsgewijze vermenigvuldiging tussen twee vectoren voor.
+
+\todo[inline]{f veranderen in een o op tekening}
 
 \begin{figure}[tb]
     \centering
@@ -314,7 +317,6 @@ p_{t+1} & = & SoftMax(m_t)
 \label{lstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
-\todo[inline]{figuur uitleggen}
 
 LSTM-netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat LSTM-netwerken over een langere periode dan een gewoon RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk.
 
@@ -330,7 +332,7 @@ Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch mod
     \label{formule:lda}
 \end{equation}
 
-Het generatieve aspect van LDA is te zien in algoritme \ref{algo:lda} en is ook ge\"illustreerd in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ word een kansverdeling over de onderwerpen gesampled per document ($\theta$), alsook een kansverdeling over de woorden voor elk onderwerp ($\phi$). Deze priors dienen als basis voor een Dirichletverdeling. Een mogelijke interpretatie $\alpha$ is het aantal observaties van de verschillende topics alvorens het document in kwestie is gezien. Hetzelfde met $\beta$, dat het aantal observaties van een bepaald woord kan voorstellen. Uit $\theta$ wordt voor elke positie $i$ in een document $j$ een onderwerp gesampled ($z_{ji}$). Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$. \todo{cite slides van Sien + reference voor dirichlet distribution zoeken}
+Het generatieve aspect van LDA is te zien in algoritme \ref{algo:lda} en is ook ge\"illustreerd in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ word een kansverdeling over de onderwerpen gesampled per document ($\theta$), alsook een kansverdeling over de woorden voor elk onderwerp ($\phi$). Deze priors geven de onzekerheid over de variabelen ($\theta$ en $\phi$) weer en dienen als basis voor een Dirichletverdeling\cite{Huang}. Een mogelijke interpretatie $\alpha$ is het aantal observaties van de verschillende topics alvorens het document in kwestie is gezien. Hetzelfde met $\beta$, dat het voorafgaand aantal samples van een bepaald woord uit een bepaald topic kan voorstellen. Uit $\theta$ wordt voor elke positie $i$ in een document $j$ een onderwerp gesampled ($z_{ji}$). Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$\cite{LDAsien}.
 
 \begin{algorithm}
 \caption{Generatief aspect van LDA}
