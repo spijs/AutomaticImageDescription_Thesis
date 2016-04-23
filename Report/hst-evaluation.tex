@@ -14,7 +14,7 @@ Om die reden bekijken we ook nog enkele statistieken van de gegenereerde zinnen 
 Als laatste onderdeel volgt een bespreking van een methode die de laatste twee jaar in onbruik is geraakt binnen dit onderzoeksdomein. Deze methode is gebaseerd op een rangschikking van zinnen en afbeeldingen. Deze rangschikking leidt tot een numerieke score voor de bekomen resultaten.
 
 \section{BLEU}
-Kort gesteld berekent het BLEU-algoritme scores van computervertalingen op basis van overeenkomsten met de referentiezinnen. Deze overeenkomsten bestaan uit gemeenschappelijke woorden of opeenvolgingen van gemeenschappelijke woorden. Verschillende vormen van BLEU kunnen worden gebruikt afhankelijk van het aantal gebruikte woorden in een opeenvolging (n-grams) \todo{deze zin is vaag, ma ik weet ni wa ge bedoelt dus ik kan het ni verbeteren -> beter?}. Het gebruik van BLEU heeft echter wel enkele nadelen.
+Kort gesteld berekent het BLEU-algoritme scores van computervertalingen op basis van overeenkomsten met de referentiezinnen. Deze overeenkomsten bestaan uit gemeenschappelijke woorden of opeenvolgingen van gemeenschappelijke woorden. Verschillende vormen van BLEU kunnen worden gebruikt afhankelijk van het aantal gebruikte woorden in een opeenvolging (n-grams). Het gebruik van BLEU heeft echter wel enkele nadelen.
 
 \subsection{Algoritme}
 Om de n-gram BLEU-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision} of gewijzigde n-gram precisie. Dit is een vorm van precisie die rekening houdt met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. 

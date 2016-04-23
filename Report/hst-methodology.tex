@@ -37,14 +37,7 @@ Een eerste implementatie, die ons startpunt vormt, is beschreven door Karpathy \
 \label{sec:usedcnn}
 Een afbeelding (2D matrix met een RGB waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. De meeste bestudeerde algoritmes maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN), zoals beschreven in \ref{sec:CNN}.
 
-Het CNN dat momenteel het beste presteert is VGGNet\cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen. Bij max-pooling wordt de afbeelding gesplitst in een aantal regio's. De maxima van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2, wat VGGNet ook gebruikt.
-
-\begin{figure}[tb]
-    \centering
-    \includegraphics[width=0.6\linewidth]{Images/maxpool.png}
-    \caption{Max pooling met 2x2 filter en stapgrootte 2}
-    \label{fig:maxpool}
-\end{figure}
+Het CNN dat momenteel het beste presteert is VGGNet\cite{Arge2015}. Dit netwerk maakt gebruik van 16 lagen, wat veel meer is dan gebruikelijk was op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen, zoals beschreven in sectie \ref{sec:CNN}.
 
 De laatste lagen van het netwerk zijn standaard (volledig verbonden) lagen, gevolgd door een softmaxlaag om de output van het netwerk te normaliseren. Figuur \ref{fig:alexvgg} toont een vereenvoudigde weergave van de architectuur van VGGNet, in vergelijking met het vroeger zeer populaire AlexNet\cite{Krizhevsky2012a}.
 
@@ -406,6 +399,7 @@ Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal af
 Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. Voorbeelden van woorden met laagste en hoogste IDF staan respectievelijk in tabel \ref{tbl:idf-laag} en tabel \ref{tbl:idf-hoog}. Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderlijke woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus zo minder veelzeggend zijn. Anderzijds zorgt dit er ook meteen voor dat korte zinnen niet langer de voorkeur krijgen.
 \todo[inline]{IDF-norm moet ook stoppen als lengte te groot is -> da nog toevoegen als geimplementeerd}
 
+\todo[inline]{deze captions zijn vreemd. alle, nu is er tabel 5.1, 5.2 en 5.3}
 \begin{table}[!htb]
 	\caption{Gestemde woorden samen met hun IDF-gewicht}
 	\begin{minipage}{.5\linewidth}
