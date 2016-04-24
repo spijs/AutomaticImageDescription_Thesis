@@ -1,26 +1,30 @@
 \chapter{Theoretische Achtergrond}
 \label{hst-theorie}
-Dit hoofdstuk bevat de theoretische concepten die nodig zijn om de gebruikte aanpak zo goed mogelijk te begrijpen. Het bevat een beschrijving van de gebruikte neurale netwerken en van een aantal concepten uit de statistiek.
+Om de gebruikte aanpak zo goed mogelijk te begrijpen zijn een aantal theoretische concepten nodig. Dit hoofdstuk biedt een overzicht van de belangrijkste methodes en technieken die gebruikt zijn tijdens het onderzoek.
+
+Een eerste sectie schetst een overzicht van de neurale netwerken die gebruikt zijn om afbeeldingen en zinnen voor te stellen. De tweede sectie focust op twee statischtische concepten die zijn aangewend om extra semantische informatie uit afbeeldingen te extraheren. 
 
 \section{Neurale Netwerken}
-Algemeen gesproken dient een neuraal netwerk als een simulatie van menselijke hersenen. De structuur van een neuraal netwerk probeert de werking van de neuronen en synapsen in het menselijke brein na te bootsen. Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan in verbinding met elkaar en communiceren met elkaar door middel van elektrische potentiaal. Afhankelijk van de aan- of afwezigheid van potentiaal over de inkomende verbindingen stuurt een neuron al dan niet een signaal door naar het volgende neuron. Deze eenheden zijn zeer makkelijk softwarematig te simuleren.
-Elk artificieel neuraal netwerk heeft een trainingsfase nodig waarin het de juiste gewichten leert. Na deze training kan het netwerk ongeziene input omvormen tot de juiste output.
+Algemeen dient een neuraal netwerk als een simulatie van menselijke hersenen. De structuur van een neuraal netwerk probeert de werking van de neuronen en synapsen in het menselijke brein na te bootsen. 
 
+Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan in verbinding met elkaar door middel van synapsen en communiceren met behulp van elektrische potentiaal. Afhankelijk van de aan- of afwezigheid van potentiaal over de inkomende verbindingen stuurt een neuron al dan niet een signaal door naar het volgende neuron. Deze eenheden zijn zeer makkelijk softwarematig te simuleren.
+
+Elk artificieel neuraal netwerk heeft een trainingsfase nodig waarin het de juiste gewichten voor alle verbindingen leert. Na deze training kan het netwerk ongeziene input omvormen tot de juiste output.
 
 Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor een aantal gebruikte varianten. Daarna volgt een toelichting van enkele meer complexe netwerken: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
 
 \subsection{Feed Forward Neurale Netwerken}
-\paragraph{Perceptron} % (fold)
+\subsubsection{Perceptron} % (fold)
 \label{par:perceptron}
 
-Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd met een transferfunctie $f$ (formule \ref{formule:neuron}). Typische voorbeelden van transferfuncties zijn de logistische functie en de hyperbolische tangensfunctie.
+Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit een of meer neuronen, met een of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd door een transferfunctie $f$ (formule \ref{formule:neuron}). Typische voorbeelden van transferfuncties zijn de logistische functie en de hyperbolische tangensfunctie.
 
 \begin{equation}
     y = f(\sum\limits_{i=1}^{n}w_i x_i)
     \label{formule:neuron}
 \end{equation}
 
-Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij heeft elke input \'e\'en gewicht per output en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk verschillende gewichten en een verschillende transferfunctie $f_i$ gebruiken.
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij hebben alle verbindingen tussen in- en outputs een eigen gewicht en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk verschillende gewichten en een verschillende transferfunctie $f_i$ gebruiken.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -55,9 +59,9 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 \end{figure}
 
 
-\paragraph{Feedforward Netwerk}
+\subsubsection{Feedforward Netwerk}
 \label{par:concept}
-Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output.\cite{Bishop:1995:NNP:525960} Daarnaast hoeft een knoop niet alle outputs van een vorige laag te gebruiken. Wanneer het niet volledig verbonden is, komt dit immers neer op een gewicht van 0 voor de niet-verbonden knopen.
+Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen van neuronen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Dit gewicht is een natuurlijk getal. Het is ook mogelijk om gewichten te hebben met waarden nul, waardoor de volgende laag niet volledig verbonden is. Het is voor elke knoop in het netwerk ook mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Hier is het ook mogelijk om een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output\cite{Bishop:1995:NNP:525960}.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -112,11 +116,11 @@ Een feedforward neuraal netwerk is een van de eenvoudigste neurale netwerken. He
 \label{fig:ffnn}
 \end{figure}
 
-% paragraph concept (end)
+% subsubsection concept (end)
 
-\paragraph{Training} % (fold)
+\subsubsection{Training} % (fold)
 \label{par:training}
-Het trainen van een feedforward netwerk gebeurt meestal met terugpropagatie. Deze techniek vergelijkt de verwachte output bij een gekende input met de berekende output. Op basis van dit verschil gebeuren er aanpassingen aan de gewichten in omgekeerde richting: eerst de gewichten van de laatste laag, dan de voorlaatste, \ldots 
+Het trainen van een feedforward netwerk gebeurt meestal met terugpropagatie. Deze techniek vergelijkt voor elke input de berekende met de verwachte waarde. Op basis van dit verschil gebeuren er aanpassingen aan de gewichten van het netwerk. Deze aanpassingen propageren in omgekeerde volgorde doorheen het netwerk: ze beginnen bij de gewichten van de laatste laag, daarna de voorlaatste,\ldots 
 
 Voor een netwerk met \'e\'en verborgen laag geldt het volgende voor de waarden van de verborgen knopen $\mathbf{\hat{h}}$ en voorspelde outputvector $\mathbf{\hat{y}}$ bij inputvector $\mathbf{x}$:
 \begin{equation}
@@ -129,7 +133,7 @@ waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen re
 
 Het probleem bij het leren van $\mathbf{W}$ en $\mathbf{W'}$ is dat de correcte verborgen vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input,de  berekende output en de verwachte output gebeuren.
 
-Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd met behulp van gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Gradient descent is een eenvoudig optimalisatie algoritme dat kan dienen om het lokale minimum van een functie te vinden. De minimalisatie gebeurt op een ``gulzige'' manier, door elke stap wijzigingen aan te brengen in de richting van de steilste afdaling. Deze richting komt overeen met de eerste afgeleide van de transferfunctie, berekend in alle variabelen van de output van het netwerk: 
+Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van \myvector{W'} en \myvector{\hat{h}}. \myvector{W'} wordt gewijzigd met behulp van gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Gradient descent is een eenvoudig optimalisatie algoritme dat kan dienen om het lokale minimum van een functie te vinden. De minimalisatie gebeurt op een ``gulzige'' manier, door elke stap wijzigingen aan te brengen in de richting van de steilste afdaling. Deze richting komt overeen met de eerste afgeleide van de transferfunctie, berekend in alle variabelen van de output van het netwerk: \todo{formules verifieren}
 
 \begin{equation}
 df_i = \frac{\partial}{\partial\hat{h_i}'}f(\hat{h_i}')
@@ -160,10 +164,10 @@ Op basis van \myvector{\Delta h} en \myvector{\hat{h}} kan \myvector{W} gewijzig
 \end{equation}
 Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}. \cite{Blockeel}
 
-Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren toe te passen op het netwerk. Deze methode kan bovendien eenvoudig worden uitgebreid naar een netwerk met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag. Een zelfde techniek maakt het trainen mogelijk van complexere structuren met terugkoppelingen (RNN) of convolutionele lagen (CNN).
-% paragraph training (end)
+Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat herhaaldelijke kleine wijzigingen op termijn de juiste gewichten leren. Het is ook mogelijk om elke input meerdere keren te gebruiken om zo tot een beter resultaat te komen. Het is zeer eenvoudig om deze methode uit te breiden naar netwerken met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag, door gebruik te maken van dezelfde concepten als hierboven beschreven. Deze techniek maakt het ook mogelijk om netwerken met complexere structuren te leren, zoals netwerken met terugkoppelingen (RNN) of convolutionele lagen (CNN).
+% subsubsection training (end)
 
-\paragraph{Softmaxlaag}\label{par:softmax}
+\subsubsection{Softmaxlaag}\label{par:softmax}
 De softmaxlaag is een laag die vaak als laatste laag in een neuraal netwerk voorkomt. Wanneer het netwerk meerdere outputs heeft, geeft de softmaxlaag een kansverdeling over de verschillende outputs terug in plaats van de oorspronkelijke outputvector. Concreet betekent dit dat de outputwaarden worden genormaliseerd op een manier dat elke waarde positief is en bovendien de som van alle waarden gelijk is aan 1. Dit is bijvoorbeeld nuttig bij het leren van een kansverdeling over een aantal discrete componenten. Ook bij classificatie van input die tegelijkertijd tot meerdere klassen kan behoren is dit van nut.
 
 De softmaxlaag is eigenlijk de softmaxfunctie $s$ in formule \eqref{formula-softmax}. Hierbij is $o$ de outputvector van grootte $n$.
