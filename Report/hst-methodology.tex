@@ -319,7 +319,7 @@ Na het berekenen van de representaties van afbeeldingen en zinnen volgt een bere
 De eerder berekende onderwerpverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de onderwerpverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de onderwerpverdeling.
 
 \begin{equation}
-    h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v +\color{red}{\mathbbm{1}{(t=1)} \odot W_lL}
+    h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \mathbbm{1}{(t=1)} \odot b_v \color{red}{+\mathbbm{1}{(t=1)} \odot W_lL}
     \color{black}
     \label{eq:rnnldaonce}
 \end{equation}

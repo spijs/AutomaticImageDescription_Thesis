@@ -12,7 +12,7 @@ De rest van deze sectie bevat een bespreking van twee algoritmes uit de computer
 \subsection{BLEU}
 Kort gesteld berekent het BLEU-algoritme scores van computervertalingen op basis van overeenkomsten met de referentiezinnen. Deze overeenkomsten bestaan uit gemeenschappelijke woorden of opeenvolgingen van gemeenschappelijke woorden. Verschillende vormen van BLEU kunnen worden gebruikt afhankelijk van het aantal gebruikte woorden in een opeenvolging. Een opeenvolging van $n$ woorden krijgt de naam \emph{n-gram}. Het redelijk eenvoudige algoritme van BLEU heeft echter wel enkele nadelen.
 
-\paragraph{Algoritme}
+\subsubsection{Algoritme}
 Om de n-gram BLEU-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision} of gewijzigde n-gram-precisie. Hierbij volgt de precisie uit gemeenschappelijke n-grams. N-gram-precisie houdt bovendien rekening met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. 
 
 De berekening van de gewijzigde n-gram-precisie neemt eerst het maximum van het aantal keer dat een specifieke n-gram voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal voorkomens ($Count(ngram)$) van deze sequentie in de gegenereerde zin $s$. Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk woord in de vertaalde zin opgeteld en gedeeld door de som van het totaal aantal n-grams in de gegenereerde zin. Deze score is afhankelijk van de waarde van $n$.
@@ -48,7 +48,7 @@ BLEU = BP\cdot exp(\sum\limits_{n=1}^N w_nlog(p_n))
 \end{equation}
 Hierbij is $w_n$ gelijk aan $1/N$ wanneer het uniforme geometrisch gemiddelde wordt genomen.
 
-\paragraph{Nadelen en gebruik}
+\subsubsection{Nadelen en gebruik}
 De BLEU-score is de meest gebruikte gebruikte evaluatiemethode in de literatuur. De meeste papers die afbeeldingsbeschrijvingen genereren, bespreken BLEU-1 tot BLEU-4 scores. De literatuur lijkt het echter niet eens over het gebruik van de Brevity Penalty. Sommige papers vermelden expliciet dat ze het niet gebruiken, maar andere volgen de paper van Papinemi volledig. Door dit verschil in evaluatie is de vergelijking van verschillende systemen niet altijd eerlijk. Wanneer de gegenereerde zinnen lang genoeg zijn komen de scores wel overeen.
 In onze experimenten stellen we de Brevity Penalty steeds gelijk aan 1.
 
@@ -72,7 +72,7 @@ Meteor is een evaluatiealgoritme met als doel het vermijden van dergelijke foute
 \subsection{Meteor}
 Elliott et al.\cite{Elliott2014} tonen aan dat zeker unigram BLEU (BLEU-1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. Meteor is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Meteor correleert het beste met menselijke evaluatie van de door Elliott onderzochte evaluatiemechanismen.
 
-\paragraph{Algoritme}
+\subsubsection{Algoritme}
 Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met de referenties en van deze alignering per zin een score te berekenen. Bij het berekenen van de score wordt net zoals bij BLEU gekeken naar de precisie. Daarnaast heeft in contrast met BLEU ook de recall een invloed.\todo{wat met recall?} De paper bevat een implementatie in de vorm van een JAR-bestand, zodat er geen twijfel bestaat over het gebruik van het algoritme.
 
 Concreet probeert het algoritme twee zinnen te aligneren met behulp van vier ``matchers''. Als eerste is er een match wanneer twee woordvormen exact dezelfde zijn. Als tweede is er een match wanneer met een Snowball Stemmer\cite{porter2001snowball} ``gestemde'' woorden gelijk zijn. Een derde matcher kijkt naar overeenkomsten in de WordNet synoniemenlijst van elk woord\cite{Miller1990}. Als laatste vormen frases of woordsequenties een match wanneer ze in zogenoemde parafrasetabellen voorkomen. Een parafrasetabel bevat paren van frases en overeenkomstige parafrases. Parafrases zijn woordsequenties die dezelfde betekenis hebben dan de overeenkomstige frase, maar anders geformuleerd zijn.
@@ -94,7 +94,7 @@ Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gea
 
 Wanneer er meerdere referenties zijn in het corpus, bepaalt het maximum van de individuele scores van elke referentie de score van de vertaling.
 
-\paragraph{Gebruik en nadelen}
+\subsubsection{Gebruik en nadelen}
 Zoals al aangehaald toonden Elliott en Keller in 2014 aan dat van de bestudeerde evaluatiemethodes Meteor de hoogste correlatie heeft met menselijke beoordelingen voor afbeeldingsbeschrijvingen. Om deze reden rapporteren wij ook de resultaten met dit algoritme. In de literatuur blijven BLEU-scores echter de meest gerapporteerde resultaten.
 
 Ondanks dat het het meest performante algoritme is, vertoont Meteor nog steeds slechts matige correlatie met menselijke beoordelingen. Verder onderzoek naar betere automatische evaluatie kan dus nuttig zijn. Daarnaast vereist het tabellen en synoniemenlijsten die niet voor elke taal beschikbaar zijn. Voor het Engels is deze informatie wel beschikbaar. 
