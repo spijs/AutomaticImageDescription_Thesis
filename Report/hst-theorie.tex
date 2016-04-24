@@ -170,36 +170,36 @@ Deze techniek wordt toegepast voor elk paar van gekende inputs en outputs zodat 
 \subsubsection{Softmaxlaag}\label{par:softmax}
 De softmaxlaag is een laag die vaak als laatste laag in een neuraal netwerk voorkomt. Wanneer het netwerk meerdere outputs heeft, geeft de softmaxlaag een kansverdeling over de verschillende outputs terug in plaats van de oorspronkelijke outputvector. Concreet betekent dit dat de outputwaarden worden genormaliseerd op een manier dat elke waarde positief is en bovendien de som van alle waarden gelijk is aan 1. Dit is bijvoorbeeld nuttig bij het leren van een kansverdeling over een aantal discrete componenten. Ook bij classificatie van input die tegelijkertijd tot meerdere klassen kan behoren is dit van nut.
 
-De softmaxlaag is eigenlijk de softmaxfunctie $s$ in formule \eqref{formula-softmax}. Hierbij is $o$ de outputvector van grootte $n$.
+De berekening van de kansverdeling gebeurt met de softmaxfunctie $s$ in formule \eqref{formula-softmax}. Hierbij is $\mathbf{o}$ de outputvector van grootte $n$.
 \begin{equation}
 s(\textbf{o})_i = \frac{e^{o_i}}{\sum^{n}_{k=1}{e^{o_k}}}
 \label{formula-softmax}
 \end{equation}
 
-Het gebruik van softmax bij backpropagatie is zeer eenvoudig. De afgeleide van de softmaxfunctie is te zien in formule \eqref{softmax_derivative}. Hierbij is $\delta_{ik}$ de Kroneckerdelta, die gelijk is aan $1$ als $i = k$ en anders gelijk is aan $0$.
+Het gebruik van softmax bij backpropagatie is zeer eenvoudig aangezien de afgeleide zeer simpel te berekenen is. De afgeleide van de softmaxfunctie is te zien in formule \eqref{softmax_derivative}. Hierbij is $\delta_{ik}$ de Kroneckerdelta, die gelijk is aan $1$ als $i = k$ en anders gelijk is aan $0$.
 
 \begin{equation}
     \frac{\partial}{\partial o_k}s(\textbf{o})_i =  s(\textbf{o})_i(\delta_{ik} - s(\textbf{o})_k)
     \label{softmax_derivative}
 \end{equation}
 
-Bij het gebruik van negatieve logprobabiliteit als foutenfunctie ($L_i$) komt dit neer op volgende zeer eenvoudige afgeleiden van de foutenfunctie:
+Bij het gebruik van negatieve logprobabiliteit als foutenfunctie ($L$) komt dit neer op volgende zeer eenvoudige afgeleide van de foutenfunctie:
 
 \begin{equation}
-    \frac{\partial L_i}{\partial o_k} = s(\textbf{o})_k - y_i
+    \frac{\partial L}{\partial o_i} = \sum_{k=1}^n{y_i}s(\textbf{o})_i - y_i
 \end{equation}
-met $\textbf{y}$ de correcte output\cite{Bishop:1995:NNP:525960}.
+met $\textbf{y}$ de correcte output. Als de outputvector een one-hot codering heeft valt de som in deze formule weg en is de afgeleide in elke component gelijk aan het verschil van de voorspelde en de correcte output\cite{Bishop:1995:NNP:525960}. 
 
 In deze thesis komt een softmax voor als laatste laag bij de gebruikte CNN (sectie \ref{sec:usedcnn}), als laatste laag in het netwerk bij de voorspelling van LDA-topicverdelingen (sectie \ref{sec:LDAprediction}) en als laatste laag in de gebruikte taalnetwerken (sectie \ref{sec:rnn_methodology} en \ref{sec:lstm}).
 
 % CNN
 \subsection{Convolutionele Neurale Netwerken}
 \label{sec:CNN}
-Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren.\cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken.\cite{Ciresan2012,Girshick2014,Zhou2015}
+Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn een biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren.\cite{LeCun2010} Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken\cite{Ciresan2012,Girshick2014,Zhou2015}.
 
 Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een non-linearity laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
-Eerst is er een filter bank laag, die een aantal features kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de verschillende features met een aantal kernelfuncties. Elke filterlaag detecteert andere features op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van een dergelijke kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
+Eerst is er een filter bank laag die een aantal features kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal kernelfuncties. Elke filterlaag detecteert andere features op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van een dergelijke kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
 
 \begin{figure}[tb]
     \centering
@@ -208,7 +208,7 @@ Eerst is er een filter bank laag, die een aantal features kan detecteren in de i
     \label{fig:cnnfilters}
 \end{figure}
 
-Daarna volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een ``rectified sigmoid'' bevatten, al dan niet gecombineerd met een normalisatie.
+Na de filters volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een ``rectified sigmoid'' bevatten, al dan niet gecombineerd met een normalisatie.
 
 De laatste laag in elk niveau is een feature pooling laag die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde. De maxima (of gemiddelde waarden) van alle regio's vormen dan een down-sampled weergave van de input. Figuur \ref{fig:maxpool} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2. 
 
@@ -219,28 +219,31 @@ De laatste laag in elk niveau is een feature pooling laag die de dimensionalitei
     \label{fig:maxpool}
 \end{figure}
 
-De laatste fase in een traditionele convolutionele architectuur bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
+Na een of meerdere opeenvolgingen van filters, niet-lineaire en pooling lagen volgt in een traditionele convolutionele architectuur de laatste fase die bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
 
-Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar ook zeer snel ongesuperviseerd waardoor er geen nood is aan zeer grote gelabelde datasets. CNN's zijn in staat om veel sneller concepten te leren dan gewone feedforward netwerken, terwijl ze theoretisch slechts iets mindere resultaten kunnen bekomen. Een CNN gebruikt op elk niveau rechthoekige regio's uit de vorige laag die bovendien mogen overlappen. Door deze overlapping is het netwerk translatie-invariant.
+Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar kan ook ongesuperviseerd. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
+In vergelijking met gewone feedforward netwerken zijn CNN's in staat om veel sneller concepten te leren, terwijl ze theoretisch slechts iets minder goede resultaten bekomen.
+Bovendien is een CNN translatie-invariant omdat het op elk niveau gebruik maakt van rechthoekige regio's uit de vorige laag van het netwerk. Er is overlap tussen de verschillende regio's, wat leidt tot deze zeer interessante eigenschap.
 
-E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een paper\cite{Krizhevsky2012a} die CNN's gebruikt voor het oplossen van de ImageNet challenge.\cite{Russakovsky2014}
-Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categorie\"en. De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitten te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die op dezelfde en recentere wedstrijden nog betere resultaten bekomen.
+E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een onderzoek van Krizhevsky et al.\cite{Krizhevsky2012a} dat CNN's gebruikt voor het oplossen van de ImageNet challenge\cite{Russakovsky2014}.
+Dit is een competitie waarin afbeeldingen moeten worden geclassificeerd in een aantal voorgedefini\"eerde categorie\"en. 
+
+De gebruikte architectuur bestaat uit 8 lagen waarvan 5 convolutioneel en 3 volledig verbonden. Ze gebruiken bovendien verschillende technieken om overfitten te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. De architectuur kan worden gezien in figuur \ref{fig:AlexNet} en  is een variant op de standaardarchitectuur die hierboven werd beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die zowel op de ImageNet challenge als op recentere wedstrijden nog betere resultaten bekomen.
 
 Het netwerk (VGGNet)\cite{Arge2015} dat wij gebruiken bestaat uit 16 lagen en is publiek beschikbaar met behulp van Caffe\cite{Jia2014}. De feature maps van verschillende outputlagen van dit netwerk dienen als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de laatste laag voor de classificatielaag worden beschouwd als een representatievector voor de hele afbeelding. Output van de andere lagen is een representatie voor afbeeldingskenmerken op een niveau lager dan de volledige afbeelding.
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/cnn.PNG}
-	\caption{Convolutioneel Neuraal Netwerk gebruikt door \cite{Krizhevsky2012a} voor classificatie van afbeeldingen}
+	\caption{Convolutioneel Neuraal Netwerk gebruikt voor classificatie van afbeeldingen\cite{Krizhevsky2012a}}
 	\label{fig:AlexNet}
 \end{figure}
 
 % RNN
 \subsection{Recurrente Neurale Netwerken}
-\todo[inline]{we hebben buiten word2vec geen enekele referentie in dit stuk?}
-\todo[inline]{Referentie zoeken voor RNN}
+\subsubsection{Concept}
 Recurrente neurale netwerken zijn een uitbreiding van standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van de output van de vorige stap naar de verborgen lagen. Op figuur \ref{fig:rnn} is een ontrolling van een RNN over verschillende tijdstippen te zien. $U,V$ en $W$ stellen gewichtsmatrices voor. Het ontrollen van het netwerk komt neer op het uitschrijven van het netwerk over verschillende tijdstippen. De pijlen van links naar rechts op de afbeelding komen overeen met de terugkoppeling van de output uit de vorige stap.
 
-De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden. Hierdoor kunnen recurrente netwerken tijdsgerelateerde informatie coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel\cite{Mikolov2010}.
+De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden, waardoor recurrente netwerken in staat zijn om tijdsgerelateerde informatie te coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg gebruikt worden als een taalmodel\cite{Mikolov2010}.
 
 \begin{figure}[tb]
     \centering
@@ -249,11 +252,15 @@ De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onth
     \label{fig:rnn}
 \end{figure}
 
-Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmax laag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om zinnen te genereren. Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen random zijn, of het kunnen word embeddings zijn zoals bijvoorbeeld \texttt{word2vec}\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
+Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmaxlaag een kansverdeling maken voor het volgende woord. Met behulp van beam-search of het samplen van het meest waarschijnlijke woord, is het netwerk in staat om zinnen te genereren. 
 
-Een frequent probleem bij het trainen van dergelijke recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op ``overfitting''. Hierbij is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Om dit probleem aan te pakken biedt Srivastava\cite{Srivastava2013} een oplossing. Hij introduceert ``dropout'' om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag: typisch is deze kans kleiner voor inputwaarden dan voor verborgen waarden.
+Tijdens de trainingsfase worden woorden in de vorm van een vector aan het netwerk gegeven. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen random zijn, of het kunnen word embeddings zijn zoals bijvoorbeeld \texttt{word2vec}\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
 
-Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Eern eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w$ voor de gewichtsvector, $dw$ is de grootte van de gradi\"ent, $\sigma$ is de learning rate, en $\epsilon$ is een smoothing parameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``adagrad'' is dat het leerproces te vroeg stopt omdat de aanpassingen aan de leersnelheid te agressief zijn.
+\subsubsection{Problemen}
+
+Een frequent probleem bij het trainen van dergelijke recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op ``overfitting''. Hierbij is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Om dit probleem aan te pakken biedt Srivastava\cite{Srivastava2013} een oplossing. Hij introduceert ``dropout'' om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Typisch is deze kans kleiner voor inputwaarden dan voor verborgen waarden.
+
+Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Eern eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w$ voor de gewichtsvector, $dw$ is de grootte van de gradi\"ent, $\sigma$ is de learning rate, en $\epsilon$ is een smoothing parameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``Adagrad'' is dat het leerproces te vroeg stopt omdat de aanpassingen aan de leersnelheid te agressief zijn.
  
 \begin{equation}
     w_t = w_{t-1} - \sigma \frac{dw}{\sqrt{dw^2} + \epsilon}
