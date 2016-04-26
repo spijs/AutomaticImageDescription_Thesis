@@ -380,7 +380,7 @@ Daarnaast veronderstellen we dat LDA een goede bron van semantische informatie i
 De experimenten beschouwen zo twee modellen, zodat het mogelijk is om na te gaan wat de betere gids is in deze configuratie van het gLSTM-netwerk.
 
 \section{Normalisatie van beam search}
-Naast het introduceren van gLSTM's breiden Jia et al.\cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leidden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de log-likelihood van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen dan nog een woord toe te voegen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde log-likelihood van elk woord als criterium. Concreet betekent dit een extra normalisatiefactor $\Omega$ bij de berekening van de waarschijnlijkheid van een woordsequentie.
+Naast het introduceren van gLSTM's breiden Jia et al.\cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leiden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de log-likelihood van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen dan nog een woord toe te voegen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde log-likelihood van elk woord als criterium. Concreet betekent dit een extra normalisatiefactor $\Omega$ bij de berekening van de waarschijnlijkheid van een woordsequentie.
 
 \begin{equation}
 p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(s_l | im, s_{1:l}, \theta)
@@ -389,11 +389,12 @@ p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(s_l | im, s_{1:l
 
 In deze formule is $l$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $s_i$ is het $i^{de}$ woord in de sequentie, $im$ de afbeelding en $\theta$ de parameters van het model. 
 
-De auteurs van de paper bestuderen meerdere functies voor $\Omega$. Wij implementeren de twee meest performante.
-Enerzijds gebruiken we de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moeten gegenereerde zinnen gelijkaardige lengtes hebben aan deze uit het corpus. 
-Anderzijds implementeren we de min-hinge normalisatie. Met deze methode is de normalisatiefactor gelijk aan de gemiddelde lengte van het trainingscorpus ($\mu$) als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$.
-
-Een eigen implementatie van de $\Omega(\ell)$ functie maakt gebruik van idf-gewichten. Deze gewichten zijn gebaseerd op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en zijn alle woorden gereduceerd met een Porter stemming algoritme. De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
+De auteurs van de paper bestuderen meerdere functies voor $\Omega$. Wij implementeren de meest performante.
+De best presterende functie is de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moeten gegenereerde zinnen gelijkaardige lengtes hebben aan deze uit het corpus. 
+Anderzijds bevat de implementatie de min-hinge normalisatie. Met deze methode is de normalisatiefactor gelijk aan de gemiddelde lengte van het trainingscorpus ($\mu$) als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$.
+\todo[inline]{polynomial}
+Een eigen evaluatie van de gegenereerde zinnen, stelt vast dat de zinnen slechts een beperkte hoeveelheid verschillende woorden gebruiken. Daarnaast is er dikwijls een voorkeur voor vage termen, die wel leiden tot een hogere score, maar soms te algemeen of beperkt zijn.
+Om die redenen voegen we een eigen implementatie toe van de $\Omega(\ell)$ functie, die gebruik maakt van idf-gewichten. De berekening van deze gewichten baseert zich op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en reduceerde een Porter stemmer alle woorden. De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
 
 \begin{equation}
     idf_i = \log(\frac{N}{n_i})
@@ -403,9 +404,9 @@ Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal af
 Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. Voorbeelden van woorden met laagste en hoogste IDF staan respectievelijk in tabel \ref{tbl:idf-laag} en tabel \ref{tbl:idf-hoog}. Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderlijke woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus zo minder veelzeggend zijn. Anderzijds zorgt dit er ook meteen voor dat korte zinnen niet langer de voorkeur krijgen.
 \todo[inline]{IDF-norm moet ook stoppen als lengte te groot is -> da nog toevoegen als geimplementeerd}
 
-\todo[inline]{deze captions zijn vreemd. alle, nu is er tabel 5.1, 5.2 en 5.3}
+
 \begin{table}[!htb]
-	\caption{Gestemde woorden samen met hun IDF-gewicht}
+	\caption*{Gestemde woorden samen met hun IDF-gewicht}
 	\begin{minipage}{.5\linewidth}
 		\caption{Woorden met laagste IDF}
 		\label{tbl:idf-laag}
@@ -421,7 +422,7 @@ Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord 
 	\begin{minipage}{.5\linewidth}
 		\centering
 		\caption{Woorden met hoogste IDF}
-		\label{tbl-idf-hoog}
+		\label{tbl:idf-hoog}
 		\begin{tabular}{ll}
 	fingerless & 10.275\\
 	creamer& 10.275\\
@@ -433,7 +434,7 @@ Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord 
 \end{table}
 
 \todo[inline]{Dit updaten als we iets beter vinden}
-Op basis van twee normalisatiefuncties hierboven beschreven is het mogelijk om een combinatie te maken. Het gebruik van zowel Gaussiaanse als idf-normalisatie zou kunnen leiden tot betere resultaten. Het idee hierachter is dat zowel korte zinnen als weinig informatieve zinnen een penalisatie ondervinden. Het berekenen van deze normalisatiefactor gebeurt door eerst de idf-gewichten van alle woorden in de zin op te tellen en deze som vervolgens te vermenigvuldigen met de waarde van de Gaussiaanse functie die hierboven is beschreven.
+Op basis van twee normalisatiefuncties hierboven beschreven is het mogelijk om een combinatie te maken. Het gebruik van zowel Gaussiaanse als idf-normalisatie zou kunnen leiden tot betere resultaten. Het idee hierachter is dat zowel korte zinnen als weinig informatieve zinnen een bestraffing ondervinden. Het berekenen van deze normalisatiefactor gebeurt door eerst de idf-gewichten van alle woorden in de zin op te tellen en deze som vervolgens te vermenigvuldigen met de waarde van de Gaussiaanse functie die hierboven is beschreven.
 
 \section{FSMN}
 E\'en van de eerste wijzigingen die we in deze thesis probeerden te implementeren, waren Feedforward Sequential Memory Neural Networks (FSMN)\cite{Zhang}. Deze netwerken vormen een uitbreiding op gewone feed-forward neurale netwerken. Dit netwerk kan afhankelijkheden op lange termijn leren zonder recurrente verbindingen te gebruiken. Het doet dit door sequenti\"ele geheugenblokken in de verborgen lagen van het feed-forward netwerk te steken. 
@@ -441,11 +442,11 @@ E\'en van de eerste wijzigingen die we in deze thesis probeerden te implementere
 Volgens de paper zijn deze netwerken in staat om betere en vooral snellere resultaten te leveren dan de huidige RNN-modellen. De snellere resultaten zijn mogelijk omdat gebruik kan worden gemaakt van standaard terugpropagatie zonder dat er zich problemen voordoen door de recurrente verbindingen. Figuur \ref{fig:fsmn} toont de  algemene structuur van dit netwerk. Hierbij dient de output van een verborgen laag als input voor een geheugenblok. Dit geheugenblok is in staat om informatie bij te houden van meerdere vorige inputs. Het geheugenblok dient dan zelfs als extra invoer voor een volgende laag.
 
 Vooral de snellere resultaten leken zeker een goede uitbreiding voor het model van Karpathy. Trainen van een RNN batch duurt immers ongeveer 4 seconden en voor LSTM 7 seconden. Hierdoor duurt het volledig trainen van het neuraal netwerk gemiddeld meer dan zeven dagen.
-Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, vertoonden de resultaten zowel qua kwaliteit en snelheid geen verbetering. Om die reden hebben we geen verdere experimenten met FSMN's uitgevoerd.
+Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, vertoonden de resultaten zowel qua kwaliteit en snelheid geen verbetering. Om die reden waren er geen verdere experimenten met FSMN's.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.6\linewidth]{Images/FSMN}
-	\caption{Algemene structuur van Feedforward Sequentieel Geheugen Neural Netwerken.}
+	\caption{Algemene structuur van Feedforward Sequentieel Geheugen Neurale Netwerken.}
 	\label{fig:fsmn}
 \end{figure}
