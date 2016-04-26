@@ -141,9 +141,23 @@ Het doel van het LDA-model is om op basis van een document te bepalen welke onde
 
 Het leren van dit model gebeurt met de python-bibliotheek \texttt{lda}\footnote{https://pypi.python.org/pypi/lda} en werkt intern met Gibbs sampling.
 
-LDA heeft het aantal onderwerpen als belangrijke parameter. Het evalueren van een LDA-model is een niet-triviale en moeilijk te automatiseren taak. Om die reden is het bepalen van het beste aantal onderwerpen niet eenvoudig. Enkel indirecte evaluatie biedt de mogelijkheid om de prestatie van LDA indirect te bepalen. Jin et al.\cite{Jin2015} gebruiken ook LDA op dezelfde dataset en gebruiken 80 als aantal onderwerpen. Daarom beschouwen de experimenten in hoofdstuk \ref{cha:experimenten} aantallen van onderwerpen rond dit getal. 
+Het aantal onderwerpen is de belangrijkste parameter van LDA. Het evalueren van een LDA-model is een niet-triviale en moeilijk te automatiseren taak. Om die reden is het bepalen van het beste aantal onderwerpen niet eenvoudig. Enkel indirecte evaluatie biedt de mogelijkheid om de prestatie van LDA indirect te bepalen. Jin et al.\cite{Jin2015} gebruiken ook LDA op dezelfde dataset en gebruiken 80 als aantal onderwerpen. Daarom beschouwen de experimenten in hoofdstuk \ref{cha:experimenten} aantallen van onderwerpen rond dit getal. 
 Om toch een idee te krijgen van hoe het model presteert gaan we als volgt te werk. Eerst bepaalt een script per onderwerp de tien belangrijkste woorden. Op basis van deze woorden krijgt elk onderwerp een zelf gekozen onderwerpnaam, die een overkoepelend concept voorstelt. 
-Hierdoor is het enerzijds mogelijk om te kijken of de belangrijkste woorden in een onderwerp, een duidelijke link hebben. Anderzijds is het nu mogelijk voor elke afbeelding in de trainingsset de vijf belangrijkste onderwerpnamen op te vragen. Een manuele evaluatie van de onderwerpen per afbeelding geeft opnieuw een idee over de prestatie van het LDA-model.\todo{toevoegen} Figuur \ref{fig:ldatopics} toont een voorbeeld van een trainingsafbeelding met de meest waarschijnlijke onderwerpen. Appendix \ref{app:LDA} bevat extra voorbeelden.
+Hierdoor is het enerzijds mogelijk om te kijken of de belangrijkste woorden in een onderwerp, een duidelijke link hebben. Anderzijds is het nu mogelijk voor elke afbeelding in de trainingsset de vijf belangrijkste onderwerpnamen op te vragen. Een manuele evaluatie van de onderwerpen per afbeelding geeft opnieuw een idee over de prestatie van het LDA-model. Tabel \ref{tbl:woorden-naar-topic} geeft hiervan twee voorbeelden. 
+
+\begin{table}
+	
+	\begin{tabular}{ll}
+		Gestemde woorden                                               & Onderwerp \\ \hline
+		\texttt{\small{wave man surf ocean surfer ride surfboard person wetsuit board}} & \texttt{surfing}       \\
+		\texttt{\small{car truck drive vehicl back van road park driver behing}}        & \texttt{vehicule}      \\
+	\end{tabular}
+	\caption{Gestemde woorden samen met de zelfgekozen onderwerpnaam}	\label{tbl:woorden-naar-topic}
+\end{table}
+
+Figuur \ref{fig:ldatopics} toont een voorbeeld van een trainingsafbeelding met de meest waarschijnlijke onderwerpen. Appendix \ref{app:LDA} bevat extra voorbeelden.
+
+
 
 \begin{figure}[h]
 	\centering
@@ -156,7 +170,7 @@ Hierdoor is het enerzijds mogelijk om te kijken of de belangrijkste woorden in e
 		\centering
 		\vspace{0pt}
 		\begin{tabular}{ll}
-			onderwerp                           & waarschijnlijkheid\\
+			Onderwerp                           & Waarschijnlijkheid\\
 			\hline
 			\texttt{constuctor}             & 0.158 \\
 			\texttt{work}                   & 0.113 \\
@@ -208,7 +222,7 @@ Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor o
     \centering
     \vspace{0pt}
     \begin{tabular}{cl}
-            onderwerp                           & waarschijnlijkheid\\
+            Onderwerp                           & Waarschijnlijkheid\\
             \hline
             \texttt{girl}             & 0.235 \\
             \texttt{dance/perform}                   & 0.096 \\
