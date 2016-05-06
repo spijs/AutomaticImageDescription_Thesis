@@ -35,11 +35,11 @@ Op basis van deze scores voor $n=1$ tot en met $N$ is het mogelijk om een N-gram
 \begin{equation}
 BLEU = exp(\sum\limits_{n=1}^N w_nlog(p_n))
 \end{equation}
-Deze score dwingt echter niet de juiste lengte van de zin af. Om die reden bepaalt Papineni een extra multiplicatieve factor, namelijk de \emph{Brevity Penalty} ($BP$). Voor elke gegenereerde zin bepaalt het algoritme de referentiezin met de dichtstbijzijnde lengte. De lengte daarvan noemt de paper de ``beste match lengte''. Vervolgens telt het zowel de lengtes van de gegenereerde zinnen als de beste match lengte op tot respectievelijk $c$ en $r$. Formule \eqref{BP} berekent de Brevity Penalty.
+Deze score dwingt echter niet de juiste lengte van de zin af. Om die reden bepaalt Papineni een extra multiplicatieve factor, namelijk de \emph{Brevity Penalty} ($BP$). Voor elke gegenereerde zin bepaalt het algoritme de referentiezin met de dichtstbijzijnde lengte. De lengte daarvan noemt de paper de ``beste match lengte''. Vervolgens telt het zowel de lengtes van de gegenereerde zinnen als de beste match lengte op tot respectievelijk $c$ en $q$. Formule \eqref{BP} berekent de Brevity Penalty.
 \begin{equation}BP=
  \begin{cases}
-1 & if c > r \\
-e^{1-r/c} & else
+1 & if c > q \\
+e^{1-q/c} & else
 \end{cases}
 \label{BP}
 \end{equation}
@@ -87,12 +87,12 @@ Uiteindelijk generaliseert het algoritme alle matches tot frase matches met een 
 Score = (1 - Pen)*F_{mean}
 \end{equation} 
 \begin{equation}
-Pen = \gamma (\frac{ch}{m})^\beta 
+Pen = \gamma (\frac{ch}{m})^\lambda 
 \end{equation}
 \begin{equation}
-F_{mean} = \frac{PR}{\alpha P + (1- \alpha)R}
+F_{mean} = \frac{PR}{\kappa P + (1- \kappa)R}
 \end{equation}
-Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gealigneerde unigrams tussen kandidaat- en referentiezin. $m$ is het gemiddeld aantal gematchte woorden. $ch$ is het aantal chunks. $\alpha$, $\beta$ en $\gamma$ zijn vooraf getrainde parameters.
+Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gealigneerde unigrams tussen kandidaat- en referentiezin. $m$ is het gemiddeld aantal gematchte woorden. $ch$ is het aantal chunks. $\kappa$, $\lambda$ en $\gamma$ zijn vooraf getrainde parameters.
 
 Wanneer er meerdere referenties zijn in het corpus bepaalt het maximum van de individuele scores van elke referentie de score van de vertaling.
 
