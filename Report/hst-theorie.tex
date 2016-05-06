@@ -145,12 +145,12 @@ In het geval van een logistische transferfunctie $f(x) = \frac{1}{1 + \mathrm e^
 
 De formule om de gewichten te updaten ziet er in het algemene geval uit als volgt:
 \begin{equation}
-  w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)df_i\hat{h}_i
+  w'_{ji} = w'_{ji} + \eta(y_j-\hat{y}_j)df_i\hat{h}_i
 \end{equation}
-Hierbij stelt $\sigma$ de leersnelheid (learning rate) voor. De leersnelheid bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
+Hierbij stelt $\eta$ de leersnelheid (learning rate) voor. De leersnelheid bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
 Indien het netwerk met een logistische transferfunctie werkt, geeft dit het volgende resultaat:
 \begin{equation}
-    w'_{ji} = w'_{ji} + \sigma(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
+    w'_{ji} = w'_{ji} + \eta(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
 \end{equation}
 Bij elke stap zorgt de gradi\"ent ervoor dat na aanpassing van de gewichten, bij dezelfde input, de output dichter bij het gewenste resultaat zal liggen.
 
@@ -160,7 +160,7 @@ Vervolgens zorgt gradient descent voor een aanpassing van \myvector{\hat{h}}. Er
 \end{equation}
 Op basis van \myvector{\Delta h} en \myvector{\hat{h}} wijzigt het algoritme \myvector{W} met volgende formule:
 \begin{equation}
-    w_{ji} = w_{ji} + \sigma(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
+    w_{ji} = w_{ji} + \eta(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
 \end{equation}
 Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in \myvector{W} en deels door die in \myvector{W'}\cite{Blockeel}.
 
@@ -272,20 +272,20 @@ Tijdens de trainingsfase bestaat de input van het netwerk uit woorden, voorgeste
 
 Een frequent probleem bij het trainen van recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op ``overfitting''. Hierbij is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Om dit probleem aan te pakken biedt Srivastava\cite{Srivastava2013} een oplossing. Hij introduceert ``dropout'' om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Typisch is deze kans kleiner voor inputwaarden dan voor verborgen waarden.
 
-Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\sigma$ is de leersnelheid, en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``Adagrad'' is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
+Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\eta$ is de leersnelheid, en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``Adagrad'' is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
  
 \begin{equation}
-    w_t = w_{t-1} - \sigma \frac{dw}{\sqrt{dw^2} + \epsilon}
+    w_t = w_{t-1} - \eta \frac{dw}{\sqrt{dw^2} + \epsilon}
     \label{formule:adagrad}
 \end{equation}
 
-Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen voorbeelden zijn met gradi\"ent $0.1$ voor een bepaalde parameter, en het tiende voorbeeld heeft waarde $-0.9$. Dan kan ``rmsprop''\cite{RMSprop} een oplossing bieden. Deze techniek maakt gebruik van een bewegend gemiddelde over alle voorbije gradi\"enten om ervoor te zorgen dat grote schommelingen in de gradi\"ent slechts een kleine verandering in de gewichten aanbrengen. Formules \eqref{rmsprop:start}-\eqref{formule:rmsprop} toont hoe dit exact in zijn werk gaat. $\rho$ is de afvlakkingsparameter voor het bewegend gemiddelde, $\sigma$ is de leersnelheid, $a_t$ is de gemiddelde gradi\"ent op tijdstip $t$, $dw$ is de gradi\"ent en $w$ is de gewichtsvector. Ook hier vermijdt $\epsilon$ een mogelijke deling door nul.
+Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen voorbeelden zijn met gradi\"ent $0.1$ voor een bepaalde parameter, en het tiende voorbeeld heeft waarde $-0.9$. Dan kan ``rmsprop''\cite{RMSprop} een oplossing bieden. Deze techniek maakt gebruik van een bewegend gemiddelde over alle voorbije gradi\"enten om ervoor te zorgen dat grote schommelingen in de gradi\"ent slechts een kleine verandering in de gewichten aanbrengen. Formules \eqref{rmsprop:start}-\eqref{formule:rmsprop} toont hoe dit exact in zijn werk gaat. $\rho$ is de afvlakkingsparameter voor het bewegend gemiddelde, $\eta$ is de leersnelheid, $a_t$ is de gemiddelde gradi\"ent op tijdstip $t$, $dw$ is de gradi\"ent en $w$ is de gewichtsvector. Ook hier vermijdt $\epsilon$ een mogelijke deling door nul.
 
 \begin{eqnarray}
 \vspace{-3mm}
     \label{rmsprop:start}
     a_t & = & \rho  a_{t-1} + (1 - \rho)dw^2 \\
-    w_t & = &  - \sigma \frac{dw}{\sqrt{a_t} + \epsilon}
+    w_t & = &  - \eta \frac{dw}{\sqrt{a_t} + \epsilon}
     \label{formule:rmsprop}
     \vspace{-3mm}
 \end{eqnarray}
