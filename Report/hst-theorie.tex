@@ -170,23 +170,23 @@ Herhaalde toepassing van deze techniek voor elk paar van gekende inputs en outpu
 \subsubsection{Softmaxlaag}\label{par:softmax}
 De softmaxlaag is een laag die vaak als laatste laag in een neuraal netwerk voorkomt. Wanneer het netwerk meerdere outputs heeft, geeft de softmaxlaag een kansverdeling over de verschillende outputs terug in plaats van de oorspronkelijke outputvector. Concreet betekent dit dat het de outputwaarden normaliseert zodat elke waarde positief is en bovendien de som van alle waarden gelijk is aan 1. Dit is bijvoorbeeld nuttig bij het leren van een kansverdeling over een aantal discrete componenten. Ook bij classificatie van input die tegelijkertijd tot meerdere klassen kan behoren is dit van nut.
 
-De berekening van de kansverdeling gebeurt met de softmaxfunctie $s$ in formule \eqref{formula-softmax}. Hierbij is $\mathbf{o}$ de outputvector van grootte $n$.
+De berekening van de kansverdeling gebeurt met de softmaxfunctie $sm$ in formule \eqref{formula-softmax}. Hierbij is $\mathbf{o}$ de outputvector van grootte $n$.
 \begin{equation}
-s(\textbf{o})_i = \frac{e^{o_i}}{\sum^{n}_{k=1}{e^{o_k}}}
+sm(\textbf{o})_i = \frac{e^{o_i}}{\sum^{n}_{k=1}{e^{o_k}}}
 \label{formula-softmax}
 \end{equation}
 
 Het gebruik van de softmaxfunctie bij training met backpropagatie is zeer eenvoudig aangezien de afgeleide zeer simpel te berekenen is. De afgeleide van de softmaxfunctie is te zien in formule \eqref{softmax_derivative}. Hierbij is $\delta_{ik}$ de Kroneckerdelta, die gelijk is aan $1$ als $i = k$ en anders gelijk is aan $0$.
 
 \begin{equation}
-    \frac{\partial}{\partial o_k}s(\textbf{o})_i =  s(\textbf{o})_i(\delta_{ik} - s(\textbf{o})_k)
+    \frac{\partial}{\partial o_k}sm(\textbf{o})_i =  sm(\textbf{o})_i(\delta_{ik} - sm(\textbf{o})_k)
     \label{softmax_derivative}
 \end{equation}
 
-Bij het gebruik van negatieve logwaarschijnlijkheid als foutenfunctie ($L$) komt dit neer op volgende zeer eenvoudige afgeleide van de foutenfunctie:
+Bij het gebruik van negatieve logwaarschijnlijkheid als foutenfunctie ($E$) komt dit neer op volgende zeer eenvoudige afgeleide van de foutenfunctie:
 
 \begin{equation}
-    \frac{\partial L}{\partial o_i} = \sum_{k=1}^n{y_i}s(\textbf{o})_i - y_i
+    \frac{\partial E}{\partial o_i} = \sum_{k=1}^n{y_i}sm(\textbf{o})_i - y_i
 \end{equation}
 met $\textbf{y}$ de correcte output. Als de outputvector een one-hot codering heeft valt de som in deze formule weg en is de afgeleide in elke component gelijk aan het verschil van de voorspelde en de correcte output\cite{Bishop:1995:NNP:525960}. 
 
@@ -305,10 +305,10 @@ Een ander probleem met ``Adagrad'' is dat de effectieve leersnelheid naar nul co
 
 Twee andere vaak voorkomende problemen bij het trainen van recurrente neurale netwerken zijn exploderende en uitdovende gradi\"enten, waarbij de gradi\"ent van de fout tijdens de training enorm toeneemt, respectievelijk afneemt. Hiervoor zijn een aantal mogelijke oplossingen.
 
-``Gradient clipping'' vormt een eerste oplossing zoals voorgesteld door Pascanu et al.\cite{Pascanu2012}. Deze methode verkort de gradi\"entvector zodra de lengte van die vector boven een bepaalde drempel $t$ ligt en lost zo het probleem van exploderende gradi\"enten op. De gewichtsupdate vindt dan plaats in de dezelfde richting, maar de norm is aangepast naar de maximale waarde $t$. Voor een vector $\mathbf{g}$ komt dit neer op volgende resulterende gradi\"entvector $\mathbf{\hat{g}}$:
+``Gradient clipping'' vormt een eerste oplossing zoals voorgesteld door Pascanu et al.\cite{Pascanu2012}. Deze methode verkort de gradi\"entvector zodra de lengte van die vector boven een bepaalde drempel $t$ ligt en lost zo het probleem van exploderende gradi\"enten op. De gewichtsupdate vindt dan plaats in de dezelfde richting, maar de norm is aangepast naar de maximale waarde $mx$. Voor een vector $\mathbf{x}$ komt dit neer op volgende resulterende gradi\"entvector $\mathbf{\hat{x}}$:
 
 \begin{equation}
-    \mathbf{\hat{g}} = \frac{t}{||\mathbf{g}||}\mathbf{g}
+    \mathbf{\hat{x}} = \frac{mx}{||\mathbf{x}||}\mathbf{x}
 \end{equation}
 
 Het gebruik van Rectified Linear Units of ReLu-encodering biedt een oplossing voor het probleem van uitdovende gradi\"enten. Dit is een activatiefunctie die werkt volgens formule $ReLu(x) = max(x,0)$. Deze functie is zeer eenvoudig te berekenen en vermijdt uitdovende grade\"enten, in tegenstelling tot niet-lineaire functies zoals een sigmo\"ide of een hyperbolische tangens\cite{Glorot2011}.
@@ -322,7 +322,7 @@ Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door
 
 Op de figuur is duidelijk te zien hoe zowel input als output zijn teruggekoppeld naar de verschillende poorten. De waarde van die poorten hangt dus af van de vorige voorspellingen van de nieuwe input.
 
-Formules \eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekeningen weer die elke stap gebeuren. In deze formules zijn alle $W_{ij}$ gewichtsmatrices, $\sigma$ en $h$ zijn transferfuncties. $x$ is de input van het netwerk, $m_t$ is de output op tijdstip $t$ en $i'_t$, $f'_t$ en $o'_t$ zijn de waarden van respectievelijk input-, vergeet- en outputpoort op tijdstip $t$. $c'_t$ is de waarde van de geheugencel op tijdstip $t$ en $p_t$ is de uiteindelijke voorspelling van het netwerk op tijdstip $t$. De $\odot$ operator stelt een puntsgewijze vermenigvuldiging tussen twee vectoren voor.
+Formules \eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekeningen weer die elke stap gebeuren. In deze formules zijn alle $W_{ij}$ gewichtsmatrices, $f_s$ en $f_h$ zijn transferfuncties. $x$ is de input van het netwerk, $o_t$ is de output op tijdstip $t$ en $i'_t$, $v'_t$ en $u'_t$ zijn de waarden van respectievelijk input-, vergeet- en outputpoort op tijdstip $t$. $c'_t$ is de waarde van de geheugencel op tijdstip $t$ en $p_t$ is de uiteindelijke voorspelling van het netwerk op tijdstip $t$. De $\odot$ operator stelt een puntsgewijze vermenigvuldiging tussen twee vectoren voor.
 
 
 \begin{figure}[tb]
@@ -335,12 +335,12 @@ Formules \eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekenin
 \begin{eqnarray}
 \vspace{-3mm}
 \label{lstm-memory-start}
-i_t' & = & \sigma (W_{ix} x_t + W_{im} m_{t-1}) \label{lstm-input} \\
-f_t' & = & \sigma (W_{fx} x_t + W_{fm} m_{t-1}) \\
-o_t' & = & \sigma (W_{ox} x_t + W_{om} m_{t-1}) \\
-c_t' & = & f_t' \odot c_{t-1}' + i_t' \odot h(W_{cx} x_t + \nonumber \\
-&   & + W_{cm} m_{t-1}) \\
-m_t & = & o_t' \odot c_t'\\
+i_t' & = & f_s (W_{ix} x_t + W_{im} o_{t-1}) \label{lstm-input} \\
+v_t' & = & f_s (W_{fx} x_t + W_{fm} o_{t-1}) \\
+u_t' & = & f_s (W_{ox} x_t + W_{om} o_{t-1}) \\
+c_t' & = & v_t' \odot c_{t-1}' + i_t' \odot f_h(W_{cx} x_t + \nonumber \\
+&   & + W_{cm} o_{t-1}) \\
+o_t & = & u_t' \odot c_t'\\
 \label{lstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
@@ -352,14 +352,14 @@ LSTM-netwerken worden net als RNN gebruikt als taalmodellen en zorgen over het a
 
 % LDA
 \subsection{Latent Dirichlet Allocation}
-Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch model voor discrete data. E\'en van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. De onderliggende veronderstelling is dat elk document een zekere kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben op hun beurt een kansverdeling over alle mogelijke woorden. Zo beschrijft formule \ref{formule:lda} de kans dat een bepaald document $d_j$ een bepaald woord $w_i$ bevat. $z_k$ is hier het $k^{de}$ onderwerp. Voor documenten die bijvoorbeeld sportevenementen beschrijven, zullen woorden als \texttt{wedstrijd, score, bal, spannend} een hogere score krijgen.
+Latent Dirichlet Allocation\cite{Blei2012} is een generatief probabilistisch model voor discrete data. E\'en van de meest gebruikte toepassingen hiervan is het modelleren van een een verdeling van onderwerpen in een set van tekstdocumenten. De onderliggende veronderstelling is dat elk document een zekere kansverdeling heeft over alle mogelijke onderwerpen. Deze onderwerpen hebben op hun beurt een kansverdeling over alle mogelijke woorden. Zo beschrijft formule \ref{formule:lda} de kans dat een bepaald document $d_j$ een bepaald woord $x_i$ bevat. $z_k$ is hier het $k^{de}$ onderwerp. Voor documenten die bijvoorbeeld sportevenementen beschrijven, zullen woorden als \texttt{wedstrijd, score, bal, spannend} een hogere score krijgen.
 
 \begin{equation}
-    P(w_i | d_j) = \sum\limits_{k=0}^{n_{topics}}P(w_i|z_k)P(z_k|d_j)
+    P(x_i | d_j) = \sum\limits_{k=0}^{n_{topics}}P(x_i|z_k)P(z_k|d_j)
     \label{formule:lda}
 \end{equation}
 
-Het generatieve aspect van LDA is te zien in algoritme \ref{algo:lda} en is ook ge\"illustreerd in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ samplet het algoritme een kansverdeling over de onderwerpen per document ($\theta$) en een kansverdeling over de woorden voor elk onderwerp ($\phi$). Deze priors geven de onzekerheid over de variabelen ($\theta$ en $\phi$) weer en dienen als basis voor een Dirichletverdeling\cite{Huang2005}. Een mogelijke interpretatie $\alpha$ is het aantal observaties van de verschillende topics alvorens het document in kwestie is gezien. Hetzelfde met $\beta$, dat het voorafgaand aantal samples van een bepaald woord uit een bepaald topic voorstelt. Het algoritme samplet voor elke positie $i$ in een document $j$ een onderwerp ($z_{ji}$) uit $\theta$. Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $w_{ji}$\cite{LDAsien}.
+Het generatieve aspect van LDA is te zien in algoritme \ref{algo:lda} en is ook ge\"illustreerd in figuur \ref{fig:lda}. Op basis van twee Dirichlet priors $\alpha$ en $\beta$ samplet het algoritme een kansverdeling over de onderwerpen per document ($\theta$) en een kansverdeling over de woorden voor elk onderwerp ($\phi$). Deze priors geven de onzekerheid over de variabelen ($\theta$ en $\phi$) weer en dienen als basis voor een Dirichletverdeling\cite{Huang2005}. Een mogelijke interpretatie $\alpha$ is het aantal observaties van de verschillende topics alvorens het document in kwestie is gezien. Hetzelfde met $\beta$, dat het voorafgaand aantal samples van een bepaald woord uit een bepaald topic voorstelt. Het algoritme samplet voor elke positie $i$ in een document $j$ een onderwerp ($z_{ji}$) uit $\theta$. Het samplen van de woordverdeling voor dit onderwerp leidt tot het woord $x_{ji}$\cite{LDAsien}.
 
 \begin{algorithm}
 \caption{Generatief aspect van LDA}
@@ -385,7 +385,7 @@ Het generatieve aspect van LDA is te zien in algoritme \ref{algo:lda} en is ook 
 
 Trainen van een LDA-model gebeurt met een Markov chain Monte Carlo algoritme. Dit type algoritme construeert een Markovketen met als doel een kansdichtheidsfunctie te benaderen. In een Markovketen is de volgende stap enkel afhankelijk van de huidige toestand, waardoor het berekenen minder complex is. De meest gebruikte techniek om een LDA-model te benaderen is Gibbs sampling. Het uiteindelijke doel is het benaderen van de kansverdelingen $\theta$ en $\phi$.
 
-Het trainen met Gibbs sampling begint met een random initialisatie van de onderwerpverdeling voor elk document. Daarna itereert het algoritme over elk woord in elk document. Het berekent de kansverdeling over de verschillende topics, gebaseerd op de onderwerpen van de andere woorden in de collectie (update stap). Formule \eqref{lda:update} toont de exacte berekening. Hierbij is $n_{j,k}$ het aantal toekenningen van onderwerp $k$ aan een woord in document $d_j$. $n_{j,k,\neg i}$ is het aantal keer dat topic $k$ is toegekend aan een woord in document $d_j$, woord $w_{ji}$ niet meegeteld. $n_{j,\cdot,\neg i}$ is de som van $n_{j,k,\neg i}$ over alle $K$ topics. $v_{k,w_{ji}}$ is het aantal associaties van woord $w_{ji}$ met topic $k$ in alle documenten. $v_{k,w_{ji}}$ is hetzelfde getal, maar dan zonder het huidige woord $w_ji$ mee te tellen. $v_{k,\cdot,\neg}$ is het totaal aantal woorden die bij topic $k$ horen, zonder $w_{ji}$ mee te tellen.
+Het trainen met Gibbs sampling begint met een random initialisatie van de onderwerpverdeling voor elk document. Daarna itereert het algoritme over elk woord in elk document. Het berekent de kansverdeling over de verschillende topics, gebaseerd op de onderwerpen van de andere woorden in de collectie (update stap). Formule \eqref{lda:update} toont de exacte berekening. Hierbij is $n_{j,k}$ het aantal toekenningen van onderwerp $k$ aan een woord in document $d_j$. $n_{j,k,\neg i}$ is het aantal keer dat topic $k$ is toegekend aan een woord in document $d_j$, woord $x_{ji}$ niet meegeteld. $n_{j,\cdot,\neg i}$ is de som van $n_{j,k,\neg i}$ over alle $K$ topics. $v_{k,x_{ji}}$ is het aantal associaties van woord $x_{ji}$ met topic $k$ in alle documenten. $v_{k,x_{ji}}$ is hetzelfde getal, maar dan zonder het huidige woord $x_ji$ mee te tellen. $v_{k,\cdot,\neg}$ is het totaal aantal woorden die bij topic $k$ horen, zonder $x_{ji}$ mee te tellen.
 
 \begin{equation}
     P(z_{ji} = k | \mathbf{z}_{\neg ji}, \mathbf{w}, \alpha, \beta) \propto \frac{n_{j,k,\neg i} + \alpha}{n_{j, \cdot, \neg i} + K \alpha} \cdot \frac{v_{k,w_{ji}, \neg}+ \beta}{v_{k,\cdot,\neg} + |V|\beta}
