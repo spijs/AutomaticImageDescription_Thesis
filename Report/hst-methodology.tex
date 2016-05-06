@@ -61,10 +61,10 @@ De berekende vectorrepresentatie van de afbeelding dient als input voor een recu
 Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. 
 Op basis van een willekeurig gekozen afbeelding uit de trainingsset berekent het netwerk de beste zin. Het verschil tussen deze voorspelling en de correcte zin propageert terug door het netwerk en leidt tot de juiste aanpassing van de gewichten.
 
-Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexiteit berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Deze perplexiteit is een functie van de kans die het taalmodel geeft aan een zin in de validatieset. Voor een zin $W=w_1w_2\dots w_N$ is dit bijvoorbeeld\cite{Jurafsky:2009:SLP:1214993}:
+Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexiteit berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Deze perplexiteit is een functie van de kans die het taalmodel geeft aan een zin in de validatieset. Voor een zin $X=x_1x_2\dots x_N$ is dit bijvoorbeeld\cite{Jurafsky:2009:SLP:1214993}:
 
 \begin{equation}
-PP(W)=P(w_1w_2\dots w_N)^{-\frac{1}{N}}
+PP(X)=P(x_1x_2\dots x_N)^{-\frac{1}{N}}
 \end{equation}
 
 Het systeem slaat de tussentijdse resultaten op onder de vorm van checkpoints. Deze checkpoints bevatten alle nodige parameters om het opgeslagen model te evalueren. Het is ook mogelijk om de training van het netwerk verder te zetten vanaf een gekozen checkpoint.
@@ -357,12 +357,12 @@ Om dit te implementeren starten ze net als in deze masterproef met de LSTM-imple
 \begin{eqnarray}
 \vspace{-3mm}
 \label{glstm-memory-start}
-i_l' & = & \sigma (W_{ix} x_l + W_{im} m_{l-1} \color{red}{+ W_{iq} g}) \label{glstm-input} \\
-f_l' & = & \sigma (W_{fx} x_l + W_{fm} m_{l-1} \color{red}{+ W_{fq} g}) \\
-o_l' & = & \sigma (W_{ox} x_l + W_{om} m_{l-1} \color{red}{+ W_{oq} g}) \\
+i_l' & = & \eta (W_{ix} x_l + W_{im} o_{l-1} \color{red}{+ W_{iq} g}) \label{glstm-input} \\
+f_l' & = & \eta (W_{fx} x_l + W_{fm} o_{l-1} \color{red}{+ W_{fq} g}) \\
+u_l' & = & \eta (W_{ox} x_l + W_{om} o_{l-1} \color{red}{+ W_{oq} g}) \\
 c_l' & = & f_l' \odot c_{l-1}' + i_l' \odot h(W_{cx} x_l + \nonumber \\
-&   & + W_{cm} m_{l-1} \color{red}{+ W_{cq} g}) \\
-m_l & = & o_l' \odot c_l'
+&   & + W_{cm} o_{l-1} \color{red}{+ W_{cq} g}) \\
+m_l & = & u_l' \odot c_l'
 \label{glstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
@@ -387,11 +387,11 @@ De experimenten beschouwen zo twee modellen, zodat het mogelijk is om na te gaan
 Naast het introduceren van gLSTM's breiden Jia et al.\cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leiden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de logwaarschijnlijkheid van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen dan nog een woord toe te voegen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde logwaarschijnlijkheid van elk woord als criterium. Concreet betekent dit een extra normalisatiefactor $\Omega$ bij de berekening van de waarschijnlijkheid van een woordsequentie (formule \eqref{eq:log-sentence-norm}).
 
 \begin{equation}
-p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(s_l | im, s_{1:l}, \theta)
+p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(x_l | im, x_{1:l}, \zeta)
 \label{eq:log-sentence-norm}
 \end{equation}
 
-In deze formule is $\ell$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $s_i$ is het $i^{de}$ woord in de sequentie, $im$ de afbeelding en $\theta$ de parameters van het model. 
+In deze formule is $\ell$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $x_i$ is het $i^{de}$ woord in de sequentie, $im$ de afbeelding en $\zeta$ de parameters van het model. 
 
 De auteurs van de paper bestuderen meerdere functies voor $\Omega$. 
 De best presterende functie is de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moet de lengte van de gegenereerde zinnen gelijkaardig zijn aan die van de zinnen uit de trainingsverzameling. 
