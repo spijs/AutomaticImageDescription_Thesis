@@ -223,8 +223,8 @@ De laatste laag in elk niveau is een feature pooling laag die de dimensionalitei
 
 Na \'e\'en of meerdere opeenvolgingen van filters, niet-lineaire en pooling lagen volgt in een traditionele convolutionele architectuur de laatste fase. Deze bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
 
-Trainen van dit netwerk kan gesuperviseerd met behulp van terugpropagatie, maar kan ook ongesuperviseerd. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
-In vergelijking met gewone feedforward netwerken zijn CNN's in staat om veel sneller visuele concepten te leren, terwijl ze theoretisch slechts iets minder goede resultaten kunnen bekomen.\todo{uitleggen van supervised en unsupervised learning}
+Trainen van dit netwerk kan op twee manieren. Een eerste manier is gesuperviseerd in combinatie met terugpropagatie. Hierbij heeft het netwerk ook kennis over het correcte antwoord. Een tweede mogelijkheid is ongesuperviseerde training, waarbij geen kennis van het correcte antwoord nodig is. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
+In vergelijking met gewone feedforward netwerken zijn CNN's in staat om veel sneller visuele concepten te leren, terwijl ze theoretisch slechts iets minder goede resultaten kunnen bekomen.
 Bovendien is een CNN translatie-invariant omdat het op elk niveau gebruik maakt van rechthoekige regio's uit de vorige laag van het netwerk. Er is overlap tussen de verschillende regio's, wat leidt tot deze zeer interessante eigenschap.
 
 \subsubsection[]{Concrete implementaties}
