@@ -13,7 +13,7 @@ Elk artificieel neuraal netwerk heeft een trainingsfase nodig waarin het de juis
 
 Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor een aantal gebruikte varianten. Daarna volgt een toelichting van enkele meer complexe netwerken: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
 
-\subsection{Feedforward Neurale Netwerken}
+\subsection{Feedforward neurale netwerken}
 \subsubsection{Perceptron} % (fold)
 \label{par:perceptron}
 
@@ -59,7 +59,7 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 \end{figure}
 
 
-\subsubsection{Feedforward Netwerk}
+\subsubsection{Feedforward netwerk}
 \label{par:concept}
 Een feedforward neuraal netwerk is \'e\'en van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen van neuronen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Dit gewicht is een natuurlijk getal. Het is ook mogelijk om gewichten te hebben met waarden nul, waardoor de volgende laag niet volledig verbonden is. Het is voor elke knoop in het netwerk bovendien mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Het netwerk kan ook een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output\cite{Bishop:1995:NNP:525960}.
 
@@ -190,10 +190,10 @@ Bij het gebruik van negatieve logwaarschijnlijkheid als foutenfunctie ($E$) komt
 \end{equation}
 met $\textbf{y}$ de correcte output. Als de outputvector een one-hot codering heeft valt de som in deze formule weg en is de afgeleide in elke component gelijk aan het verschil van de voorspelde en de correcte output\cite{Bishop:1995:NNP:525960}. 
 
-In deze thesis komt een softmax voor als laatste laag bij de gebruikte CNN (sectie \ref{sec:usedcnn}), als laatste laag in het netwerk bij de voorspelling van LDA-topicverdelingen (sectie \ref{sec:LDAprediction}) en als laatste laag in de gebruikte taalnetwerken (sectie \ref{sec:rnn_methodology} en \ref{sec:lstm}).
+In deze thesis komt een softmax voor als laatste laag bij de gebruikte CNN \mbox{(sectie \ref{sec:usedcnn})}, als laatste laag in het netwerk bij de voorspelling van LDA-topicverdelingen (sectie \ref{sec:LDAprediction}) en als laatste laag in de gebruikte taalnetwerken (sectie \ref{sec:rnn_methodology} en \ref{sec:lstm}).
 
 % CNN
-\subsection{Convolutionele Neurale Netwerken}
+\subsection{Convolutionele neurale netwerken}
 \label{sec:CNN}
 \subsubsection{Concept}
 Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren\cite{LeCun2010}. Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken\cite{Ciresan2012,Girshick2014,Zhou2015}.
