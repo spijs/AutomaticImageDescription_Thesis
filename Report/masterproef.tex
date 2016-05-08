@@ -109,102 +109,79 @@
 \begin{flushleft}
   \renewcommand{\arraystretch}{1.1}
   \begin{tabularx}{\textwidth}{@{}p{25mm}X@{}}
-    $\sigma$    & Leersnelheid (learning rate) van neuraal netwerk \\
-    $f$         & Transferfunctie van neuraal netwerk\\
-    $x_i$       & Input feedforward neuraal netwerk\\
-    $y$			& Output feedforward neuraal netwerk\\
-    $w_i$ 		& Gewicht feedforward neuraal netwerk\\
-    $W$         & Gewichtsmatrix\\
-    $x$			& Inputvector\\
-    $h$         & Verborgen vector in neuraal netwerk\\
-    $\Delta h$   & Verandering van verborgen vector\\
-    $softmax$   & Softmax functie\\
-    $o$			& Outputvector als input voor softmax\\
-    $n$			& Grootte van outputvector\\
-    $\theta$    & Kansverdeling van onderwerpen per document (LDA) \\
-    $\phi$      & Kansverdeling van woorden per onderwerp (LDA)  \\  
-	$topic_k$   & $k^{de}$ topic uit een lijst topics \\
-	$d_j$       & $j^{de}$ document uit een lijst met documenten\\
-	$\alpha$    & Dirichlet prior voor LDA\\
-	$\beta$     & Dirichlet prior voor LDA\\
-	$w_{ji}$    & Woord op positie $j$ in document $i$\\
-	$z_{ji}$    & Onderwerp op positie $j$ in document $i$\\
-	$A$         & CCA projectie\\
-	$B$         & CCA projectie\\
-	$\phi$      & Random fourier mapping functie\\
-	$X,Y$       & CCA geprojecteerde dataset\\
-	$\hat{X}$	& Concatenatie van originele dataset samen met niet-lineaire transformatie\\
-	$U$ 		& CCA projectiematrix\\
-	$V$			& CCA projectiematrix \\
-	$R$			& Matrix verkregen door sampling van normaalverdeling\\
-	$\hat{x}$	& Met stacked CCA uitgebreide representatie van afbeeldingsvector\\
-	$W_{hi}$    & Gewichtsmatrix voor transformatie afbeeldingsvector RNN\\
-	$W_{hx}$    & Gewichtsmatrix voor woordvectoren RNN\\
-	$W_{hh}$     & Gewichtsmatrix verborgen laag RNN\\
-	$W_{oh}$    & Gewichtsmatrix voor output van RNN\\
-	$b_h$       & Biasvector verborgen laag RNN\\
-	$b_o$       & Biasvector output RNN\\
-	$b_v$		& Afbeeldingsrepresentatie vector \\
+  	$a_t$ & Gradi\"ent op tijdstip $t$\\
+  	$a_{wt}$ & Bewegend gemiddelde van gewichtsupdates \\ 
+  	$A$ & CCA-projectie\\
+  	$b_i$ & Biasvector neuraal netwerk \\
+  	$B$ & CCA-projectie\\
+  	$BP$& Brevity Penalty voor Bleu-scores \\
+  	$CNN_{\theta_c}$ & Output voorlaatste laag van CNN \\
+  	$c$& Totaal aantal woorden van gegenereerde zinnen \\
+  	$ch$ & Aantal chunks (Meteor) \\
+  	$c'_t$ &Waarde van LSTM-geheugencel op tijdstip $t$ \\
+  	$Count$ & Aantal voorkomens van een gegeven woordsequentie \\
+  	$Count_{clip}$ & Minimum van aantal voorkomens in referentiezinnen en te evalueren zin \\
+  	$d_j$ & $j^{de}$ document LDA \\
+  	$E$ & Foutenfunctie\\
+  	$f$ & Transferfunctie van neuraal netwerk\\
+  	$g$ & Gidsvector bij gLSTM \\
+  	$h$ & Verborgen laag neuraal netwerk\\
+	$H$ & Entropie\\
+	$i'_t$ & Inputvector LSTM \\
+	$idf$ &Inverse documentfrequentie \\
+	$I$& Afbeeldingsvector \\
+	$j$ & Vector voor Random Fourier Feature \\
+	$l$ & Aantal woorden in een zin \\
+	$L$ & LDA-onderwerpverdeling \\
+	$LSTM(x)$& Output LSTM-netwerk voor input $x$ \\
+	$m$ & Gemiddeld aantal gematchte woorden \\
+	$\textbf{o}$ & Outputvector\\
+	$p(x)$ & Kans op gebeurtenis x\\
+	$P(x|y) $& Voorwaardelijke kans\\
+	$PP$ & Perplexiteit \\
+	$q$ & som van de lengtes van beste matches (Bleu)\\
+	$r$& Recall \\
+	$R$ & Matrix voor Random Fourier Feature \\
+	$s$ & Zin \\
+	$sd$ & Standaardafwijking zinlengtes\\
+	$sm$ & Softmaxfunctie\\
+	$tf$& Termfrequentie \\
+	$u'_t$ & Output van LSTM-cel \\
+
+
 	  \end{tabularx}
 	\end{flushleft}
 	
-	\begin{flushleft}
-		\renewcommand{\arraystretch}{1.1}
-		\begin{tabularx}{\textwidth}{@{}p{25mm}X@{}}
-	$CNN_{\theta_c} $& Outputfunctie van voorlaatste laag CNN \\
-	$I$         & Afbeelding\\
-	$END$       & Symbool dat einde van zin aangeeft\\
-	$h_t$		& Waarde van verborgen laag op tijdstip $t$\\
-	$x_t$       & $t^{de}$ woord van een zin\\
-	$y_t$		& $t^{de}$ woord van outputzin\\
-	$W_l$		& Gewichtsmatrix LDA-vector\\
-	$L$			& LDA-vector\\
-	$W_{ix}$    & Gewichtsmatrix voor woordrepresentaties\\
-	$W_{im}$	& Gewichtsmatrix voor afbeeldingsrepresentatie\\
-	$W_{fx}$    & \\
-	$W_{fm}$	&\\
-	$W_{fq}$	&\\
-	$W_{oq}$	&\\
-	$W_{cq}$	&\\
-	$g$			& Gidsvector\\
-	$c'_l$		&\\
-	$i'_l$		&\\
-	$o'_l$		&\\
-	$W_{cx}$	&\\
-	$f'_l$		&\\
-	$m_l$		& $l^{de}$ output van LSTM-blok\\
-	$p$			& Waarschijnlijkheid van woord\\
-	$\Omega$     & Normalisatiefunctie\\
-	$s_l$		& \\
-	$\theta$	&\\
-	$\mathcal{N}$& Gaussiaanse verdeling\\
-	$\mu$		& Gemiddelde lengte van zinnen in trainingscorpus\\
-	$\sigma$    & Standaardafwijking van lengtes van zinnen\\
-	$w_n$		& Gewicht bij BLEU-score\\
-	$Count_{clip}$& Minimum van aantal keer dat n-gram in referentiezin en genereerde zin voorkomt\\
-	$Count$     & Functie die aantal voorkomens van een n-gram een zin telt\\
-	$p_{modified}$ & Modified n-gram precision\\
-	$p_n$       & Modified n-gram precision voor volledige corpus\\
-	$N$         & Het aantal woorden dat als geheel beschouwd wordt in het BLEU-algoritme\\
-	
-		  \end{tabularx}
-		\end{flushleft}
+\begin{flushleft}
+	\renewcommand{\arraystretch}{1.1}
+	\begin{tabularx}{\textwidth}{@{}p{25mm}X@{}}
+	$U$ &Projectiematrix CCA \\
+	$v'_t$& Vergeetvector LSTM \\
+	$V$ &Vocabularium LDA \\
+	$w$ & Gewichtsvector\\
+	$W$ & Gewichtsmatrix \\
+	$x_i$ & Inputvector\\
+	$x_i$ &$i^{de}$ woord\\
+	$y$ & Outputvector neuraal netwerk\\
+	$z_{k}$ & $k^{de}$ onderwerp van LDA \\
+	$\alpha$ & Dirichlet prior\\
+	$\beta$ & Dirichlet prior \\
+	$\gamma$ & Parameter Meteor\\
+	$\delta_{ik}$ & Kroneckerdelta functie\\
+	$\epsilon$ & Afvlakkingsparameter\\
+	$\eta$ & Leersnelheid neuraal netwerk\\
+
+	$\kappa$ & Parameter Meteor \\
+	$\lambda$ & Parameter Meteor \\
+	$\mu$ & Gemiddelde zinlengte\\
+	$\theta$ & Kansverdeling onderwerpen per document (LDA)\\
+	$\rho$ & Afvlakkingsparameter\\
+	$\Omega$ & Normalisatiefactor bij beam search \\
+	$\sigma$ & Sigmo\"idefunctie \\
+	$\phi$ & Kansverdeling woorden per onderwerp (LDA)\\
+	$\psi$ & Lineaire functie Stacked CCA \\
 		
-		\begin{flushleft}
-			\renewcommand{\arraystretch}{1.1}
-			\begin{tabularx}{\textwidth}{@{}p{25mm}X@{}}
-	$s$			& Zin in corpus\\
-	$Candidates$        & Corpus van gegenereerde zinnen\\
-	$F_{mean}$  & Gemiddelde F-score\\
-	$P$			& Precisie\\
-	$R$			& Recall\\
-	$Pen$		& Penalisatiefactor Meteor\\
-	$ch$		& Aantal chunks\\
-	$m$			& Aantal unigrams\\
-	$\alpha$	& Gewichtsfactor Meteor\\
-	$r$			& Positie van correcte zin/afbeelding in een lijst met teruggegeven zinnen/afbeeldingen\\
-	$recall@k$	& Percentage van items dat bij de eerste $k$ teruggeven items zit.\\
-  \end{tabularx}
+	\end{tabularx}
 \end{flushleft}
 
 % Nu begint de eigenlijke tekst

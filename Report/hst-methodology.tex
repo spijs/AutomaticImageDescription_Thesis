@@ -75,7 +75,7 @@ Formeel gezien berekent het netwerk op basis van input vectoren (woorden in de z
 \begin{aligned}
      b_v &= W_{hi} [CNN_{\theta_c}(I)] \\
      h_t &= f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \delta_{t1} \odot b_v) \\
-     y_t &= softmax( W_{oh} h_t + b_o)
+     y_t &= sm( W_{oh} h_t + b_o)
 \end{aligned}
 \label{eq:rnn}
 \end{equation}
@@ -387,14 +387,14 @@ De experimenten beschouwen zo twee modellen, zodat het mogelijk is om na te gaan
 Naast het introduceren van gLSTM's breiden Jia et al.\cite{Fernando2015} de implementatie van Karpathy nog op een tweede manier uit. Na evaluatie van bestaande modellen leiden ze af dat het gebruikte beam-search algoritme een voorkeur heeft voor kortere zinnen. Beam-search neemt de som van de logwaarschijnlijkheid van individuele woorden als criterium. Aangezien deze waarde voor elk woord negatief is, zal het algoritme sneller kiezen om te stoppen dan nog een woord toe te voegen. Om dit fenomeen tegen te gaan introduceren ze de genormaliseerde logwaarschijnlijkheid van elk woord als criterium. Concreet betekent dit een extra normalisatiefactor $\Omega$ bij de berekening van de waarschijnlijkheid van een woordsequentie (formule \eqref{eq:log-sentence-norm}).
 
 \begin{equation}
-p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(x_l | im, x_{1:l}, \zeta)
+p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(x_l | I, x_{1:l}, \zeta)
 \label{eq:log-sentence-norm}
 \end{equation}
 
-In deze formule is $\ell$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $x_i$ is het $i^{de}$ woord in de sequentie, $im$ de afbeelding en $\zeta$ de parameters van het model. 
+In deze formule is $\ell$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $x_i$ is het $i^{de}$ woord in de sequentie, $I$ de afbeelding en $\zeta$ de parameters van het model. 
 
 De auteurs van de paper bestuderen meerdere functies voor $\Omega$. 
-De best presterende functie is de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, \sigma)$, waar $\mu$ en $\sigma$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moet de lengte van de gegenereerde zinnen gelijkaardig zijn aan die van de zinnen uit de trainingsverzameling. 
+De best presterende functie is de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, sd)$, waar $\mu$ en $sd$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moet de lengte van de gegenereerde zinnen gelijkaardig zijn aan die van de zinnen uit de trainingsverzameling. 
 Anderzijds bevat de implementatie min-hinge normalisatie. De normalisatiefactor is dan gelijk aan de gemiddelde lengte van het trainingscorpus ($\mu$) als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$.
 Een ander voorstel van de auteurs is het gebruik van een polynomiale normalisatiefactor. Deze factor is gebaseerd op de lengte van de gegenereerde zin. De exacte berekening van de normalisatiefactor is $\Omega(\ell) = \ell^m$. Hierbij is $m$ een natuurlijk getal. De auteurs stellen vast dat $m=1$ het beste presteert. De experimenten in deze thesis maken dan ook gebruik van die waarde.
 
