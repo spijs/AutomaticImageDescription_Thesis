@@ -5,7 +5,7 @@ Dit hoofdstuk beschrijft hoe de voorgaande theoretische componenten samen een au
 
 Uit de analyse van zinnen gegenereerd door het startpunt, blijkt dat naarmate de zin groeit, het verband met de afbeelding vermindert. Daarom is het doel van de meeste uitbreidingen het toevoegen van extra semantische informatie aan het taalmodel. Op deze manier blijft het model over kennis beschikken van de originele afbeelding. Eerst volgt een bespreking van hoe het mogelijk is om semantische kennis te extraheren uit afbeeldingen met behulp van LDA. De volgende sectie bespreekt de Flickr30k Entities dataset als tweede mogelijke bron van informatie. CCA vormt een derde manier waarbij een multimodale vector deze informatie bevat.
 
-Vervolgens beschouwt dit hoofdstuk op welke wijze deze informatie kan bijdragen tot de twee gebruikte taalmodellen. Dit kan als vector rechtstreeks in het RNN of als een semantische gids in het LSTM-netwerk. 
+Vervolgens staan we in dit hoofdstuk stil bij de manier waarop deze informatie kan bijdragen tot de twee gebruikte taalmodellen. Dit kan als vector rechtstreeks in het RNN of als een semantische gids in het LSTM-netwerk. 
 
 De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De startpunt implementatie vertoont een voorkeur voor korte zinnen. Daarom beschrijft de voorlaatste sectie een normalisatiemethode voor beam-search. Deze methode is in staat langere zinnen te genereren. Het hoofdstuk sluit af met een beschrijving van Feedforward Sequential Memory Networks, een ander type neuraal netwerk, dat volgens de auteurs ervan veelbelovende eigenschappen heeft.
 
@@ -37,7 +37,7 @@ De eerste implementatie van het startpunt is beschreven door Karpathy\cite{Karpa
 \label{sec:usedcnn}
 Een afbeelding (2D-matrix met een RGB waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. Veel van de bestudeerde systemen, waaronder ons startpunt, maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN).
 
-Het CNN dat momenteel het beste presteert is VGGNet\cite{Arge2015}. Dit netwerk heeft implementaties met tot 19 lagen, wat veel meer is dan gebruikelijk op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen, zoals beschreven in sectie \ref{sec:CNN}.
+Het CNN dat momenteel het beste presteert, is VGGNet\cite{Arge2015}. Dit netwerk heeft implementaties met tot 19 lagen, wat veel meer is dan gebruikelijk op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen, zoals beschreven in sectie \ref{sec:CNN}.
 
 De laatste lagen van het netwerk zijn volledig verbonden lagen, gevolgd door een softmaxlaag om de output van het netwerk te normaliseren. 
 
@@ -46,7 +46,7 @@ De representatie die Karpathy gebruikt voor afbeeldingen, is de output van de vo
 Aangezien VGGNet momenteel \'e\'en van de best presterende CNN's is op het gebied van afbeeldingsrepresentatie zijn de afbeeldingsvectoren in deze thesis berekend met VGGNet. De berekeningen gebeuren met een publiek beschikbare implementatie in Caffe\cite{Jia2014}.
 
 \subsubsection{Woordrepresentatie}
-Karpathy\cite{Karpathy2015} stelt vast dat voorgetrainde word embeddings zoals \texttt{word2vec} geen toegevoegde waarde bieden bij het voorstellen van woorden. Om die reden gebruikt Karpathy een one-hotcodering waarbij \'e\'en specifieke code is toegewezen aan het start- en stopwoord. Karpathy kiest ervoor om enkel woorden die meer dan vijf keer voorkomen te gebruiken in zijn model. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix $W_{hx}$ en een sommatie met een biasvector. Deze gewichtsmatrix en vector wijzigen mee tijdens het trainingsproces van het netwerk. Op deze manier zijn de semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig.
+Karpathy\cite{Karpathy2015} stelt vast dat voorgetrainde word embeddings zoals \texttt{word2vec} geen toegevoegde waarde bieden bij het voorstellen van woorden. Om die reden gebruikt Karpathy een one-hotcodering waarbij \'e\'en specifieke code is toegewezen aan het start- en stopwoord. Karpathy kiest ervoor om in zijn model enkel woorden te gebruiken die meer dan vijf keer voorkomen in de trainingsset. Dit omdat met minder dan vijf woorden, het systeem te weinig voorbeelden heeft om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix $W_{hx}$ en een sommatie met een biasvector. Deze gewichtsmatrix en vector wijzigen mee tijdens het trainingsproces van het netwerk. Op deze manier zijn de semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig.
 
 \subsubsection{Van afbeelding naar beschrijving}
 De berekende vectorrepresentatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training voorspelt het netwerk het eerste woord op basis van de afbeeldingsvector en een speciale vector die de start van een zin voorstelt. Op basis van het gegenereerde woord voorspelt het model dan wat het volgende woord is. Dit proces herhaalt zich tot het einde van de zin bereikt is. Terugpropagatie op basis van stochastic gradient descent zorgt voor de juiste wijzigingen aan de gewichten van het netwerk. Figuur \ref{fig:rnntraining} toont een eenvoudige weergave van hoe het RNN een beschrijving genereert.
@@ -61,7 +61,7 @@ De berekende vectorrepresentatie van de afbeelding dient als input voor een recu
 Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. 
 Op basis van een willekeurig gekozen afbeelding uit de trainingsset berekent het netwerk de beste zin. Het verschil tussen deze voorspelling en de correcte zin propageert terug door het netwerk en leidt tot de juiste aanpassing van de gewichten.
 
-Wanneer de trainingsset volledig is doorlopen vindt een evaluatie plaats. De perplexiteit berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Deze perplexiteit is een functie van de kans die het taalmodel geeft aan een zin in de validatieset. Voor een zin $X=x_1x_2\dots x_N$ is dit bijvoorbeeld\cite{Jurafsky:2009:SLP:1214993}:
+Evaluatie vindt plaats wanneer de trainingsset volledig is doorlopen. De perplexiteit berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Deze perplexiteit is een functie van de kans die het taalmodel geeft aan een zin in de validatieset. Voor een zin $X=x_1x_2\dots x_N$ is dit bijvoorbeeld\cite{Jurafsky:2009:SLP:1214993}:
 
 \begin{equation}
 PP(X)=P(x_1x_2\dots x_N)^{-\frac{1}{N}}
@@ -256,7 +256,7 @@ Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor o
 
 
 \section{Flickr30k Entities}
-De dataset \emph{Flickr30k Entities}\cite{Plummer2015} is gebaseerd op de Flickr30k dataset. Ze bevat een groot aantal annotaties en omspannende rechthoeken, alsook verbanden tussen beide. Deze verbanden kunnen een bron zijn van extra informatie. Deze sectie start met een beschrijving van deze dataset in meer detail. Vervolgens volgt een bespreking van het mogelijke nut van deze informatie. De sectie eindigt met een beschrijving van de pogingen om deze grote hoeveelheid informatie om te zetten een handelbaar formaat. 
+De dataset \emph{Flickr30k Entities}\cite{Plummer2015} is gebaseerd op de Flickr30k dataset. Ze bevat een groot aantal annotaties en omspannende rechthoeken, alsook verbanden tussen beide. Deze verbanden kunnen een bron zijn van extra informatie. Deze sectie start met een beschrijving van deze dataset in meer detail. Daarna volgt een bespreking van het mogelijke nut van deze informatie. De sectie eindigt met een beschrijving van de pogingen om deze grote hoeveelheid informatie om te zetten een handelbaar formaat. 
 
 \subsection{Dataset}
 \label{sub:Dataset}
@@ -307,7 +307,7 @@ Om de data bruikbaar te maken voor verwerking leest een script de tekstbestanden
 
 Op basis van de CCA-uitbreiding beschreven in sectie \ref{sub:stackedcca} is het mogelijk om een uitgebreide voorstelling te maken van de afbeeldingen uit de Flickr30k dataset. De extra informatie uit de overeenkomsten tussen omspannende rechthoeken en zinsdelen zit vervat in een eerste gemeenschappelijke CCA ruimte. Uit de methodes voorgesteld door Gong et al.\cite{Gong2014} volgt een representatie van de trainingsafbeeldingen. Hierin is ook de informatie uit de Entities dataset aanwezig.
 
-Het berekenen van de CCA projectie tussen de rechthoeken en de frasen uit de Entities dataset verliep zonder problemen. De berekening van de augmentatie was ook probleemloos, maar het berekenen van de CCA projectie tussen de augmentaties van de Flickr30k foto's en hun beschrijvingen was qua tijdsbestek onhaalbaar door de hoge dimensionaliteit. Daarom gebruikt geen enkel experiment deze projecties. 
+Het berekenen van de CCA projectie tussen de rechthoeken en de frasen uit de Entities dataset verliep zonder problemen. De berekening van de augmentatie ging ook probleemloos, maar het berekenen van de CCA-projectie tussen de augmentaties van de Flickr30k foto's en hun beschrijvingen was qua tijdsbestek onhaalbaar door de hoge dimensionaliteit. Daarom gebruikt geen enkel experiment deze projecties. 
 
 
 
@@ -324,7 +324,7 @@ Een deel van de rijkdom van de dataset gaat verloren als CCA gebruik maakt van e
 
 
 \section{Toevoeging van LDA onderwerpverdeling aan RNN}
-De eerder berekende LDA-onderwerpverdelingen kunnen dienen als extra semantische informatie om de generatie in de juiste richting te sturen. Het integreren van de onderwerpverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de onderwerpverdeling.
+De eerder berekende LDA-onderwerpverdelingen kunnen dienen als extra semantische informatie om het generatieproces in de juiste richting te sturen. Het integreren van de onderwerpverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de onderwerpverdeling.
 
 \begin{equation}
     h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \delta_{t1} \odot b_v \color{red}{+\delta_{t1} \odot W_lL}
@@ -344,7 +344,7 @@ Het is ook mogelijk om de onderwerpverdeling elke stap toe te voegen, wat leidt 
 \subsection{Guided LSTM}
 Guided Long Short Term Memory (gLSTM) is een recente uitbreiding van het LSTM model ge\"introduceerd door Jia et al.\cite{Fernando2015} In dit model extraheren ze eerst semantische informatie uit elke afbeelding. Deze informatie dient dan als extra input of ``gids'' voor het LSTM-blok.
 
-Na het bestuderen van bestaande LSTM-modellen ontdekten de auteurs dat de gegenereerde zinnen ``semantische drift'' vertonen. Dit wil zeggen dat naarmate de zin evolueert, de betekenis van volgende woorden steeds minder met de input-afbeelding te maken heeft. Ze vermoeden dat dit komt door twee tegenwerkende krachten. Enerzijds moet de zin de afbeelding beschrijven, anderzijds moet de zin passen in het taalmodel. Om die reden introduceren ze een semantische gids, die ervoor moet zorgen dat het model na enkele woorden op het juiste pad blijft. Dit gebeurt door woorden die semantisch verbonden zijn aan de afbeelding een positieve bias te geven.
+Na het bestuderen van bestaande LSTM-modellen ontdekten de auteurs dat de gegenereerde zinnen ``semantische drift'' vertonen. Dit wil zeggen dat naarmate de zin evolueert, de betekenis van volgende woorden steeds minder met de input-afbeelding te maken heeft. Ze vermoeden dat dit komt door twee tegenwerkende krachten. Enerzijds moet de zin de afbeelding beschrijven, anderzijds moet de zin passen in het taalmodel. Om die reden introduceren ze een semantische gids, die ervoor moet zorgen dat het model na enkele woorden op het juiste pad blijft. Dit gebeurt door woorden die semantisch verbonden zijn met de afbeelding een positieve bias te geven.
 
 Ze beschouwen vier verschillende semantische gidsen in hun experimenten. Als eerste model gebruiken ze een ``retrieval based'' gids. Hierbij zoeken ze eerst naar zinnen die gerelateerd zijn aan de afbeelding. Vervolgens verzamelen ze daaruit de zinnen met de hoogste rang. Deze zinnen vormen dan de extra input.
 Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de projectie van de afbeeldingsrepresentatie in de gemeenschappelijke ruimte. Daarna zoekt een algoritme de dichtstbijzijnde geprojecteerde zinnen op basis van cosinusgelijkheid. Ook hier vormen de hoogst scorende zinnen de extra invoer.
@@ -391,7 +391,7 @@ p = \frac{1}{\color{red}{\Omega(\ell)}}\sum_{l=1}^{\ell} \log p(x_l | I, x_{1:l}
 \label{eq:log-sentence-norm}
 \end{equation}
 
-In deze formule is $\ell$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $x_i$ is het $i^{de}$ woord in de sequentie, $I$ de afbeelding en $\zeta$ de parameters van het model. 
+In deze formule is $\ell$ de lengte van de huidige woordsequentie. $p$ stelt de waarschijnlijkheid voor. $x_i$ is het $i^{de}$ woord in de sequentie, $I$ de afbeelding en $\zeta$ de parameters van het taalmodel. 
 
 De auteurs van de paper bestuderen meerdere functies voor $\Omega$. 
 De best presterende functie is de Gaussiaanse functie $\Omega(\ell) \sim \mathcal{N}(\mu, sd)$, waar $\mu$ en $sd$ respectievelijk het gemiddelde en de standaardafwijking zijn van de lengtes van de zinnen in het trainingscorpus. Hierdoor moet de lengte van de gegenereerde zinnen gelijkaardig zijn aan die van de zinnen uit de trainingsverzameling. 
