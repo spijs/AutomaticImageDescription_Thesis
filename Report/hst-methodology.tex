@@ -14,15 +14,15 @@ De laatste twee secties bespreken nog twee toevoegingen die geen semantische inf
 Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python implementatie van het recurrente neurale netwerk beschreven in een van zijn papers\cite{Karpathy2015}. Daarnaast bevat het ook een implementatie gebaseerd op het werk van Vinyals et al.\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
 
 \subsection{Algemeen systeem}
-Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijke systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiden van de data, het maken van tussentijdse back-ups en het aansturen van een ``oplosser''. Deze ``oplosser'' beheert de netwerken en controleert het trainingsproces. De netwerken traint hij in batches. Hierbij traint het netwerk niet met steeds \'e\'en voorbeeld, maar met meerdere tegelijk, wat de trainingssnelheid verbetert. 
+Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijk systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiden van de data, het maken van tussentijdse back-ups en het aansturen van een ``oplosser''. Deze ``oplosser'' beheert de netwerken en controleert het trainingsproces. De netwerken traint hij in batches. Hierbij traint het netwerk niet met steeds \'e\'en voorbeeld, maar met meerdere tegelijk, wat de trainingssnelheid verbetert. 
 Hij voorziet verschillende opties om dit gemeenschappelijk systeem te configureren. Hieronder volgt een overzicht van de belangrijkste parameters voor het trainen van het netwerk.
 \begin{itemize}
 	\item grootte van de verborgen laag van de netwerken
 	\item grootte van afbeeldings- en woordcodering
 	\item aantal afbeeldingen in een batch
-	\item type solver: rmsprop, adagrad, adadelta of gewone gradient descent
-	\item decay rate voor rmsprop, adagrad en adadelta
-	\item epsilon smoothing bij rmsprop, adagrad en adadelta
+	\item type oplosser: rmsprop, Adagrad, Adadelta of gewone gradient descent
+	\item afvlakkingsparameter voor rmsprop, Adagrad en Adadelta
+	\item epsilon afvlakking bij rmsprop, Adagrad en Adadelta
 	\item al dan niet gradient clipping
 	\item drop-out percentage in encoder en decoder
 	\item leersnelheid
