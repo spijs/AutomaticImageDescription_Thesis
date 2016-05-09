@@ -200,7 +200,7 @@ Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn biologisch ge\" inspir
 
 Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een niet-lineaire laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
-Eerst is er een filter bank laag die een aantal features kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal kernelfuncties.\todo{uitleggen} Elke filterlaag detecteert andere features op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
+Eerst is er een filter bank laag die een aantal kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal kernelfuncties.\todo{uitleggen} Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
 
 \begin{figure}[tb]
     \centering
@@ -225,7 +225,7 @@ Na \'e\'en of meerdere opeenvolgingen van filters, niet-lineaire en pooling lage
 Trainen van dit netwerk kan op twee manieren. Een eerste manier is gesuperviseerd in combinatie met terugpropagatie. Hierbij heeft het netwerk ook kennis over het correcte antwoord. Een tweede mogelijkheid is ongesuperviseerde training, waarbij geen kennis van het correcte antwoord nodig is. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
 
 In vergelijking met gewone feedforward netwerken zijn CNN's in staat om veel sneller visuele concepten te leren, terwijl ze theoretisch slechts iets minder goede resultaten kunnen bekomen.
-Bovendien is een CNN translatie-invariant omdat het op elk niveau gebruik maakt van rechthoekige regio's uit de vorige laag van het netwerk. Er is overlap tussen de verschillende regio's, wat leidt tot deze zeer interessante eigenschap.
+Bovendien is een CNN translatie-invariant omdat het op elk niveau gebruik maakt van rechthoekige regio's uit de vorige laag van het netwerk. De verschillende regio's overlappen, wat leidt tot deze zeer interessante eigenschap.
 
 \subsubsection[]{Concrete implementaties}
 E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een onderzoek van Krizhevsky et al.\cite{Krizhevsky2012a} dat CNN's gebruikt voor het oplossen van de ImageNet challenge\cite{Russakovsky2014}.
@@ -270,9 +270,9 @@ Tijdens de trainingsfase bestaat de input van het netwerk uit woorden, voorgeste
 
 \subsubsection{Problemen en oplossingen met RNN}
 
-Een frequent probleem bij het trainen van recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op ``overfitting''. Hierbij is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Om dit probleem aan te pakken biedt Srivastava\cite{Srivastava2013} een oplossing. Hij introduceert ``dropout'' om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Typisch is deze kans kleiner voor inputwaarden dan voor verborgen waarden.
+Een frequent probleem bij het trainen van recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op ``overfitting''. Hierbij is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Om dit probleem aan te pakken biedt Srivastava\cite{Srivastava2013} een oplossing. Hij introduceert ``dropout'' om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Deze kans is typisch kleiner voor inputwaarden dan voor verborgen waarden.
 
-Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\eta$ is de leersnelheid, en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``Adagrad'' is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
+Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\eta$ is de leersnelheid en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``Adagrad'' is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
  
 \begin{equation}
     w_t = w_{t-1} - \eta \frac{dw}{\sqrt{dw^2} + \epsilon}
@@ -290,7 +290,7 @@ Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen v
     \vspace{-3mm}
 \end{eqnarray}
 
-Een ander probleem met ``Adagrad'' is dat de effectieve leersnelheid naar nul convergeert naarmate de training langer duurt. ``Adadelta''\cite{Zeiler2012} biedt hiervoor een oplossing door, net als ``rmsprop'' gebruik te maken van een bewegend gemiddelde, zowel voor gradi\"ent als voor de gewichten. Door het gebruik van dit tweede gemiddelde is het niet nodig om expliciet een leersnelheid te defini\"eren. Formules \eqref{adadelta:start}-\eqref{formule:adadelta} tonen de exacte berekening van gewichtsupdates bij het gebruik van adadelta. $a_t$, $\rho$, $\epsilon$, $w$ en $dw$ zijn hetzelfde gedefini\"eerd als bij adagrad. $a_{w,t}$ is het bewegende gemiddelde van de gewichtsupdates op tijdstip $t$ en $\Delta w_t$ is de aanpassing die gebeurt aan de gewichten op tijdstip $t$.
+Een ander probleem met ``Adagrad'' is dat de effectieve leersnelheid naar nul convergeert naarmate de training langer duurt. ``Adadelta''\cite{Zeiler2012} biedt hiervoor een oplossing door, net als ``rmsprop'' gebruik te maken van een bewegend gemiddelde, zowel voor gradi\"ent als voor de gewichten. Door het gebruik van dit tweede gemiddelde is het niet nodig om expliciet een leersnelheid te defini\"eren. Formules \eqref{adadelta:start}-\eqref{formule:adadelta} tonen de exacte berekening van gewichtsupdates bij het gebruik van Adadelta. $a_t$, $\rho$, $\epsilon$, $w$ en $dw$ zijn hetzelfde gedefini\"eerd als bij Adagrad. $a_{w,t}$ is het bewegende gemiddelde van de gewichtsupdates op tijdstip $t$ en $\Delta w_t$ is de aanpassing die gebeurt aan de gewichten op tijdstip $t$.
 
 \begin{eqnarray}
 \vspace{-3mm}
@@ -341,7 +341,7 @@ v_t' & = & f_s (W_{fx} x_t + W_{fm} o_{t-1}) \\
 u_t' & = & f_s (W_{ox} x_t + W_{om} o_{t-1}) \\
 c_t' & = & v_t' \odot c_{t-1}' + i_t' \odot f_h(W_{cx} x_t + \nonumber \\
 &   & + W_{cm} o_{t-1}) \\
-o_t & = & u_t' \odot c_t'\\
+o_t & = & u_t' \odot c_t'
 \label{lstm-memory}
 \vspace{-3mm}
 \end{eqnarray}
@@ -427,7 +427,7 @@ Stacked Auxiliary Embedding\cite{Gong2014} kan op basis van extra informatie een
 
 Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Uit de extra dataset volgt een eerste set van CCA-projecties ($A$, $B$). Daarna volgt een projectie van de originele dataset ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$. Dit resulteert in projecties $AX$ en $BY$. Vervolgens transformeert een lineaire functie $\psi(x)$ de waarden $AX$ en $BY$ zoals de originele paper voorstelt.
 
-Om de dimensionaliteit van de projectie te verhogen gebruikt de paper voor $\psi(x)$ een Random Fourier Feature (RFF). Deze RFF is een functie die de gemiddelde afstand tot de vijftigste dichtste buur van de inputvector gebruikt. Voor elke foto en beschrijving kijkt het algoritme welke andere foto of beschrijving de vijftigste dichtste buur is, om vervolgens het gemiddelde te nemen van alle afstanden. De exacte berekening is $\psi(\mathbf{x})=\sqrt{2}cos(\mathbf{x}R+\mathbf{j})$. Hierin is $R$ een matrix die verkregen door sampling van een normaalverdeling met gemiddelde 0, en standaardafwijking $\sigma^2$, waarbij $\sigma$ overeen komt met de eerder berekende gemiddelde afstand. Vector $j$ is resultaat van sampling uit een uniforme verdeling [0,1].
+Om de dimensionaliteit van de projectie te verhogen gebruikt de paper voor $\psi(x)$ een Random Fourier Feature (RFF). Deze RFF is een functie die de gemiddelde afstand tot de vijftigste dichtste buur van de inputvector gebruikt. Voor elke foto en beschrijving kijkt het algoritme welke andere foto of beschrijving de vijftigste dichtste buur is, om vervolgens het gemiddelde te nemen van alle afstanden. De exacte berekening is $\psi(\mathbf{x})=\sqrt{2}cos(\mathbf{x}R+\mathbf{j})$. Hierin is $R$ een matrix verkregen door sampling van een normaalverdeling met gemiddelde 0, en standaardafwijking $sd$, waarbij $\sqrt{sd}$ overeen komt met de eerder berekende gemiddelde afstand. Vector $j$ is resultaat van sampling uit een uniforme verdeling [0,1].
 
 Aaneensluiting van de originele dataset met het resultaat van de niet-lineaire transformatie leidt tot $\hat{X} = [X, \psi(XA)], \hat{Y} = [Y, \psi(YB)]$. Een laatste stap in het proces berekent een CCA-projectie die gebaseerd is op $\hat{X}$ en $\hat{Y}$, wat resulteert in $U_1$ en $U_2$.
 
