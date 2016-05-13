@@ -1,13 +1,14 @@
 \chapter{Methodologie}
 \label{hst-meth}
-
+\todo[inline]{roadmap o.i.d. maken van het hoofdstuk. Grafische illustratie van alles wat we doen}
+\todo[inline]{elk hoofdstuk een conclusie geven die link legt naar het volgende hoofdstuk}
 Dit hoofdstuk beschrijft hoe de voorgaande theoretische componenten samen een automatische generator van afbeeldingsbeschrijvingen kunnen vormen. De eerste sectie behandelt een bestaande implementatie, die het startpunt vormt van het nieuwe systeem. De volgende secties bekijken uitbreidingen hierop samen met hun implementatie. Concreet moeten deze uitbreidingen zorgen voor verbeteringen op dit startpunt.
 
-Uit de analyse van zinnen gegenereerd door het startpunt, blijkt dat naarmate de zin groeit, het verband met de afbeelding vermindert. Daarom is het doel van de meeste uitbreidingen het toevoegen van extra semantische informatie aan het taalmodel. Op deze manier blijft het model over kennis beschikken van de originele afbeelding. Eerst volgt een bespreking van hoe het mogelijk is om semantische kennis te extraheren uit afbeeldingen met behulp van LDA. De volgende sectie bespreekt de Flickr30k Entities dataset als tweede mogelijke bron van informatie. CCA vormt een derde manier waarbij een multimodale vector deze informatie bevat.
+Uit de analyse van zinnen gegenereerd door het startpunt, blijkt dat naarmate de zin groeit, het verband met de afbeelding vermindert.\todo{waarom is dit vermoedelijk zo?} Daarom is het doel van de meeste uitbreidingen het toevoegen van extra semantische informatie aan het taalmodel. Op deze manier blijft het model over kennis beschikken van de originele afbeelding. Eerst volgt een bespreking van hoe het mogelijk is om semantische kennis te extraheren uit afbeeldingen met behulp van LDA. De volgende sectie bespreekt de Flickr30k Entities dataset als tweede mogelijke bron van informatie. CCA vormt een derde manier waarbij een multimodale vector deze informatie bevat.
 
 Vervolgens staan we in dit hoofdstuk stil bij de manier waarop deze informatie kan bijdragen tot de twee gebruikte taalmodellen. Dit kan als vector rechtstreeks in het RNN of als een semantische gids in het LSTM-netwerk. 
 
-De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De startpunt implementatie vertoont een voorkeur voor korte zinnen. Daarom beschrijft de voorlaatste sectie een normalisatiemethode voor beam-search. Deze methode is in staat langere zinnen te genereren. Het hoofdstuk sluit af met een beschrijving van Feedforward Sequential Memory Networks, een ander type neuraal netwerk, dat volgens de auteurs ervan veelbelovende eigenschappen heeft.
+De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De startpuntimplementatie vertoont een voorkeur voor korte zinnen. Daarom beschrijft de voorlaatste sectie een normalisatiemethode voor beam-search. Deze methode is in staat langere zinnen te genereren. Het hoofdstuk sluit af met een beschrijving van Feedforward Sequential Memory Networks, een ander type neuraal netwerk, dat volgens de auteurs ervan veelbelovende eigenschappen heeft.
 
 
 \section{Startpunt}
@@ -35,7 +36,7 @@ De eerste implementatie van het startpunt is beschreven door Karpathy\cite{Karpa
 
 \subsubsection{Afbeeldingsrepresentatie}
 \label{sec:usedcnn}
-Een afbeelding (2D-matrix met een RGB waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. Veel van de bestudeerde systemen, waaronder ons startpunt, maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN).
+Een afbeelding (2D-matrix met een Rood-Groen-Blauw (RGB) waarde voor elke pixel) bevat weinig tastbare informatie. Om dit probleem op te lossen, transformeren de meeste systemen de afbeeldingen eerst naar een vectorrepresentatie. Meestal is deze vector een kansverdeling over verschillende latente concepten uit de afbeelding. Veel van de bestudeerde systemen, waaronder ons startpunt, maken hiervoor gebruik van een convolutioneel neuraal netwerk (CNN).
 
 Het CNN dat momenteel het beste presteert, is VGGNet\cite{Arge2015}. Dit netwerk heeft implementaties met tot 19 lagen, wat veel meer is dan gebruikelijk op het moment van publicatie. Door het grote aantal lagen kan het netwerk complexere verbanden leren. De lagen bestaan uit groepen van convolutionele lagen afgewisseld met max-pool lagen, zoals beschreven in sectie \ref{sec:CNN}.
 
@@ -99,11 +100,13 @@ De code van Karpathy implementeert ook een tweede type van neuraal netwerk. Dit 
 De startimplementatie gebruikt net als bij RNN de 4096-dimensionale vectoren berekend met VGGNet als afbeeldingsvoorstelling. Ook de woordrepresentatie blijft dezelfde.
 
 \subsubsection{Van afbeelding naar beschrijving}
-Anders dan het RNN van Karpathy, beschouwt deze implementatie de afbeeldingsrepresentatie als het eerste woord in de zin. Daarnaast gebruikt het een LSTM-netwerk als taalmodel, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} of poorten is er controle over het al dan niet onthouden van bepaalde waarden. Onderstaande vergelijkingen tonen de ontrolprocedure van het netwerk. Figuur \ref{fig:vinyals:karpathy} geeft een schematische weergave. Hierin is $x_t$ het $t+1^{de}$ woord van een zin en loopt $t$ van $0$ tot $N-1$. $W_{hi}$ transformeert de afbeeldingstransformatie naar een compactere codering. $p_{t+1}$ is de kansverdeling voor het $t+1^{de}$ woord van de gegenereerde zin. De $LSTM$-functie uit de gebruikte formule staat samen met theoretische verduidelijking van het concept in sectie \ref{sub:lstm}. 
+Anders dan het RNN van Karpathy, beschouwt deze implementatie de afbeeldingsrepresentatie als het eerste woord in de zin. Daarnaast gebruikt het een LSTM-netwerk als taalmodel, een uitbreiding van een RNN. Op elk moment bevat het netwerk kennis over alle observaties tot op het huidige tijdstip. Door middel van \emph{gates} of poorten is er controle over het al dan niet onthouden van bepaalde waarden. Vergelijkingen \eqref{eq:lstm1}-\eqref{eq:lstm2} tonen de ontrolprocedure van het netwerk.\todo{hier staat een rood cirkeltje bij} Figuur \ref{fig:vinyals:karpathy} geeft een schematische weergave. Hierin is $x_t$ het $t+1^{de}$ woord van een zin en loopt $t$ van $0$ tot $N-1$. $W_{hi}$ transformeert de afbeeldingstransformatie naar een compactere codering. $p_{t+1}$ is de kansverdeling voor het $t+1^{de}$ woord van de gegenereerde zin. De $LSTM$-functie uit de gebruikte formule staat samen met theoretische verduidelijking van het concept in sectie \ref{sub:lstm}. 
 \begin{eqnarray}
 \vspace{-3mm}
 x_{-1} = W_{hi}CNN(I)\\
+\label{eq:lstm1}
 p_{t+1} = LSTM(x_t)
+\label{eq:lstm2}
 \end{eqnarray}
 
 \begin{figure}[tb]
@@ -113,7 +116,7 @@ p_{t+1} = LSTM(x_t)
 	\label{fig:vinyals:karpathy}
 \end{figure}
 
-De training van het netwerk verloopt net als bij de RNN implementatie. Hierbij loop $t$ van $-1$ tot $N-1$ waarbij het de afbeelding dus als woord $-1$ beschouwt. Het netwerk leert op basis van de Flickr30k trainingsset en bij elk volledig doorlopen van de trainingsset berekenent de software de perplexity van de resultaten op de validatieset. Dit dient als een criterium om de training stop te zetten en het beste model te bepalen. Hoofdstuk \ref{cha:experimenten} beschrijft bij de experimenten een beter criterium voor het vinden van dit beste model.
+De training van het netwerk verloopt net als bij de RNN implementatie. Hierbij loop $t$ van $-1$ tot $N-1$ waarbij het de afbeelding dus als woord $-1$ beschouwt. Het netwerk leert op basis van de Flickr30k trainingsset en bij elk volledig doorlopen van de trainingsset berekent de software de perplexiteit van de resultaten op de validatieset. Dit dient als een criterium om de training stop te zetten en het beste model te bepalen. Hoofdstuk \ref{cha:experimenten} beschrijft bij de experimenten een beter criterium voor het vinden van dit beste model.
 
 
 Het genereren van nieuwe beschrijvingen voor ongeziene foto's gebeurt op exact dezelfde manier als bij RNN. Het ``beam search'' algoritme bepaalt de meest waarschijnlijke zin op basis van de uitkomst van het netwerk.
@@ -127,9 +130,9 @@ Deze sectie beschrijft hoe LDA zorgt voor extra semantische informatie. Dit gebe
 
 \subsubsection{Berekening van LDA-model}
 \label{subs:Berekening van onderwerpverdeling}
-Het leren van het gebruikte LDA model gebeurt op de Flickr30k dataset. Het algoritme om het LDA-model te bepalen beschouwt alle vijf beschrijvingen van een afbeelding na elkaar als \'e\'en document. Net als in het voorbereiden van de data voor het taalmodel, houdt het enkel woorden over die meer dan vijf keer in de trainingsdata voorkomen. Vervolgens verwijdert het bovendien stopwoorden en stemt de woorden met behulp van een Porter stemmer. De implementaties van deze voorbereidingstechnieken zijn geschreven met hulpmiddelen uit NLTK\footnote{\url{http://www.nltk.org/}}.
+Het leren van het gebruikte LDA-model gebeurt op de Flickr30k dataset. Het algoritme om het LDA-model te bepalen beschouwt alle vijf beschrijvingen van een afbeelding na elkaar als \'e\'en document. Net als in het voorbereiden van de data voor het taalmodel, houdt het enkel woorden over die meer dan vijf keer in de trainingsdata voorkomen. Vervolgens verwijdert het bovendien stopwoorden en stemt de woorden met behulp van een Porter stemmer. De implementaties van deze voorbereidingstechnieken zijn geschreven met hulpmiddelen uit NLTK\footnote{\url{http://www.nltk.org/}}.
 
-Het doel van dit LDA-model is om op basis van een document te bepalen welke onderwerpen het sterkst aanwezig zijn. Het idee hierachter is dat een onderwerpverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste onderwerp passen. Het leren van dit model gebeurt met de python-bibliotheek \texttt{lda}\footnote{\url{https://pypi.python.org/pypi/lda}} en werkt intern met Gibbs sampling.
+Het doel van dit LDA-model is om op basis van een document te bepalen welke onderwerpen het sterkst aanwezig zijn. Het idee hierachter is dat een onderwerpverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste onderwerp passen. Het leren van dit model gebeurt met de Python-bibliotheek \texttt{lda}\footnote{\url{https://pypi.python.org/pypi/lda}} en werkt intern met Gibbs sampling.
 
 Het aantal onderwerpen is de belangrijkste parameter van LDA. Het evalueren van een LDA-model is een niet-triviale en moeilijk te automatiseren taak. Om die reden is het bepalen van het beste aantal onderwerpen niet eenvoudig. Enkel indirecte evaluatie biedt de mogelijkheid om de prestatie van LDA indirect te bepalen. Jin et al.\cite{Jin2015} gebruiken ook LDA op dezelfde dataset en gebruiken 80 als aantal onderwerpen. Daarom beschouwen de experimenten in hoofdstuk \ref{cha:experimenten} aantallen van onderwerpen rond dit getal. 
 Om toch een idee te krijgen van hoe het model presteert gaan we als volgt te werk. Eerst bepaalt een script per onderwerp de tien belangrijkste woorden. Op basis van deze woorden krijgt elk onderwerp een zelf gekozen onderwerpnaam, die een overkoepelend concept voorstelt. 
@@ -176,14 +179,14 @@ Figuur \ref{fig:ldatopics} toont een voorbeeld van een trainingsafbeelding met d
 
 \subsubsection{Leren van netwerk}
 \label{sec:LDAprediction}
-Bij invoer van een nieuwe, ongeziene afbeelding moet het systeem een onderwerpverdeling afleiden. De beschrijvingen van de ongeziene afbeelding zijn niet gekend, dus het systeem kan het LDA-model niet rechtstreeks gebruiken. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een onderwerpverdeling. Een eenvoudig feed-forward neuraal netwerk zorgt. 
-Het netwerk zorgt voor de projectie van een afbeelding naar een onderwerpverdeling.
+Bij invoer van een nieuwe, ongeziene afbeelding moet het systeem een onderwerpverdeling afleiden. De beschrijvingen van de ongeziene afbeelding zijn niet gekend, dus het systeem kan het LDA-model niet rechtstreeks gebruiken. Daarom is er een link nodig tussen een afbeeldingsrepresentatie en een onderwerpverdeling. Een eenvoudig feed-forward neuraal netwerk is in staat om deze link te leggen. 
+Het netwerk zorgt voor het transformeren van een afbeelding naar een onderwerpverdeling.
 
 De trainingsverzameling in combinatie met de geleerde onderwerpverdeling vormt de trainingsdata voor dit netwerk. 
 Het geleerde LDA-model bepaalt vervolgens de onderwerpverdeling voor de zinnen in de validatieset. Deze onderwerpverdelingen vormen de testverzameling voor het LDA-netwerk. Het doel van het trainen van het netwerk is de fout tussen de voorspelde verdeling en de berekende verdeling van de validatieverzameling te verkleinen. De fout van het finale netwerk maakt het mogelijk om verschillende configuraties te vergelijken.
 
 Het gebruikte netwerk bestaat uit een inputlaag, een verborgen laag met 256 knopen, en een outputlaag. De verborgen laag gebruikt de sigmo\"idefunctie \eqref{eq:sigmoid} als transferfunctie, terwijl de outputlaag een softmaxfunctie gebruikt, zoals besproken in sectie \ref{par:softmax}. Uit experimenten blijkt dat de leersnelheid 0.001 het beste compromis vormt tussen resultaat en snelheid van het leren.
-Door middel van terugpropagatie leert het netwerk langzaamaan de juiste gewichten. Dit netwerk kan op het moment van testen zeer snel een onderwerpverdeling bepalen voor een ongeziene afbeelding. Implementatie van het netwerk gebeurde met de python-bibliotheek \texttt{scikit-neuralnetwork}\footnote{https://scikit-neuralnetwork.readthedocs.org/en/latest/}.
+Door middel van terugpropagatie leert het netwerk langzaamaan de juiste gewichten. Dit netwerk kan op het moment van testen zeer snel een onderwerpverdeling bepalen voor een ongeziene afbeelding. Implementatie van het netwerk gebeurde met de Python-bibliotheek \texttt{scikit-neuralnetwork}\footnote{https://scikit-neuralnetwork.readthedocs.org/en/latest/}.
 \begin{equation}
 \sigma(t) = \frac{1}{1 + e^{-t}}
 \label{eq:sigmoid}
@@ -262,7 +265,7 @@ De dataset \emph{Flickr30k Entities}\cite{Plummer2015} is gebaseerd op de Flickr
 \label{sub:Dataset}
 Flickr30k Entities is ontstaan op basis van een eenvoudig idee. De makers zien in dat een ``standaard'' afbeeldingsbeschrijvend systeem een globaal verband leert tussen een foto en een zin, zonder echt rekening te houden met de overeenkomsten tussen entiteiten op de foto en in de zin. Er zijn vrij recent wel een aantal systemen ontwikkeld die een projectie maken van afbeeldingsregio's naar beschrijvingen. Deze systemen veronderstellen echter dat deze verbanden latent zijn. Hier probeert de nieuwe Entities dataset verandering in te brengen, door de verbanden tussen beschrijving en foto te expliciteren.
 
-De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k dataset\cite{Young2014} met de bijhorende beschrijvingen. De makers brengen een uitbreiding hiervan, met een set van bijna 250,000 \texttt{coreference chains}, die verbanden aangeven tussen regio's uit de afbeeldingen en zinsdelen uit de beschrijvingen. Deze aanpak lijkt op wat de MS COCO\cite{Lin2014} dataset biedt, maar de objecten in de COCO dataset zijn onafhankelijk van de beschrijvingen gedetecteerd. Figuur \ref{fig:entities} toont een aantal voorbeelden van annotaties en referenties uit de Entities dataset, terwijl figuur \ref{fig:cocoexamples} toont hoe de verschillende objecten in de COCO dataset worden opgeslagen. Het is duidelijk dat er bij de COCO dataset geen rechtstreeks verband is met de beschrijvingen.
+De dataset is gebaseerd op de meer dan 30,000 afbeeldingen uit de Flickr30k dataset\cite{Young2014} met de bijhorende beschrijvingen. De makers brengen een uitbreiding hiervan, met een set van bijna 250,000 \texttt{coreference chains}, die verbanden aangeven tussen regio's uit de afbeeldingen en zinsdelen uit de beschrijvingen. Deze aanpak lijkt op wat de MS COCO\cite{Lin2014} dataset biedt, maar de objecten in de COCO dataset zijn onafhankelijk van de beschrijvingen gedetecteerd. Figuur \ref{fig:entities} toont een aantal voorbeelden van annotaties en referenties uit de Entities dataset, terwijl figuur \ref{fig:cocoexamples} toont hoe de verschillende objecten in de COCO dataset worden opgeslagen. Het is duidelijk dat er bij de COCO dataset geen rechtstreeks verband is met de beschrijvingen. \todo{waarom is het verschil tussen coco en entities relevant voor deze thesis?}
 
 \begin{figure}[!tb]
     \centering
@@ -318,10 +321,9 @@ Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Een eerste
 
 Na het berekenen van de representaties van afbeeldingen en zinnen volgt een berekening van de correlatiecomponenten. Dit gebeurt met de \texttt{MATLAB}-implementatie van het canonical correlation algoritme. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en beschrijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. De experimenten maken enkel gebruik van de projectie voor afbeeldingen, aangezien Jia et al.\cite{Fernando2015} aantonen dat het gebruik van enkel de afbeeldingsprojectie de beste resultaten oplevert.
 
-Belangrijk is dat de berekening alle zinnen apart beschouwt. Waar de LDA-implementatie de vijf zinnen per afbeelding aaneensluit tot \'e\'en zin, blijven ze hier apart. Moest er sprake zijn van heel uiteenlopende formuleringen voor dezelfde concepten, houdt de mapping toch rekening met de verschillende zinnen. Meer concreet houdt dit in dat elke foto maximaal moet correleren met vijf verschillende zinnen uit de trainingsset. 
+Belangrijk is dat de berekening alle zinnen apart beschouwt. Waar de LDA-implementatie de vijf zinnen per afbeelding aaneensluit tot \'e\'en zin, blijven ze hier apart. Moest er sprake zijn van heel uiteenlopende formuleringen voor dezelfde concepten, houdt de mapping toch rekening met de verschillende zinnen. Meer concreet houdt dit in dat elke foto maximaal moet correleren met vijf verschillende zinnen uit de trainingsset. \todo{deze alinea herschrijven}
 
-Een deel van de rijkdom van de dataset gaat verloren als CCA gebruik maakt van een aaneensluiting van de verschillende zinnen. Bij LDA doet dit probleem zich niet voor en is het zelfs beter om de zinnen bij elkaar te voegen. Dit omdat de gebruikte toepassing van LDA een onderwerpverdeling per afbeelding beoogt, en niet per zin. Synoniemen en afgeleiden worden beschouwd als deel van hetzelfde document, juist door de aaneensluiting van de zinnen.
-
+Een deel van de rijkdom van de dataset gaat verloren als CCA gebruik maakt van een aaneensluiting van de verschillende zinnen. Bij LDA doet dit probleem zich niet voor en is het zelfs beter om de zinnen bij elkaar te voegen. Dit omdat de gebruikte toepassing van LDA een onderwerpverdeling per afbeelding beoogt, en niet per zin. Synoniemen en afgeleiden worden beschouwd als deel van hetzelfde document, juist door de aaneensluiting van de zinnen. \todo{maar LDA zou dit ook per zin kunnen berekenen? $\rightarrow$ verduidelijken m.b.v. vorige alinea?}
 
 \section{Toevoeging van LDA onderwerpverdeling aan RNN}
 De eerder berekende LDA-onderwerpverdelingen kunnen dienen als extra semantische informatie om het generatieproces in de juiste richting te sturen. Het integreren van de onderwerpverdeling $L$ in het RNN gebeurt volgens formule \eqref{eq:rnnldaonce} die het tweede deel van \eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met \eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de onderwerpverdeling.
@@ -332,7 +334,7 @@ De eerder berekende LDA-onderwerpverdelingen kunnen dienen als extra semantische
     \label{eq:rnnldaonce}
 \end{equation}
 
-Het is ook mogelijk om de onderwerpverdeling elke stap toe te voegen, wat leidt tot formule \eqref{eq:rnnldaall}. Het lijkt interessant om te experimenteren met het al dan niet altijd toevoegen van deze informatie in elke tijdstap. De informatie uit de onderwerpverdeling is afgeleid van de afbeelding, maar bevat informatie van een lagere dimensionaliteit. Het herhaaldelijk meegeven van de onderwerpvector zorgt dat het netwerk elke stap deze semantische informatie binnenkrijgt. Dit kan een verbetering betekenen. Door de lagere dimensionaliteit blijft de toename in rekentijd beperkt. Hoofdstuk \ref{cha:experimenten} bevat een gedetailleerde beschrijving van de uitgevoerde experimenten en een vergelijking tussen de verschillende instellingen.
+Het is ook mogelijk om de onderwerpverdeling elke stap toe te voegen, wat leidt tot formule \eqref{eq:rnnldaall}. Het lijkt interessant om te experimenteren met het al dan niet altijd toevoegen van deze informatie in elke tijdstap. De informatie uit de onderwerpverdeling is afgeleid van de afbeelding, maar bevat informatie van een lagere dimensionaliteit. Het herhaaldelijk meegeven van de onderwerpvector zorgt dat het netwerk in elke stap deze semantische informatie binnenkrijgt. Dit kan een verbetering betekenen. Door de lagere dimensionaliteit blijft de toename in rekentijd beperkt. Hoofdstuk \ref{cha:experimenten} bevat een gedetailleerde beschrijving van de uitgevoerde experimenten en een vergelijking tussen de verschillende instellingen.
 
 \begin{equation}
     h_t = f(W_{hx} x_{t} + W_{hh} h_{t-1} + b_h + \delta_{t1} \odot b_v + W_lL
@@ -351,7 +353,7 @@ Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de pr
 Een derde model gebruikt de CCA-projectie van de afbeelding in de gemeenschappelijke ruimte rechtstreeks als gids.
 Als laatste model gebruiken ze de afbeeldingsrepresentatie zelf als gids.
 
-Om dit te implementeren starten ze net als in deze masterproef met de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de formules \eqref{glstm-memory-start}-\eqref{glstm-memory} . Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM \eqref{lstm-memory-start}-\eqref{lstm-memory}:
+Om dit te implementeren starten ze net als in deze masterproef met de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de formules \eqref{glstm-memory-start}-\eqref{glstm-memory}. Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM \eqref{lstm-memory-start}-\eqref{lstm-memory}:
 
 %
 \begin{eqnarray}
@@ -371,7 +373,7 @@ Hierbij is de gids $g$ de vectorvoorstelling van de semantische informatie. De g
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/jia}
-	\caption{LSTM-blok in het zwart. Uitbreidingen van gLSTM in het rood.}
+	\caption{LSTM-blok in het zwart. Uitbreidingen van gLSTM in het rood\cite{Fernando2015}.}
 	\label{fig:glstm}
 \end{figure}
 
@@ -380,7 +382,7 @@ Jia et al. bekomen zeer goede resultaten. De eerste drie gidsen zorgen voor verb
 \subsection{gLSTM met LDA en CCA}
 Net als Jia implementeren we de gLSTM als een uitbreiding van LSTM overeenstemmend met formules \eqref{glstm-memory-start}-\eqref{glstm-memory}.
 Om te kunnen vergelijken met hun paper kan de implementatie ook de CCA-projectie als gids gebruiken.
-Daarnaast veronderstellen we dat LDA-onderwerpsverdelingen een goede bron van semantische informatie vormen. Daarom bevat het gecre\"eerde systeem een uitbreiding waarbij LDA de gids vormt van het gLSTM-netwerk.
+Daarnaast veronderstellen we dat LDA-onderwerpsverdelingen\todo{CONSISTENTIE met of zonder tussen-s} een goede bron van semantische informatie vormen. Daarom bevat het gecre\"eerde systeem een uitbreiding waarbij LDA de gids vormt van het gLSTM-netwerk.
 De experimenten beschouwen zo twee modellen, zodat het mogelijk is om na te gaan welke gids beter presteert in deze configuratie van het gLSTM-netwerk.
 
 \section{Normalisatie van beam search}
@@ -398,8 +400,10 @@ De best presterende functie is de Gaussiaanse functie $\Omega(\ell) \sim \mathca
 Anderzijds bevat de implementatie min-hinge normalisatie. De normalisatiefactor is dan gelijk aan de gemiddelde lengte van het trainingscorpus ($\mu$) als de zin langer is dan dit gemiddelde. Indien de zin korter is, is de factor gelijk aan de lengte van de zin. Dit komt overeen met de functie $\Omega(\ell)=\min\{\ell, \mu\}$.
 Een ander voorstel van de auteurs is het gebruik van een polynomiale normalisatiefactor. Deze factor is gebaseerd op de lengte van de gegenereerde zin. De exacte berekening van de normalisatiefactor is $\Omega(\ell) = \ell^m$. Hierbij is $m$ een natuurlijk getal. De auteurs stellen vast dat $m=1$ het beste presteert. De experimenten in deze thesis maken dan ook gebruik van die waarde.
 
-Een eigen evaluatie van de gegenereerde zinnen stelt vast dat de zinnen slechts een beperkte woordenschat gebruiken. Daarnaast is er dikwijls een voorkeur voor vage termen, die wel leiden tot een hogere score, maar soms te algemeen of beperkt zijn.
+Een eigen evaluatie van de gegenereerde zinnen stelt vast dat de zinnen slechts een beperkte woordenschat gebruiken. Daarnaast is er dikwijls een voorkeur voor vage termen, die wel leiden tot een hogere score, maar soms te algemeen of te beperkt zijn.
 Om die redenen voegen we een eigen implementatie toe van de $\Omega(\ell)$ functie, die gebruik maakt van idf-gewichten. De berekening van deze gewichten baseert zich op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en reduceerde een Porter stemmer alle woorden. De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
+
+\todo[inline]{consistent zijn in schrijfwijze idf}
 
 \begin{equation}
     idf_i = \log(\frac{N}{n_i})
@@ -447,7 +451,7 @@ E\'en van de eerste wijzigingen die we in deze thesis probeerden te implementere
 Volgens de paper zijn deze netwerken in staat om betere en vooral snellere resultaten te leveren dan de huidige RNN-modellen. De snellere resultaten zijn mogelijk omdat gebruik kan worden gemaakt van standaard terugpropagatie zonder dat er zich problemen voordoen bij de recurrente verbindingen. Figuur \ref{fig:fsmn} toont de  algemene structuur van dit netwerk. Hierbij dient de output van een verborgen laag als input voor een geheugenblok. Dit geheugenblok is in staat om informatie bij te houden van meerdere vorige inputs. Het geheugenblok dient ook als extra invoer voor een volgende laag.
 
 Vooral de snellere resultaten leken zeker een goede uitbreiding voor het model van Karpathy. Trainen van een RNN-batch duurt ongeveer 4 seconden en een LSTM-batch duurt 7 seconden. Hierdoor duurt het volledig trainen van het neuraal netwerk gemiddeld meer dan zeven dagen.
-Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, vertoonden de resultaten zowel op vlak van kwaliteit als snelheid geen verbetering. Om die reden waren er geen verdere experimenten met FSMN's.
+Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, vertoonden de resultaten zowel op vlak van kwaliteit als snelheid geen verbetering.\todo{waaraan kan dit liggen? verduidelijk} Om die reden waren er geen verdere experimenten met FSMN's.
 
 \begin{figure}[tb]
 	\centering
@@ -455,3 +459,6 @@ Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, ver
 	\caption{Algemene structuur van Feedforward Sequentieel Geheugen Neurale Netwerken.}
 	\label{fig:fsmn}
 \end{figure}
+
+\section{Besluit}
+\todo[inline]{schrijven}

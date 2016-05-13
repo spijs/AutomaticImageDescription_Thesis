@@ -2,7 +2,7 @@
 \label{hoofdstuk:evaluatie}
 Om verschillende systemen te vergelijken, moet er een manier zijn om de gegenereerde zinnen te evalueren. Elke zin moet aan twee belangrijke voorwaarden voldoen: enerzijds moet de inhoud van de zin overeenkomen met de inhoud van de afbeelding, anderzijds moet de zin een grammaticaal correcte structuur hebben en voldoende vloeiend zijn.
 
-Dit hoofdstuk behandelt enkele gebruikte methodes om de ontwikkelde systemen te evalueren. Een eerste sectie behandelt twee methodes die hun oorsprong vinden in de computervertaling. Ze zijn ontwikkeld om automatisch de kwaliteit van vertalingen te meten. Het doel van deze evaluatiealgoritmes is om zo goed als mogelijk menselijke evaluatiescores te benaderen. De tweede sectie bekijkt enkele nuttige statistieken over de gegenereerde zinnen die peilen naar bepaalde eigenschappen zoals originaliteit. De laatste sectie behandelt een evaluatiemethode die de laatste jaren in onbruik is geraakt binnen dit onderzoeksdomein. Deze vorm van evaluatie kijkt naar het ophalen van afbeeldingen op basis van zinnen en omgekeerd. Hieruit volgt steeds een rangschikking, die leidt tot een numerieke score.
+Dit hoofdstuk behandelt enkele gebruikte methodes om de ontwikkelde systemen te evalueren. Een eerste sectie behandelt BLEU en METEOR, twee methodes die hun oorsprong vinden in de computervertaling. Ze zijn ontwikkeld om automatisch de kwaliteit van vertalingen te meten. Het doel van deze evaluatiealgoritmes is om zo goed als mogelijk menselijke evaluatiescores te benaderen. De tweede sectie bekijkt enkele nuttige statistieken over de gegenereerde zinnen die peilen naar bepaalde eigenschappen zoals originaliteit. De laatste sectie behandelt een evaluatiemethode die de laatste jaren in onbruik is geraakt binnen dit onderzoeksdomein. Deze vorm van evaluatie kijkt naar het ophalen van afbeeldingen op basis van zinnen en omgekeerd. Hieruit volgt steeds een rangschikking, die leidt tot een numerieke score.
 
 
 \section{Automatische evaluatie}
@@ -14,9 +14,9 @@ De rest van deze sectie bevat een bespreking van twee algoritmes uit de computer
 Kort gesteld berekent het BLEU-algoritme scores van computervertalingen op basis van overeenkomsten met de referentiezinnen. Deze overeenkomsten bestaan uit gemeenschappelijke woorden of opeenvolgingen van gemeenschappelijke woorden. Verschillende vormen van BLEU kunnen worden gebruikt afhankelijk van het aantal gebruikte woorden in een opeenvolging. Een opeenvolging van $n$ woorden krijgt de naam \emph{n-gram}. Het redelijk eenvoudige algoritme van BLEU heeft wel enkele nadelen.
 
 \subsubsection{Algoritme}
-Om de n-gram BLEU-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision} of gewijzigde n-gram-precisie. Hierbij volgt de precisie uit het aantal gemeenschappelijke n-grams. N-gram-precisie houdt bovendien rekening met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. 
+Om de $n$-gram BLEU-score van een zin te berekenen bepaalt het algoritme eerst de \textit{modified n-gram precision} of gewijzigde $n$-gram-precisie. Hierbij volgt de precisie uit het aantal gemeenschappelijke $n$-grams. $N$-gram-precisie houdt bovendien rekening met het aantal keer dat elk woord in de referentiezinnen voorkomt. Op deze manier krijgen zinnen als \texttt{the the the the the} een lage score omdat \texttt{the} nooit vijfmaal voorkomt in een referentiezin. \todo{dit voorbeeld is met unigram, verduidelijk. Of beter voorbeeld met bigram?}
 
-De berekening van de gewijzigde n-gram-precisie neemt eerst het maximum van het aantal keer dat een specifiek n-gram voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal keer dat deze sequentie voorkomt in de gegenereerde zin $s$ ($Count(ngram)$). Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk n-gram in de vertaalde zin opgeteld en gedeeld door de som van het totaal aantal n-grams in de gegenereerde zin. Deze score is afhankelijk van de waarde van $n$.
+De berekening van de gewijzigde n-gram-precisie neemt eerst het maximum van het aantal keer dat een specifiek n-gram voorkomt in elke referentiezin. Vervolgens telt het algoritme het aantal keer dat deze sequentie voorkomt in de gegenereerde zin $s$ ($Count(ngram)$). Het minimum van deze twee getallen ($Count_ {clip}$) wordt dan voor elk n-gram in de vertaalde zin opgeteld en gedeeld door de som van het totaal aantal $n$-grams in de gegenereerde zin. Deze score is afhankelijk van de waarde van $n$.
 
 \begin{equation}
 p_{modified}(s) =
@@ -38,8 +38,8 @@ BLEU = exp(\sum\limits_{n=1}^N w_nlog(p_n))
 Deze score dwingt echter niet de juiste lengte van de zin af. Om die reden bepaalt Papineni een extra multiplicatieve factor, namelijk de \emph{Brevity Penalty} ($BP$). Voor elke gegenereerde zin bepaalt het algoritme de referentiezin met de dichtstbijzijnde lengte. De lengte daarvan noemt de paper de ``beste match lengte''. Vervolgens telt het zowel de lengtes van de gegenereerde zinnen als de beste match lengte op tot respectievelijk $c$ en $q$. Formule \eqref{BP} berekent de Brevity Penalty.
 \begin{equation}BP=
  \begin{cases}
-1 & if c > q \\
-e^{1-q/c} & else
+1 & \textrm{if}\quad c > q \\
+e^{1-q/c} & \textrm{else}
 \end{cases}
 \label{BP}
 \end{equation}
@@ -51,13 +51,13 @@ De uiteindelijke BLEU-N score is dan gelijk aan:
 Hierbij is $w_n$ gelijk aan $1/N$ wanneer het uniforme geometrisch gemiddelde wordt genomen.
 
 \subsubsection{Nadelen en gebruik}
-De BLEU-score is de meest gebruikte gebruikte evaluatiemethode in de literatuur. De meeste papers die afbeeldingsbeschrijvingen genereren, bespreken BLEU-1 tot BLEU-4 scores. De literatuur lijkt het echter niet eens over het gebruik van de Brevity Penalty. Sommige papers vermelden expliciet dat ze het niet gebruiken, maar andere volgen de paper van Papinemi volledig. Door dit verschil in evaluatie is de vergelijking van verschillende systemen niet altijd eerlijk. Wanneer de gegenereerde zinnen lang genoeg zijn komen de scores wel overeen.
-In onze experimenten stellen we de Brevity Penalty steeds gelijk aan 1.
+De BLEU-score is de meest gebruikte gebruikte evaluatiemethode in de literatuur. De meeste papers die afbeeldingsbeschrijvingen genereren, bespreken BLEU-1 tot BLEU-4 scores. De literatuur lijkt het echter niet eens over het gebruik van de Brevity Penalty. Sommige papers vermelden expliciet dat ze deze niet gebruiken, maar andere volgen de paper van Papinemi volledig. Door dit verschil in evaluatie is de vergelijking van verschillende systemen niet altijd eerlijk. Wanneer de gegenereerde zinnen lang genoeg zijn komen de scores wel overeen.
+In onze experimenten stellen we de Brevity Penalty steeds gelijk aan 1.\todo{waarom}
 
 Naast deze problemen bestaan er verschillende implementaties met kleine onderlinge verschillen. De meeste van deze verschillen vinden in hun oorsprong in het al dan niet toevoegen van normalisatie. Hierdoor zijn de concrete scores dus afhankelijk van de gebruikte implementatie. In onze experimenten gebruiken we de \texttt{multi-BLEU.pl}\footnote{\url{https://github.com/moses-smt/mosesdecoder/blob/master/scripts/generic/multi-bleu.perl}} code uit de Moses decoder\cite{Koehn2006}, omdat Karpathy deze ook voorziet in zijn code.
 
 Elliot et al.\cite{Elliott2014} tonen aan dat BLEU-3 en BLEU-4 scores slechts een matige correlatie hebben met menselijke beoordeling. De correlatie van BLEU-1 en BLEU-2 is nog minder.
-Hiervoor zijn meerdere verklaringen mogelijk. Zo kijkt BLEU enkel naar exacte woordovereenkomsten, maar houdt het geen rekening met semantisch gelijkaardige woorden. Het gebruik van een synoniem in plaats van het exacte woord geeft een lager BLEU-score, terwijl dit bij menselijke evaluatie niet tot een lsechtere score leidt. Daarnaast is de score onafhankelijk van de semantische informatie die een woord bevat. Concreet zorgt een woord als \texttt{a} voor een even grote toename van de score als een woord als \texttt{ski}. Ook werkwoorden die in de referentiezin als substantief voorkomen en semantische informatie bevatten, geven problemen. Hieronder volgen voorbeelden van situaties waarbij zinnen een slechte BLEU-score krijgen terwijl ze inhoudelijk toch hetzelfde weergeven.
+Hiervoor zijn meerdere verklaringen mogelijk. Zo kijkt BLEU enkel naar exacte woordovereenkomsten, maar houdt het geen rekening met semantisch gelijkaardige woorden. Het gebruik van een synoniem in plaats van het exacte woord geeft een lager BLEU-score, terwijl dit bij menselijke evaluatie niet tot een slechtere score leidt. Daarnaast is de score onafhankelijk van de semantische informatie die een woord bevat. Concreet zorgt een woord als \texttt{a} voor een even grote toename van de score als een woord als \texttt{ski}. Ook werkwoorden die in de referentiezin als substantief voorkomen en semantische informatie bevatten, geven problemen. Hieronder volgen voorbeelden van situaties waarbij zinnen een slechte BLEU-score krijgen terwijl ze inhoudelijk toch hetzelfde weergeven.
 \\
 
 Referentie 1: \texttt{Two boys are on their bikes.}
@@ -72,7 +72,7 @@ Kandidaat 2: \texttt{A man is going down a hill on his skis}
 Meteor is een evaluatiealgoritme dat het als doel heeft om dergelijke foute evaluaties te vermijden.
 
 \subsection{Meteor}
-Elliott et al.\cite{Elliott2014} tonen aan dat unigram BLEU (BLEU-1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. Meteor is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen correleert Meteor het beste met menselijke evaluatie.
+Elliott et al.\cite{Elliott2014} tonen aan dat unigram BLEU (BLEU-1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. Meteor is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen correleert Meteor het beste met menselijke evaluatie.\todo{hier zegt ze referentie?}
 
 \subsubsection{Algoritme}
 Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met de referenties en van deze alignering per zin een score te berekenen. Bij het berekenen van de score wordt net zoals bij BLEU gekeken naar de precisie. Daarnaast heeft ook recall een invloed, in tegenstellin tot bij de BLEU score. De auteurs voorzien een implementatie in de vorm van een JAR-bestand, zodat er geen twijfel bestaat over het gebruik van een correcte ge\"implementeerd algoritme.
@@ -80,7 +80,7 @@ Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met 
 Concreet probeert het algoritme twee zinnen te aligneren met behulp van vier ``matchers''. Als eerste is er een match wanneer twee woordvormen exact hetzelfde zijn. Als tweede is er een match wanneer woorden na ``stemming'' met een Snowball Stemmer\cite{porter2001snowball} gelijk zijn. Een derde matcher kijkt naar overeenkomsten in de WordNet synoniemenlijst van elk woord\cite{Miller1990}. Als laatste vormen frases of woordsequenties een match wanneer ze in zogenoemde parafrasetabellen voorkomen. Een parafrasetabel bevat paren van frases en overeenkomstige parafrases. Parafrases zijn woordsequenties die dezelfde betekenis hebben als de overeenkomstige frase, maar anders geformuleerd zijn.
 Elke matcher heeft een bepaald gewicht. De experimenten gebruiken de standaardgewichten van Meteor: 0.85, 0.2 ,0.6 en 0.75.
 
-Uiteindelijk generaliseert het algoritme alle matches tot frase matches met een bepaalde begin- en eindpositie. Een van de doelen van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarbij moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen. De uiteindelijke Meteor score bestaat uit de F-score $F_{mean}$ vermenigvuldigd met een penalisatiefactor $Pen$ op basis van het aantal chunks.
+Uiteindelijk generaliseert het algoritme alle matches tot frase matches met een bepaalde begin- en eindpositie. Een van de doelen van de Meteor score is om zoveel mogelijk woorden af te dekken in de twee zinnen. Daarbij moet het aantal \textit{chunks} minimaal zijn. Denkowski et al. defini\"eren een chunk als aaneengesloten en identiek geordende matches tussen de twee zinnen\cite{Denkowski2007a}. De uiteindelijke Meteor score bestaat uit de F-score $F_{mean}$ vermenigvuldigd met een penalisatiefactor $Pen$ op basis van het aantal chunks.
 
 
 \begin{equation}
@@ -97,6 +97,7 @@ Hierbij zijn $P$ en $R$ respectievelijk de gewogen precisie en recall van de gea
 Wanneer er meerdere referenties zijn in het corpus bepaalt het maximum van de individuele scores van elke referentie de score van de vertaling.
 
 \subsubsection{Gebruik en nadelen}
+\todo{vermijd redundantie}
 Zoals al aangehaald toonden Elliott en Keller in 2014 aan dat van de bestudeerde evaluatiemethodes Meteor de hoogste correlatie heeft met menselijke beoordelingen voor afbeeldingsbeschrijvingen. Om deze reden rapporteren wij ook de resultaten met dit algoritme. In de literatuur blijven BLEU-scores echter de meest gerapporteerde resultaten.
 
 Hoewel Meteor het meest performante algoritme is, vertoont het nog steeds slechts matige correlatie met menselijke beoordelingen. Verder onderzoek naar betere automatische evaluatie kan dus nuttig zijn. Daarnaast vereist het tabellen en synoniemenlijsten die niet voor elke taal beschikbaar zijn. Voor het Engels is deze informatie wel beschikbaar. 
