@@ -1,6 +1,5 @@
 \chapter{Gerelateerd werk}
 \label{hoofdstuk:related}
-\todo[inline]{geparset vervangen door iets anders}
 Het automatisch genereren van beschrijvingen voor ongeziene afbeeldingen is een complex proces. Het combineert namelijk zowel computervisie (CV) als natuurlijke taalverwerking (NLP). Vele modellen zijn al voorgesteld die telkens elementen uit beide onderzoeksvelden combineren. 
 
 Dit hoofdstuk begint met een vergelijking van verschillende mogelijkheden om afbeeldingen en zinnen voor te stellen. De meest relevante onderzoeken uit CV en NLP komen aan bod. Daarna volgt een samenvatting van de verschillende mogelijkheden om deze technologie\"en te integreren in \'e\'en model. 
@@ -18,12 +17,12 @@ De literatuur gebruikt meerdere technieken uit computervisie om nuttige features
 
 Bij sc\`eneclassificatie leert een model voor ongeziene afbeeldingen een bepaalde algemene sc\`ene (bijvoorbeeld restaurant, slaapkamer, keuken) af te leiden. Ook modellen die verschillende objecten detecteren hebben hun nut. Van zulke gevonden objecten kunnen classifiers ook nog nuttige attributen zoals kleur bepalen. Om zulke afleidingen te maken, gebruiken de papers bestaande classifiers en detectoren zoals bij Felzenswalb et al.\cite{Felzenszwalb2008}, Im2Text\cite{Ordonez2011} en GIST\cite{Oliva2006}. Ee\'n of meerdere van deze features kan dan rechtstreeks de representatie vormen van een afbeelding. Daarnaast vormen deze features in een aantal werken\cite{Farhadi2010,Li2011,Mitchell2012,Yang2011} enkel de input voor abstracte afbeeldingsrepresentaties in de vorm van tupels. Deze tupels bevatten dan objecten, acties tussen objecten, sc\`enetypes en/of ruimtelijke relaties.
 
-Een andere manier om afbeeldingen voor te stellen is het gebruik van Visual Dependency Representations (VDR) zoals voorgesteld door Elliott et al.\cite{Elliott2013}. Dit model werkt analoog aan een taalgebaseerde afhankelijkheidsgrammatica. Dit type grammatica stelt de syntactische structuur van een zin voor met woorden met daartussen binaire semantische of syntactische relaties\cite{Jurafsky:2009:SLP:1214993}. Figuur \ref{fig:dep_grammar} toont een voorbeeld van een zin geparset met een afhankelijkheidsgrammatica. De gelabelde pijlen stellen de verschillende relaties tussen de woorden voor.
+Een andere manier om afbeeldingen voor te stellen is het gebruik van Visual Dependency Representations (VDR) zoals voorgesteld door Elliott et al.\cite{Elliott2013}. Dit model werkt analoog aan een taalgebaseerde afhankelijkheidsgrammatica. Dit type grammatica stelt de syntactische structuur van een zin voor met woorden met daartussen binaire semantische of syntactische relaties\cite{Jurafsky:2009:SLP:1214993}. Figuur \ref{fig:dep_grammar} toont een voorbeeld van een zin ontleed met een afhankelijkheidsgrammatica. De gelabelde pijlen stellen de verschillende relaties tussen de woorden voor.
 
 \begin{figure}[tb]
       \centering
       \includegraphics[width=\linewidth]{Images/dependencygrammar.jpg}
-      \caption{Zin geparset met afhankelijkheidsgrammatica\cite{GasserNotes}}
+      \caption{Zin ontleed met afhankelijkheidsgrammatica\cite{GasserNotes}}
       \label{fig:dep_grammar}
   \end{figure}  
 
@@ -50,7 +49,7 @@ De meeste modellen vertrekken van een vectorrepresentatie voor individuele woord
 \subsection{Voorstellen van woorden}
  Het voorstellen van woorden met een vector vergemakkelijkt de verdere verwerking en kan bovendien ook semantische informatie bevatten.
 
- Een eerste mogelijke voorstelling is een one-hot codering waarin een vector met als grootte het aantal woorden in het vocabularium elk woord voorstelt. Deze vector is volledig nul behalve op \'e\'en rij die overeenkomt met het woord. Het is mogelijk om deze representatie verder uit breiden door vermenigvuldiging met een gewichtsmatrix\todo{wat zit er in deze gewichtsmatrix} om zo ook de semantische informatie van de woorden te leren. Deze gewichtsmatrix kan willekeurig worden ge\"initialiseerd of eerst trainen op bestaande corpora\cite{Lebret2013,Mao2014a,Google}. Daarna kunnen de gekende woorden en zinnen uit de dataset de gewichten nog verfijnen.  
+ Een eerste mogelijke voorstelling is een one-hot codering waarin een vector met als grootte het aantal woorden in het vocabularium elk woord voorstelt. Deze vector is volledig nul behalve op \'e\'en rij die overeenkomt met het woord. Het is mogelijk om deze representatie verder uit breiden door vermenigvuldiging met een gewichtsmatrix. Deze matrix transformeert de one-hotvectoren naar een andere vector. Training kan zorgen voor aanpassingen aan deze gewichtsmatrix om zo ook de semantische informatie van de woorden te leren. Deze gewichtsmatrix kan willekeurig worden ge\"initialiseerd of eerst trainen op bestaande corpora\cite{Lebret2013,Mao2014a,Google}. Daarna kunnen de gekende woorden en zinnen uit de dataset de gewichten nog verfijnen.  
 
  Een andere mogelijkheid is om bestaande word embeddings te gebruiken zoals \texttt{word2vec}. Dat algoritme projecteert elk woord op een vooraf geleerde vector en heeft bovendien enkele mooie eigenschappen. Zo projecteert het semantisch gelijkaardige woorden op nabijgelegen posities in de vectorruimte\cite{Mikolov2013}. Deze voorgedefin\"ieerde vectoren hebben als nadeel dat niet voor elk woord uit de beschrijvingen een vector representatie beschikbaar is. Het is wel mogelijk om zelf de vectorrepresentaties te leren op basis van de gebruikte dataset zoals beschreven in de paper.
 
@@ -62,7 +61,7 @@ De meeste modellen vertrekken van een vectorrepresentatie voor individuele woord
  \begin{figure}[tb]
      \centering
      \includegraphics[width=0.35\textwidth]{Images/dep_relations}
-     \caption{Zin met geparsete afhankelijkheidstriplets\cite{Karpathy2014}}
+     \caption{Zin met ontlede afhankelijkheidstriplets\cite{Karpathy2014}}
      \label{fig:deprelations}
  \end{figure}
 
@@ -115,7 +114,7 @@ Concreet stelt de entropie $H$ de hoeveelheid informatie voor die in een willeke
      \label{entropy}
  \end{equation} 
 
-Entropie-gebaseerde modellen willen de meest uniforme kansverdeling vormen over de opeenvolging van woorden. Deze kansverdeling moet voldoen aan een aantal beperkingen. Deze beperkingen kunnen bestaan uit het al dan niet mogelijk zijn van een bepaalde opeenvolging, een aantal sjablonen,\ldots Op deze manier maakt het model enkel gebruik van wat het zeker weet en negeert het elke onwaarschijnlijkheid. \todo{citen + duidelijker maken}
+Entropie-gebaseerde modellen modelleren de kennis die zeker is en ze beschouwen onzekerheden als uniform. Als een woord vijf mogelijke vertalingen heeft, waar het systeem verder niets over weet, heeft elke vertaling een kans van $\frac{1}{5}$. Als het systeem uit observatie weet dat in 50 \% van de gevallen een van de eerste 2 vertalingen is, hebben deze twee vertalingen een waarschijnlijkheid van $\frac{1}{4}$. De andere drie vertalingen, waarover het systeem onzeker is, hebben een waarschijnlijkheid van $\frac{1}{6}$, wat neerkomt op een uniforme kansverdeling binnen de beperkingen die uit de observaties voortkomen. In andere modellen kunnen deze beperkingen voortkomen uit sjablonen, het al dan niet observeren van bepaalde woordsequenties, \ldots \cite{Berger1996}
 
 Zo leren Mitchell et al.\cite{Mitchell2015} om een lijst met waarschijnlijke woorden uit de afbeeldingsrepresentatie te extraheren en combineren ze deze met een uitgebreid taalmodel. Dit taalmodel leert de verschillende kansen op basis van de beschrijvingen in de trainingsdata. Tijdens het leerproces probeert het algoritme de entropie te maximaliseren. In een volgende stap van hun systeem zoeken ze de zinnen die het meest waarschijnlijk zijn, gegeven de woorden die herkend zijn in de afbeelding. Vervolgens sorteren ze de gegeneerde zinnen op basis van een aantal additionele kenmerken. Dit model is net als de modellen met neurale netwerken in staat om nieuwe en vlotte zinnen te vormen. De prestatie is gelijkaardig aan die van de neurale netwerken.
 
@@ -136,6 +135,8 @@ Aandachtsmodellen geven bovendien een mooie visuele voorstelling van waar het mo
 	\label{fig:attention-example}
 \end{figure}
 
+
+\section{Besluit}
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "masterproef"

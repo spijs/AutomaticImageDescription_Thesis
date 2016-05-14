@@ -200,7 +200,7 @@ Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn biologisch ge\" inspir
 
 Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output van een verborgen laag is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een niet-lineaire laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
-Eerst is er een filterbanklaag die kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal kernelfuncties.\todo{uitleggen} Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
+Eerst is er een filterbanklaag die kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal kernelfuncties. Deze kernels zijn trainbare filters, die elk een verschillend effect hebben op de afbeelding. Ze kunnen de afbeelding vervormen, vervagen, randen van objecten detecteren, bepaalde kleuren verwijderen, \ldots Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
 
 \begin{figure}[tb]
     \centering
@@ -432,3 +432,5 @@ Om de dimensionaliteit van de projectie te verhogen gebruikt de paper voor $\psi
 Aaneensluiting van de originele dataset met het resultaat van de niet-lineaire transformatie leidt tot $\hat{X} = [X, \psi(XA)], \hat{Y} = [Y, \psi(YB)]$. Een laatste stap in het proces berekent een CCA-projectie die gebaseerd is op $\hat{X}$ en $\hat{Y}$, wat resulteert in $U_1$ en $U_2$.
 
 De projectie van een ongeziene afbeelding is het resultaat van het achtereenvolgens uitvoeren van alle transformaties. Voor vector $\mathbf{x}$ geeft dit $\mathbf{\hat{x}} = U_1[\mathbf{x}, \psi(A\mathbf{x})]$. Deze representatie vormt dan een verbeterde versie van de originele afbeeldingsrepresentatie, wat nuttig is voor bijvoorbeeld het opzoeken van afbeeldingen. In deze thesis zou een verbeterde vectorrepresentatie kunnen dienen als extra semantische informatie. 
+
+\section{Besluit}
