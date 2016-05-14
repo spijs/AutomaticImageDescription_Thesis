@@ -72,7 +72,7 @@ Kandidaat 2: \texttt{A man is going down a hill on his skis}
 Meteor is een evaluatiealgoritme dat het als doel heeft om dergelijke foute evaluaties te vermijden.
 
 \subsection{Meteor}
-Elliott et al.\cite{Elliott2014} tonen aan dat unigram BLEU (BLEU-1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. Meteor is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen correleert Meteor het beste met menselijke evaluatie.\todo{hier zegt ze referentie?}
+Elliott et al. tonen aan dat unigram BLEU (BLEU-1) slechts een zwakke correlatie heeft met menselijke evaluatie. Hogere orde BLEU-scores hebben slechts een matige correlatie. Meteor is een metriek die specifiek ontworpen is om de tekortkomingen van BLEU te verbeteren. Van de door Elliott onderzochte evaluatiemechanismen correleert Meteor het beste met menselijke evaluatie\cite{Elliott2014}.
 
 \subsubsection{Algoritme}
 Meteor\cite{Denkowski2007a} evalueert vertaalde zinnen door ze te aligneren met de referenties en van deze alignering per zin een score te berekenen. Bij het berekenen van de score wordt net zoals bij BLEU gekeken naar de precisie. Daarnaast heeft ook recall een invloed, in tegenstellin tot bij de BLEU score. De auteurs voorzien een implementatie in de vorm van een JAR-bestand, zodat er geen twijfel bestaat over het gebruik van een correcte ge\"implementeerd algoritme.
