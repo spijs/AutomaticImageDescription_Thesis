@@ -31,7 +31,7 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 \centering
 \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
     \tikzstyle{every pin edge}=[<-,shorten <=1pt]
-    \tikzstyle{neuron}=[circle,fill=black!100,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{neuron}=[circle,fill=black!100,draw=black,minimum size=17pt,inner sep=0pt]
     \tikzstyle{input neuron}=[neuron, fill=lime!65];
     \tikzstyle{output neuron}=[neuron, fill=red!65];
     \tikzstyle{annot} = [text width=4em, text centered]
@@ -69,7 +69,7 @@ In deze masterproef leert een eenvoudig feedforward netwerk afbeeldingsrepresent
 \centering
 \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
     \tikzstyle{every pin edge}=[<-,shorten <=1pt]
-    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,draw=black,inner sep=0pt]
     \tikzstyle{input neuron}=[neuron, fill=lime!65];
     \tikzstyle{output neuron}=[neuron, fill=red!65];
     \tikzstyle{verborgen neuron}=[neuron, fill=blue!50];
@@ -201,7 +201,7 @@ Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn biologisch ge\" inspir
 
 Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output van een verborgen laag is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filterbanklaag, een niet-lineaire laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
-Eerst is er een filterbanklaag die kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal \emph{kernelfuncties}. Deze kernels zijn trainbare filters, die elk een verschillend effect hebben op de afbeelding. Ze kunnen de afbeelding vervormen, vervagen, randen van objecten detecteren, bepaalde kleuren verwijderen, \ldots Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur~\ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
+Eerst is er een filterbanklaag die kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal \emph{kernelfuncties}. Deze kernels zijn trainbare filters, die elk een verschillend effect hebben op de afbeelding. Ze kunnen de afbeelding vervormen, vervagen, randen van objecten detecteren, bepaalde kleuren verwijderen,~\textellipsis\  Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur~\ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
 
 \begin{figure}[tb]
     \centering
@@ -221,7 +221,7 @@ De laatste laag in elk niveau is een \emph{feature-pooling-laag} die de dimensio
     \label{fig:maxpool}
 \end{figure}
 
-Na \'e\'en of meerdere opeenvolgingen van filters, niet-lineaire en pooling lagen volgt in een traditionele convolutionele architectuur de laatste fase. Deze bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
+Na \'e\'en of meerdere opeenvolgingen van filters, niet-lineaire en poolinglagen volgt in een traditionele convolutionele architectuur de laatste fase. Deze bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
 
 Trainen van dit netwerk kan op twee manieren. Een eerste manier is gesuperviseerd in combinatie met terugpropagatie. Hierbij heeft het netwerk ook kennis over het correcte antwoord. Een tweede mogelijkheid is ongesuperviseerde training, waarbij geen kennis van het correcte antwoord nodig is. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
 
@@ -436,4 +436,4 @@ Aaneensluiting van de originele dataset met het resultaat van de niet-lineaire t
 De projectie van een ongeziene afbeelding is het resultaat van het achtereenvolgens uitvoeren van alle transformaties. Voor vector $\mathbf{x}$ geeft dit $\mathbf{\hat{x}} = U_1[\mathbf{x}, \psi(A\mathbf{x})]$. Deze representatie vormt dan een verbeterde versie van de originele afbeeldingsrepresentatie, wat nuttig is voor bijvoorbeeld het opzoeken van afbeeldingen. In deze thesis zou een verbeterde vectorrepresentatie kunnen dienen als extra semantische informatie. 
 
 \section{Besluit}
-Dit hoofdstuk gaf een theoretische uitwerkingen van concepten die de modellen van deze thesis gebruiken. Als eerste volgde een bespreking van drie types van neurale netwerken: feedforward, CNN en RNN. Daarna volgde een uitdieping van twee statistische concepten die in deze thesis als bron dienen voor semantische informatie: LDA en CCA. Het volgende hoofdstuk bespreekt concreet hoe al de besproken theorie in deze masterproef wordt samengevoegd tot een systeem dat in staat is afbeeldingen te beschrijven.
+Dit hoofdstuk gaf een theoretische uitwerkingen van concepten die de modellen van deze thesis gebruiken. Als eerste volgde een bespreking van vier types van neurale netwerken: feedforward, CNN, RNN en LSTM. Daarna volgde een uitdieping van twee statistische concepten die in deze thesis als bron dienen voor semantische informatie: LDA en CCA. Het volgende hoofdstuk bespreekt concreet hoe al de besproken theorie in deze masterproef wordt samengevoegd tot een systeem dat in staat is afbeeldingen te beschrijven.
