@@ -17,16 +17,21 @@ De literatuur gebruikt meerdere technieken uit computervisie om nuttige features
 
 Bij sc\`eneclassificatie leert een model voor ongeziene afbeeldingen een bepaalde algemene sc\`ene (bijvoorbeeld restaurant, slaapkamer, keuken) af te leiden. Ook modellen die verschillende objecten detecteren hebben hun nut. Van zulke gevonden objecten kunnen classifiers ook nog nuttige attributen zoals kleur bepalen. Om zulke afleidingen te maken, gebruiken de papers bestaande classifiers en detectoren zoals bij Felzenswalb et al.~\cite{Felzenszwalb2008}, Im2Text~\cite{Ordonez2011} en GIST~\cite{Oliva2006}. Ee\'n of meerdere van deze features kan dan rechtstreeks de representatie vormen van een afbeelding. Daarnaast vormen deze features in een aantal werken~\cite{Farhadi2010,Li2011,Mitchell2012,Yang2011} enkel de input voor abstracte afbeeldingsrepresentaties in de vorm van tupels. Deze tupels bevatten dan objecten, acties tussen objecten, sc\`enetypes en/of ruimtelijke relaties. Figuur~\ref{fig:imgtriplets} geeft hiervan een voorbeeld.
 
-
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{Images/imgtriples.PNG}
+	\caption[Tripletrepresentatie van een afbeelding]{Tripletrepresentatie van een afbeelding waarbij elk triplet de vorm \texttt{<object(O),actie(A),sc\`ene(S)>} heeft. Verschillende detectoren leiden elk element in het triplet af uit de afbeelding~\cite{Farhadi2010}.}
+	\label{fig:imgtriplets}
+\end{figure}  
 
 Een andere manier om afbeeldingen voor te stellen is het gebruik van Visual Dependency Representations (VDR) zoals voorgesteld door Elliott et al.~\cite{Elliott2013}. Dit model werkt analoog aan een taalgebaseerde afhankelijkheidsgrammatica. Dit type grammatica stelt de syntactische structuur van een zin voor met woorden met daartussen binaire semantische of syntactische relaties~\cite{Jurafsky:2009:SLP:1214993}. Figuur~\ref{fig:dep_grammar} toont een voorbeeld van een zin ontleed met een afhankelijkheidsgrammatica. De gelabelde pijlen stellen de verschillende relaties tussen de woorden voor.
 
 \begin{figure}[tb]
-      \centering
-      \includegraphics[width=\linewidth]{Images/imgtriples.PNG}
-      \caption[Tripletrepresentatie van een afbeelding]{Tripletrepresentatie van een afbeelding waarbij elk triplet de vorm \texttt{<object(O),actie(A),sc\`ene(S)>} heeft. Verschillende detectoren leiden elk element in het triplet af uit de afbeelding.~\cite{Farhadi2010}}
-      \label{fig:dep_grammar}
-  \end{figure}  
+	\centering
+	\includegraphics[width=\linewidth]{Images/dependencygrammar.jpg}
+    \caption{Zin ontleed met afhankelijkheidsgrammatica\cite{GasserNotes}}
+	\label{fig:dep_grammar}
+\end{figure}  
 
 VDR's gebruiken een afhankelijkheidsgraaf om de ruimtelijke relaties tussen regio's in een foto voor te stellen. Elke relatie tussen twee objecten krijgt dan een ruimtelijke positie als label. Mogelijke relaties zijn bijvoorbeeld \texttt{op}, \texttt{boven}, \texttt{onder}, \texttt{naast}, ... Het leren van VDR's kan op basis van geannoteerde trainingsdata, automatisch met objectherkenning~\cite{Elliott2015} of met nog andere informatie die in de abstracte sc\`ene zit~\cite{Gilberto2015}.  
 
@@ -57,7 +62,7 @@ De meeste modellen vertrekken van een vectorrepresentatie voor individuele woord
  De meeste werken in de literatuur rapporteren dat one-hotcodering in combinatie met een te leren gewichtsmatrix gelijkaardige en snellere resultaten oplevert. Daarnaast hebben sommige semantisch gelijkaardige woorden zoals kleuren gelijkaardige vectoren bij gebruik van het \texttt{word2vec} algoritme, terwijl kleuren in een afbeelding toch uitgesproken verschillend zijn. Hierdoor zal een systeem dat \texttt{word2vec} woordvectoren gebruikt, waarschijnlijk slecht presteren in het herkennen van kleuren~\cite{Karpathy2015}.
  
 \subsection{Voorstellen van zinnen}
- Verschillende mogelijkheden bestaan om de zinnen voor te stellen wanneer de woordvectoren gekend zijn. Een eerste mogelijkheid gebruikt een afhankelijkheidsparser en stelt de zinnen voor als een volledige afhankelijkheidsboom\cite{Socher2014}. Karpathy~\cite{Karpathy2014} gebruikt ook een afhankelijkheidsparser, maar haalt hier een verzameling van triplets uit. Dergelijke triplets bestaan uit twee woorden uit de zin en hun onderlinge relatie. Figuur~\ref{fig:deprelations} toont een voorbeeldzin met de bijhorende triplets. Het eerste element van de triplet is het type van de relatie.
+ Verschillende mogelijkheden bestaan om de zinnen voor te stellen wanneer de woordvectoren gekend zijn. Een eerste mogelijkheid gebruikt een afhankelijkheidsparser en stelt de zinnen voor als een volledige afhankelijkheidsboom\cite{Socher2014}. Karpathy~\cite{Karpathy2014} gebruikt ook een afhankelijkheidsparser, maar haalt hier een verzameling van triplets uit. Dergelijke triplets bestaan uit twee woorden uit de zin en hun onderlinge relatie. Figuur~\ref{fig:deprelations} toont een voorbeeldzin met de bijhorende triplets. Het eerste element van het triplet is het type van de relatie.
 
  \begin{figure}[tb]
      \centering
@@ -66,16 +71,16 @@ De meeste modellen vertrekken van een vectorrepresentatie voor individuele woord
      \label{fig:deprelations}
  \end{figure}
 
- Een volgende optie telt de woordvectoren van een zin op~\cite{Lebret2013}  Hierdoor gaat informatie uit de woordvolgorde wel verloren. Le en Mikolov~\cite{Le2014a} bieden een oplossing voor het verloren gaan van woordvolgorde. Zij trainen een model om representaties te maken van stukken tekst met variabele lengte. Hun algoritme kan zowel zinnen als paragrafen en volledige teksten voorstellen.
+ Een volgende optie telt de woordvectoren van een zin op~\cite{Lebret2013}.  Hierdoor gaat informatie uit de woordvolgorde wel verloren. Le en Mikolov~\cite{Le2014a} bieden een oplossing voor het verloren gaan van woordvolgorde. Zij trainen een model om representaties te maken van stukken tekst met variabele lengte. Hun algoritme kan zowel zinnen als paragrafen en volledige teksten voorstellen.
 
  Een vaak gebruikt taalmodel in de meer recente NLP-literatuur is een Recurrent Neuraal Netwerk (RNN)~\cite{Mikolov2010}. Dit is een neuraal netwerk dat goed overweg kan met sequenti\"ele data zoals taal. Kiros et al.~\cite{Kiros2013} combineren de verborgen lagen van een RNN met extra informatie (zoals POS-tags) om tot een representatie van de zin te komen. De meer recente modellen stellen een zin voor als de sequentie van de woordvectoren in die zin. Zo kan het RNN de taal leren door elke zin woord per woord in het netwerk in te voeren.
  
 \section{Van afbeeldingsrepresentaties naar beschrijvingen}
-Er zijn verschillende methodes om vanuit de representaties van de afbeelding en bijbehorende referentiezinnen een model te trainen dat in staat is om ongeziene afbeeldingen om te zetten in correcte beschrijvingen. 
+Er zijn verschillende methodes om vanuit de representaties van de afbeeldingen en bijbehorende referentiezinnen een model te trainen dat in staat is om ongeziene afbeeldingen om te zetten in correcte beschrijvingen. 
 De meeste modellen trainen met als doel het verschil tussen de gegenereerde omschrijving en de correcte omschrijving uit de trainingsverzameling te minimaliseren.
 
 \subsection{Dichtstbijzijnde afbeelding}
-De eenvoudigste aanpak zoekt naar de meest gelijkaardige afbeelding in de trainingsverzameling en geeft \'e\'en van haar beschrijvingen terug als resultaat(Nearest Neighbour)~\cite{Devlin2015a}. Een gelijkaardigheidsmetriek zoals de cosinusgelijkenis tussen de afbeeldingsrepresentaties evalueert de gelijkaardigheid van twee representaties.
+De eenvoudigste aanpak zoekt naar de meest gelijkaardige afbeelding in de trainingsverzameling en geeft \'e\'en van haar beschrijvingen terug als resultaat (Nearest Neighbour)~\cite{Devlin2015a}. Een gelijkaardigheidsmetriek zoals de cosinusgelijkenis tussen de afbeeldingsrepresentaties evalueert de gelijkaardigheid van twee representaties.
 
 Een uitbreiding op deze aanpak zoekt naar de verzameling van de meest gelijkaardige afbeeldingen in de trainingsverzameling. Vervolgens cre\"eert een model een rangorde op basis van extra visuele of tekstuele informatie. De referentiezin van de hoogst scorende afbeelding is dan het resultaat~\cite{Devlin2015a,Hodosh2013,Oliva2006,Ordonez2011}. 
 Deze modellen hebben als nadeel dat ze nooit resulteren in een zin die niet in de trainingsverzameling zit.
@@ -145,7 +150,7 @@ Aandachtsmodellen geven bovendien een mooie visuele voorstelling van waar het mo
 
 
 \section{Besluit}
-Het probleem van deze masterproef bevat zowel elementen uit CV als NLP. Dit hoofdstuk bood een overzicht van hoe de literatuur componenten uit beide domeinen gebruikt om dit probleem op te lossen. Concreet vereist dit een voorstelling van zowel afbeeldingen als zinnen en een systeem dat hiermee afbeeldingsbeschrijvingen kan genereren. Zowel voor het beschrijven van afbeeldingen als het genereren van zinnen behalen neurale netwerken de beste resultaten. Om die reden gebruikt deze thesis dan ook respectievelijke CNN's en RNN's voor beide deelproblemen. Het volgende hoofdstuk gaat dieper in op de theoretische achtergrond van beide netwerken. Daarbovenop bespreekt dit hoofdstuk ook uitbreidingen op de netwerken en de extra van semantische informatie om zo tot betere resultaten te komen.
+Het probleem van deze masterproef bevat zowel elementen uit CV als NLP. Dit hoofdstuk bood een overzicht van hoe de literatuur componenten uit beide domeinen gebruikt om dit probleem op te lossen. Concreet vereist dit een voorstelling van zowel afbeeldingen als zinnen en een systeem dat hiermee afbeeldingsbeschrijvingen kan genereren. Zowel voor het voorstellen van afbeeldingen als het genereren van zinnen behalen neurale netwerken de beste resultaten. Om die reden gebruikt deze thesis dan ook respectievelijk CNN's en RNN's voor beide deelproblemen. Het volgende hoofdstuk gaat dieper in op de theoretische achtergrond van beide netwerken. Daarbovenop bespreekt dit hoofdstuk ook uitbreidingen op de netwerken en de extra van semantische informatie om zo tot betere resultaten te komen.
 
 %%% Local Variables: 
 %%% mode: latex
