@@ -73,7 +73,7 @@ MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een o
 
 Een ander belangrijk deel van de COCO dataset zijn annotaties. Oudere datasets legden de focus op classificatie, omgevende rechthoeken en segmentatie, terwijl \mbox{MS COCO} probeert om elk belangrijk object op de foto te annoteren. De afbeeldingen zijn gebaseerd op een lijst van objectcategorie\"en en zijn specifiek geselecteerd om niet-iconische sc\`enes te bevatten. De Flickr-datasets focussen niet expliciet op niet-iconische afbeeldingen, dus bevatten meer variatie in het type afbeeldingen.
 
-Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mechanical Turk workers}, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving~\cite{Rampf2015}. Figuur~\ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
+Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mechanical Turk workers}, net zoals bij de Flickr-datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving~\cite{Rampf2015}. Figuur~\ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
 
 \begin{figure}[tb]
 	\centering
@@ -82,10 +82,10 @@ Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mec
 	\label{fig:coco_ui}
 \end{figure}
 \subsubsection{Gekozen dataset}
-Dit werk gebruikt Flickr30k als dataset voor de training en evaluatie. Hoewel \mbox{MS Coco} groter is en meer complexere afbeeldingen bevat, maakt de grootte van Flickr30k snellere training van het systeem mogelijk. Daarnaast is deze dataset ook de in de literatuur het meest gebruikt wat de vergelijking tussen bestaande systemen mogelijk maakt. 
+Dit werk gebruikt Flickr30k als dataset voor de training en evaluatie. Hoewel \mbox{MS COCO} groter is en meer complexere afbeeldingen bevat, maakt de grootte van Flickr30k snellere training van het systeem mogelijk. Daarnaast is deze dataset ook de meest gebruikte in de literatuur wat de vergelijking met bestaande systemen mogelijk maakt. 
 
 \section{Besluit}
-Deze masterproef focust op het verbeteren van een bestaand systeem dat in staat is om afbeeldingen te beschrijven. Deze beschrijvingen zijn bovendien grammaticaal correcte, Engelstalige vloeiende zinnen. Dit probleem bevindt zich op het snijpunt van CV en NLP en is nauw verbonden met gerelateerd problemen binnen deze domeinen. Naast het academisch nut van het oplossen van dit complexe probleem heeft de oplossing ook praktische toepassingen. Zo dient het al in toepassingen die slechtzienden helpen met het bekijken van afbeeldingen op het internet. Voor dit probleem bestaan drie datasets waarvan \mbox{MS Coco} de grootste en wellicht beste is. Flickr30k vormt een uitbreiding op Flickr8k en bevat minder en eenvoudigere afbeeldingen dan MS Coco. Omwille van de kleinere grootte en meer gebruik in de literatuur traint en evalueert het systeem van deze masterproef toch met Flickr30k. 
+Deze masterproef focust op het verbeteren van een bestaand systeem dat in staat is om afbeeldingen te beschrijven. Deze beschrijvingen zijn bovendien grammaticaal correcte, Engelstalige vloeiende zinnen. Dit probleem bevindt zich op het snijpunt van CV en NLP en is nauw verbonden met gerelateerd problemen binnen deze domeinen. Naast het academisch nut van het oplossen van dit complexe probleem heeft de oplossing ook praktische toepassingen. Zo dient het al in toepassingen die slechtzienden helpen met het bekijken van afbeeldingen op het internet. Voor dit probleem bestaan drie datasets waarvan \mbox{MS COCO} de grootste en wellicht beste is. Flickr30k vormt een uitbreiding op Flickr8k en bevat minder en eenvoudigere afbeeldingen dan MS COCO. Omwille van de kleinere grootte en meer gebruik in de literatuur traint en evalueert het systeem van deze masterproef toch met Flickr30k. 
 
 Het volgende hoofdstuk biedt een overzicht van gebruikte methodes en modellen uit de literatuur om het hiervoor geschetste probleem op te lossen.
 %%% Local Variables: 
