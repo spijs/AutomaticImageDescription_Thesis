@@ -15,7 +15,7 @@ Aan de NLP-kant zijn veel aspecten van de automatische afbeeldingsbeschrijving g
 
 Het automatisch herkennen van objecten in afbeeldingen vormt \'e\'en van de meest onderzochte vraagstukken in het domein van de computervisie. Zoals eerder gezegd, is er niet enkel nood aan algoritmes die vormen detecteren in afbeeldingen, maar moet er ook een adequate labeling van de gedetecteerde vormen zijn. Een zeer gelijkaardig probleem is het classificeren van een volledige afbeelding, waarbij de hele sc\`ene een label krijgt in plaats van de gedetecteerde objecten.
 
-De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: \emph{``Genereer een vloeiende, grammaticaal correcte Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''}. Een voorbeeld van twee afbeeldingen met automatisch gegenereerde zinnen is te zien in figuur \ref{fig:examplecaptions}.
+De concrete probleemstelling voor het vraagstuk van afbeeldingsbeschrijving is de volgende: \emph{``Genereer een vloeiende, grammaticaal correcte Engelse zin die beschrijft wat er op een nooit eerder geziene foto staat''}. Een voorbeeld van twee afbeeldingen met automatisch gegenereerde zinnen is te zien in figuur~\ref{fig:examplecaptions}.
 
 \begin{figure}[tb]
     \centering
@@ -67,18 +67,18 @@ MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een o
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/iconic.jpg}
-    \caption{Verschil tussen iconische en niet-iconische afbeeldingen\cite{Lin2014}}
+    \caption{Verschil tussen iconische en niet-iconische afbeeldingen~\cite{Lin2014}}
     \label{fig:cocotypes}
 \end{figure}
 
 Een ander belangrijk deel van de COCO dataset zijn annotaties. Oudere datasets legden de focus op classificatie, omgevende rechthoeken en segmentatie, terwijl \mbox{MS COCO} probeert om elk belangrijk object op de foto te annoteren. De afbeeldingen zijn gebaseerd op een lijst van objectcategorie\"en en zijn specifiek geselecteerd om niet-iconische sc\`enes te bevatten. De Flickr-datasets focussen niet expliciet op niet-iconische afbeeldingen, dus bevatten meer variatie in het type afbeeldingen.
 
-Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mechanical Turk workers}, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving\cite{Rampf2015}. Figuur \ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
+Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mechanical Turk workers}, net zoals bij de Flickr datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving~\cite{Rampf2015}. Figuur~\ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.8\linewidth]{Images/coco_UI.png}
-	\caption{User interface voor het ingeven van afbeeldingsbeschrijvingen \mbox{MS COCO}\cite{Rampf2015}}
+	\caption{User interface voor het ingeven van afbeeldingsbeschrijvingen \mbox{MS COCO}~\cite{Rampf2015}}
 	\label{fig:coco_ui}
 \end{figure}
 \subsubsection{Gekozen dataset}
