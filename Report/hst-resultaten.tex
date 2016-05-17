@@ -10,11 +10,12 @@ Zoals vermeld in het vorige hoofdstuk defini\"eren we een referentiemodel getrai
 Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Brevity Penalty. Hij voorziet ook geen informatie over Meteor of andere statistieken. Daarom voeren we eerst experimenten uit met de basisinstellingen voor RNN (\emph{ref-RNN}) zonder Brevity Penalty. Hierbij wordt op elk tijdstip de afbeelding aan het netwerk meegegeven. De resultaten van Karpathy krijgen niet op elke tijdstap de afbeelding mee. Hij rapporteert dat dit nog beter presteert. Wanneer de evaluatie toch met Brevity Penalty gebeurt, toont tabel~\ref{table:karpathy_met_bp} dat de referentie toch zeer sterk overeenkomt met de resultaten van de paper van Karpathy. 
 
 \begin{table}
+	\centering
 	\begin{tabular}{lllllll}
 		& Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
-		RNN (Karpathy~\cite{Karpathy2015})    & 57.3   & 36.9   & 24     & 15.7   & ~           \\    
-		ref-RNN + BP     & 55.17   & 36.64   & 23.89   & 15.13   & 14.29          \\
-		ref-RNN          & 64.9  & 43.1     & 28.1   & 17.8   & 14.29          \\
+		RNN (Karpathy~\cite{Karpathy2015})    & 57,3   & 36,9   & 24     & 15,7   & ~           \\    
+		ref-RNN + BP     & 55,2   & 36,6   & 23,9   & 15,1   & 14,3          \\
+		ref-RNN          & 64,9  & 43,1     & 28,1   & 17,8   & 14,3          \\\hline
 	\end{tabular}
 
 	\caption{Resultaten Karpathy~\cite{Karpathy2015} in vergelijking met onze referentieresultaten.}
@@ -22,15 +23,16 @@ Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Br
 \end{table}
 
 Tabel~\ref{table:rnn_met_lda} toont het effect van het toevoegen van LDA aan de basisimplementatie van RNN. Alle gebruikte metrieken vertonen een stijging. LDA lijkt er dus in te slagen om de semantische drift tegen te gaan.
-Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het meest overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhaalden lijkt de bias van standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
+Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het meest overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhalen lijkt de bias van standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
 
 \begin{table}
+	\centering
 	\begin{tabular}{lllllll}
 		& Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
-		ref-RNN        & 64.9   & 43.1   & 28.1   & 17.8   & 14.29          \\
-		RNN + Gauss       & 62.4   & 42     & 28.2   & 18.6   & 16.57          \\
-		RNN + LDA         & \textbf{65.4}   & \textbf{44}     & \textbf{29.1}   & 19     & 14.38          \\
-		RNN + LDA + Gauss & 62.7   & 42.6   & 28.8   & \textbf{19.5}   & \textbf{16.62}          \\ \hline
+		ref-RNN        & 64,9   & 43,1   & 28,1   & 17,8   & 14,3          \\
+		RNN + Gauss       & 62,4   & 42     & 28,2   & 18,6   & 16,6          \\
+		RNN + LDA         & \textbf{65,4}   & \textbf{44}     & \textbf{29,1}   & 19     & 14,4          \\
+		RNN + LDA + Gauss & 62,7   & 42,6   & 28,8   & \textbf{19,5}   & \textbf{16,6}          \\ \hline
 	\end{tabular}
 	\caption{Vergelijking van de resultaten RNN na toevoeging LDA en Gaussnormalisatie}	
 	\label{table:rnn_met_lda}
@@ -42,12 +44,13 @@ Het toevoegen van LDA vermindert het aantal unieke woorden, maar verhoogt de gem
 Normaliseren met de Gaussiaanse functie bereikt zijn doel. De lengte van de zinnen stijgt met gemiddeld 3 woorden. Toch stijgt het aantal unieke woorden niet mee. Het aantal zinnen dat niet voorkomt in de trainingsset stijgt naar 93\%. Toch is het aantal unieke zinnen van het tweede type niet veel hoger. Het systeem met Gauss-normalisatie genereert met andere woorden veel dezelfde ongeziene zinnen.
 
 \begin{table}
+	\centering
 	\begin{tabular}{lllll}
 		~                 & Unieke woorden & Gem. zinslengte & Uniek1 & Uniek2 \\ \hline
 		ref-RNN           & 233            & 7,14           & 785    & 392    \\
 		RNN + Gauss       & \textbf{239}   & 10,14          & \textbf{931}    & \textbf{439}    \\
 		RNN + LDA         & 189            & 7,59           & 823    & 387    \\
-		RNN + LDA + Gauss & 192            & \textbf{10,33}          & 930    & 384    \\
+		RNN + LDA + Gauss & 192            & \textbf{10,33}          & 930    & 384    \\\hline
 	\end{tabular}
 	\caption[Vergelijking van de verzamelde statistieken RNN na toevoeging LDA en Gaussnormalisatie]{Vergelijking van de verzamelde statistieken RNN na toevoeging LDA en Gaussnormalisatie. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.}
 	\label{table:rnn_lda_stats}
@@ -59,15 +62,16 @@ Rechtstreeks vergelijken met de LSTM-implementatie van Vinyals~\cite{Google} is 
 Zowel het gebruik van LDA als CCA als gids in de gLSTM verbetert de resultaten op elke metriek ten opzichte van de referentie. Daarenboven presteren beide gLSTM-netwerken beter op elke metriek behalve Bleu-1. Dit effect is het grootste voor CCA op de Meteor-score na. Voor zowel het referentiemodel als gLSTM met LDA zorgt Gauss-normalisatie voor een aanzienlijke verbetering voor Bleu-3, Bleu-4 en Meteor. Deze scores komen bovendien het meest overeen met menselijke evaluatie. Bij gLSTM met CCA doet er zich een vreemd fenomeen voor en verslechtert de normalisatie de Bleu-scores, maar verbetert ze de Meteor-score. 
 Het effect van LDA met Gauss en CCA ligt dicht bij elkaar. Toch scoort LDA met Gauss op de scores die meer correleren met menselijke evaluatie nipt het beste.
     \begin{table}
+    	\centering
     	\begin{tabular}{llllll}
     		~                   & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
-    		LSTM (Vinyals~\cite{Google})      & \textbf{66.3}   & 42.3   & 27.7   & 18.3   & ~     \\ 
-    		ref-LSTM         & 62.1   & 41.4   & 27.1   & 17.6   & 15.08  \\
-    		LSTM+Gauss        & 61.2   & 41.1   & 27.3   & 18.2   & 16.92  \\
-    		gLSTM+LDA         & 64.4   & 43.2   & 28.1   & 17.8   & 15.95  \\
-    		gLSTM+LDA+Gauss & 62.7   & 42.5   & 28.8   & \textbf{19.4}   & \textbf{17.4}  \\
-	        gLSTM+CCA         & 63.7   & \textbf{43.4}   & \textbf{29.2}   &19.3   & 15.76  \\
-	        gLSTM+CCA+Gauss & 62.1   & 41.9   & 28.2   & 18.7   & 17.18  \\
+    		LSTM (Vinyals~\cite{Google})      & \textbf{66,3}   & 42,3   & 27,7   & 18,3   & ~     \\ 
+    		ref-LSTM         & 62,1   & 41,4   & 27,1   & 17,6   & 15,1  \\
+    		LSTM+Gauss        & 61,2   & 41,1   & 27,3   & 18,2   & 16,9  \\
+    		gLSTM+LDA         & 64,4   & 43,2   & 28,1   & 17,8   & 16  \\
+    		gLSTM+LDA+Gauss & 62,7   & 42,5   & 28,8   & \textbf{19,4}   & \textbf{17,4}  \\
+	        gLSTM+CCA         & 63,7   & \textbf{43,4}   & \textbf{29,2}   &19,3   & 15,8  \\
+	        gLSTM+CCA+Gauss & 62,1   & 41,9   & 28,2   & 18,7   & 17,2  \\\hline
     	\end{tabular}
    	\caption{Vergelijking van de resultaten LSTM met twee gidsen en met Gaussnormalisatie}	
    	\label{table:lstm_results}
@@ -76,14 +80,15 @@ Het effect van LDA met Gauss en CCA ligt dicht bij elkaar. Toch scoort LDA met G
 Tabel~\ref{table:lstm_stats} toont de verzamelde statistieken over de gegenereerde zinnen van de vorige systemen. In vergelijking met het referentie RNN leert het LSTM-netwerk een groter vocabularium (ongeveer 40\% groter). Ook de zinnen zijn gemiddeld iets langer. Het aantal unieke zinnen van het eerste type daalt licht, maar het aantal van het tweede type is gelijkaardig.
 Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengte stijgt gevoelig en ook het aantal unieke zinnen van type 1 stijgt fel. Het aantal volledig unieke zinnen (\emph{Uniek2}) van beide gLSTM's stijgt sterk door het toevoegen van Gauss-normalisatie tot 60\% voor CCA. CCA als gids leert ook meer unieke woorden dan LDA en lijkt dus tot iets creatievere zinnen te leiden.
     \begin{table}
+    	\centering
     	\begin{tabular}{llllll}
     		~                   & Unieke woorden & Gem. zinslengte & Uniek1 & Uniek2 \\ \hline
-    		ref-LSTM         				  & 327   & 7.89   & 723   & 399  \\
+    		ref-LSTM         				  & 327   & 7,89   & 723   & 399  \\
     		LSTM+Gauss        				  & 351   & 10,36   & 905   & 437  \\
     		gLSTM+LDA         				  & 296   & 8,33   & 775   & 490     \\
     		gLSTM+LDA+Gauss 				  & 323   & \textbf{10,43}   & 907   & 541     \\
     		gLSTM+CCA         				  & 347   & 7,96   & 775   &557   \\
-    		gLSTM+CCA+Gauss 				  & \textbf{383}   & 10,36   & \textbf{915}   & \textbf{602}    \\
+    		gLSTM+CCA+Gauss 				  & \textbf{383}   & 10,36   & \textbf{915}   & \textbf{602}    \\\hline
     	\end{tabular}
 	\caption[Vergelijking van de verzamelde statistieken LSTM na toevoeging LDA, CCA en Gaussnormalisatie]{Vergelijking van de verzamelde statistieken LSTM na toevoeging LDA, CCA en Gaussnormalisatie. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.}
     	\label{table:lstm_stats}
@@ -96,7 +101,23 @@ Deze sectie bekijkt de invloed van enkele parameters die hierboven vast stonden.
 
 \subsection{Aantal onderwerpen LDA}
 
-\subsection{Vectorgrootte CCA}
+\subsection{Vectorgrootte CCA} 
+Het CCA-algoritme laat toe om het aantal correlatiecomponenten te kiezen. De invloed van dit aantal op de afbeeldingsgeneratie is niet meteen duidelijk. Daarom beschouwen we net zoals Jia et al.~\cite{Fernando2015} eerst een grootte van 256, maar bekijken ook de resultaten voor een grootte van 128 en 512. De tijd nodig voor het trainen van het gLSTM-netwerk stijgt sterk met de gekozen gidsgrootte. Dit maakt een afweging tussen grootte en tijd om te trainen in de toekomst misschien noodzakelijk.
+
+Tabel~\ref{table:results_cca} toont de resultaten van de automatische evaluatiemethodes voor de drie types. Het is duidelijk dat CCA met een vectorgrootte van 256 het beste presteert op alle evaluatiemethodes. Dit model genereert eveneens meer unieke woorden en meer unieke zinnen van beide types.
+
+\begin{table}
+	\centering
+	\begin{tabular}{lllllll}
+		~              & CCA-grootte     & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+		gLSTM+CCA & 128        & 63,5   & 42,5 			& 27,9   & 18   & 15,5  \\
+		gLSTM+CCA & 256        & \textbf{63,7}   & \textbf{43,4}   & \textbf{29,2}   & \textbf{19,3}   & \textbf{15,8}  \\
+		gLSTM+CCA & 512        & 63,3   & 42,2   & 28,2   & 18,3 & 15,1  \\ \hline
+	
+	\end{tabular}
+	\label{table:results_cca}
+	\caption{Automatische evaluatieresultaten voor verschillend aantal correlatiecomponenten CCA}
+\end{table}
 
 \subsection{Effect verschillende normalisatiemethodes}
 
@@ -107,12 +128,12 @@ Deze sectie bekijkt de invloed van enkele parameters die hierboven vast stonden.
 	\centering
 	\begin{tabular}{llllll}
 		~                     & B1   & B2   & B3   & B4   & Meteor \\ \hline
-		Google NIC\cite{Google}            & 66.3 & 42.3 & 27.7 & 18.3 & ~      \\
-		gLSTM CCA + gauss\cite{Fernando2015}     & 64.6 & 44.6 & 30.5 & 20.6 & 17.91  \\
-		gLSTM CCA + polyn.\cite{Fernando2015}    & 59.8 & 41.3 & 29.3 & 19.2 & 18.58  \\
-		Xu attention\cite{Xu2015}         & 66.9 & 43.9 & 29.6 & 19.9 & 18.46  \\
-		Karpathy\cite{Karpathy2015}              & 57.3 & 36.9 & 24   & 15.7 & ~      \\
-		Attention+scenevector\cite{Jin2015} & \textbf{67}   & \textbf{47.5} & \textbf{33}   & \textbf{24.3} & \textbf{19.4}   \\
+		Google NIC\cite{Google}            & 66,3 & 42,3 & 27,7 & 18,3 & ~      \\
+		gLSTM CCA + gauss\cite{Fernando2015}     & 64,6 & 44,6 & 30,5 & 20,6 & 17,9  \\
+		gLSTM CCA + polyn.\cite{Fernando2015}    & 59,8 & 41,3 & 29,3 & 19,2 & 18,6  \\
+		Xu attention\cite{Xu2015}         & 66,9 & 43,9 & 29,6 & 19,9 & 18,5  \\
+		Karpathy\cite{Karpathy2015}              & 57,3 & 36,9 & 24   & 15,7 & ~      \\
+		Attention+scenevector\cite{Jin2015} & \textbf{67}   & \textbf{47,5} & \textbf{33}   & \textbf{24,3} & \textbf{19,4}   \\\hline
 	\end{tabular}
 	\label{table:results_literature}
 	\caption{Vergelijking van state-of-the-art resultaten met onze resultaten}
