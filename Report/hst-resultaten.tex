@@ -1,11 +1,103 @@
 \chapter{Resultaten} % (fold)
 \label{cha:resultaten}
-Dit hoofdstuk bevat een overzicht van de verschillende experimenten die zijn uitgevoerd. Eerst beschrijven we de resultaten van onze eigen implementaties. Daarna volgt een kritische vergelijking met de state-of-the art resultaten. Een laatste set van experimenten gaat over een vergelijking van CCA en LDA als gids voor de gLSTM implementatie. Meer specifiek focussen we op hoe deze twee presteren bij aanwezigheid van ruis in de trainingsdata.
+Dit hoofdstuk bevat de resultaten van de verschillende experimenten die zijn uitgevoerd. Eerst bespreken we de resultaten van de verschillende uitbreidingen met hun overeenkomstige referentiemodel. Daarna volgt een beschouwing van de invloed van verschillende parameters op de resultaten. Dan volgt een kritische vergelijking van de beste modellen met de state-of-the art resultaten. Een laatste set van experimenten gaat over een vergelijking van CCA en LDA als gids voor de gLSTM implementatie. Meer specifiek focust  de vergelijking op hoe deze twee presteren bij aanwezigheid van ruis in de trainingsdata.
 
-\section{Eigen implementaties} % (fold)
+\section{Vergelijking eigen toevoegingen met referenties}  % (fold)
 \label{sec:eigen_implementaties}
+Zoals vermeld in het vorige hoofdstuk defini\"eren we een referentiemodel getraind met de basisinstellingen voor zowel RNN als LSTM. Deze sectie bespreekt het effect van het toevoegen van LDA aan het RNN-netwerk, het effect van de twee gidsen op het LSTM-netwerk en het effect van normalisatie bij de beam-search op beide netwerken. Er volgt steeds eerst een bespreking van de automatische evaluatie gevolgd door een analyse van de verzamelde statistieken van elk model.
 
-% section eigen_implementaties (end)
+\subsection{RNN}
+Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Brevity Penalty. Hij voorziet ook geen informatie over Meteor of andere statistieken. Daarom voeren we eerst experimenten uit met de basisinstellingen voor RNN (\emph{ref-RNN}) zonder Brevity Penalty. Hierbij wordt op elk tijdstip de afbeelding aan het netwerk meegegeven. De resultaten van Karpathy krijgen niet op elke tijdstap de afbeelding mee. Hij rapporteert dat dit nog beter presteert. Wanneer de evaluatie toch met Brevity Penalty gebeurt, toont tabel~\ref{table:karpathy_met_bp} dat de referentie toch zeer sterk overeenkomt met de resultaten van de paper van Karpathy. 
+
+\begin{table}
+	\begin{tabular}{lllllll}
+		& Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+		RNN (Karpathy~\cite{Karpathy2015})    & 57.3   & 36.9   & 24     & 15.7   & ~           \\    
+		ref-RNN + BP     & 55.17   & 36.64   & 23.89   & 15.13   & 14.29          \\
+		ref-RNN          & 64.9  & 43.1     & 28.1   & 17.8   & 14.29          \\
+	\end{tabular}
+
+	\caption{Resultaten Karpathy~\cite{Karpathy2015} in vergelijking met onze referentieresultaten.}
+	\label{table:karpathy_met_bp}
+\end{table}
+
+Tabel~\ref{table:rnn_met_lda} toont het effect van het toevoegen van LDA aan de basisimplementatie van RNN. Alle gebruikte metrieken vertonen een stijging. LDA lijkt er dus in te slagen om de semantische drift tegen te gaan.
+Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het meest overeenkomen met menselijke evaluatie.
+
+\begin{table}
+	\begin{tabular}{lllllll}
+		& Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+		ref-RNN        & 64.9   & 43.1   & 28.1   & 17.8   & 14.29          \\
+		RNN + Gauss       & 62.4   & 42     & 28.2   & 18.6   & 16.57          \\
+		RNN + LDA         & \textbf{65.4}   & \textbf{44}     & \textbf{29.1}   & 19     & 14.38          \\
+		RNN + LDA + Gauss & 62.7   & 42.6   & 28.8   & \textbf{19.5}   & \textbf{16.62}          \\ \hline
+	\end{tabular}
+	\caption{Vergelijking van de resultaten RNN na toevoeging LDA en Gaussnormalisatie}	
+	\label{table:rnn_met_lda}
+\end{table}
+
+Tabel~\ref{table:rnn_lda_stats} toont de verzamelde statistieken over de gegenereerde zinnen van dezelfde systemen. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.
+Algemeen valt op dat RNN op een testset van duizend afbeeldingen en een gemiddelde zinslengte van 7 tot 10 woorden slechts een heel beperkt vocabularium leert.
+Het toevoegen van LDA vermindert het aantal unieke woorden, maar verhoogt de gemiddelde zinslengte wel lichtjes. Het aantal unieke zinnen van beide types wijzigt niet sterk, al genereert het iets meer vooraf ongeziene zinnen. Het toevoegen van LDA lijkt de creativiteit van de gegenereerde zinnen dus licht te doen dalen.
+Normaliseren met de Gaussiaanse functie bereikt zijn doel. De lengte van de zinnen stijgt met gemiddeld 3 woorden. Toch stijgt het aantal unieke woorden niet mee. Het aantal zinnen dat niet voorkomt in de trainingsset stijgt naar 93\%. Toch is het aantal unieke zinnen van het tweede type niet veel hoger. Het systeem met Gauss-normalisatie genereert met andere woorden veel dezelfde ongeziene zinnen.
+
+\begin{table}
+	\begin{tabular}{lllll}
+		~                 & Unieke woorden & Gem. zinslengte & Uniek1 & Uniek2 \\ \hline
+		ref-RNN           & 233            & 7,14           & 785    & 392    \\
+		RNN + Gauss       & \textbf{239}   & 10,14          & \textbf{931}    & \textbf{439}    \\
+		RNN + LDA         & 189            & 7,59           & 823    & 387    \\
+		RNN + LDA + Gauss & 192            & \textbf{10,33}          & 930    & 384    \\
+	\end{tabular}
+	\caption[Vergelijking van de verzamelde statistieken RNN na toevoeging LDA en Gaussnormalisatie]{Vergelijking van de verzamelde statistieken RNN na toevoeging LDA en Gaussnormalisatie. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.}
+	\label{table:rnn_lda_stats}
+\end{table}
+
+\subsection{LSTM}
+Rechtstreeks vergelijken met de LSTM-implementatie van Vinyals~\cite{Google} is onmogelijk. Hij gebruikt niet alleen een ander CNN, maar gebruikt bovendien ook ensemble-methodes wat te veel tijd kost voor onze implementatie. Daarom bepalen we ook hier met de standaardinstellingen een referentiemodel (\emph{ref-LSTM}). Tabel~\ref{table:lstm_results} vergelijkt de resultaten van de originele paper, het referentiemodel en de gLSTM's. De experimenten bevatten resultaten voor LDA met 120 onderwerpen, CCA met een multimodale voorstelling van grootte 256 en opnieuw het effect van Gauss-normalisatie. Ook hier toont de tabel dat de referentiewaarden ondanks een eenvoudiger model toch dichtbij de originele resultaten aanleunen.
+
+Zowel het gebruik van LDA als CCA als gids in de gLSTM verbetert de resultaten op elke metriek ten opzichte van de referentie. Dit effect is het grootste voor CCA op de Meteor-score na. Voor zowel het referentiemodel als gLSTM met LDA zorgt Gauss-normalisatie voor een aanzienlijke verbetering voor Bleu-3, Bleu-4 en Meteor. Deze scores komen bovendien het meest overeen met menselijke evaluatie. Bij gLSTM met CCA doet er zich een vreemd fenomeen voor en verslechtert de normalisatie de Bleu-scores, maar verbetert ze de Meteor-score. 
+Het effect van LDA met Gauss en CCA ligt dicht bij elkaar. Toch scoort LDA met Gauss op de scores die meer correleren met menselijke evaluatie nipt het beste.
+    \begin{table}
+    	\begin{tabular}{llllll}
+    		~                   & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+    		LSTM (Vinyals~\cite{Google})      & \textbf{66.3}   & 42.3   & 27.7   & 18.3   & ~     \\ 
+    		ref-LSTM         & 62.1   & 41.4   & 27.1   & 17.6   & 15.08  \\
+    		LSTM+Gauss        & 61.2   & 41.1   & 27.3   & 18.2   & 16.92  \\
+    		gLSTM+LDA         & 64.4   & 43.2   & 28.1   & 17.8   & 15.95  \\
+    		gLSTM+LDA+Gauss & 62.7   & 42.5   & 28.8   & \textbf{19.4}   & \textbf{17.4}  \\
+	        gLSTM+CCA         & 63.7   & \textbf{43.4}   & \textbf{29.2}   &19.3   & 15.76  \\
+	        gLSTM+CCA+Gauss & 62.1   & 41.9   & 28.2   & 18.7   & 17.18  \\
+    	\end{tabular}
+   	\caption{Vergelijking van de resultaten LSTM met twee gidsen en met Gaussnormalisatie}	
+   	\label{table:lstm_results}
+    \end{table}
+
+Tabel~\ref{table:lstm_stats} toont de verzamelde statistieken over de gegenereerde zinnen van de vorige systemen. In vergelijking met het referentie RNN leert het LSTM-netwerk een groter vocabularium (ongeveer 40\% groter). Ook de zinnen zijn gemiddeld iets langer. Het aantal unieke zinnen van het eerste type daalt licht, maar het aantal van het tweede type is gelijkaardig.
+Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengte stijgt gevoelig en ook het aantal unieke zinnen van type 1 stijgt fel. Het aantal volledig unieke zinnen (\emph{Uniek2}) van beide gLSTM's stijgt sterk door het toevoegen van Gauss-normalisatie tot 60\% voor CCA. CCA als gids leert ook meer unieke woorden dan LDA en lijkt dus tot iets creatievere zinnen te leiden.
+    \begin{table}
+    	\begin{tabular}{llllll}
+    		~                   & Unieke woorden & Gem. zinslengte & Uniek1 & Uniek2 \\ \hline
+    		ref-LSTM         				  & 327   & 7.89   & 723   & 399  \\
+    		LSTM+Gauss        				  & 351   & 10,36   & 905   & 437  \\
+    		gLSTM+LDA         				  & 296   & 8,33   & 775   & 490     \\
+    		gLSTM+LDA+Gauss 				  & 323   & \textbf{10,43}   & 907   & 541     \\
+    		gLSTM+CCA         				  & 347   & 7,96   & 775   &557   \\
+    		gLSTM+CCA+Gauss 				  & \textbf{383}   & 10,36   & \textbf{915}   & \textbf{602}    \\
+    	\end{tabular}
+	\caption[Vergelijking van de verzamelde statistieken LSTM na toevoeging LDA, CCA en Gaussnormalisatie]{Vergelijking van de verzamelde statistieken LSTM na toevoeging LDA, CCA en Gaussnormalisatie. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.}
+    	\label{table:lstm_stats}
+    \end{table}
+    
+\section{Invloed van parameters}
+\label{sec:invloed-parameters}
+\subsection{Beam-lengte}
+
+\subsection{Aantal onderwerpen LDA}
+
+\subsection{Vectorgrootte CCA}
+
+\subsection{Effect verschillende normalisatiemethodes}
 
 \section{Vergelijking met literatuur} % (fold)
 \label{sec:vergelijking_met_literatuur}
