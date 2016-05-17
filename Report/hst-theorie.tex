@@ -11,20 +11,20 @@ Neuronen zijn de primitieve eenheden van het menselijke zenuwstelsel. Ze staan i
 
 Elk artificieel neuraal netwerk heeft een trainingsfase nodig waarin het de juiste gewichten voor alle verbindingen leert. Deze gewichten simuleren de gevoeligheid voor potentiaal van een inkomende verbinding. Na de training kan het netwerk ongeziene input omvormen tot de juiste output.
 
-Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (feedforward), dat de basis vormt voor een aantal gebruikte varianten. Daarna volgt een toelichting van enkele meer complexe netwerken: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
+Deze sectie geeft een inleiding tot de gebruikte neurale netwerken. Een eerste deel handelt over het eenvoudigste type neuraal netwerk (\emph{feedforward}), dat de basis vormt voor een aantal gebruikte varianten. Daarna volgt een toelichting van enkele meer complexe netwerken: recurrente en convolutionele neurale netwerken, alsook Long Short Term Memory netwerken.
 
 \subsection{Feedforward neurale netwerken}
 \subsubsection{Perceptron} % (fold)
 \label{par:perceptron}
 
-Om een feedforward neuraal netwerk te begrijpen is het concept perceptron nodig. Dit is een netwerk bestaande uit \'e\'en of meer neuronen, met \'e\'en of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd door een transferfunctie $f$ (formule \eqref{formule:neuron}). Typische voorbeelden van transferfuncties zijn de logistische functie en de hyperbolische tangensfunctie.
+Om een feedforward neuraal netwerk te begrijpen is het concept \emph{perceptron} nodig. Dit is een netwerk bestaande uit \'e\'en of meer neuronen, met \'e\'en of meerdere inputs ($x_i$). De output $y$ van een neuron is een gewogen som van alle inputs met gewichten $w_i$, al dan niet gewijzigd door een transferfunctie $f$ (formule~\eqref{formule:neuron}). Typische voorbeelden van transferfuncties zijn de logistische functie en de hyperbolische tangensfunctie.
 
 \begin{equation}
     y = f(\sum\limits_{i=1}^{n}w_i x_i)
     \label{formule:neuron}
 \end{equation}
 
-Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij hebben alle verbindingen tussen in- en outputs een eigen gewicht en kan elke output een verschillende transferfunctie hebben. Figuur \ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk verschillende gewichten en een verschillende transferfunctie $f_i$ gebruiken.
+Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij hebben alle verbindingen tussen in- en outputs een eigen gewicht en kan elke output een verschillende transferfunctie hebben. Figuur~\ref{fig:perceptron} toont een perceptron met vijf inputs en drie outputs. Deze architectuur komt exact overeen met drie aparte neuronen die allemaal dezelfde inputs krijgen, maar elk verschillende gewichten en een verschillende transferfunctie $f_i$ gebruiken.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -61,7 +61,8 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 
 \subsubsection{Feedforward netwerk}
 \label{par:concept}
-Een feedforward neuraal netwerk is \'e\'en van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen van neuronen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur \ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Dit gewicht is een natuurlijk getal. Het is ook mogelijk om gewichten te hebben met waarde nul, waardoor de volgende laag niet volledig verbonden is. Het is voor elke knoop in het netwerk bovendien mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Het netwerk kan ook een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output\cite{Bishop:1995:NNP:525960}.
+Een feedforward neuraal netwerk is \'e\'en van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen van neuronen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur~\ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Dit gewicht is een natuurlijk getal. Het is ook mogelijk om gewichten te hebben met waarde nul, waardoor de volgende laag niet volledig verbonden is. Het is voor elke knoop in het netwerk bovendien mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Het netwerk kan ook een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output~\cite{Bishop:1995:NNP:525960}. 
+In deze masterproef leert een eenvoudig feedforward netwerk afbeeldingsrepresentaties te projecteren op onderwerpsverdelingen.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -133,7 +134,7 @@ waarbij $\mathbf{W}$ en $\mathbf{W'}$ de gewichten van de verbindingen tussen re
 
 Het probleem bij het leren van ${W}$ en ${W'}$ is dat de correcte verborgen vector $\mathbf{h}$ niet gekend is. De training van het netwerk kan dus enkel op basis van de input, de  berekende output en de verwachte output gebeuren.
 
-Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van {W'} en \myvector{\hat{h}}. {W'} wordt gewijzigd met behulp van gradient descent, veronderstellende dat \myvector{\hat{h}} correct is. Gradient descent is een eenvoudig optimalisatiealgoritme dat kan dienen om het lokale minimum van een functie te vinden. De minimalisatie gebeurt op een ``gulzige'' manier, door elke stap wijzigingen aan te brengen in de richting van de steilste afdaling. Deze richting komt overeen met de eerste afgeleide van de transferfunctie, berekend in alle variabelen van de output van het netwerk:
+Een eerste stap is het verkleinen van het verschil $\mathbf{\hat{y}} - \mathbf{y}$ door het aanpassen van $W'$ en \myvector{\hat{h}}. {W'} wordt gewijzigd met behulp van \emph{gradient descent}, veronderstellende dat \myvector{\hat{h}} correct is. Gradient descent is een eenvoudig optimalisatiealgoritme dat kan dienen om het lokale minimum van een functie te vinden. De minimalisatie gebeurt op een ``gulzige'' manier, door elke stap wijzigingen aan te brengen in de richting van de steilste afdaling. Deze richting komt overeen met de eerste afgeleide van de transferfunctie, berekend in alle variabelen van de output van het netwerk:
 
 \begin{equation}
 df_i = \frac{\partial}{\partial\hat{h_i}'}f(\hat{h_i}')
@@ -147,14 +148,14 @@ De formule om de gewichten te updaten ziet er in het algemene geval uit als volg
 \begin{equation}
   w'_{ji} = w'_{ji} + \eta(y_j-\hat{y}_j)df_i\hat{h}_i
 \end{equation}
-Hierbij stelt $\eta$ de leersnelheid (learning rate) voor. Deze leersnelheid bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
+Hierbij stelt $\eta$ de leersnelheid (\emph{learning rate}) voor. Deze leersnelheid bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
 Indien het netwerk met een logistische transferfunctie werkt, geeft dit het volgende resultaat:
 \begin{equation}
     w'_{ji} = w'_{ji} + \eta(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)\hat{h}_i
 \end{equation}
 Bij elke stap zorgt de gradi\"ent ervoor dat na aanpassing van de gewichten, bij dezelfde input, de output dichter bij het gewenste resultaat zal liggen.
 
-Vervolgens zorgt gradient descent voor een aanpassing van \myvector{\hat{h}}. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus wijzigt het algoritme {W} op de manier die de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}} weergeeft:
+Vervolgens zorgt gradient descent voor een aanpassing van \myvector{\hat{h}}. Er kunnen echter geen wijzigingen worden aangebracht in \myvector{\hat{h}} zelf, dus wijzigt het algoritme ${W}$ op de manier die de fout op \myvector{\hat{h}} het meeste verkleint. Gradient descent leidt tot volgende \myvector{\Delta h}, die de gewenste verandering van \myvector{\hat{h}} weergeeft:
 \begin{equation}
     \Delta h_i = \sum\limits_{j}(y_j-\hat{y}_j)\hat{y}_j(1-\hat{y}_j)w'_{ji}
 \end{equation}
@@ -162,7 +163,7 @@ Op basis van \myvector{\Delta h} en \myvector{\hat{h}} wijzigt het algoritme {W}
 \begin{equation}
     w_{ji} = w_{ji} + \eta(\Delta h_j)\hat{h}_j(1-\hat{h}_j)x_i
 \end{equation}
-Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in {W} en deels door die in {W'}\cite{Blockeel}.
+Op deze manier verkleint de fout op de output \myvector{\hat{y}-y}, deels door de verandering in ${W}$ en deels door die in ${W'}$~\cite{Blockeel}.
 
 Herhaalde toepassing van deze techniek voor elk paar van gekende inputs en outputs zorgt dat het netwerk op termijn de juiste gewichten leert. Het is ook mogelijk om elke input meerdere keren te gebruiken om zo tot een beter resultaat te komen. Om complexere relaties tussen in en output te leren is deze methode zeer eenvoudig uit te breiden naar netwerken met een arbitrair aantal verborgen lagen. Hierbij propageert de fout van elke laag door naar de gewichten van de vorige laag, door gebruik te maken van dezelfde concepten als hierboven beschreven. Terugpropagatie maakt het ook mogelijk om netwerken met complexere structuren te leren, zoals netwerken met terugkoppelingen (RNN) of convolutionele lagen (CNN).
 % subsubsection training (end)
@@ -176,7 +177,7 @@ sm(\textbf{o})_i = \frac{e^{o_i}}{\sum^{n}_{k=1}{e^{o_k}}}
 \label{formula-softmax}
 \end{equation}
 
-Het gebruik van de softmaxfunctie bij training met backpropagatie is zeer eenvoudig aangezien de afgeleide zeer simpel te berekenen is. De afgeleide van de softmaxfunctie is te zien in formule \eqref{softmax_derivative}. Hierbij is $\delta_{ik}$ de Kroneckerdelta, die gelijk is aan $1$ als $i = k$ en anders gelijk is aan $0$.
+Het gebruik van de softmaxfunctie bij training met terugpropagatie is zeer eenvoudig aangezien de afgeleide zeer simpel te berekenen is. De afgeleide van de softmaxfunctie is te zien in formule~\eqref{softmax_derivative}. Hierbij is $\delta_{ik}$ de Kroneckerdelta, die gelijk is aan $1$ als $i = k$ en anders gelijk is aan $0$.
 
 \begin{equation}
     \frac{\partial}{\partial o_k}sm(\textbf{o})_i =  sm(\textbf{o})_i(\delta_{ik} - sm(\textbf{o})_k)
@@ -188,30 +189,30 @@ Bij het gebruik van negatieve logwaarschijnlijkheid als foutenfunctie ($E$) komt
 \begin{equation}
     \frac{\partial E}{\partial o_i} = \sum_{k=1}^n{y_i}sm(\textbf{o})_i - y_i
 \end{equation}
-met $\textbf{y}$ de correcte output. Als de outputvector een one-hot codering heeft valt de som in deze formule weg en is de afgeleide in elke component gelijk aan het verschil van de voorspelde en de correcte output\cite{Bishop:1995:NNP:525960}. 
+met $\textbf{y}$ de correcte output. Als de outputvector een one-hot codering heeft valt de som in deze formule weg en is de afgeleide in elke component gelijk aan het verschil van de voorspelde en de correcte output~\cite{Bishop:1995:NNP:525960}. 
 
-In deze thesis komt een softmaxlaag voor als laatste laag bij de gebruikte CNN \mbox{(sectie \ref{sec:usedcnn})}, als laatste laag in het netwerk bij de voorspelling van LDA-topicverde\-lingen (sectie \ref{sec:LDAprediction}) en als laatste laag in de gebruikte taalnetwerken (sectie \ref{sec:rnn_methodology} en \ref{sec:lstm}).
+In deze thesis komt een softmaxlaag voor als laatste laag bij de gebruikte CNN \mbox{(sectie \ref{sec:usedcnn})}, als laatste laag in het netwerk bij de voorspelling van LDA-topicverde\-lingen (sectie~\ref{sec:LDAprediction}) en als laatste laag in de gebruikte taalnetwerken (sectie~\ref{sec:rnn_methodology} en~\ref{sec:lstm}).
 
 % CNN
 \subsection{Convolutionele neurale netwerken}
 \label{sec:CNN}
 \subsubsection{Concept}
-Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren\cite{LeCun2010}. Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken\cite{Ciresan2012,Girshick2014,Zhou2015}.
+Convolutionele Neurale Netwerken (ConvNets of CNN's) zijn biologisch ge\" inspireerde trainbare architecturen die invariante afbeeldingskarakteristieken kunnen leren~\cite{LeCun2010}. Ze bieden een hi\"erarchische representatie van een afbeelding en zijn van nut in tal van visuele taken~\cite{Ciresan2012,Girshick2014,Zhou2015}.
 
-Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output van een verborgen laag is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filter bank laag, een niet-lineaire laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
+Een CNN is een \emph{deep learning} architectuur bestaande uit verschillende niveaus. De input en output van elk niveau is een verzameling van arrays die men een \emph{feature map} noemt. Op elke output van een verborgen laag is de feature map een representatie van een bepaald kenmerk van de afbeelding. Elk niveau bestaat standaard uit drie lagen: een filterbanklaag, een niet-lineaire laag en een feature pooling laag. Na een aantal van deze niveaus is er nog een classificatielaag.
 
-Eerst is er een filterbanklaag die kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal kernelfuncties. Deze kernels zijn trainbare filters, die elk een verschillend effect hebben op de afbeelding. Ze kunnen de afbeelding vervormen, vervagen, randen van objecten detecteren, bepaalde kleuren verwijderen, \ldots Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur \ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
+Eerst is er een filterbanklaag die kenmerken kan detecteren in de input. In deze filterlaag gebeurt de eigenlijke convolutie. Het netwerk berekent de convolutie van de input \emph{feature map} met een aantal \emph{kernelfuncties}. Deze kernels zijn trainbare filters, die elk een verschillend effect hebben op de afbeelding. Ze kunnen de afbeelding vervormen, vervagen, randen van objecten detecteren, bepaalde kleuren verwijderen, \ldots Elke filterlaag detecteert andere kenmerken op alle mogelijke locaties van de input. Figuur~\ref{fig:cnnfilters} toont een voorbeeld van geleerde kernelfuncties na afloop van het trainingsproces. De bovenste drie rijen filters focussen minder op kleur, terwijl de onderste drie rijen dat wel doen.
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=.7\textwidth]{Images/cnnfilters.png}
-    \caption{96 convolutionele filters\cite{Krizhevsky2012a}}
+    \caption{96 convolutionele filters~\cite{Krizhevsky2012a}}
     \label{fig:cnnfilters}
 \end{figure}
 
-Na de filters volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een sigmo\"ide of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een ``rectified sigmoid'' bevatten, al dan niet gecombineerd met een normalisatie.
+Na de filters volgt een niet-lineaire laag. Deze kan een eenvoudige functie bevatten zoals een \emph{sigmo\"ide} of de $\tanh$ functie, maar kan ook veel complexer zijn en bijvoorbeeld een \emph{rectified sigmoid} bevatten, al dan niet gecombineerd met een normalisatie.
 
-De laatste laag in elk niveau is een feature pooling laag die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde. De maxima (of gemiddelde waarden) van alle regio's verlagen de dimensie van de input. Figuur \ref{fig:maxpool} illustreert het principe van max-pooling met een filtergrootte van 2x2 en een stapgrootte van 2. 
+De laatste laag in elk niveau is een \emph{feature-pooling-laag} die de dimensionaliteit van de output reduceert door regio's van de output te vervangen door hun gemiddelde of maximumwaarde. De maxima (of gemiddelde waarden) van alle regio's verlagen de dimensie van de input. Figuur~\ref{fig:maxpool} illustreert het principe van \emph{max-pooling} met een filtergrootte van 2x2 en een stapgrootte van 2. 
 
 \begin{figure}[tb]
     \centering
@@ -228,25 +229,25 @@ In vergelijking met gewone feedforward netwerken zijn CNN's in staat om veel sne
 Bovendien is een CNN translatie-invariant omdat het op elk niveau gebruik maakt van rechthoekige regio's uit de vorige laag van het netwerk. De verschillende regio's overlappen, wat leidt tot deze zeer interessante eigenschap.
 
 \subsubsection[]{Concrete implementaties}
-E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een onderzoek van Krizhevsky et al.\cite{Krizhevsky2012a} dat CNN's gebruikt voor het oplossen van de ImageNet challenge\cite{Russakovsky2014}.
+E\'en van de meest succesvolle toepassingen van CNN's is objectdetectie. Deze vooruitgang was vooral te wijten aan een onderzoek van Krizhevsky et al.~\cite{Krizhevsky2012a} dat CNN's gebruikt voor het oplossen van de ImageNet challenge~\cite{Russakovsky2014}.
 Dit is een competitie over het classificeren van afbeeldingen in een aantal voorgedefini\"eerde categorie\"en. 
 
-De gebruikte architectuur bestaat uit acht lagen waarvan vijf convolutioneel en drie volledig verbonden. Krizhevsky et al.\cite{Krizhevsky2012a} gebruiken bovendien verschillende technieken om overfitten te vermijden. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. Figuur \ref{fig:AlexNet} toont de architectuur en  is een variant op de standaardarchitectuur zoals hierboven beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die zowel op de ImageNet challenge als op recentere wedstrijden nog betere resultaten bekomen.
+De gebruikte architectuur bestaat uit acht lagen waarvan vijf convolutioneel en drie volledig verbonden. Krizhevsky et al.~\cite{Krizhevsky2012a} gebruiken bovendien verschillende technieken om \emph{overfitten} te vermijden. Bij overfitten is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Als classificatielaag gebruiken ze softmax zodat het netwerk een kansverdeling over de verschillende categori\"een leert. Figuur~\ref{fig:AlexNet} toont de architectuur en  is een variant op de standaardarchitectuur zoals hierboven beschreven. Dit netwerk was het best presterende netwerk voor de wedstrijd in 2012. Ondertussen zijn nog diepere architecturen voorgesteld die zowel op de \emph{ImageNet challenge} als op recentere wedstrijden nog betere resultaten bekomen.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/cnn.PNG}
-	\caption{Convolutioneel Neuraal Netwerk gebruikt voor classificatie van afbeeldingen\cite{Krizhevsky2012a}}
+	\caption{Convolutioneel Neuraal Netwerk gebruikt voor classificatie van afbeeldingen~\cite{Krizhevsky2012a}}
 	\label{fig:AlexNet}
 \end{figure}
 
-Het recentere netwerk (VGGNet\cite{Arge2015}) bestaat uit meer lagen en is te gebruiken met behulp van publieke implementaties in Caffe\cite{Jia2014}.
-Figuur \ref{fig:alexvgg} toont een vergelijking tussen AlexNet en een versie van VGGNet met 13 gewichtslagen. De feature maps van verschillende outputlagen van dit netwerk dienen ook als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de voorlaatste laag voor de softmaxlaag worden beschouwd als een representatievector voor de hele afbeelding. De outputs van de andere lagen stellen een aantal afbeeldingskenmerken voor op een niveau lager dan de volledige afbeelding.
+Het recentere netwerk (VGGNet~\cite{Arge2015}) bestaat uit meer lagen en is te gebruiken met behulp van publieke implementaties in Caffe~\cite{Jia2014}.
+Figuur~\ref{fig:alexvgg} toont een vergelijking tussen AlexNet en een versie van VGGNet met 13 gewichtslagen. De feature maps van verschillende outputlagen van dit netwerk dienen ook als input voor andere taken dan de ImageNet Challenge. Zo kan de output van de voorlaatste laag voor de softmaxlaag worden beschouwd als een representatievector voor de hele afbeelding. Ook in deze masterproef dient deze output als afbeeldingsrepresentatie. De outputs van de andere lagen stellen een aantal afbeeldingskenmerken voor op een niveau lager dan de volledige afbeelding.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/alex_vgg.eps}
-	\caption{Vergelijking van de architectuur van AlexNet en VGGNet}
+	\caption{Vergelijking van de architectuur van AlexNet en VGGNet~\cite{Kataoka}}
 	\label{fig:alexvgg}
 \end{figure}
 
@@ -254,33 +255,33 @@ Figuur \ref{fig:alexvgg} toont een vergelijking tussen AlexNet en een versie van
 \subsection{Recurrente Neurale Netwerken}
 \subsubsection{Concept}
 \label{sec:rnnconcept}
-Recurrente neurale netwerken vormen een uitbreiding op standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van uitvoer van de vorige invoer naar de verborgen lagen. Figuur \ref{fig:rnn} illustreert deze terugkoppeling met behulp van een ontrolling over verschillende tijdstippen. $U,V$ en $W$ stellen gewichtsmatrices voor. Het ontrollen van het netwerk komt neer op het uitschrijven van het netwerk over verschillende tijdstippen. De pijlen van links naar rechts op de afbeelding komen overeen met de terugkoppeling van de output uit de vorige stap.
+Recurrente neurale netwerken vormen een uitbreiding op standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van uitvoer van de vorige invoer naar de verborgen lagen. Figuur~\ref{fig:rnn} illustreert deze terugkoppeling met behulp van een ontrolling over verschillende tijdstippen. $U,V$ en $W$ stellen gewichtsmatrices voor. Het ontrollen van het netwerk komt neer op het uitschrijven van het netwerk over verschillende tijdstippen. De pijlen van links naar rechts op de afbeelding komen overeen met de terugkoppeling van de output uit de vorige stap.
 
-De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden, waardoor het mogelijk is om tijdsgerelateerde informatie te coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg dienen als taalmodel\cite{Mikolov2010}.
+De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden, waardoor het mogelijk is om tijdsgerelateerde informatie te coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg dienen als taalmodel~\cite{Mikolov2010}. In deze thesis zorgt een recurrent neuraal netwerk steeds voor de generatie van de zinnen.
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/rnn.PNG}
-    \caption{Ontrolling van een recurrent neuraal netwerk\cite{RNNTutorial}}
+    \caption{Ontrolling van een recurrent neuraal netwerk~\cite{RNNTutorial}}
     \label{fig:rnn}
 \end{figure}
 
-Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmaxlaag een kansverdeling berekenen voor het volgende woord. Met behulp van beam-search of het samplen van deze kansverdeling, is het netwerk in staat om zinnen te genereren. Het beam-search algoritme is een zoekalgoritme dat tijdens het zoeken net zoals breadth-first per niveau elke knoop gaat uitklappen. Het verschil met breadth-first is dat het enkel de hoogst-scorende expansies bijhoudt. Dit algoritme vindt niet altijd het optimale resultaat, maar zorgt wel voor een beperkt geheugengebruik.
+Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de eerder waargenomen woorden kan een softmaxlaag een kansverdeling berekenen voor het volgende woord. Met behulp van \emph{beam-search} of het samplen van deze kansverdeling, is het netwerk in staat om zinnen te genereren. Het beam-search-algoritme is een zoekalgoritme dat tijdens het zoeken net zoals \emph{breadth-first} per niveau elke knoop gaat uitklappen. Het verschil met \emph{breadth-first} is dat het enkel de hoogst-scorende expansies bijhoudt. Dit algoritme vindt niet altijd het optimale resultaat, maar zorgt wel voor een beperkt geheugengebruik.
 
-Tijdens de trainingsfase bestaat de input van het netwerk uit woorden, voorgesteld als een vector. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen willekeurig zijn, of het kunnen vooraf getrainde word embeddings zijn zoals bijvoorbeeld \texttt{word2vec}\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
+Tijdens de trainingsfase bestaat de input van het netwerk uit woorden, voorgesteld als een vector. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen willekeurig zijn, of het kunnen vooraf getrainde \emph{word embeddings} zijn zoals bijvoorbeeld \texttt{word2vec}~\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
 
 \subsubsection{Problemen en oplossingen met RNN}
 
-Een frequent probleem bij het trainen van recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op ``overfitting''. Hierbij is het uiteindelijke netwerk te hard afgestemd op de trainingsdata, waardoor de precisie op de testdata achteruit gaat. Om dit probleem aan te pakken biedt Srivastava\cite{Srivastava2013} een oplossing. Hij introduceert ``dropout'' om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Deze kans is typisch kleiner voor inputwaarden dan voor verborgen waarden.
+Een frequent probleem bij het trainen van recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op overfitting. Om dit probleem aan te pakken biedt Srivastava~\cite{Srivastava2014} een oplossing. Hij introduceert \emph{dropout} om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Deze kans is typisch kleiner voor inputwaarden dan voor verborgen waarden.
 
-Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van ``Adagrad''\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule \eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\eta$ is de leersnelheid en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van ``Adagrad'' is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
+Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van \emph{Adagrad}~\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule~\eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor zullen parameters waarbij de gradi\"ent zeer groot is een lagere effectieve leersnelheid hebben dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\eta$ is de leersnelheid en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van Adagrad is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
  
 \begin{equation}
     w_t = w_{t-1} - \eta \frac{dw}{\sqrt{dw^2} + \epsilon}
     \label{formule:adagrad}
 \end{equation}
 
-Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen voorbeelden zijn met gradi\"ent $0.1$ voor een bepaalde parameter, en het tiende voorbeeld heeft waarde $-0.9$. Dan kan ``rmsprop''\cite{RMSprop} een oplossing bieden. Deze techniek maakt gebruik van een bewegend gemiddelde over alle voorbije gradi\"enten om ervoor te zorgen dat grote schommelingen in de gradi\"ent slechts een kleine verandering in de gewichten aanbrengen. Formules \eqref{rmsprop:start}-\eqref{formule:rmsprop} tonen hoe dit exact in zijn werk gaat. $\rho$ is de afvlakkingsparameter voor het bewegend gemiddelde, $\eta$ is de leersnelheid, $a_t$ is de gemiddelde gradi\"ent op tijdstip $t$, $dw$ is de gradi\"ent van de gewichtsvector en $w$ is de gewichtsvector. Ook hier vermijdt $\epsilon$ een mogelijke deling door nul.
+Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen voorbeelden zijn met gradi\"ent $0.1$ voor een bepaalde parameter, en het tiende voorbeeld heeft waarde $-0.9$. Dan kan \emph{rmsprop}~\cite{RMSprop} een oplossing bieden. Deze techniek maakt gebruik van een bewegend gemiddelde over alle voorbije gradi\"enten om ervoor te zorgen dat grote schommelingen in de gradi\"ent slechts een kleine verandering in de gewichten aanbrengen. Formules~\eqref{rmsprop:start}-\eqref{formule:rmsprop} tonen hoe dit exact in zijn werk gaat. $\rho$ is de afvlakkingsparameter voor het bewegend gemiddelde, $\eta$ is de leersnelheid, $a_t$ is de gemiddelde gradi\"ent op tijdstip $t$, $dw$ is de gradi\"ent van de gewichtsvector en $w$ is de gewichtsvector. Ook hier vermijdt $\epsilon$ een mogelijke deling door nul.
 
 \begin{eqnarray}
 \vspace{-3mm}
@@ -291,7 +292,7 @@ Soms biedt deze methode onvoldoende verbetering, bijvoorbeeld wanneer er negen v
     \vspace{-3mm}
 \end{eqnarray}
 
-Een ander probleem met ``Adagrad'' is dat de effectieve leersnelheid naar nul convergeert naarmate de training langer duurt. ``Adadelta''\cite{Zeiler2012} biedt hiervoor een oplossing door, net als ``rmsprop'' gebruik te maken van een bewegend gemiddelde, zowel voor gradi\"ent als voor de gewichten. Door het gebruik van dit tweede gemiddelde is het niet nodig om expliciet een leersnelheid te defini\"eren. Formules \eqref{adadelta:start}-\eqref{formule:adadelta} tonen de exacte berekening van gewichtsupdates bij het gebruik van Adadelta. $a_t$, $\rho$, $\epsilon$, $w$ en $dw$ zijn hetzelfde gedefini\"eerd als bij Adagrad. $a_{w,t}$ is het bewegende gemiddelde van de gewichtsupdates op tijdstip $t$ en $\Delta w_t$ is de aanpassing die gebeurt aan de gewichten op tijdstip $t$.
+Een ander probleem met Adagrad is dat de effectieve leersnelheid naar nul convergeert naarmate de training langer duurt. \emph{Adadelta)}~\cite{Zeiler2012} biedt hiervoor een oplossing door, net als \emph{rmsprop} gebruik te maken van een bewegend gemiddelde, zowel voor gradi\"ent als voor de gewichten. Door het gebruik van dit tweede gemiddelde is het niet nodig om expliciet een leersnelheid te defini\"eren. Formules~\eqref{adadelta:start}-\eqref{formule:adadelta} tonen de exacte berekening van gewichtsupdates bij het gebruik van Adadelta. $a_t$, $\rho$, $\epsilon$, $w$ en $dw$ zijn hetzelfde gedefini\"eerd als bij Adagrad. $a_{w,t}$ is het bewegende gemiddelde van de gewichtsupdates op tijdstip $t$ en $\Delta w_t$ is de aanpassing die gebeurt aan de gewichten op tijdstip $t$.
 
 \begin{eqnarray}
 \vspace{-3mm}
@@ -307,30 +308,30 @@ Een ander probleem met ``Adagrad'' is dat de effectieve leersnelheid naar nul co
 
 Twee andere vaak voorkomende problemen bij het trainen van recurrente neurale netwerken zijn exploderende en uitdovende gradi\"enten, waarbij de gradi\"ent van de fout tijdens de training enorm toeneemt, respectievelijk afneemt. Hiervoor zijn een aantal mogelijke oplossingen.
 
-``Gradient clipping'' vormt een eerste oplossing zoals voorgesteld door Pascanu et al.\cite{Pascanu2012}. Deze methode verkort de gradi\"entvector zodra de lengte van die vector boven een bepaalde drempel $t$ ligt en lost zo het probleem van exploderende gradi\"enten op. De gewichtsupdate vindt plaats in de dezelfde richting, maar de norm is aangepast naar de maximale waarde $mx$. Voor een vector $\mathbf{x}$ komt dit neer op volgende resulterende gradi\"entvector $\mathbf{\hat{x}}$:
+``Gradient clipping'' vormt een eerste oplossing zoals voorgesteld door Pascanu et al.~\cite{Pascanu2012}. Deze methode verkort de gradi\"entvector zodra de lengte van die vector boven een bepaalde drempel $t$ ligt en lost zo het probleem van exploderende gradi\"enten op. De gewichtsupdate vindt plaats in de dezelfde richting, maar de norm is aangepast naar de maximale waarde $mx$. Voor een vector $\mathbf{x}$ komt dit neer op volgende resulterende gradi\"entvector $\mathbf{\hat{x}}$:
 
 \begin{equation}
     \mathbf{\hat{x}} = \frac{mx}{||\mathbf{x}||}\mathbf{x}
 \end{equation}
 
-Het gebruik van Rectified Linear Units of ReLu-encodering biedt een oplossing voor het probleem van uitdovende gradi\"enten. Dit is een activatiefunctie die werkt volgens formule $ReLu(x) = max(x,0)$. Deze functie is zeer eenvoudig te berekenen en vermijdt uitdovende gradi\"enten, in tegenstelling tot niet-lineaire functies zoals een sigmo\"ide of een hyperbolische tangens\cite{Glorot2011}.
+Het gebruik van \emph{Rectified Linear Units} of ReLu-encodering biedt een oplossing voor het probleem van uitdovende gradi\"enten. Dit is een activatiefunctie die werkt volgens formule $ReLu(x) = max(x,0)$. Deze functie is zeer eenvoudig te berekenen en vermijdt uitdovende gradi\"enten, in tegenstelling tot niet-lineaire functies zoals een sigmo\"ide of een hyperbolische tangens~\cite{Glorot2011}.
 
-Door deze problemen is het voor een RNN moeilijk om informatie te onthouden op langere termijn. Hochreiter et al.\cite{SeppHochreiter1997} bieden met Long Short Term Memory netwerken een andere mogelijke oplossing voor dit probleem.
+Door deze problemen is het voor een RNN moeilijk om informatie te onthouden op langere termijn. Hochreiter et al.~\cite{SeppHochreiter1997} bieden met Long Short Term Memory netwerken een andere mogelijke oplossing voor dit probleem.
 
 % LSTM
 \subsection{Long Short Term Memory Neurale Netwerken}
 \label{sub:lstm}
-Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elke LSTM-geheugencel heeft een aantal poorten of gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Figuur \ref{fig:lstm} toont hoe een LSTM-blok er uitziet\cite{SeppHochreiter1997,Google}.
+Long Short Term Memory (LSTM) is een vorm van RNN die geheugencellen bevat. Door deze cellen is het netwerk in staat om op lange termijn informatie over de input bij te houden. Elke LSTM-geheugencel heeft een aantal poorten of gates om te bepalen of de input moet onthouden worden, en of een vorige waarde moet bijgehouden of vergeten worden. De output van de cellen is bijgevolg afhankelijk van alle eerder geobserveerde inputs. Figuur~\ref{fig:lstm} toont hoe een LSTM-blok er uitziet~\cite{SeppHochreiter1997,Google}.
 
 Op de figuur is duidelijk te zien hoe zowel input als output zijn teruggekoppeld naar de verschillende poorten. De waarde van die poorten hangt dus af van de vorige voorspellingen en van de nieuwe input.
 
-Formules \eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekeningen weer die elke stap gebeuren. In deze formules zijn alle $W_{ij}$ gewichtsmatrices, $f_s$ en $f_h$ zijn transferfuncties. $x$ is de input van het netwerk, $o_t$ is de output op tijdstip $t$ en $i'_t$, $v'_t$ en $u'_t$ zijn de waarden van respectievelijk input-, vergeet- en outputpoort op tijdstip $t$. $c'_t$ is de waarde van de geheugencel op tijdstip $t$ en $p_t$ is de uiteindelijke voorspelling van het netwerk op tijdstip $t$. De $\odot$ operator stelt een puntsgewijze vermenigvuldiging tussen twee vectoren voor.
+Formules~\eqref{lstm-memory-start}-\eqref{lstm-memory} geven de exacte berekeningen weer die elke stap gebeuren. In deze formules zijn alle $W_{ij}$ gewichtsmatrices, $f_s$ en $f_h$ zijn transferfuncties. $x$ is de input van het netwerk, $o_t$ is de output op tijdstip $t$ en $i'_t$, $v'_t$ en $u'_t$ zijn de waarden van respectievelijk input-, vergeet- en outputpoort op tijdstip $t$. $c'_t$ is de waarde van de geheugencel op tijdstip $t$ en $p_t$ is de uiteindelijke voorspelling van het netwerk op tijdstip $t$. De $\odot$ operator stelt een puntsgewijze vermenigvuldiging tussen twee vectoren voor.
 
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lstm.PNG}
-    \caption{Long Short Term Memory geheugencel}
+    \caption{Long Short Term Memory geheugencel~\cite{Google}}
     \label{fig:lstm}
 \end{figure}
 
@@ -347,7 +348,7 @@ o_t & = & u_t' \odot c_t'
 \vspace{-3mm}
 \end{eqnarray}
 
-LSTM-netwerken worden net als RNN's gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat een LSTM-netwerk over een langere periode dan een eenvoudig RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk.
+LSTM-netwerken worden net als RNN's gebruikt als taalmodellen en zorgen over het algemeen voor hogere kwaliteit. Dit komt doordat een LSTM-netwerk over een langere periode dan een eenvoudig RNN informatie kan onthouden. Dit maakt het modelleren van sequenties met events, die gescheiden zijn door een langere periode, mogelijk. Deze thesis onderzoekt de prestatie van zowel eenvoudige RNN- als iets complexere LSTM-modellen voor het genereren van zinnen.
 
 
 \section{Statistische concepten}
@@ -381,20 +382,20 @@ Het generatieve aspect van LDA is te zien in algoritme \ref{algo:lda} en is ook 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lda.png}
-    \caption{Grafische weergave van LDA}
+    \caption{Grafische weergave van LDA~\cite{LDAsien}}
     \label{fig:lda}
 \end{figure}
 
 Trainen van een LDA-model gebeurt dikwijls met een Markov chain Monte Carlo algoritme. Dit type algoritme construeert een Markovketen met als doel een kansdichtheidsfunctie te benaderen. In een Markovketen is de volgende stap enkel afhankelijk van de huidige toestand, waardoor het berekenen minder complex is. De meest gebruikte techniek om een LDA-model te benaderen is Gibbs sampling. Het uiteindelijke doel is het benaderen van de kansverdelingen $\theta$ en $\phi$.
 
-Het trainen met Gibbs sampling begint met een willekeurige initialisatie van de onderwerpverdeling voor elk document. Daarna itereert het algoritme over elk woord in elk document. Het berekent de kansverdeling over de verschillende topics, gebaseerd op de onderwerpen van de andere woorden in de collectie (update stap). Formule \eqref{lda:update} toont de exacte berekening. Hierbij is $n_{j,k}$ het aantal toekenningen van onderwerp $k$ aan een woord in document $d_j$. $n_{j,k,\neg i}$ is het aantal keer dat topic $k$ is toegekend aan een woord in document $d_j$, woord $x_{ji}$ niet meegeteld. $n_{j,\cdot,\neg i}$ is de som van $n_{j,k,\neg i}$ over alle $K$ topics. $v_{k,x_{ji}}$ is het aantal associaties van woord $x_{ji}$ met topic $k$ in alle documenten. $v_{k,x_{ji}}$ is hetzelfde getal, maar dan zonder het huidige woord $x_{ji}$ mee te tellen. $v_{k,\cdot,\neg}$ is het totaal aantal woorden die bij topic $k$ horen, zonder $x_{ji}$ mee te tellen. $V$ is het aantal woorden in de woordenschat.
+Het trainen met Gibbs sampling begint met een willekeurige initialisatie van de onderwerpverdeling voor elk document. Daarna itereert het algoritme over elk woord in elk document. Het berekent de kansverdeling over de verschillende topics, gebaseerd op de onderwerpen van de andere woorden in de collectie (update stap). Formule~\eqref{lda:update} toont de exacte berekening. Hierbij is $n_{j,k}$ het aantal toekenningen van onderwerp $k$ aan een woord in document $d_j$. $n_{j,k,\neg i}$ is het aantal keer dat topic $k$ is toegekend aan een woord in document $d_j$, woord $x_{ji}$ niet meegeteld. $n_{j,\cdot,\neg i}$ is de som van $n_{j,k,\neg i}$ over alle $K$ topics. $v_{k,x_{ji}}$ is het aantal associaties van woord $x_{ji}$ met topic $k$ in alle documenten. $v_{k,x_{ji}}$ is hetzelfde getal, maar dan zonder het huidige woord $x_{ji}$ mee te tellen. $v_{k,\cdot,\neg}$ is het totaal aantal woorden die bij topic $k$ horen, zonder $x_{ji}$ mee te tellen. $V$ is het aantal woorden in de woordenschat.
 
 \begin{equation}
     P(z_{ji} = k | \mathbf{z}_{\neg ji}, \mathbf{x}, \alpha, \beta) \propto \frac{n_{j,k,\neg i} + \alpha}{n_{j, \cdot, \neg i} + K \alpha} \cdot \frac{v_{k,x_{ji}, \neg}+ \beta}{v_{k,\cdot,\neg} + |V|\beta}
     \label{lda:update}
 \end{equation}
 
-Op basis van deze kansverdeling samplet formule \eqref{lda:sample} een nieuw topic gesampled voor het huidige woord. Dit proces van updaten en samplen herhaalt zich tot er convergentie plaatsvindt. De geleerde onderwerpverdelingen voor elk woord dienen dan als basis voor de onderwerpverdelingen voor elk document en de woordverdelingen per topic. Formule \eqref{form:doctopic} toont de berekening van de document-onderwerpverdeling. Formule \eqref{form:topicword} bevat deze voor topic-woordverdelingen. De symbolen hebben dezelfde betekenis als eerder beschreven.
+Op basis van deze kansverdeling samplet formule~\eqref{lda:sample} een nieuw topic gesampled voor het huidige woord. Dit proces van updaten en samplen herhaalt zich tot er convergentie plaatsvindt. De geleerde onderwerpverdelingen voor elk woord dienen dan als basis voor de onderwerpverdelingen voor elk document en de woordverdelingen per topic. Formule~\eqref{form:doctopic} toont de berekening van de document-onderwerpverdeling. Formule~\eqref{form:topicword} bevat deze voor topic-woordverdelingen. De symbolen hebben dezelfde betekenis als eerder beschreven.
 
 \begin{equation}
     z_{ji} \sim  P(z_{ji} = k | \mathbf{z}_{\neg ji}, \mathbf{x}, \alpha, \beta)
@@ -418,13 +419,13 @@ Het meest interessante voor deze masterproef zijn de onderwerpverdelingen per do
 \subsection{Canonical Correlation Analysis}
 \label{sub:stackedcca}         
 Canonical Correlation Analysis (CCA) is een methode die basisvectoren probeert te vinden voor twee gerelateerde datasets. De bedoeling is om, bij projectie van overeenkomstige elementen uit beide datasets, een maximale lineaire correlatie te bekomen tussen de twee projecties. 
-Op basis van de singulierewaardenontbinding (SWO) van de twee datasets is het mogelijk om deze ruimte te benaderen. Door het gebruik van singuliere waarden is het mogelijk om projecties in de tussenliggende ruimte te reduceren tot hun $n$ eerste componenten. Dit komt doordat een SWO de dimensies rangschikt van dominant naar minder dominant. Weenink\cite{Weenink2003} beschrijft de theoretische uitwerking en oplossingsmethodes.
+Op basis van de singulierewaardenontbinding (SWO) van de twee datasets is het mogelijk om deze ruimte te benaderen. Door het gebruik van singuliere waarden is het mogelijk om projecties in de tussenliggende ruimte te reduceren tot hun $n$ eerste componenten. Dit komt doordat een SWO de dimensies rangschikt van dominant naar minder dominant. Weenink~\cite{Weenink2003} beschrijft de theoretische uitwerking en oplossingsmethodes.
 
-In het onderzoek naar afbeeldingsbeschrijving kan dit bijvoorbeeld leiden tot een multimodale projectie van afbeeldings- en beschrijvingsrepresentatie.
+In het onderzoek naar afbeeldingsbeschrijving kan dit bijvoorbeeld leiden tot een multimodale projectie van afbeeldings- en beschrijvingsrepresentatie. Voor deze masterproef is de geprojecteerde matrix van de afbeelding een bron van semantische informatie dat de afbeeldingsgeneratie kan helpen.
 
 \paragraph{Stacked auxiliary embeddings}
 
-Stacked Auxiliary Embedding\cite{Gong2014} kan op basis van extra informatie een verbeterde projectie maken ten opzichte van gewone CCA. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeteren door gebruik te maken van de informatie uit de extra dataset.
+Stacked Auxiliary Embedding~\cite{Gong2014} kan op basis van extra informatie een verbeterde projectie maken ten opzichte van gewone CCA. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met per foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeteren door gebruik te maken van de informatie uit de extra dataset.
 
 Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Uit de extra dataset volgt een eerste set van CCA-projecties ($A$, $B$). Daarna volgt een projectie van de originele dataset ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$. Dit resulteert in projecties $AX$ en $BY$. Vervolgens transformeert een lineaire functie $\psi(x)$ de waarden $AX$ en $BY$ zoals de originele paper voorstelt.
 
@@ -435,3 +436,4 @@ Aaneensluiting van de originele dataset met het resultaat van de niet-lineaire t
 De projectie van een ongeziene afbeelding is het resultaat van het achtereenvolgens uitvoeren van alle transformaties. Voor vector $\mathbf{x}$ geeft dit $\mathbf{\hat{x}} = U_1[\mathbf{x}, \psi(A\mathbf{x})]$. Deze representatie vormt dan een verbeterde versie van de originele afbeeldingsrepresentatie, wat nuttig is voor bijvoorbeeld het opzoeken van afbeeldingen. In deze thesis zou een verbeterde vectorrepresentatie kunnen dienen als extra semantische informatie. 
 
 \section{Besluit}
+Dit hoofdstuk gaf een theoretische uitwerkingen van concepten die de modellen van deze thesis gebruiken. Als eerste volgde een bespreking van drie types van neurale netwerken: feedforward, CNN en RNN. Daarna volgde een uitdieping van twee statistische concepten die in deze thesis als bron dienen voor semantische informatie: LDA en CCA. Het volgende hoofdstuk bespreekt concreet hoe al de besproken theorie in deze masterproef wordt samengevoegd tot een systeem dat in staat is afbeeldingen te beschrijven.
