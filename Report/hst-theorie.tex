@@ -253,6 +253,7 @@ Figuur \ref{fig:alexvgg} toont een vergelijking tussen AlexNet en een versie van
 % RNN
 \subsection{Recurrente Neurale Netwerken}
 \subsubsection{Concept}
+\label{sec:rnnconcept}
 Recurrente neurale netwerken vormen een uitbreiding op standaard feedforward neurale netwerken. Ze kunnen, net zoals feedforward netwerken, getraind worden met terugpropagatie. Het grote verschil met feedforward netwerken is de terugkoppeling van uitvoer van de vorige invoer naar de verborgen lagen. Figuur \ref{fig:rnn} illustreert deze terugkoppeling met behulp van een ontrolling over verschillende tijdstippen. $U,V$ en $W$ stellen gewichtsmatrices voor. Het ontrollen van het netwerk komt neer op het uitschrijven van het netwerk over verschillende tijdstippen. De pijlen van links naar rechts op de afbeelding komen overeen met de terugkoppeling van de output uit de vorige stap.
 
 De terugkoppeling zorgt ervoor dat het netwerk in staat is om informatie te onthouden, waardoor het mogelijk is om tijdsgerelateerde informatie te coderen. Daarom zijn ze geschikt om sequenti\"ele data, zoals tekst, te modelleren en te voorspellen. Recurrente neurale netwerken kunnen bijgevolg dienen als taalmodel\cite{Mikolov2010}.
