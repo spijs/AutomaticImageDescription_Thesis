@@ -1,7 +1,5 @@
 \chapter{Methodologie}
 \label{hst-meth}
-\todo[inline]{roadmap o.i.d. maken van het hoofdstuk. Grafische illustratie van alles wat we doen}
-\todo[inline]{elk hoofdstuk een conclusie geven die link legt naar het volgende hoofdstuk}
 Dit hoofdstuk beschrijft hoe de voorgaande theoretische componenten samen een automatische generator van afbeeldingsbeschrijvingen kunnen vormen. De eerste sectie behandelt een bestaande implementatie, die het startpunt vormt van het nieuwe systeem. De volgende secties bekijken uitbreidingen hierop samen met hun implementatie. Concreet moeten deze uitbreidingen zorgen voor verbeteringen op dit startpunt.
 
 Uit de analyse van zinnen gegenereerd door het startpunt blijkt dat, naarmate de zin groeit, het verband met de afbeelding vermindert. Een mogelijke oorzaak ligt in het tegenwerken van twee krachten. Enerzijds moet de beschrijving passen in het taalmodel, anderzijds moet ze de afbeelding zo goed mogelijk beschrijven. Daarom is het doel van de meeste uitbreidingen het toevoegen van extra semantische informatie aan het taalmodel. Op deze manier blijft het model over kennis beschikken van de originele afbeelding. Eerst volgt een bespreking van hoe het mogelijk is om semantische kennis te extraheren uit afbeeldingen met behulp van LDA. De volgende sectie bespreekt de Flickr30k Entities dataset als tweede mogelijke bron van informatie. CCA vormt een derde manier waarbij een multimodale vector deze informatie bevat.
@@ -9,6 +7,22 @@ Uit de analyse van zinnen gegenereerd door het startpunt blijkt dat, naarmate de
 Vervolgens staat dit hoofdstuk stil bij de manier waarop deze informatie kan bijdragen tot de twee gebruikte taalmodellen. Dit kan als vector rechtstreeks in het RNN of als een semantische gids in het LSTM-netwerk. 
 
 De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De startpuntimplementatie vertoont een voorkeur voor korte zinnen. Daarom beschrijft de voorlaatste sectie een normalisatiemethode voor beam-search. Deze methode is in staat langere zinnen te genereren. Het hoofdstuk sluit af met een beschrijving van Feedforward Sequential Memory Networks, een ander type neuraal netwerk, dat volgens de auteurs ervan veelbelovende eigenschappen heeft.
+
+Figuur~\ref{fig:methodology_overview} toont een overzicht van deze verschillende concepten, samen met de sectie waar ze beschreven staan. Figuur~\ref{fig:system_overview} geeft een schematische weergave van hoe de verschillende beschreven componenten samen een afbeeldingsbeschrijvingssysteem vormen.
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{Images/methodology_overview}
+\caption{Overzicht van de concepten uit hoofdstuk~\ref{hst-meth}}
+\label{fig:methodology_overview}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{Images/system_overview}
+\caption{Schematische weergave van een afbeeldingsbeschrijvingssysteem}
+\label{fig:system_overview}
+\end{figure}
+
 
 
 \section{Startpunt}
