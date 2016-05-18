@@ -8,7 +8,7 @@ def main():
     evaluate(d,topics)
 
 def evaluate(dict,topics):
-    file = open('models/highest_topics_test_120.txt','w')
+    file = open('models/highest_topics_test_120_pert.txt','w')
     for key in dict.keys():
         dist = dict[key]
         indices = get_n_highest_indices(dist,5)
@@ -54,12 +54,8 @@ def preprocess(rawDistribution):
 
 
 def createTopicList(nbOfTopics=120):
-    file = open('models/topicnames'+str(nbOfTopics)+'.txt')
-    list = []
-    line = file.readline()
-    while line != '':
-        list.extend([line])
-        line = file.readline()
+    for i in range(nbOfTopics):
+        list.extend([str(i)])
     return list
 
 if __name__ == "__main__":
