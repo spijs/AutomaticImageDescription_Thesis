@@ -75,8 +75,14 @@ Moesten we iemand vergeten zijn in dit dankwoord, alvast onze excuses.
 \tableofcontents*
 
 \begin{abstract}
-  \todo[inline]{schrijven}
-\end{abstract}
+  Het automatisch beschrijven van afbeeldingen is een complex probleem. Het combineert componenten uit de vakgebieden van computervisie en natuurlijke taalverwerking. Voor een machine is het een complex probleem om deze twee gebieden te combineren tot een kwalitatief afbeeldingsbeschrijvend systeem. De literatuur biedt een groot aantal mogelijke oplossingen die op basis van een dataset met afbeeldingen een correcte beschrijvingen leren om automatisch beschrijvingen te genereren. Een veel voorkomend probleem met deze systemen is dat een groot deel van de gegenereerde zinnen niet aansluit bij wat mensen als kwalitatief ervaren. De gebruikte woorden zijn te algemeen en tonen weinig verband met de foto. Vaak zijn de gegenereerde zinnen ook korter dan de zinnen die het systeem gebruikt om te leren.
+ 
+ Deze masterproef biedt een aantal oplossingen voor dit probleem. Door extra semantische informatie uit de afbeelding toe te voegen aan twee bestaande systemen is het mogelijk om zinnen te genereren die minder afwijken van de afbeelding en die een bredere woordenschat gebruiken. Het onderzoek focust op twee specifieke vormen van informatie. Ten eerste is er informatie die verband houdt met onderwerpen die aanwezig zijn in de afbeelding. De afbeeldingen en zinnen uit de trainingsset leiden tot een verband tussen afbeelding en onderwerpen die afgeleid zijn uit de zinnen. Een projectie bepaalt dan de onderwerpen die in elke afbeelding aanwezig zijn. Op die manier gebruikt het beschrijvingssysteem woorden die beter aansluiten bij de onderwerpen die in de afbeelding aanwezig zijn. Een tweede manier om informatie toe te voegen is door gebruik van een multimodale ruimte tussen afbeelding en tekst. Door het gebruik van een CCA-projectie is het mogelijk om een ruimte te leren waarin overeenkomstige afbeeldingen en zinnen maximaal gecorreleerd zijn. Door nieuwe afbeeldingen in deze ruimte te projecteren verkrijgt het systeem informatie over welke zinnen mogelijk dicht in de buurt van de afbeelding liggen, om zo de generatie in de juiste richting te sturen. De experimenten maken duidelijk dat beide technieken verbeteringen aanbrengen 
+ 
+ Een tweede aangebrachte verbetering focust op de lengte van de zinnen. Door een normalisatie toe te voegen aan de laatste stap van het generatieproces is het mogelijk om bepaalde zinnen te verkiezen op basis van hun lengte. Op die manier is er voorkeur voor zinnen die qua lengte beter overeen komen met de trainingszinnen. Uit de experimenten blijkt dat het toevoegen van normalisatie leidt tot een meer uniforme verdeling van de zinslengtes die beter aansluit bij die van de trainingsset.
+ 
+ Tenslotte biedt deze masterproef een vergelijking van de twee manieren om semantische informatie toe te voegen. Perturbatie van de dataset door het vervangen van een aantal woorden leidt tot een vergelijking op gebied van ruisgevoeligheid. Experimenten wijzen uit de de multimodale projectie beter bestand is tegen ruis, omdat het leren van onderwerpsverdelingen zwaardere invloed ondervindt van de veranderingen in de zinnen.
+ \end{abstract}
 
 % Een lijst van figuren en tabellen is optioneel
 %\listoffigures
