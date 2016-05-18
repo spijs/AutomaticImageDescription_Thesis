@@ -78,7 +78,7 @@ class FeedForwardNetwork:
 
     def cost(self):
         prediction = self.oOutput
-        cost = -sum(self.correct*log(prediction))
+        cost = -sum(self.correct*log(prediction))+-
         return cost
 
     def predict(self, Sample):
