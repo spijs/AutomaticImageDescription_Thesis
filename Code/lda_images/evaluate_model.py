@@ -3,12 +3,12 @@ __author__ = 'spijs'
 import numpy as np
 
 def main():
-    d = create_dist_dict('models/image_topic_distribution_flickr30k_top120_test.txt')
+    d = create_dist_dict('models/image_topic_distribution_flickr30k_top120_test_pert.txt')
     topics = createTopicList(120)
     evaluate(d,topics)
 
 def evaluate(dict,topics):
-    file = open('models/highest_topics_test_120.txt','w')
+    file = open('models/highest_topics_test_120_pert.txt','w')
     for key in dict.keys():
         dist = dict[key]
         indices = get_n_highest_indices(dist,5)
@@ -54,12 +54,12 @@ def preprocess(rawDistribution):
 
 
 def createTopicList(nbOfTopics=120):
-    file = open('models/topicnames'+str(nbOfTopics)+'.txt')
+    file = open('models/topic_word_distribution_flickr30ktop120_pert_.txt', 'r')
     list = []
-    line = file.readline()
-    while line != '':
-        list.extend([line])
-        line = file.readline()
+    l = file.readline()
+    l = file.readline()
+    while l != "":
+        list.extend(l.split('*')[0][2:])
     return list
 
 if __name__ == "__main__":
