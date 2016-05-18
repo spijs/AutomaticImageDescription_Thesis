@@ -97,7 +97,46 @@ Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengt
 \section{Invloed van parameters}
 \label{sec:invloed-parameters}
 Deze sectie bekijkt de invloed van enkele parameters die hierboven vast stonden. Als eerste volgt een analyse van het effect van de gebruikte beam-lengte. Vervolgens volgt een korte bespreking van de het aantal onderwerpen van LDA. Hierna experimenteren we met de gebruikte grootte van de CCA-projectie. Als laatste bekijken we de gevolgen van de ge\"implementeerde normalisatiemethodes.
+
 \subsection{Beam-lengte}
+Ook de gekozen beam-lengte bij het beam-search-algoritme speelt een rol in de uitvoeringstijd en resultaten van elk systeem. 
+Een grotere beam-lengte zorgt ervoor dat het zoekalgoritme veel meer mogelijkheden onderzoekt en bijgevolg langere tijd nodig heeft om zinnen te genereren.
+Ideaal gezien bekijkt het systeem alle mogelijke zinnen of dus een beam-lengte ter grootte van het vocabularium, maar dit is praktisch niet haalbaar door de te hoge vereiste tijd.
+Om die reden bekijkt dit onderdeel in welke mate de beam-lengte de resultaten be\"invloedt.
+Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LDA-vector met 120 onderwerpen. De beam-grootte varieert tussen 1 en 100. Vanaf grotere waarden duurt de generatie te lang. Tabel~\ref{table:beam_gauss} toont hetzelfde type van experimenten maar deze keer ook met Gauss-normalisatie. Uit deze resultaten blijkt dat een beam-grootte van 1, wat overeenkomt met steeds het meest waarschijnlijke woord nemen, de slechtste scores oplevert. Uit de hogere beam-groottes kan geen eenduidige conclusie worden getrokken. Zonder Gauss-normalisatie presteert een grootte van 75 het beste op Bleu-1 tot Bleu-3, maar niet op de belangrijke Bleu-4-score. Met Gauss-normalisatie scoort een grootte van 25 de beste resultaten. Een algemene beam-grootte van 50 zoals de standaard in deze thesis, lijkt dus een acceptabel compromis tussen deze twee best-presterende groottes.
+
+    \begin{table}
+    	\centering
+    	\begin{tabular}{lllll}
+    		Beam-grootte                   & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4  \\ \hline
+	    	1	      & 57,9   & 39,1   & 25,5   & 16,3        \\ 
+    		5         & 62,6   & 42,6   & 28,3   & \textbf{18,6}     \\
+    		10         & 63,6   & 42,9   & 28,4   & 18,5    \\
+    		25        & 64,4   & 43,3   & 28,4   & 18,4     \\
+    		50		  & 64,4   & 43,2   & 28,1   & 17,8    \\
+    		75        & \textbf{64,9}   & \textbf{43,7}   & \textbf{29,5}   & 18,2    \\
+    	    100		  & 64,7   & 43,4   & 28,2   & 17,9     \\\hline
+    	\end{tabular}
+    	\caption{Vergelijking van de Bleu-resultaten van gLSTM met verschillende beam-groottes en als gids LDA met 120 onderwerpen.}	
+    	\label{table:beam}
+    \end{table}
+
+    \begin{table}
+    	\centering
+    	\begin{tabular}{lllll}
+    		Beam-grootte & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4  \\ \hline
+    		1	      & 57,9   & 39,1   & 25,5   & 16,3        \\ 
+    		5         & 62,1   & 42,4   & 28,6   & 19,1     \\
+    		10        & 62,9   & 42,8   & 28,8   & 19,2    \\
+    		25        & \textbf{62,9}   & \textbf{43,7}   & \textbf{28,9}   & \textbf{19,4}     \\
+    		50		  & 62,7   & 43,5   & 28,8   & \textbf{19,4}    \\
+    		75        & 62,5   & 42,2   & 28,5   & 19,2    \\ \hline
+    	\end{tabular}
+    	\caption{Vergelijking van de Bleu-resultaten van gLSTM met Gauss-normalisatie en verschillende beam-groottes en als gids LDA met 120 onderwerpen.}	
+    	\label{table:beam_gauss}
+    \end{table}
+
+
 
 \subsection{Aantal onderwerpen LDA}
 
@@ -115,11 +154,66 @@ Tabel~\ref{table:results_cca} toont de resultaten van de automatische evaluatiem
 		gLSTM+CCA & 512        & 63,3   & 42,2   & 28,2   & 18,3 & 15,1  \\ \hline
 	
 	\end{tabular}
-	\label{table:results_cca}
+
 	\caption{Automatische evaluatieresultaten voor verschillend aantal correlatiecomponenten CCA}
+		\label{table:results_cca}
 \end{table}
 
 \subsection{Effect verschillende normalisatiemethodes}
+Deze thesis maakt gebruik van drie verschillende normalisatiemethodes. Als eerste Gauss en Min-Hinge met als doel de lengte van de zinnen te verhogen en zo ook hun automatische evaluatie te verbeteren. Als derde de nieuwe idf-gewogen normalisatiefunctie. Deze heeft als doel de creativiteit van de zinnen te verhogen om zo minder algemene beschrijvingen te genereren.
+
+\subsubsection{Gauss-normalisatie}
+In de paper van Jia et al.~\cite{Fernando2015} presteert Gauss-normalisatie voor de meeste metrieken veruit het beste. 
+Dit is ook het geval bij de in deze paper bestudeerde normalisatiefuncties. Gauss-normalisatie verhoogt vrijwel steeds de Bleu-3-, Bleu-4- en Meteor-score. De lagere Bleu-scores (zonder Brevity Penalty) lijken een voorkeur te hebben voor korte zinnen. Op de belangrijkere scores scoort Gauss-normalisatie dus beter dan zonder normalisatie. 
+Het tweede doel was het genereren van langere zinnen door de lengteverdeling van de trainingsverzameling na te bootsen.
+In alle bestudeerde configuraties slaagt de normalisatie erin om de lengte van gemiddeld 7,5 te doen stijgen naar 10,3 woorden per zin. Figuur~\ref{fig:gauss} toont voor het standaard RNN-systeem hoe de lengteverdeling wijzigt. Deze stijging in het aantal woorden gaat gepaard met een sterke stijging in de zinnen die niet voorkomen in de trainingsset naar meer dan 90\%. Het aantal unieke zinnen van het tweede type verhoogt slechts licht. 
+Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte woorden. Ondanks de stijging van het aantal woorden met Gauss-normalisatie, vertonen de meest gebruikte woorden deze stijging niet en blijven de aantallen zelfs exact dezelfde. Een mogelijke verklaring ligt hier waarschijnlijk in de manier waarop het systeem zinnen genereert. Vermoedelijk zijn de zinnen vrijwel hetzelfde, maar zorgt de Gauss-normalisatie ervoor dat het achteraan de zin nog extra informatie over de afbeelding toevoegt. Dit kan ook een verklaring zijn voor de toename in creativiteit. De informatie aan het einde is heel variabel, terwijl de algemene en vaak iets vagere informatie aan het begin van de zin vaak gelijkaardig is. Een groot deel van de zinnen begint bijvoorbeeld met de woorden \texttt{A man is}, die tevens in elke configuratie bij de vijf meest voorkomende woorden horen. Figuur~\ref{fig:gauss_improve} toont twee voorbeelden waar Gauss-normalisatie zorgt voor een meer volledige beschrijving.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{Images/gauss_length.PNG}
+	\caption[Effect van gauss-normalisatie op de zinslengteverdeling]{Effect van Gauss-normalisatie op de zinslengteverdeling voor het standaard RNN-systeem.}
+	\label{fig:gauss}
+\end{figure}  
+
+\begin{figure}
+	\centering
+	\begin{minipage}[t]{.3\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[width=\textwidth]{Images/Results/gauss/hond}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{.7\textwidth}
+		\vspace{0pt}
+		\begin{tabular}{ll}
+			Standaard & \texttt{A dog runs through the grass} \\
+			Met Gauss & \texttt{A brown and white dog is}\\
+			~ & \texttt{running through the grass} \\
+		\end{tabular}
+	\end{minipage}
+	
+		\centering
+		\begin{minipage}[t]{.3\textwidth}
+			\centering
+			\vspace{0pt}
+			\includegraphics[width=\textwidth]{Images/Results/gauss/man}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{.7\textwidth}
+			\vspace{0pt}
+			\begin{tabular}{ll}
+				Standaard & \texttt{A man in a green shirt is holding a tree} \\
+				Met Gauss & \texttt{A man in a blue shirt is standing }\\
+				~ & \texttt{in a field} \\
+			\end{tabular}
+		\end{minipage}
+\caption{Twee voorbeelden waar Gauss-normalisatie de gegenereerde zin verbetert.}
+\end{figure}
+
+
+
+\subsubsection{Min-Hinge-normalisatie}
+
+\subsubsection{Idf-normalisatie}
 
 \section{Vergelijking met literatuur} % (fold)
 \label{sec:vergelijking_met_literatuur}
