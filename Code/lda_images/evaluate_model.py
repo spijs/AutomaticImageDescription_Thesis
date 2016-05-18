@@ -54,9 +54,12 @@ def preprocess(rawDistribution):
 
 
 def createTopicList(nbOfTopics=120):
+    file = open('models/topic_word_distribution_flickr30ktop120_pert_.txt', 'r')
     list = []
-    for i in range(nbOfTopics):
-        list.extend([str(i)])
+    l = file.readline()
+    l = file.readline()
+    while l != "":
+        list.extend(l.split('*')[0][2:])
     return list
 
 if __name__ == "__main__":
