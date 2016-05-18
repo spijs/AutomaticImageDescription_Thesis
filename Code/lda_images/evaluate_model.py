@@ -54,6 +54,7 @@ def preprocess(rawDistribution):
 
 
 def createTopicList(nbOfTopics=120):
+    list = []
     for i in range(nbOfTopics):
         list.extend([str(i)])
     return list
