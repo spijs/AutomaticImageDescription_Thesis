@@ -3,7 +3,7 @@ __author__ = 'spijs'
 import numpy as np
 
 def main():
-    d = create_dist_dict('models/image_topic_distribution_flickr30k_top120_test.txt')
+    d = create_dist_dict('models/image_topic_distribution_flickr30k_top120_test_pert.txt')
     topics = createTopicList(120)
     evaluate(d,topics)
 
