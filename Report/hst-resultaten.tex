@@ -23,7 +23,7 @@ Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Br
 \end{table}
 
 Tabel~\ref{table:rnn_met_lda} toont het effect van het toevoegen van LDA aan de basisimplementatie van RNN. Alle gebruikte metrieken vertonen een stijging. LDA lijkt er dus in te slagen om de semantische drift tegen te gaan.
-Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het meest overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhalen lijkt de bias van standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
+Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het best overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhalen lijkt standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
 
 \begin{table}
 	\centering
@@ -34,12 +34,12 @@ Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Met
 		RNN + LDA         & \textbf{65,4}   & \textbf{44}     & \textbf{29,1}   & 19     & 14,4          \\
 		RNN + LDA + Gauss & 62,7   & 42,6   & 28,8   & \textbf{19,5}   & \textbf{16,6}          \\ \hline
 	\end{tabular}
-	\caption{Vergelijking van de resultaten RNN na toevoeging LDA en Gaussnormalisatie}	
+	\caption{Vergelijking van de resultaten van RNN na toevoeging LDA en Gaussnormalisatie}	
 	\label{table:rnn_met_lda}
 \end{table}
 
-Tabel~\ref{table:rnn_lda_stats} toont de verzamelde statistieken over de gegenereerde zinnen van dezelfde systemen. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.
-Algemeen valt op dat RNN op een testset van duizend afbeeldingen en een gemiddelde zinslengte van 7 tot 10 woorden slechts een heel beperkt vocabularium leert.
+Tabel~\ref{table:rnn_lda_stats} toont de verzamelde statistieken over de gegenereerde zinnen van dezelfde systemen. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts eenmaal in de verzameling gegenereerde zinnen.
+Algemeen valt op dat RNN op een testset van duizend afbeeldingen en een gemiddelde zinslengte van 7 tot 10 woorden slechts een heel beperkte woordenschat leert.
 Het toevoegen van LDA vermindert het aantal unieke woorden, maar verhoogt de gemiddelde zinslengte wel lichtjes. Het aantal unieke zinnen van beide types wijzigt niet sterk, al genereert het iets meer vooraf ongeziene zinnen. Het toevoegen van LDA lijkt de creativiteit van de gegenereerde zinnen dus licht te doen dalen.
 Normaliseren met de Gaussiaanse functie bereikt zijn doel. De lengte van de zinnen stijgt met gemiddeld 3 woorden. Toch stijgt het aantal unieke woorden niet mee. Het aantal zinnen dat niet voorkomt in de trainingsset stijgt naar 93\%. Toch is het aantal unieke zinnen van het tweede type niet veel hoger. Het systeem met Gauss-normalisatie genereert met andere woorden veel dezelfde ongeziene zinnen.
 
@@ -77,7 +77,7 @@ Het effect van LDA met Gauss en CCA ligt dicht bij elkaar. Toch scoort LDA met G
    	\label{table:lstm_results}
     \end{table}
 
-Tabel~\ref{table:lstm_stats} toont de verzamelde statistieken over de gegenereerde zinnen van de vorige systemen. In vergelijking met het referentie RNN leert het LSTM-netwerk een groter vocabularium (ongeveer 40\% groter). Ook de zinnen zijn gemiddeld iets langer. Het aantal unieke zinnen van het eerste type daalt licht, maar het aantal van het tweede type is gelijkaardig.
+Tabel~\ref{table:lstm_stats} toont de verzamelde statistieken over de gegenereerde zinnen van de vorige systemen. In vergelijking met het referentie-RNN leert het LSTM-netwerk een groter vocabularium (ongeveer 40\% groter). Ook de zinnen zijn gemiddeld iets langer. Het aantal unieke zinnen van het eerste type daalt licht, maar het aantal van het tweede type is gelijkaardig.
 Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengte stijgt gevoelig en ook het aantal unieke zinnen van type 1 stijgt fel. Het aantal volledig unieke zinnen (\emph{Uniek2}) van beide gLSTM's stijgt sterk door het toevoegen van Gauss-normalisatie tot 60\% voor CCA. CCA als gids leert ook meer unieke woorden dan LDA en lijkt dus tot iets creatievere zinnen te leiden.
     \begin{table}
     	\centering
@@ -100,10 +100,10 @@ Deze sectie bekijkt de invloed van enkele parameters die hierboven vast stonden.
 
 \subsection{Beam-lengte}
 Ook de gekozen beam-lengte bij het beam-search-algoritme speelt een rol in de uitvoeringstijd en resultaten van elk systeem. 
-Een grotere beam-lengte zorgt ervoor dat het zoekalgoritme veel meer mogelijkheden onderzoekt en bijgevolg langere tijd nodig heeft om zinnen te genereren.
-Ideaal gezien bekijkt het systeem alle mogelijke zinnen of dus een beam-lengte ter grootte van het vocabularium, maar dit is praktisch niet haalbaar door de te hoge vereiste tijd.
+Een grotere beam-lengte zorgt ervoor dat het zoekalgoritme veel meer mogelijkheden onderzoekt en bijgevolg meer tijd nodig heeft om zinnen te genereren.
+Ideaal gezien bekijkt het systeem alle mogelijke zinnen, wat neerkomt op een beam-lengte ter grootte van het vocabularium, maar dit is praktisch niet haalbaar door de te hoge vereiste tijd.
 Om die reden bekijkt dit onderdeel in welke mate de beam-lengte de resultaten be\"invloedt.
-Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LDA-vector met 120 onderwerpen. De beam-grootte varieert tussen 1 en 100. Vanaf grotere waarden duurt de generatie te lang. Tabel~\ref{table:beam_gauss} toont hetzelfde type van experimenten maar deze keer ook met Gauss-normalisatie. Uit deze resultaten blijkt dat een beam-grootte van 1, wat overeenkomt met steeds het meest waarschijnlijke woord nemen, de slechtste scores oplevert. Uit de hogere beam-groottes kan geen eenduidige conclusie worden getrokken. Zonder Gauss-normalisatie presteert een grootte van 75 het beste op Bleu-1 tot Bleu-3, maar niet op de belangrijke Bleu-4-score. Met Gauss-normalisatie scoort een grootte van 25 de beste resultaten. Een algemene beam-grootte van 50 zoals de standaard in deze thesis, lijkt dus een acceptabel compromis tussen deze twee best-presterende groottes.
+Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LDA-vector met 120 onderwerpen. De beam-grootte varieert tussen 1 en 100. Voor grotere waarden duurt de generatie te lang. Tabel~\ref{table:beam_gauss} toont hetzelfde type van experimenten maar deze keer ook met Gauss-normalisatie. Uit deze resultaten blijkt dat een beam-grootte van 1, wat overeenkomt met steeds het meest waarschijnlijke woord nemen, de slechtste scores oplevert. Uit de hogere beam-groottes kan geen eenduidige conclusie worden getrokken. Zonder Gauss-normalisatie presteert een grootte van 75 het beste op Bleu-1 tot Bleu-3, maar niet op de belangrijke Bleu-4-score. Met Gauss-normalisatie scoort een grootte van 25 de beste resultaten. Een algemene beam-grootte van 50 zoals de standaard in deze thesis, lijkt dus een acceptabel compromis tussen deze twee best-presterende groottes.
 
     \begin{table}
     	\centering
@@ -183,14 +183,16 @@ Het fenomeen dat de grootte meer speelt met Gauss-normalisatie was hier niet zic
 \end{table}
 
 \subsection{Effect verschillende normalisatiemethodes}
-Deze thesis maakt gebruik van drie verschillende normalisatiemethodes. Als eerste Gauss en Min-Hinge met als doel de lengte van de zinnen te verhogen en zo ook hun automatische evaluatie te verbeteren. Als derde de nieuwe idf-gewogen normalisatiefunctie. Deze heeft als doel de creativiteit van de zinnen te verhogen om zo minder algemene beschrijvingen te genereren.
+Deze thesis maakt gebruik van drie verschillende normalisatiemethodes. Als eerste zijn er Gauss en Min-Hinge met als doel de lengte van de zinnen te verhogen en zo ook hun automatische evaluatie te verbeteren. Als derde introduceert deze masterproef de idf-gewogen normalisatiefunctie. Deze heeft als doel de creativiteit van de zinnen te verhogen om zo minder algemene beschrijvingen te genereren.
 
 \subsubsection{Gauss-normalisatie}
 In de paper van Jia et al.~\cite{Fernando2015} presteert Gauss-normalisatie voor de meeste metrieken veruit het beste. 
-Dit is ook het geval bij de in deze paper bestudeerde normalisatiefuncties. Gauss-normalisatie verhoogt vrijwel steeds de Bleu-3-, Bleu-4- en Meteor-score. De lagere Bleu-scores (zonder Brevity Penalty) lijken een voorkeur te hebben voor korte zinnen. Op de belangrijkere scores scoort Gauss-normalisatie dus beter dan zonder normalisatie. 
+Dit is ook het geval bij de in deze masterproef bestudeerde normalisatiefuncties. Gauss-normalisatie verhoogt vrijwel steeds de Bleu-3-, Bleu-4- en Meteor-score. De lagere Bleu-scores (zonder Brevity Penalty) lijken een voorkeur te hebben voor korte zinnen. Op de belangrijkere scores scoort Gauss-normalisatie dus beter dan zonder normalisatie. 
 Het tweede doel was het genereren van langere zinnen door de lengteverdeling van de trainingsverzameling na te bootsen.
 In alle bestudeerde configuraties slaagt de normalisatie erin om de lengte van gemiddeld 7,5 te doen stijgen naar 10,3 woorden per zin. Figuur~\ref{fig:gauss} toont voor het standaard RNN-systeem hoe de lengteverdeling wijzigt. Deze stijging in het aantal woorden gaat gepaard met een sterke stijging in de zinnen die niet voorkomen in de trainingsset naar meer dan 90\%. Het aantal unieke zinnen van het tweede type verhoogt slechts licht. 
-Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte woorden. Ondanks de stijging van het aantal woorden met Gauss-normalisatie, vertonen de meest gebruikte woorden deze stijging niet en blijven de aantallen zelfs exact dezelfde. Een mogelijke verklaring ligt hier waarschijnlijk in de manier waarop het systeem zinnen genereert. Vermoedelijk zijn de zinnen vrijwel hetzelfde, maar zorgt de Gauss-normalisatie ervoor dat het achteraan de zin nog extra informatie over de afbeelding toevoegt. Dit kan ook een verklaring zijn voor de toename in creativiteit. De informatie aan het einde is heel variabel, terwijl de algemene en vaak iets vagere informatie aan het begin van de zin vaak gelijkaardig is. Een groot deel van de zinnen begint bijvoorbeeld met de woorden \texttt{A man is}, die tevens in elke configuratie bij de vijf meest voorkomende woorden horen. Figuur~\ref{fig:gauss_improve} toont twee voorbeelden waar Gauss-normalisatie zorgt voor een meer volledige beschrijving.
+
+Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte woorden. Ondanks de stijging van het aantal woorden met Gauss-normalisatie, vertonen de meest gebruikte woorden deze stijging niet en blijven de aantallen zelfs exact dezelfde. Een mogelijke verklaring ligt in de manier waarop het systeem zinnen genereert. Vermoedelijk zijn de zinnen vrijwel hetzelfde, maar zorgt de Gauss-normalisatie ervoor dat het achteraan de zin nog extra informatie over de afbeelding toevoegt. Dit kan ook een verklaring zijn voor de toename in creativiteit. De informatie aan het einde is heel variabel, terwijl de algemene en vaak iets vagere informatie aan het begin van de zin vaak gelijkaardig is. Een groot deel van de zinnen begint bijvoorbeeld met de woorden \texttt{A man is}, die tevens in elke configuratie bij de vijf meest voorkomende woorden horen. Figuur~\ref{fig:gauss_improve} toont twee voorbeelden waar Gauss-normalisatie zorgt voor een meer volledige beschrijving.
+
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{Images/gauss_length.PNG}

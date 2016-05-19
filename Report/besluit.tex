@@ -1,13 +1,34 @@
 \chapter{Besluit}
 \label{besluit}
-Deze masterproef probeert twee bestaande systemen voor afbeeldingsbeschrijving te verbeteren. Dit gebeurt op twee manieren. Ten eerste is er het afleiden extra informatie uit een afbeelding, hetzij door het extraheren van onderwerpen, hetzij door een multimodale projectie. Beide methodes zijn variabel in het aantal gebruikte dimensies. Deze masterproef bestudeert dan ook de invloed van de dimensionaliteit van de extra informatie. 
+Deze masterproef probeert twee bestaande systemen voor afbeeldingsbeschrijving te verbeteren. Dit gebeurt op drie manieren. Ten eerste is er het afleiden extra informatie uit een afbeelding, hetzij door het extraheren van onderwerpen, hetzij door een multimodale projectie. Beide methodes zijn variabel in het aantal gebruikte dimensies. Deze masterproef bestudeert dan ook de invloed van de dimensionaliteit van de extra informatie. 
+Een tweede aangebrachte verbetering is het normaliseren van de zinnen tijdens het generatieproces. Dit kan leiden tot zinnen die meer informatie bevatten of tot een betere verdeling van de zinslengtes. Tenslotte bestudeert deze masterproef de mogelijke invloed van een aantal parameters van het generatieproces.
 
-Een tweede aangebrachte verbetering is het normaliseren van de zinslengte tijdens het generatieproces. Hierdoor sluit de verdeling van lengtes van de gegenereerde zinnen beter aan bij die uit de trainingsset. 
+Deze thesis experimenteert ook met de robuustheid van de twee manieren om semantische informatie toe te voegen. Een aantal experimenten proberen de invloed van ruis op deze informatie te bepalen.
 
 Dit hoofdstuk biedt eerst een overzicht van de belangrijkste resultaten en de bekomen verbeteringen. Daarna volgt een overzicht van de mogelijke uitbreidingen.
 \section{Resultaten}
-\section{Toekomstig werk}
+\subsection{Toevoegen van semantische informatie}
+Het gebruik van extra semantische informatie leidt tot verbeteringen in de kwaliteit van de gegenereerde zinnen. 
+Bij RNN zorgt het gebruik van de onderwerpen afgeleid uit de afbeeldingen voor een hogere score ten opzichte van het referentiemodel. 
+De veronderstelling dat de ondewerpen de gegenereerde zinnen beter doet aansluiten bij de afbeelding is dus correct.
+Bij LSTM geven zowel de afgeleide onderwerpen als de multimodale projectie een hogere score dan het referentiemodel. 
+De scores van beide technieken om extra informatie toe te voegen liggen bij LSTM zeer dicht bij elkaar, maar het gebruik van onderwerpen scoort lichtjes beter op de metrieken die het dichtst aanleunen bij menselijke evaluatie.
 
+
+\subsection{Normalisatie}
+Om de lengte van de gegenereerde zinnen beter te doen aansluiten bij die van de trainingsverzameling implementeert deze masterproef een normalisatiefunctie. Hierdoor krijgen zinnen die te hard afwijken een lagere score. 
+Deze methode heeft een zeer grote invloed op de gegenereerde zinnen. De gemiddelde lengte stijgt bij RNN van 7 naar 10, en bij LSTM van 8 naar 10. De normalisatiefunctie heeft het meeste invloed op het einde van de zinnen, waardoor het begin van de meeste zinnen vrij generisch is en het grootste deel van de informatie zich in de laatste woorden van de zin bevindt.
+
+Een tweede vorm van normalisatie probeert de gegenereerde zinnen informatiever te maken. Alle woorden uit de woordenschat krijgen een score op basis van hoeveel keer ze voorkomen in de trainingsverzameling. Woorden die minder voorkomen zijn specifieker en krijgen dus een hogere score. Op basis van deze scores krijgen de gegenereerde zinnen een aangepaste score. Deze normalisatie leidt inderdaad tot zinnen die meer specifieke woorden bevatten. Meestal leidt dit ook tot een zin van hogere kwaliteit, maar in een aantal gevallen voegt het systeem schijnbaar willekeurig een aantal woorden met een hoge score toe die weinig met de afbeelding te maken hebben. De evaluatiemetrieken oordelen ook dat de zinnen met deze normalisatie slechter zijn, maar voor een mens zijn een groot aantal van de zinnen van betere kwaliteit.
+\subsection{Invloed van parameters}
+
+\subsection{Robuustheid van semantische informatie}
+
+\section{Toekomstig werk}
+Zoals beschreven in het literatuuroverzicht en de resultaten scoren de modellen die gebruik maken van aandachtsmechanismes het hoogste. Het gebruik van aandachtsvectoren is echter te complex voor deze masterproef. Het is zeker interessant om te experimenteren met het toevoegen van aandachtsinformatie aan de systemen voorgesteld in deze masterproef om tot grotere verbeteringen te komen. 
+
+Een ander mogelijk vervolg op deze masterproef gaat dieper in op de robuustheid van de verschillende systemen om semantische informatie toe te voegen aan de generatiesystemen.
+De aanpak in de experimenten is vrij rudimentair, dus het zou zeker lonen om te onderzoeken wat de invloed is van verschillende gradaties van perturbatie, alsook verschillende types van ruis.
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "masterproef"
