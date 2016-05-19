@@ -299,7 +299,40 @@ Het is opvallend dat de best scorende paper werd gepubliceerd in juni 2015, maar
 
 \section{Ruisgevoeligheid van CCA en LDA} % (fold)
 \label{sec:ruisgevoeligheid_van_cca_en_lda_res}
+Deze sectie beschrijft en bespreekt de resultaten van de experimenten die de ruisgevoeligheid van de gidsen CCA en LDA nagaan in een gLSTM-netwerk.
+De experimenten zijn dezelfde als hierboven besproken maar gebruiken een trainingsset met zinnen die willekeurige ruis bevatten.
+Tabel~\ref{table:ruis} toont de numerieke resultaten van het toevoegen van ruis aan beide netwerken.
 
+\begin{table}
+	\centering
+	\begin{tabular}{lllllll}
+		~                  & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+		LDA 80        & 61,4   & 40,4 			& 26   & 16,7  & 14,7 \\
+		LDA 80+ruis & 43,7  &25,5    &14,6   & 9   & 12,5 \\ \hline
+		LDA 120   & 64,4   & 43,2   & 28,1   & 17,8 & 16 \\
+		LDA 120+ruis   & 55,3   & 33,6   & 20,2   & 12,7 & 12,7 \\ \hline
+		CCA 128   & 63,5   & 42,5   & 27,9   & 18 & 15,5 \\
+		CCA 128+ruis   & 57,4   & 36,2   & 22,6   & 14,3 & 13,5 \\ \hline
+		CCA 256   & 63,7   & 43,4   & 29,2   & 19,3 & 15,8 \\
+		CCA 256+ruis   & x  & x   & x   & x & x \\ \hline			
+	\end{tabular}
+	\caption{Effect van ruis op automatische evaluatieresultaten voor LDA en CCA als gids van een gLSTM-netwerk}
+	\label{table:ruis}
+\end{table}
+
+Het is duidelijk dat CCA absoluut en relatief beter presteert dan LDA op de gewijzigde dataset.
+De gegenereerde zinnen van alle systemen zijn nog steeds grammaticaal correct.
+Het gLSTM-netwerk is dus nog steeds in staat een correct taalmodel te leren.
+Het verschil tussen beide systemen kan dus ofwel liggen in de geleerde projectie van afbeelding naar gidsvector.
+Een manuele inspectie van de woordverdeling bij elk onderwerp lijkt dit uit te sluiten.
+Voor elk onderwerp hebben de woorden met hoogste waarschijnlijkheid nog steeds een duidelijk verband.
+Het is wel zo dat de kansen waarmee het LDA-netwerk een onderwerp aan een afbeelding toekent kleiner verkleinen.
+
+De meest waarschijnlijke verklaring bevindt zich in het trainen van het gLSTM-netwerk.
+Vermoedelijk is het netwerk slechter in staat de koppeling te maken tussen de LDA-vector en 'correcte' zin. 
+Hierdoor leert het mogelijk foutieve verbanden tussen elementen in de LDA-vector en specifieke woorden.
+	
+Bij het leren van meer ongesuperviseerde afbeeldingsbeschrijvingssystemen (bijvoorbeeld afbeeldingen op het web), lijkt CCA dan ook de beste kandidaat als gids omwille van de aanwezige ruis en onzekerheid. 
 % section ruisgevoeligheid_van_cca_en_lda (end)
 
 \section{Besluit} % (fold)
