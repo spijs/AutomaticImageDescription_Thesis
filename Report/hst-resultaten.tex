@@ -136,15 +136,38 @@ Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LD
     	\label{table:beam_gauss}
     \end{table}
 
-
-
 \subsection{Aantal onderwerpen LDA}
+Tijdens het leren van LDA, is buiten de manuele inspectie van de kansverdeling van de woorden bij elk onderwerp er geen concrete aanwijzing of een bepaald aantal onderwerpen leidt tot betere verdelingen.
+Tijdens het trainen van het neuraal netwerk geeft de fout op de validatieverzameling wel een indicatie van hoe goed het netwerk de verdelingen kan genereren op basis van een afbeelding.
+Na dit trainen gebruikt de gLSTM deze verdelingen als gids bij het genereren van de zinnen.
+In deze drie stappen speelt het aantal onderwerpen dus steeds een rol, maar is het finaal niet duidelijk wat het ideale aantal precies is.
+De paper van Jin et al.~\cite{Jin2015} die ook de LDA-onderwerpverdeling als extra invoer in het LSTM-netwerk voert, gebruikt 80 onderwerpen.
+Daarom beschouwen de experimenten aantallen rond deze 80. Na manuele inspectie van de woordverdelingen per onderwerp bleek 50 onderwerpen weinig duidelijk te onderscheiden onderwerpen af te leiden.
+Tabel~\ref{table:lda-onderwerpen} bevat daarom enkel resultaten voor 80, 100 en 120 onderwerpen.
+
+    \begin{table}
+    	\centering
+    	\begin{tabular}{lllllll}
+    		~                 &\# topics  & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+    		gLSTM+LDA       & 80  & 61,4   & 40,4  & 26   & 16,7   & 14,7     \\ 
+    		gLSTM+LDA      & 100  & \textbf{64,4}   & \textbf{43,3}   & \textbf{28,6}   & \textbf{18,6}   & 15,9  \\
+    		gLSTM+LDA      &120   & \textbf{64,4}   & 43,2   & 28,1   & 17,8   & \textbf{16}  \\\hline
+    		gLSTM+LDA+Gauss &80 & \textbf{65}   & \textbf{43,5}   & 28,4   & 18,2   & 16,2  \\ 
+    		gLSTM+LDA+Gauss& 100&62,5& 42,1   & 28,2   & 18,9   & 17,2    \\
+    	gLSTM+LDA+Gauss&120 & 62,7   & 42,5   &\textbf{28,8}   & \textbf{19,4}   & \textbf{17,4}  \\\hline
+    	\end{tabular}
+    	\caption{Vergelijking van de resultaten gLSTM met LDA als gids en variabel aantal onderwerpen}	
+    	\label{table:lda-onderwerpen}
+    \end{table}
+    
+Uit de resultaten blijkt dat zonder Gauss-normalisatie 100 onderwerpen het beste scoren op Bleu en ongeveer even goed als 120 op Meteor. 80 onderwerpen lijkt te weinig om het gLSTM-netwerk voldoende bij te sturen. Na toevoeging van Gauss-normalisatie presteren 120 onderwerpen beter op de belangrijkste evaluatiecriteria. Een mogelijke verklaring voor dit gedrag ligt in het feit dat Gauss-normalisatie zorgt voor langere zinnen. De laatste woorden in deze zinnen hebben bijgevolg meer last van semantische drift. Hier speelt LDA als semantische gids dus een belangrijkere rol. Het blijkt dus dat een grotere vector voor LDA vooral voor lange zinnen een meerwaarde biedt. Er bestaat wel een bovengrens in de grootte. Wanneer het aantal onderwerpen te hoog wordt, is het LDA-algoritme niet langer in staat om zinnige onderwerpen te ontdekken.
 
 \subsection{Vectorgrootte CCA} 
 Het CCA-algoritme laat toe om het aantal correlatiecomponenten te kiezen. De invloed van dit aantal op de afbeeldingsgeneratie is niet meteen duidelijk. Daarom beschouwen we net zoals Jia et al.~\cite{Fernando2015} eerst een grootte van 256, maar bekijken ook de resultaten voor een grootte van 128 en 512. De tijd nodig voor het trainen van het gLSTM-netwerk stijgt sterk met de gekozen gidsgrootte. Dit maakt een afweging tussen grootte en tijd om te trainen in de toekomst misschien noodzakelijk.
 
-Tabel~\ref{table:results_cca} toont de resultaten van de automatische evaluatiemethodes voor de drie types. Het is duidelijk dat CCA met een vectorgrootte van 256 het beste presteert op alle evaluatiemethodes. Dit model genereert eveneens meer unieke woorden en meer unieke zinnen van beide types.
+Tabel~\ref{table:results_cca} toont de resultaten van de automatische evaluatiemethodes voor de drie types. Het is duidelijk dat CCA met een vectorgrootte van 256 het beste presteert op alle evaluatiemethodes. Dit model genereert eveneens meer unieke woorden en meer unieke zinnen van beide types. Een mogelijke verklaring hiervoor is dat CCA met een grootte van 128 te weinig semantische informatie meegeeft, terwijl met 512 de gLSTM net te veel focust op de semantische informatie.
 
+Het fenomeen dat de grootte meer speelt met Gauss-normalisatie was hier niet zichtbaar. Een mogelijke verklaring hiervoor is dat CCA als gids zonder Gauss-normalisatie al zeer goede prestaties bereikt.
 \begin{table}
 	\centering
 	\begin{tabular}{lllllll}
@@ -168,14 +191,12 @@ Dit is ook het geval bij de in deze paper bestudeerde normalisatiefuncties. Gaus
 Het tweede doel was het genereren van langere zinnen door de lengteverdeling van de trainingsverzameling na te bootsen.
 In alle bestudeerde configuraties slaagt de normalisatie erin om de lengte van gemiddeld 7,5 te doen stijgen naar 10,3 woorden per zin. Figuur~\ref{fig:gauss} toont voor het standaard RNN-systeem hoe de lengteverdeling wijzigt. Deze stijging in het aantal woorden gaat gepaard met een sterke stijging in de zinnen die niet voorkomen in de trainingsset naar meer dan 90\%. Het aantal unieke zinnen van het tweede type verhoogt slechts licht. 
 Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte woorden. Ondanks de stijging van het aantal woorden met Gauss-normalisatie, vertonen de meest gebruikte woorden deze stijging niet en blijven de aantallen zelfs exact dezelfde. Een mogelijke verklaring ligt hier waarschijnlijk in de manier waarop het systeem zinnen genereert. Vermoedelijk zijn de zinnen vrijwel hetzelfde, maar zorgt de Gauss-normalisatie ervoor dat het achteraan de zin nog extra informatie over de afbeelding toevoegt. Dit kan ook een verklaring zijn voor de toename in creativiteit. De informatie aan het einde is heel variabel, terwijl de algemene en vaak iets vagere informatie aan het begin van de zin vaak gelijkaardig is. Een groot deel van de zinnen begint bijvoorbeeld met de woorden \texttt{A man is}, die tevens in elke configuratie bij de vijf meest voorkomende woorden horen. Figuur~\ref{fig:gauss_improve} toont twee voorbeelden waar Gauss-normalisatie zorgt voor een meer volledige beschrijving.
-
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{Images/gauss_length.PNG}
 	\caption[Effect van gauss-normalisatie op de zinslengteverdeling]{Effect van Gauss-normalisatie op de zinslengteverdeling voor het standaard RNN-systeem.}
 	\label{fig:gauss}
 \end{figure}  
-
 \begin{figure}
 	\centering
 	\begin{minipage}[t]{.3\textwidth}
@@ -191,8 +212,7 @@ Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte w
 			~ & \texttt{running through the grass} \\
 		\end{tabular}
 	\end{minipage}
-	
-		\centering
+			\centering
 		\begin{minipage}[t]{.3\textwidth}
 			\centering
 			\vspace{0pt}
@@ -207,30 +227,71 @@ Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte w
 			\end{tabular}
 		\end{minipage}
 \caption{Twee voorbeelden waar Gauss-normalisatie de gegenereerde zin verbetert.}
+\label{fig:gauss_improve}
 \end{figure}
-
-
-
 \subsubsection{Min-Hinge-normalisatie}
+Net als Gauss-normalisatie tracht ook Min-Hinge-normalisatie langere zinnen te genereren.
+Na experimenten met hetzelfde gLSTM-netwerk met als gids CCA met een vectorgrootte van 128, blijkt dat de Min-Hinge-normalisatie hier niet in slaagt. Daarnaast verslechtert het bovendien de resultaten. Om die redenen zijn geen verdere experimenten met deze vorm van normalisatie uitgevoerd. Tabel~\ref{table:minhinge}toont de vergelijking van Gauss-normalisatie, Min-Hinge-normalisatie en geen normalisatie.
+
+\begin{table}
+	\centering
+	\begin{tabular}{lllllll}
+		~                  & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor&Zinslengte \\ \hline
+		gLSTM        & 63,5   & 42,5 			& 27,9   & 18   & 15,5&7,99  \\
+		gLSTM+MinHinge & 60,4   &40,4    &26,8   & 17,6   & 15,5& 7,98 \\
+		gLSTM+Gauss   & 62,1   & 41,9   & 28,2   & 18,3 & 15,1& 10,54 \\ \hline
+		
+	\end{tabular}
+	
+	\caption{Automatische evaluatieresultaten voor hetzelfde gLSTM-netwerk met als gids CCA met vectorgrootte 128 en verschillende normalisatiemethodes}
+	\label{table:minhinge}
+\end{table}
 
 \subsubsection{Idf-normalisatie}
 
 \section{Vergelijking met literatuur} % (fold)
 \label{sec:vergelijking_met_literatuur}
+Na de grondige evaluatie van de eigen resultaten volgt in dit onderdeel een vergelijking met de resultaten uit de meest recente literatuur.
+Deze vergelijking bevat onder andere het werk van Vinyals et al.~\cite{Google} dat de basis vormt voor het LSTM-netwerk in deze masterproef. 
+De thesis gebruikt ook gLSTM's zoals voorgesteld in de paper van Jia et al.~\cite{Fernando2015}.
+Naast deze twee hoog scorende papers bestaan er nog twee systemen die allebei aandacht integreren in hun model~\cite{Jin2015,Xu2015}.
+Jin et al.~\cite{Jin2015} voegen bovendien een sc\`enevector op basis van LDA toe aan het gebruikte LSTM-netwerk.
+Tabel~\ref{table:sota} biedt een overzicht van de best presterende eigen modellen in vergelijking met de beste modellen uit de literatuur.
+Algemeen is duidelijk dat de best presterende modellen uit deze masterproef op de laatste paper na zeker in de buurt komen van de state-of-the-art resultaten.
+
+De experimenten van deze masterproef werken met een aantal ongewijzigde parameters.
+Deze keuze is gemaakt omdat het trainen van een netwerk met een bepaalde instelling steeds bijzonder veel tijd vraagt.
+Zo duurt het trainen van een netwerk met RNN ongeveer 5 dagen op de gebruikte hardware, terwijl een netwerk met LSTM ongeveer 8 dagen vraagt.
+Een betere afstelling van deze parameters maakt betere resultaten van dezelfde systemen mogelijk.
+Dit is een mogelijke verklaring waarom het gLSTM-netwerk van Jia met 256 als vectorgrootte voor CCA en Gauss-normalisatie beter scoort dan onze implementatie.
+Toch komen de resultaten van de masterproef zeker in de buurt.
+
+Beide aandachtsmodellen scoren het beste in de literatuur. Het toevoegen van aandacht aan de netwerken van deze masterproef lijkt dus een veelbelovende uitbreiding.
+Het model van \cite{Jin2015} claimt de hoogste resultaten op de Flickr30k testverzameling.
+Het toevoegen van aandacht aan het netwerk maakt duidelijk het trainen van het netwerk complexer en bijgevolg ook trager.
+Het \emph{RNN+LDA}-model doet daarom zeker niet onder. De resultaten liggen immers niet veraf en door het gebruik van een RNN en weinig complexe toevoegingen traint het sneller.
+In vergelijking met ons model bestaande uit gLSTM met LDA gebruik~\cite{Jin2015} bijvoorbeeld een CNN die aparte regio's ontdekt. De ontdekte regio's en hun representatie vormen samen de voorstelling van een afbeelding in plaats van \'e\'en CNN-output zoals in deze thesis. Daarnaast maakt het gebruik van twee LSTM's met elk een andere functie. Het systeem integreert bovendien een aandachtsmodel in het netwerk.
+In hun experimenten bepalen ze hun vocabularium door enkel woorden te selecteren die meer dan 20 keer voorkomen, wat hoger is dan de 5 in dit werk waardoor het systeem wel minder woorden moet leren begrijpen.
+Het is opvallend dat de best scorende paper werd gepubliceerd in juni 2015, maar tot op het schrijven van deze masterproef geen publicatie heeft.
 
 \begin{table}
 	\centering
 	\begin{tabular}{llllll}
-		~                     & B1   & B2   & B3   & B4   & Meteor \\ \hline
-		Google NIC\cite{Google}            & 66,3 & 42,3 & 27,7 & 18,3 & ~      \\
-		gLSTM CCA + gauss\cite{Fernando2015}     & 64,6 & 44,6 & 30,5 & 20,6 & 17,9  \\
-		gLSTM CCA + polyn.\cite{Fernando2015}    & 59,8 & 41,3 & 29,3 & 19,2 & 18,6  \\
-		Xu attention\cite{Xu2015}         & 66,9 & 43,9 & 29,6 & 19,9 & 18,5  \\
-		Karpathy\cite{Karpathy2015}              & 57,3 & 36,9 & 24   & 15,7 & ~      \\
-		Attention+scenevector\cite{Jin2015} & \textbf{67}   & \textbf{47,5} & \textbf{33}   & \textbf{24,3} & \textbf{19,4}   \\\hline
+		~                  & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+		RNN+LDA            & \textbf{65,4}   & \textbf{44}     & 29,1   & 19     & 14,38  \\
+		RNN+LDA+Gauss      & 62,7   & 42,6   & 28,8   & \textbf{19,5}   & 16,62  \\
+		gLSTM+LDA+Gauss    & 62,7   & 42,5   & 28,8   & 19,4   & \textbf{17,4}   \\
+		gLSTM+CCA          & 63,7   & 43,4   & \textbf{29,2}   & 19,3   & 15,76  \\
+		gLSTM+CCA+Gauss    & 62,1   & 41,9   & 28,2   & 18,7   & 17,18  \\ \hline
+		
+		Google NIC~\cite{Google}           & 66,3   & 42,3   & 27,7   & 18,3   & ~      \\
+		Jia (gLSTM+Gauss)~\cite{Fernando2015}  & 64,6   & 44,6   & 30,5   & 20,6   & 17,91  \\
+		Jia (gLSTM+polyn.)~\cite{Fernando2015} & 59,8   & 41,3   & 29,3   & 19,2   & 18,58  \\
+		Xu (Attention)~\cite{Xu2015}     & 66,9   & 43,9   & 29,6   & 19,9   & 18,46  \\
+		Attention+LDA~\cite{Jin2015}      & \textbf{67}    & \textbf{47,5}   & \textbf{33}     & \textbf{24,3}   & \textbf{19,4}   \\ \hline
 	\end{tabular}
-	\label{table:results_literature}
-	\caption{Vergelijking van state-of-the-art resultaten met onze resultaten}
+	\caption{Vergelijking van de best behaalde resultaten met huidige state-of-the-art}
+	\label{table:sota}
 \end{table}
 % section vergelijking_met_literatuur (end)
 
