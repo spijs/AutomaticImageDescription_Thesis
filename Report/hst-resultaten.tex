@@ -23,6 +23,7 @@ Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Br
 \end{table}
 
 Tabel~\ref{table:rnn_met_lda} toont het effect van het toevoegen van LDA aan de basisimplementatie van RNN. Alle gebruikte metrieken vertonen een stijging. LDA lijkt er dus in te slagen om de semantische drift tegen te gaan.
+Figuur~\ref{fig:ldaguide} illustreert met twee voorbeelden hoe LDA het belangrijkste onderwerp terug in de zin krijgt.  
 Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het best overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhalen lijkt standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
 
 \begin{table}
@@ -37,6 +38,41 @@ Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Met
 	\caption{Vergelijking van de resultaten van RNN na toevoeging LDA en Gaussnormalisatie}	
 	\label{table:rnn_met_lda}
 \end{table}
+
+\begin{figure}
+	\centering
+	\begin{minipage}[t]{.3\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[width=\textwidth]{Images/Results/guide/2}
+	\end{minipage}\hfill	
+	\begin{minipage}[t]{.7\textwidth}
+		\vspace{0pt}
+		\begin{tabular}{ll}
+			RNN & \texttt{A group of people walking down} \\
+		     ~ & \texttt{the street} \\
+			RNN+LDA& \texttt{A group of people are running in}\\
+			~ & \texttt{the street} \\
+		\end{tabular}
+	\end{minipage}
+	\centering
+	\begin{minipage}[t]{.3\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[width=\textwidth]{Images/Results/guide/1}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{.7\textwidth}
+		%\hspace{2pt}
+		\vspace{0pt}
+		\begin{tabular}{ll}
+			RNN & \texttt{A man is standing in front of a crowd} \\
+			RNN+LDA & \texttt{A man in a blue shirt is riding}\\
+			~ & \texttt{a horse} \\
+		\end{tabular}
+	\end{minipage}
+	\caption{Twee voorbeelden waar LDA de gegenereerde zin verbetert.}
+	\label{fig:ldaguide}
+\end{figure}
 
 Tabel~\ref{table:rnn_lda_stats} toont de verzamelde statistieken over de gegenereerde zinnen van dezelfde systemen. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts eenmaal in de verzameling gegenereerde zinnen.
 Algemeen valt op dat RNN op een testset van duizend afbeeldingen en een gemiddelde zinslengte van 7 tot 10 woorden slechts een heel beperkte woordenschat leert.
@@ -93,6 +129,19 @@ Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengt
 	\caption[Vergelijking van de verzamelde statistieken LSTM na toevoeging LDA, CCA en Gaussnormalisatie]{Vergelijking van de verzamelde statistieken LSTM na toevoeging LDA, CCA en Gaussnormalisatie. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.}
     	\label{table:lstm_stats}
     \end{table}
+    
+\subsection{Problemen van systemen}
+De best presterende systemen in deze masterproef zijn niet altijd in staat om perfect de afbeeldingen te beschrijven.
+ De gegenereerde zinnen zijn wel vloeiend en grammaticaal correct.
+  Figuur~\ref{fig:badresults}~en~\ref{fig:intermediateresult} in de appendix geven hiervan een aantal voorbeelden.
+Vaak voorkomende problemen zijn de incorrecte toewijzing van kleuren aan objecten.
+Een tweede type van problemen doet zich voor wanneer het systeem concrete aantallen voorspelt.
+Dikwijls verkiest het systeem het woord \texttt{two} terwijl er meer dan twee objecten in de afbeelding staan.
+LDA biedt hier zeker geen hulp, aangezien er dikwijls een onderwerp met aantallen bestaat waarin \texttt{two} het meest waarschijnlijke woord is.
+
+Naast deze frequente problemen is er ook een beperkt aantal zinnen waar het systeem geen benul heeft van wat er op de afbeelding staat.
+Deze afbeeldingen komen vaak overeen met de afbeeldingen waar het LDA-netwerk ook geen correcte onderwerpverdeling bepaalt.
+De verklaring hiervoor ligt wellicht in slechte representaties vanuit het CNN.
     
 \section{Invloed van parameters}
 \label{sec:invloed-parameters}
@@ -182,6 +231,8 @@ Het fenomeen dat de grootte meer speelt met Gauss-normalisatie was hier niet zic
 		\label{table:results_cca}
 \end{table}
 
+
+
 \subsection{Effect verschillende normalisatiemethodes}
 Deze thesis maakt gebruik van drie verschillende normalisatiemethodes. Als eerste zijn er Gauss en Min-Hinge met als doel de lengte van de zinnen te verhogen en zo ook hun automatische evaluatie te verbeteren. Als derde introduceert deze masterproef de idf-gewogen normalisatiefunctie. Deze heeft als doel de creativiteit van de zinnen te verhogen om zo minder algemene beschrijvingen te genereren.
 
@@ -250,6 +301,84 @@ Na experimenten met hetzelfde gLSTM-netwerk met als gids CCA met een vectorgroot
 \end{table}
 
 \subsubsection{Idf-normalisatie}
+Als laatste vorm introduceren we idf-normalisatie. Hierbij is het doel om langere zinnen te genereren die bovendien creatiever zijn.
+Dit is een reactie op de observatie uit dat tot slechts de helft van de zinnen echt uniek zijn. Bovendien is de woordenschat van de getrainde modellen steeds beperkt tot
+maximaal 383 woorden terwijl het vocabularium van de trainingsset 7413 verschillende woorden bevat.
+Het is te verwachten dat door het aanmoedigen van minder frequente woorden de Bleu-score daalt. Omdat Meteor wel rekening houdt met synoniemen voorspellen we een minder sterke daling dan bij Bleu.
+
+De experimenten vergelijken gLSTM met als gids LDA met 120 onderwerpen met en zonder idf-normalisatie.
+Tabel \ref{table:idf-results} bevat de resultaten van de automatische evaluatie. Het is duidelijk dat de Bleu-score dramatisch daalt. Ook de Meteor-score daalt, maar de daling is zoals verwacht minder sterk.
+
+Tabel~\ref{table:idf-stats} toont dat idf-normalisatie het doel wel bereikt. De gemiddelde lengte verhoogt tot ongeveer het niveau van Gauss-normalisatie. 99\% van de gegenereerde zinnen komt niet voor in de trainingsverzameling. 93\% Van de zinnen is komt slechts \'e\'en keer voor in de trainingsverzameling en gegenereerde zinnen samen. Het is dus duidelijk dat de creativiteit van dit systeem een stuk hoger ligt dan zonder idf-normalisatie.
+\begin{table}
+	\centering
+	\begin{tabular}{llllll}
+		~                  & Bleu-1 & Bleu-2 & Bleu-3 & Bleu-4 & Meteor \\ \hline
+		gLSTM        & 64,4   & 43,2 			& 28,1   & 17,8   & 16 \\
+		gLSTM+idf   & 40,7   & 23,2   & 13,4   & 7,6 & 12,82 \\ \hline
+		
+	\end{tabular}
+	
+	\caption{Vergelijking van automatische evaluatieresultaten voor hetzelfde gLSTM-netwerk met als gids LDA met 120 onderwerpen met en zonder idf-normalisatie}
+	\label{table:idf-results}
+\end{table}
+
+    \begin{table}
+    	\centering
+    	\begin{tabular}{llllll}
+    		~                   & Unieke woorden & Gem. zinslengte & Uniek1 & Uniek2 \\ \hline
+    		gLSTM         				  & 296   & 8,33   & 775   & 490  \\
+    		
+    		gLSTM+idf 				  & \textbf{721}   & \textbf{10,54}   & \textbf{991}   & \textbf{927}    \\\hline
+    	\end{tabular}
+    	\caption[Vergelijking effect idf-normalisatie op de statistieken van gLSTM met LDA met 120 onderwerpen]{Vergelijking van het effect van idf-normalisatie op de statistieken van gLSTM met LDA met 120 onderwerpen. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts \'e\'en keer wordt gegenereerd.}
+    	\label{table:idf-stats}
+    \end{table}
+    
+Met een manuele kwalitatieve evaluatie van de gegenereerde zinnen brengen we in kaart of deze creativiteit sterk ten koste gaat van de zinskwaliteit zoals de Bleu- en Meteorscores suggereren. 
+De meeste afbeeldingen in de testverzameling genereren zowel correcte grammaticaal als inhoudelijk correcte zinnen.
+Daarnaast is het woordgebruik duidelijk veel gevarieerder en vloeiender.
+Figuur~\ref{fig:betteridf} toont een aantal voorbeelden waarbij idf-normalisatie voor verbetering zorgt.
+Helaas gaat het systeem bij het genereren van veel zinnen duidelijk in de mist. Een vaak voorkomend probleem zijn woordherhalingen. Ook de woorden \texttt{African American} komen te vaak voor bij beschrijvingen waar mensen in voorkomen. Dit kan deels verklaard worden door dat de woorden \texttt{African} en \texttt{American} in hetzelfde onderwerp voorkomen als \texttt{white}, maar nu de voorkeur krijgen omdat ze weinig voorkomen in de trainingsverzameling. Voorbeelden van foutief gegenereerde zinnen zijn:\\
+\texttt{african american african american male is sitting on a rock ledge}\\
+\texttt{lone lone lone lone lone lone lone skier splashes in the water}
+
+\begin{figure}
+	\centering
+	\begin{minipage}[t]{.3\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[width=\textwidth]{Images/Results/idf/rock}
+	\end{minipage}\hfill	
+	\begin{minipage}[t]{.7\textwidth}
+		\vspace{0pt}
+		\begin{tabular}{ll}
+			gLSTM & \texttt{a group of people are standing } \\
+			~ & \texttt{in the woods} \\
+			gLSTM+idf & \texttt{several people are standing}\\
+			~ & \texttt{near a large rock formation} \\
+		\end{tabular}
+	\end{minipage}
+	\centering
+	\begin{minipage}[t]{.3\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[width=\textwidth]{Images/Results/idf/trouw}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{.7\textwidth}
+		\vspace{0pt}
+		\begin{tabular}{ll}
+			gLSTM & \texttt{A man and woman are talking} \\ 
+			~ & \texttt{to each other} \\
+			gLSTM+idf & \texttt{Two men dressed in formal attire}\\
+			~ & \texttt{share a conversation} \\
+		\end{tabular}
+	\end{minipage}
+	\caption{Twee voorbeelden waar idf-normalisatie de gegenereerde zin verbetert.}
+	\label{fig:betteridf}
+\end{figure}
+
+Deze vorm van normalisatie lijkt in vele gevallen creatievere, minder vage en soms menselijkere zinnen te genereren. Toch bevat het nog een groot aantal storende fouten. Verder onderzoek naar dit type normalisatie, misschien in combinatie met bijvoorbeeld Gauss-normalisatie, lijkt nuttig. 
 
 \section{Vergelijking met literatuur} % (fold)
 \label{sec:vergelijking_met_literatuur}
@@ -338,6 +467,19 @@ Dit ongesuperviseerd leren kan bijvoorbeeld bij een systeem dat afbeeldingen op 
 
 \section{Besluit} % (fold)
 \label{sec:besluit}
+Uit dit hoofdstuk blijkt dat onze modellen zeker voldoen aan de vooropgestelde doelstelling om verbeteringen te brengen aan de startimplementatie. Het RNN-model verbetert door het toevoegen van LDA. Gauss-normalisatie zorgt voor nog betere en langere zinnen.
+Ook het LSTM-model verbetert na toevoeging van zowel LDA als CCA. Het LSTM-netwerk leert een groter vocabularium in vergelijking met RNN. Ook hier zorgt Gauss-normalisatie voor nog verdere verbetering bij LDA en enkel voor de Meteor-score bij CCA.
+Ondanks de verbeteringen vertonen beide types van systemen nog steeds enkele problemen bij het genereren van zinnen.
+Vervolgens toont dit hoofdstuk aan dat de ideale beam-lengte afhangt van het al dan niet gebruiken van Gauss-normalisatie. Als compromis tussen de twee nemen we een grootte van 50.
+Gauss-normalisatie speelt ook een rol bij de keuze van het aantal onderwerpen bij LDA. Wanneer Gauss-normalisatie aanwezig is lijkt een groter aantal onderwerpen voordeliger. Bij CCA is dit effect van de normalisatie niet aanwezig. De experimenten reiken 256 aan als ideale grootte voor de projectievector.
+
+De experimenten tonen aan dat Gauss-normalisatie vrijwel steeds verbeteringen oplevert voor de hogere Bleu-scores en Meteor. Daarnaast cre\"eert het langere en iets creatievere zinnen. Min-Hinge-normalisatie daarentegen zorgt niet voor de verwachte verbeteringen.
+
+De resultaten van idf-normalisatie zijn dubbel. Enerzijds genereert het soms foutieve zinnen, anderzijds zijn er ook vele afbeeldingen die een creatievere en minder vage beschrijving krijgen. Meer onderzoek hiernaar lijkt nuttig.
+
+Wanneer we de bekomen resultaten vergelijken met de literatuur, blijkt dat we niet veraf zitten. Meer tijd om parameters af te stellen zorgt misschien voor deze verbetering. De best scorende systemen integreren een aandachtsmodel in hun netwerk. Aandacht lijkt dan ook zeker voor de toekomst een interessant extra onderdeel.
+
+Een laatste conclusie volgt uit de experimenten met extra ruis in de trainingsverzameling. Van de twee geteste gidsen voor het gLSTM-netwerk presteert CCA veruit het beste.
 
 % section besluit (end)
 

@@ -17,6 +17,7 @@ De verschillende modellen trainen met de volgende standaardinstellingen:
 	\item gradient clipping: drempelwaarde 5
 	\item drop-out percentage in encoder en decoder: 50
 	\item leersnelheid: 0.0001
+	\item vocabularium bevat enkel woorden die meer dan 5 keer voorkomen in de trainingsverzameling
 \end{itemize}Hierbij is de afbeeldingscodering en woordcodering de vector verkregen na de vermenigvuldiging van de representatie met een gewichtsmatrix.
 
 Tijdens het trainen van de modellen slaat het systeem op vaste momenten het huidige netwerk op, samen met de perplexiteit van de validatieset. Karpathy kiest als finaal model voor het netwerk met de beste perplexiteit. Uit enkele eenvoudige testen blijkt dat de perplexiteit slechts beperkt overeenkomt met de BLEU-score. Om die reden kiest ons systeem het netwerk dat de beste BLEU-4 score op de validatieset heeft als finaal model voor elke configuratie.
