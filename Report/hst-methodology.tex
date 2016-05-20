@@ -220,7 +220,7 @@ Wanneer het systeem een ongeziene afbeelding krijgt, gebeurt het volgende: VGGNe
     \label{fig:learningLDA}
 \end{figure}
 
-Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor ongeziene afbeeldingen de bijhorende onderwerpverdeling te voorspellen. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. In uitzonderlijke gevallen zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen onderwerp is met een grote kans. Bij de correcte voorspelling is er meestal een onderwerp dat een veel grotere waarschijnlijkheid heeft dan de andere onderwerpen. Appendix \ref{app:LDApredictions} bevat meer voorbeelden van correcte en incorrecte voorspellingen. \todo{informatie over slechte foto's toevoegen}
+Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor ongeziene afbeeldingen de bijhorende onderwerpverdeling te voorspellen. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. In uitzonderlijke gevallen zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen onderwerp is met een grote kans. Bij de correcte voorspelling is er meestal een onderwerp dat een veel grotere waarschijnlijkheid heeft dan de andere onderwerpen. Het valt ook op dat de afbeeldingen waar de voorspellingen slecht zijn, geen goede beschrijving krijgen, zelfs niet zonder het gebruik van de onderwerpsverdelingen. Dit komt waarschijnlijk doordat de afbeeldingsvector gemaakt door VGGNet van slechte kwaliteit is. Appendix \ref{app:LDApredictions} bevat meer voorbeelden van correcte en incorrecte voorspellingen.
 
 \begin{figure}[h]
     \centering
@@ -416,7 +416,6 @@ Anderzijds bevat onze implementatie \emph{min-hinge}-normalisatie. De normalisat
 Een eigen evaluatie van de gegenereerde zinnen stelt vast dat de zinnen slechts een beperkte woordenschat gebruiken. Daarnaast is er dikwijls een voorkeur voor vage termen, die wel leiden tot een hogere score, maar soms te algemeen of te beperkt zijn.
 Om die redenen voegen we een eigen implementatie toe van de $\Omega(\ell)$ functie, die gebruik maakt van $idf$-gewichten. De berekening van deze gewichten baseert zich op het aantal afbeeldingen uit de trainingsverzameling waarbij het woord in kwestie voorkomt in \'e\'en van de vijf beschrijvingen. Alvorens deze gewichten te berekenen zijn de stopwoorden verwijderd uit de trainingszinnen en reduceerde een Porter stemmer alle woorden. De berekende gewichten ($idf_i$) voor elk woord ($w_i$) komen dan overeen met volgende formule: 
 
-\todo[inline]{consistent zijn in schrijfwijze idf}
 
 \begin{equation}
     idf_i = \log(\frac{N}{n_i})
@@ -424,7 +423,6 @@ Om die redenen voegen we een eigen implementatie toe van de $\Omega(\ell)$ funct
 Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal afbeeldingen waar het woord $w_i$ voorkomt in de beschrijvingen.
 
 Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. Voorbeelden van woorden met laagste en hoogste $idf$-score staan respectievelijk in tabel \ref{tbl:idf-laag} en tabel \ref{tbl:idf-hoog}. Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderlijke woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus zo minder veelzeggend zijn. Anderzijds zorgt dit er ook voor dat er niet langer een voorkeur is voor korte zinnen.
-\todo[inline]{IDF-norm moet ook stoppen als lengte te groot is -> da nog toevoegen als geimplementeerd}
 
 
 \begin{table}[!htb]
