@@ -62,7 +62,7 @@ Het is ook mogelijk om een perceptron met meerdere outputs te gebruiken. Hierbij
 \subsubsection{Feedforward netwerk}
 \label{par:concept}
 Een feedforward neuraal netwerk is \'e\'en van de eenvoudigste neurale netwerken. Het is een perceptron met \'e\'en of meer verborgen lagen van neuronen tussen input en output. De outputs van elke laag worden enkel doorgegeven aan de volgende laag, er zijn dus geen cycli in het netwerk (zie figuur~\ref{fig:ffnn}). Elke pijl op de figuur vertegenwoordigt een vermenigvuldiging met een bepaald gewicht. Dit gewicht is een natuurlijk getal. Het is ook mogelijk om gewichten te hebben met waarde nul, waardoor de volgende laag niet volledig verbonden is. Het is voor elke knoop in het netwerk bovendien mogelijk om een transferfunctie te gebruiken alvorens de waarde door te sturen naar de volgende laag. Het netwerk kan ook een outputlaag te gebruiken met meerdere knopen, wat neerkomt op een parallelle uitvoering van meerdere netwerken met een enkele output~\cite{Bishop:1995:NNP:525960}. 
-In deze masterproef leert een eenvoudig feedforward netwerk afbeeldingsrepresentaties te projecteren op onderwerpsverdelingen.
+In deze masterproef leert een eenvoudig feedforward netwerk afbeeldingsrepresentaties te projecteren op onderwerpverdelingen.
 
 \begin{figure}[ht]
 \def\layersep{2.5cm}
@@ -436,4 +436,4 @@ Aaneensluiting van de originele dataset met het resultaat van de niet-lineaire t
 De projectie van een ongeziene afbeelding is het resultaat van het achtereenvolgens uitvoeren van alle transformaties. Voor vector $\mathbf{x}$ geeft dit $\mathbf{\hat{x}} = U_1[\mathbf{x}, \psi(A\mathbf{x})]$. Deze representatie vormt dan een verbeterde versie van de originele afbeeldingsrepresentatie, wat nuttig is voor bijvoorbeeld het opzoeken van afbeeldingen. In deze thesis zou een verbeterde vectorrepresentatie kunnen dienen als extra semantische informatie. 
 
 \section{Besluit}
-Dit hoofdstuk gaf een theoretische uitwerkingen van concepten die de modellen van deze thesis gebruiken. Als eerste volgde een bespreking van vier types van neurale netwerken: feedforward, CNN, RNN en LSTM. Daarna volgde een uitdieping van twee statistische concepten die in deze thesis als bron dienen voor semantische informatie: LDA en CCA. Het volgende hoofdstuk bespreekt concreet hoe al de besproken theorie in deze masterproef wordt samengevoegd tot een systeem dat in staat is afbeeldingen te beschrijven.
+Dit hoofdstuk gaf een theoretische uitwerkingen van concepten die de modellen van deze thesis gebruiken. Als eerste volgde een bespreking van vier types van neurale netwerken: feedforward, CNN, RNN en LSTM. Daarna volgde een uitdieping van twee statistische concepten die in deze thesis als bron dienen voor semantische informatie: LDA en CCA. Het volgende hoofdstuk bespreekt concreet hoe deze masterproef de besproken theorie samenvoegt tot een systeem dat in staat is afbeeldingen te beschrijven.
