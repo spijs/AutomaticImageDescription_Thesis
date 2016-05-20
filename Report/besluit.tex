@@ -32,10 +32,25 @@ Verschillende parameters van het systeem hebben een invloed op de resultaten. Te
 Beide methodes om semantische informatie toe te voegen aan de bestudeerde systemen ondervinden nadeel van ruis op de trainingsdata. De absolute en relatieve achteruitgang is kleiner bij het gebruik van een multimodale projectie. Dit komt vermoedelijk omdat het netwerk dan slechter in staat is om het verband te leren tussen de trainingszinnen en de vector met extra informatie.
 
 \section{Toekomstig werk}
-Zoals beschreven in het literatuuroverzicht en de resultaten scoren de modellen die gebruik maken van aandachtsmechanismes het hoogste. Het gebruik van aandachtsvectoren is echter te complex voor deze masterproef. Het is zeker interessant om te experimenteren met het toevoegen van aandachtsinformatie aan de systemen voorgesteld in deze masterproef om tot grotere verbeteringen te komen. 
+Deze sectie geeft een korte samenvatting van een aantal punten waar in de toekomst verbeteringen mogelijk zijn.
+
+Het trainen van een model met een bepaalde keuze van parameters duurt steeds ongeveer een week op de gebruikte hardware. Om die reden zijn veel van de instelbare parameters in de implementatie nooit gewijzigd. Het loont dus zeker de moeite om te onderzoeken of door wijziging hiervan de resultaten verbeteren.
+
+De huidige modellen struikelen nog steeds over een aantal problemen. Zo is de kwaliteit van de afbeeldingsvoorstelling zeker belangrijk. Betere convolutionele netwerken kunnen hiervoor zorgen. Daarnaast heeft het huidige systeem last met het toewijzen van kleur aan het juiste object. Ook aantallen vormen dikwijls een probleem. Oplossingen hiervoor zijn dus nog nodig.
+
+Bij het onderzoek naar de ideaal aantal onderwerpen van LDA, was 120 het best scorende model met Gauss-normalisatie. Het kan interessant zijn om te kijken of een nog groter aantal, deze resultaten nog verhoogt en waar net de bovengrens op dit aantal ligt.
+
+Idf-normalisatie zorgt voor creatievere en meer unieke zinnen. Helaas genereert het ook vaak compleet foute beschrijvingen. 
+Verder onderzoek naar variaties op deze normalisatie lijkt nuttig. Wanneer de fouten er uit zouden kunnen geraken, lijken de zinnen immers meer menselijk.
+
+Zoals beschreven in het literatuuroverzicht en de resultaten scoren de modellen die gebruik maken van aandachtsmechanismes het hoogste. Het gebruik van aandachtsvectoren is echter te complex voor deze masterproef. Het is zeker interessant om te experimenteren met het toevoegen van aandachtsinformatie aan de systemen voorgesteld in deze masterproef om te kijken tot welke verbeteringen deze leiden. 
 
 Een ander mogelijk vervolg op deze masterproef gaat dieper in op de robuustheid van de verschillende systemen om semantische informatie toe te voegen aan de generatiesystemen.
-De aanpak in de experimenten is vrij rudimentair, dus het zou zeker lonen om te onderzoeken wat de invloed is van verschillende gradaties van perturbatie, alsook verschillende types van ruis.
+De aanpak in de experimenten is vrij rudimentair, dus het zou zeker lonen om te onderzoeken wat de invloed is van verschillende gradaties van aanpassingen in de trainingsset, alsook verschillende types van ruis.
+
+Een laatste mogelijke verderzetting van dit werk focust op de toepassing van de automatische afbeeldingsbeschrijving. 
+Zo is verder onderzoek nodig naar hoe de integratie van dit en soortgelijke systemen in browsers en applicaties voor blinden en slechtzienden mogelijk is. Net zoals Facebook~\cite{facebook} al gebruikt op hun website, kan een algemene browser die elke afbeelding automatisch omzet in een beschrijving en deze bijvoorbeeld voorleest, zeker op appreciatie rekenen van deze mensen.
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "masterproef"
