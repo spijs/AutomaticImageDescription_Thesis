@@ -1,13 +1,13 @@
 \chapter{Resultaten} % (fold)
 \label{cha:resultaten}
-Dit hoofdstuk bevat de resultaten van de verschillende experimenten die zijn uitgevoerd. Eerst bespreken we de resultaten van de verschillende uitbreidingen met hun overeenkomstige referentiemodel. Daarna volgt een beschouwing van de invloed van verschillende parameters op de resultaten. Dan volgt een kritische vergelijking van de beste modellen met de state-of-the art resultaten. Een laatste set van experimenten gaat over een vergelijking van CCA en LDA als gids voor de gLSTM implementatie. Meer specifiek focust  de vergelijking op hoe deze twee presteren bij aanwezigheid van ruis in de trainingsdata.
+Dit hoofdstuk bevat de resultaten van de verschillende uitgevoerde experimenten. Eerst bespreken we de resultaten van de verschillende uitbreidingen met hun overeenkomstige referentiemodel. Daarna volgt een beschouwing van de invloed van verschillende parameters op de resultaten. Dan komt een kritische vergelijking van de beste modellen met de state-of-the art resultaten. Een laatste set van experimenten vergelijkt CCA en LDA als gids voor de gLSTM-implementatie. Meer specifiek focust de vergelijking op hoe deze twee presteren bij aanwezigheid van ruis in de trainingsdata.
 
 \section{Vergelijking eigen toevoegingen met referenties}  % (fold)
 \label{sec:eigen_implementaties}
-Zoals vermeld in het vorige hoofdstuk defini\"eren we een referentiemodel getraind met de basisinstellingen voor zowel RNN als LSTM. Deze sectie bespreekt het effect van het toevoegen van LDA aan het RNN-netwerk, het effect van de twee gidsen op het LSTM-netwerk en het effect van normalisatie bij de beam-search op beide netwerken. Er volgt steeds eerst een bespreking van de automatische evaluatie gevolgd door een analyse van de verzamelde statistieken van elk model.
+Zoals vermeld in het vorige hoofdstuk defini\"eren we een referentiemodel getraind met de basisinstellingen voor zowel RNN als LSTM. Deze sectie bespreekt het effect van het toevoegen van LDA aan het RNN-netwerk, het effect van de twee gidsen op het LSTM-netwerk en kort het effect van Gaussnormalisatie bij het beam-search-algoritme op beide netwerken. Er volgt steeds eerst een bespreking van de automatische evaluatie gevolgd door een analyse van de verzamelde statistieken van elk model.
 
 \subsection{RNN}
-Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Brevity Penalty. Hij voorziet ook geen informatie over Meteor of andere statistieken. Daarom voeren we eerst experimenten uit met de basisinstellingen voor RNN (\emph{ref-RNN}) zonder Brevity Penalty. Hierbij wordt op elk tijdstip de afbeelding aan het netwerk meegegeven. De resultaten van Karpathy krijgen niet op elke tijdstap de afbeelding mee. Hij rapporteert dat dit nog beter presteert. Wanneer de evaluatie toch met Brevity Penalty gebeurt, toont tabel~\ref{table:karpathy_met_bp} dat de referentie toch zeer sterk overeenkomt met de resultaten van de paper van Karpathy. 
+Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Brevity Penalty. Hij voorziet ook geen informatie over Meteor of andere statistieken. Daarom voeren we eerst experimenten uit met de basisinstellingen voor RNN (\emph{ref-RNN}) zonder Brevity Penalty. Hierbij wordt op elk tijdstip de afbeelding aan het netwerk meegegeven. In vergelijking met de uitgevoerde experimenten krijgt het systeem van Karpathy niet op elke tijdstap de afbeelding als invoer. Hij rapporteert dat dit beter presteert. Wanneer de evaluatie toch met Brevity Penalty gebeurt, toont tabel~\ref{table:karpathy_met_bp} dat onze referentie toch zeer sterk overeenkomt met de resultaten van de paper van Karpathy. 
 
 \begin{table}
 	\centering
@@ -23,8 +23,11 @@ Zoals al vermeld evalueert Karpathy~\cite{Karpathy2015} de Bleu-score met een Br
 \end{table}
 
 Tabel~\ref{table:rnn_met_lda} toont het effect van het toevoegen van LDA aan de basisimplementatie van RNN. Alle gebruikte metrieken vertonen een stijging. LDA lijkt er dus in te slagen om de semantische drift tegen te gaan.
-Figuur~\ref{fig:ldaguide} illustreert met twee voorbeelden hoe LDA het belangrijkste onderwerp terug in de zin krijgt.  
-Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het best overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhalen lijkt standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
+Figuur~\ref{fig:ldaguide} illustreert met twee voorbeelden hoe LDA het belangrijkste onderwerp terug in de zin krijgt.
+
+In het vorige experiment dient LDA samen met de afbeeldingsrepresentatie op elke tijdstap als invoer van het taalmodel. Experimenten waarbij enkel bij het begin van een zin de afbeelding wordt meegegeven, geven hier tegenover geen verbetering. 
+
+Het toevoegen van Gaussnormalisatie verbetert steeds de score van Bleu-4 en Meteor. Dit zijn de scores die het best overeenkomen met menselijke evaluatie. Net zoals Jia et al.~\cite{Fernando2015} al aanhalen lijkt standaard beam-search lagere Bleu-scores te bevoordelen. Zo domineren de korte zinnen dus niet enkel de gegenereerde zinnen, maar be\"invloeden ze ook de evaluatie.
 
 \begin{table}
 	\centering
@@ -74,10 +77,10 @@ Het toevoegen van Gauss-normalisatie verbetert steeds de score van Bleu-4 en Met
 	\label{fig:ldaguide}
 \end{figure}
 
-Tabel~\ref{table:rnn_lda_stats} toont de verzamelde statistieken over de gegenereerde zinnen van dezelfde systemen. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts eenmaal in de verzameling gegenereerde zinnen.
+Tabel~\ref{table:rnn_lda_stats} toont de verzamelde statistieken over de gegenereerde zinnen van dezelfde systemen als bij de vorige experimenten. Hierin is \emph{Uniek1} het aantal zinnen dat niet voorkomt in de trainingsverzameling. \emph{Uniek2} is het aantal zinnen dat niet voorkomt in de trainingsverzameling en slechts eenmaal in de verzameling gegenereerde zinnen.
 Algemeen valt op dat RNN op een testset van duizend afbeeldingen en een gemiddelde zinslengte van 7 tot 10 woorden slechts een heel beperkte woordenschat leert.
 Het toevoegen van LDA vermindert het aantal unieke woorden, maar verhoogt de gemiddelde zinslengte wel lichtjes. Het aantal unieke zinnen van beide types wijzigt niet sterk, al genereert het iets meer vooraf ongeziene zinnen. Het toevoegen van LDA lijkt de creativiteit van de gegenereerde zinnen dus licht te doen dalen.
-Normaliseren met de Gaussiaanse functie bereikt zijn doel. De lengte van de zinnen stijgt met gemiddeld 3 woorden. Toch stijgt het aantal unieke woorden niet mee. Het aantal zinnen dat niet voorkomt in de trainingsset stijgt naar 93\%. Toch is het aantal unieke zinnen van het tweede type niet veel hoger. Het systeem met Gauss-normalisatie genereert met andere woorden veel dezelfde ongeziene zinnen.
+Het normaliseren met de Gaussiaanse functie bereikt zijn doel. De lengte van de zinnen stijgt met gemiddeld 3 woorden. Toch stijgt het aantal unieke woorden niet mee. De woorden die de normalisatie toevoegt zijn dus veelvoorkomend. Het aantal zinnen dat niet voorkomt in de trainingsset stijgt naar 93\%. Toch is het aantal unieke zinnen van het tweede type niet veel hoger. Het systeem met Gaussnormalisatie genereert met andere woorden veel dezelfde ongeziene zinnen.
 
 \begin{table}
 	\centering
@@ -93,9 +96,9 @@ Normaliseren met de Gaussiaanse functie bereikt zijn doel. De lengte van de zinn
 \end{table}
 
 \subsection{LSTM}
-Rechtstreeks vergelijken met de LSTM-implementatie van Vinyals~\cite{Google} is onmogelijk. Hij gebruikt niet alleen een ander CNN, maar gebruikt bovendien ook ensemble-methodes wat te veel tijd kost voor onze implementatie. Daarom bepalen we ook hier met de standaardinstellingen een referentiemodel (\emph{ref-LSTM}). Tabel~\ref{table:lstm_results} vergelijkt de resultaten van de originele paper, het referentiemodel en de gLSTM's. De experimenten bevatten resultaten voor LDA met 120 onderwerpen, CCA met een multimodale voorstelling van grootte 256 en opnieuw het effect van Gauss-normalisatie. Ook hier toont de tabel dat de referentiewaarden ondanks een eenvoudiger model toch dichtbij de originele resultaten aanleunen.
+Rechtstreeks vergelijken met de LSTM-implementatie van Vinyals~\cite{Google} is onmogelijk. Hij gebruikt niet alleen een ander CNN, maar gebruikt bovendien ook ensemble-methodes wat te veel tijd kost voor onze implementatie. Daarom bepalen we ook hier met de standaardinstellingen een referentiemodel (\emph{ref-LSTM}). Tabel~\ref{table:lstm_results} vergelijkt de resultaten van de originele paper, het referentiemodel en de gLSTM's. De experimenten bevatten resultaten voor LDA met 120 onderwerpen, CCA met een multimodale voorstelling van grootte 256 en opnieuw het effect van Gaussnormalisatie. Ook hier toont de tabel dat de referentiewaarden ondanks een eenvoudiger model toch dichtbij de originele resultaten aanleunen.
 
-Zowel het gebruik van LDA als CCA als gids in de gLSTM verbetert de resultaten op elke metriek ten opzichte van de referentie. Daarenboven presteren beide gLSTM-netwerken beter op elke metriek behalve Bleu-1. Dit effect is het grootste voor CCA op de Meteor-score na. Voor zowel het referentiemodel als gLSTM met LDA zorgt Gauss-normalisatie voor een aanzienlijke verbetering voor Bleu-3, Bleu-4 en Meteor. Deze scores komen bovendien het meest overeen met menselijke evaluatie. Bij gLSTM met CCA doet er zich een vreemd fenomeen voor en verslechtert de normalisatie de Bleu-scores, maar verbetert ze de Meteor-score. 
+Zowel het gebruik van LDA als CCA als gids in de gLSTM verbetert de resultaten op elke metriek ten opzichte van de referentie. Daarenboven presteren beide gLSTM-netwerken beter dan de originele paper op elke metriek behalve Bleu-1. Dit effect is het grootste voor CCA, op de Meteor-score na. Voor zowel het referentiemodel als gLSTM met LDA zorgt Gaussnormalisatie voor een aanzienlijke verbetering voor Bleu-3, Bleu-4 en Meteor. Deze scores komen bovendien het meest overeen met menselijke evaluatie. Bij gLSTM met CCA doet er zich een vreemd fenomeen voor en verslechtert de normalisatie de Bleu-scores, maar verbetert ze de Meteor-score. 
 Het effect van LDA met Gauss en CCA ligt dicht bij elkaar. Toch scoort LDA met Gauss op de scores die meer correleren met menselijke evaluatie nipt het beste.
     \begin{table}
     	\centering
@@ -114,7 +117,7 @@ Het effect van LDA met Gauss en CCA ligt dicht bij elkaar. Toch scoort LDA met G
     \end{table}
 
 Tabel~\ref{table:lstm_stats} toont de verzamelde statistieken over de gegenereerde zinnen van de vorige systemen. In vergelijking met het referentie-RNN leert het LSTM-netwerk een groter vocabularium (ongeveer 40\% groter). Ook de zinnen zijn gemiddeld iets langer. Het aantal unieke zinnen van het eerste type daalt licht, maar het aantal van het tweede type is gelijkaardig.
-Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengte stijgt gevoelig en ook het aantal unieke zinnen van type 1 stijgt fel. Het aantal volledig unieke zinnen (\emph{Uniek2}) van beide gLSTM's stijgt sterk door het toevoegen van Gauss-normalisatie tot 60\% voor CCA. CCA als gids leert ook meer unieke woorden dan LDA en lijkt dus tot iets creatievere zinnen te leiden.
+Ook hier is het effect van Gaussnormalisatie hetzelfde. De gemiddelde zinslengte stijgt gevoelig en ook het aantal unieke zinnen van type 1 stijgt fel. Het aantal volledig unieke zinnen (\emph{Uniek2}) van beide gLSTM's stijgt sterk door het toevoegen van Gaussnormalisatie tot 60\% voor CCA. CCA als gids leert ook meer unieke woorden dan LDA en lijkt dus tot iets creatievere zinnen te leiden.
     \begin{table}
     	\centering
     	\begin{tabular}{llllll}
@@ -132,8 +135,8 @@ Ook hier is het effect van Gauss-normalisatie hetzelfde. De gemiddelde zinslengt
     
 \subsection{Problemen van systemen}
 De best presterende systemen in deze masterproef zijn niet altijd in staat om perfect de afbeeldingen te beschrijven.
- De gegenereerde zinnen zijn wel vloeiend en grammaticaal correct.
-  Figuur~\ref{fig:badresults}~en~\ref{fig:intermediateresult} in de appendix geven hiervan een aantal voorbeelden.
+ De gegenereerde zinnen zijn wel altijd vloeiend en grammaticaal correct.
+  Figuren~\ref{fig:badresults}~en~\ref{fig:intermediateresult} in de appendix geven hiervan een aantal voorbeelden.
 Vaak voorkomende problemen zijn de incorrecte toewijzing van kleuren aan objecten.
 Een tweede type van problemen doet zich voor wanneer het systeem concrete aantallen voorspelt.
 Dikwijls verkiest het systeem het woord \texttt{two} terwijl er meer dan twee objecten in de afbeelding staan.
@@ -145,14 +148,14 @@ De verklaring hiervoor ligt wellicht in slechte representaties vanuit het CNN.
     
 \section{Invloed van parameters}
 \label{sec:invloed-parameters}
-Deze sectie bekijkt de invloed van enkele parameters die hierboven vast stonden. Als eerste volgt een analyse van het effect van de gebruikte beam-lengte. Vervolgens volgt een korte bespreking van de het aantal onderwerpen van LDA. Hierna experimenteren we met de gebruikte grootte van de CCA-projectie. Als laatste bekijken we de gevolgen van de ge\"implementeerde normalisatiemethodes.
+Deze sectie bekijkt de invloed van enkele parameters die in de voorgaande experimenten hetzelfde bleven. Als eerste volgt een analyse van het effect van de gebruikte beam-lengte. Vervolgens volgt een korte bespreking van de het aantal onderwerpen van LDA. Hierna experimenteren we met de gebruikte grootte van de CCA-projectie. Als laatste bekijken we de gevolgen van de ge\"implementeerde normalisatiemethodes.
 
 \subsection{Beam-lengte}
-Ook de gekozen beam-lengte bij het beam-search-algoritme speelt een rol in de uitvoeringstijd en resultaten van elk systeem. 
+De gekozen beam-lengte bij het beam-search-algoritme speelt een rol in de uitvoeringstijd en resultaten van elk systeem. 
 Een grotere beam-lengte zorgt ervoor dat het zoekalgoritme veel meer mogelijkheden onderzoekt en bijgevolg meer tijd nodig heeft om zinnen te genereren.
 Ideaal gezien bekijkt het systeem alle mogelijke zinnen, wat neerkomt op een beam-lengte ter grootte van het vocabularium, maar dit is praktisch niet haalbaar door de te hoge vereiste tijd.
 Om die reden bekijkt dit onderdeel in welke mate de beam-lengte de resultaten be\"invloedt.
-Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LDA-vector met 120 onderwerpen. De beam-grootte varieert tussen 1 en 100. Voor grotere waarden duurt de generatie te lang. Tabel~\ref{table:beam_gauss} toont hetzelfde type van experimenten maar deze keer ook met Gauss-normalisatie. Uit deze resultaten blijkt dat een beam-grootte van 1, wat overeenkomt met steeds het meest waarschijnlijke woord nemen, de slechtste scores oplevert. Uit de hogere beam-groottes kan geen eenduidige conclusie worden getrokken. Zonder Gauss-normalisatie presteert een grootte van 75 het beste op Bleu-1 tot Bleu-3, maar niet op de belangrijke Bleu-4-score. Met Gauss-normalisatie scoort een grootte van 25 de beste resultaten. Een algemene beam-grootte van 50 zoals de standaard in deze thesis, lijkt dus een acceptabel compromis tussen deze twee best-presterende groottes.
+Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LDA-vector met 120 onderwerpen. De beam-grootte varieert tussen 1 en 100. Voor grotere waarden dan 100 duurt de generatie te lang voor praktische toepassingen. Tabel~\ref{table:beam_gauss} toont hetzelfde type van experimenten maar deze keer ook met Gaussnormalisatie. Uit deze resultaten blijkt dat een beam-grootte van 1, wat overeenkomt met steeds het meest waarschijnlijke woord nemen, de slechtste scores oplevert. Uit de hogere beam-groottes kan geen eenduidige conclusie worden getrokken. Zonder Gaussnormalisatie presteert een grootte van 75 het beste op Bleu-1 tot Bleu-3, maar niet op de belangrijke Bleu-4-score. Met Gaussnormalisatie scoort een grootte van 25 de beste resultaten. Een algemene beam-grootte van 50 zoals de standaard in deze thesis, lijkt dus een acceptabel compromis tussen deze twee best-presterende groottes.
 
     \begin{table}
     	\centering
@@ -181,13 +184,13 @@ Tabel~\ref{table:beam} toont resultaten voor een gLSTM-model met als gids een LD
     		50		  & 62,7   & 43,5   & 28,8   & \textbf{19,4}    \\
     		75        & 62,5   & 42,2   & 28,5   & 19,2    \\ \hline
     	\end{tabular}
-    	\caption{Vergelijking van de Bleu-resultaten van gLSTM met Gauss-normalisatie en verschillende beam-groottes en als gids LDA met 120 onderwerpen.}	
+    	\caption{Vergelijking van de Bleu-resultaten van gLSTM met Gaussnormalisatie en verschillende beam-groottes en als gids LDA met 120 onderwerpen.}	
     	\label{table:beam_gauss}
     \end{table}
 
 \subsection{Aantal onderwerpen LDA}
-Tijdens het leren van LDA, is buiten de manuele inspectie van de kansverdeling van de woorden bij elk onderwerp er geen concrete aanwijzing of een bepaald aantal onderwerpen leidt tot betere verdelingen.
-Tijdens het trainen van het neuraal netwerk geeft de fout op de validatieverzameling wel een indicatie van hoe goed het netwerk de verdelingen kan genereren op basis van een afbeelding.
+Tijdens het leren van LDA, is er buiten de manuele inspectie van de kansverdeling van de woorden bij elk onderwerp, geen concrete aanwijzing of een bepaald aantal onderwerpen leidt tot betere verdelingen.
+Tijdens het trainen van het neuraal netwerk geeft de fout op de validatieverzameling wel een indicatie van hoe goed het netwerk die verdelingen kan voorspellen op basis van een afbeelding.
 Na dit trainen gebruikt de gLSTM deze verdelingen als gids bij het genereren van de zinnen.
 In deze drie stappen speelt het aantal onderwerpen dus steeds een rol, maar is het finaal niet duidelijk wat het ideale aantal precies is.
 De paper van Jin et al.~\cite{Jin2015} die ook de LDA-onderwerpverdeling als extra invoer in het LSTM-netwerk voert, gebruikt 80 onderwerpen.
@@ -209,14 +212,14 @@ Tabel~\ref{table:lda-onderwerpen} bevat daarom enkel resultaten voor 80, 100 en 
     	\label{table:lda-onderwerpen}
     \end{table}
     
-Uit de resultaten blijkt dat zonder Gauss-normalisatie 100 onderwerpen het beste scoren op Bleu en ongeveer even goed als 120 op Meteor. 80 onderwerpen lijkt te weinig om het gLSTM-netwerk voldoende bij te sturen. Na toevoeging van Gauss-normalisatie presteren 120 onderwerpen beter op de belangrijkste evaluatiecriteria. Een mogelijke verklaring voor dit gedrag ligt in het feit dat Gauss-normalisatie zorgt voor langere zinnen. De laatste woorden in deze zinnen hebben bijgevolg meer last van semantische drift. Hier speelt LDA als semantische gids dus een belangrijkere rol. Het blijkt dus dat een grotere vector voor LDA vooral voor lange zinnen een meerwaarde biedt. Er bestaat wel een bovengrens in de grootte. Wanneer het aantal onderwerpen te hoog wordt, is het LDA-algoritme niet langer in staat om zinnige onderwerpen te ontdekken.
+Uit de resultaten blijkt dat zonder Gaussnormalisatie LDA met 100 onderwerpen het beste scoort op Bleu en ongeveer even goed als 120 op Meteor. 80 onderwerpen lijkt te weinig om het gLSTM-netwerk voldoende bij te sturen. Na toevoeging van Gaussnormalisatie presteren 120 onderwerpen beter op de belangrijkste evaluatiecriteria. Een mogelijke verklaring voor dit gedrag ligt in het feit dat Gaussnormalisatie zorgt voor langere zinnen. De laatste woorden in deze zinnen hebben bijgevolg meer last van semantische drift. Hier speelt LDA als semantische gids dus een belangrijkere rol. Het blijkt dus een grotere vector voor LDA vooral voor lange zinnen een meerwaarde biedt. Er bestaat wel een bovengrens in de grootte. Wanneer het aantal onderwerpen te hoog wordt, is het LDA-algoritme niet langer in staat om zinnige onderwerpen te ontdekken.
 
 \subsection{Vectorgrootte CCA} 
-Het CCA-algoritme laat toe om het aantal correlatiecomponenten te kiezen. De invloed van dit aantal op de afbeeldingsgeneratie is niet meteen duidelijk. Daarom beschouwen we net zoals Jia et al.~\cite{Fernando2015} eerst een grootte van 256, maar bekijken ook de resultaten voor een grootte van 128 en 512. De tijd nodig voor het trainen van het gLSTM-netwerk stijgt sterk met de gekozen gidsgrootte. Dit maakt een afweging tussen grootte en tijd om te trainen in de toekomst misschien noodzakelijk.
+Het CCA-algoritme laat toe om het aantal correlatiecomponenten te kiezen. De invloed van dit aantal op de afbeeldingsgeneratie is niet meteen duidelijk. Daarom beschouwen we net zoals Jia et al.~\cite{Fernando2015} eerst een grootte van 256, maar bekijken ook de resultaten voor een grootte van 128 en 512. De tijd nodig voor het trainen van het gLSTM-netwerk stijgt sterk met de gekozen gidsgrootte. Dit maakt een afweging tussen grootte en trainingstijd in de misschien noodzakelijk.
 
 Tabel~\ref{table:results_cca} toont de resultaten van de automatische evaluatiemethodes voor de drie types. Het is duidelijk dat CCA met een vectorgrootte van 256 het beste presteert op alle evaluatiemethodes. Dit model genereert eveneens meer unieke woorden en meer unieke zinnen van beide types. Een mogelijke verklaring hiervoor is dat CCA met een grootte van 128 te weinig semantische informatie meegeeft, terwijl met 512 de gLSTM net te veel focust op de semantische informatie.
 
-Het fenomeen dat de grootte meer speelt met Gauss-normalisatie was hier niet zichtbaar. Een mogelijke verklaring hiervoor is dat CCA als gids zonder Gauss-normalisatie al zeer goede prestaties bereikt.
+Het fenomeen dat de grootte meer speelt met Gaussnormalisatie zoals bij LDA was hier niet zichtbaar. Een mogelijke verklaring hiervoor is dat CCA als gids zonder Gaussnormalisatie al zeer goede prestaties bereikt.
 \begin{table}
 	\centering
 	\begin{tabular}{lllllll}
@@ -236,18 +239,18 @@ Het fenomeen dat de grootte meer speelt met Gauss-normalisatie was hier niet zic
 \subsection{Effect verschillende normalisatiemethodes}
 Deze thesis maakt gebruik van drie verschillende normalisatiemethodes. Als eerste zijn er Gauss en Min-Hinge met als doel de lengte van de zinnen te verhogen en zo ook hun automatische evaluatie te verbeteren. Als derde introduceert deze masterproef de idf-gewogen normalisatiefunctie. Deze heeft als doel de creativiteit van de zinnen te verhogen om zo minder algemene beschrijvingen te genereren.
 
-\subsubsection{Gauss-normalisatie}
-In de paper van Jia et al.~\cite{Fernando2015} presteert Gauss-normalisatie voor de meeste metrieken veruit het beste. 
-Dit is ook het geval bij de in deze masterproef bestudeerde normalisatiefuncties. Gauss-normalisatie verhoogt vrijwel steeds de Bleu-3-, Bleu-4- en Meteor-score. De lagere Bleu-scores (zonder Brevity Penalty) lijken een voorkeur te hebben voor korte zinnen. Op de belangrijkere scores scoort Gauss-normalisatie dus beter dan zonder normalisatie. 
-Het tweede doel was het genereren van langere zinnen door de lengteverdeling van de trainingsverzameling na te bootsen.
-In alle bestudeerde configuraties slaagt de normalisatie erin om de lengte van gemiddeld 7,5 te doen stijgen naar 10,3 woorden per zin. Figuur~\ref{fig:gauss} toont voor het standaard RNN-systeem hoe de lengteverdeling wijzigt. Deze stijging in het aantal woorden gaat gepaard met een sterke stijging in de zinnen die niet voorkomen in de trainingsset naar meer dan 90\%. Het aantal unieke zinnen van het tweede type verhoogt slechts licht. 
+\subsubsection{Gaussnormalisatie}
+In de paper van Jia et al.~\cite{Fernando2015} presteert Gaussnormalisatie voor de meeste metrieken veruit het beste. 
+Dit is ook het geval bij de in deze masterproef bestudeerde normalisatiefuncties. Gaussnormalisatie verhoogt vrijwel steeds de Bleu-3-, Bleu-4- en Meteor-score. De lagere Bleu-scores (zeker zonder Brevity Penalty) lijken een voorkeur te hebben voor korte zinnen. Op de belangrijkere scores scoort Gaussnormalisatie dus beter dan zonder normalisatie. De Brevity Penalty na Gaussnormalisatie is bovendien steeds gelijk aan 1, waardoor de scores met of zonder BP dezelfde zijn.
+Het tweede doel is het genereren van langere zinnen door de lengteverdeling van de trainingsverzameling na te bootsen.
+In alle bestudeerde configuraties slaagt de normalisatie erin om de lengte van gemiddeld 7,5 te doen stijgen naar 10,3 woorden per zin. Figuur~\ref{fig:gauss} toont voor het standaard RNN-systeem hoe de lengteverdeling wijzigt. Deze stijging gaat gepaard met een sterke toename van de zinnen die niet voorkomen in de trainingsset tot meer dan 90\%. Het aantal unieke zinnen van het tweede type verhoogt slechts licht. 
 
-Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte woorden. Ondanks de stijging van het aantal woorden met Gauss-normalisatie, vertonen de meest gebruikte woorden deze stijging niet en blijven de aantallen zelfs exact dezelfde. Een mogelijke verklaring ligt in de manier waarop het systeem zinnen genereert. Vermoedelijk zijn de zinnen vrijwel hetzelfde, maar zorgt de Gauss-normalisatie ervoor dat het achteraan de zin nog extra informatie over de afbeelding toevoegt. Dit kan ook een verklaring zijn voor de toename in creativiteit. De informatie aan het einde is heel variabel, terwijl de algemene en vaak iets vagere informatie aan het begin van de zin vaak gelijkaardig is. Een groot deel van de zinnen begint bijvoorbeeld met de woorden \texttt{A man is}, die tevens in elke configuratie bij de vijf meest voorkomende woorden horen. Figuur~\ref{fig:gauss_improve} toont twee voorbeelden waar Gauss-normalisatie zorgt voor een meer volledige beschrijving.
+Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte woorden. Ondanks de stijging van het aantal woorden met Gaussnormalisatie, vertonen de meest gebruikte woorden deze stijging niet en blijven de aantallen zelfs exact dezelfde. Een mogelijke verklaring ligt in de manier waarop het systeem zinnen genereert. Vermoedelijk zijn de zinnen vrijwel hetzelfde, maar zorgt de Gaussnormalisatie ervoor dat het achteraan de zin nog extra informatie over de afbeelding toevoegt. Dit kan ook een verklaring zijn voor de toename in creativiteit. De informatie aan het einde is heel variabel, terwijl de algemene en vaak iets vagere informatie aan het begin van de zin vaak gelijkaardig is. Een groot deel van de zinnen begint bijvoorbeeld met de woorden \texttt{A man is}, die tevens in elke configuratie bij de vijf meest voorkomende woorden horen. Figuur~\ref{fig:gauss_improve} toont twee voorbeelden waar Gaussnormalisatie zorgt voor een meer volledige beschrijving.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{Images/gauss_length.PNG}
-	\caption[Effect van gauss-normalisatie op de zinslengteverdeling]{Effect van Gauss-normalisatie op de zinslengteverdeling voor het standaard RNN-systeem.}
+	\caption[Effect van Gaussnormalisatie op de zinslengteverdeling]{Effect van Gaussnormalisatie op de zinslengteverdeling voor het standaard RNN-systeem.}
 	\label{fig:gauss}
 \end{figure}  
 \begin{figure}
@@ -279,12 +282,12 @@ Een ander interessant fenomeen vertoont zich in de frequentie van de gebruikte w
 				~ & \texttt{in a field} \\
 			\end{tabular}
 		\end{minipage}
-\caption{Twee voorbeelden waar Gauss-normalisatie de gegenereerde zin verbetert.}
+\caption{Twee voorbeelden waar Gaussnormalisatie de gegenereerde zin verbetert.}
 \label{fig:gauss_improve}
 \end{figure}
 \subsubsection{Min-Hinge-normalisatie}
-Net als Gauss-normalisatie tracht ook Min-Hinge-normalisatie langere zinnen te genereren.
-Na experimenten met hetzelfde gLSTM-netwerk met als gids CCA met een vectorgrootte van 128, blijkt dat de Min-Hinge-normalisatie hier niet in slaagt. Daarnaast verslechtert het bovendien de resultaten. Om die redenen zijn geen verdere experimenten met deze vorm van normalisatie uitgevoerd. Tabel~\ref{table:minhinge}toont de vergelijking van Gauss-normalisatie, Min-Hinge-normalisatie en geen normalisatie.
+Net als Gaussnormalisatie tracht ook Min-Hinge-normalisatie langere zinnen te genereren.
+Na experimenten met hetzelfde gLSTM-netwerk met als gids CCA met een vectorgrootte van 128, blijkt dat de Min-Hinge-normalisatie hier niet in slaagt. Daarnaast verslechtert het bovendien de resultaten. Om die redenen zijn geen verdere experimenten met deze vorm van normalisatie uitgevoerd. Tabel~\ref{table:minhinge}toont de vergelijking van Gaussnormalisatie, Min-Hinge-normalisatie en geen normalisatie.
 
 \begin{table}
 	\centering
@@ -302,14 +305,14 @@ Na experimenten met hetzelfde gLSTM-netwerk met als gids CCA met een vectorgroot
 
 \subsubsection{Idf-normalisatie}
 Als laatste vorm introduceren we idf-normalisatie. Hierbij is het doel om langere zinnen te genereren die bovendien creatiever zijn.
-Dit is een reactie op de observatie uit dat tot slechts de helft van de zinnen echt uniek zijn. Bovendien is de woordenschat van de getrainde modellen steeds beperkt tot
+Dit is een reactie op de observatie dat slechts hoogstens de helft van de zinnen echt uniek zijn. Bovendien is de woordenschat van de getrainde modellen steeds beperkt tot
 maximaal 383 woorden terwijl het vocabularium van de trainingsset 7413 verschillende woorden bevat.
-Het is te verwachten dat door het aanmoedigen van minder frequente woorden de Bleu-score daalt. Omdat Meteor wel rekening houdt met synoniemen voorspellen we een minder sterke daling dan bij Bleu.
+Het is te verwachten dat door het aanmoedigen van minder frequente woorden de Bleu-score daalt. Omdat Meteor wel rekening houdt met synoniemen, voorspellen we een minder sterke daling dan bij Bleu.
 
-De experimenten vergelijken gLSTM met als gids LDA met 120 onderwerpen met en zonder idf-normalisatie.
+De experimenten vergelijken gLSTM met LDA met 120 onderwerpen als gids, met en zonder idf-normalisatie.
 Tabel \ref{table:idf-results} bevat de resultaten van de automatische evaluatie. Het is duidelijk dat de Bleu-score dramatisch daalt. Ook de Meteor-score daalt, maar de daling is zoals verwacht minder sterk.
 
-Tabel~\ref{table:idf-stats} toont dat idf-normalisatie het doel wel bereikt. De gemiddelde lengte verhoogt tot ongeveer het niveau van Gauss-normalisatie. 99\% van de gegenereerde zinnen komt niet voor in de trainingsverzameling. 93\% Van de zinnen is komt slechts \'e\'en keer voor in de trainingsverzameling en gegenereerde zinnen samen. Het is dus duidelijk dat de creativiteit van dit systeem een stuk hoger ligt dan zonder idf-normalisatie.
+Tabel~\ref{table:idf-stats} toont dat idf-normalisatie het doel wel bereikt. De gemiddelde lengte verhoogt tot ongeveer het niveau van Gaussnormalisatie. 99\% van de gegenereerde zinnen komt niet voor in de trainingsverzameling. 93\% Van de zinnen is komt slechts \'e\'en keer voor in de trainingsverzameling en gegenereerde zinnen samen. Het is dus duidelijk dat de creativiteit van dit systeem een stuk hoger ligt dan zonder idf-normalisatie.
 \begin{table}
 	\centering
 	\begin{tabular}{llllll}
@@ -336,10 +339,10 @@ Tabel~\ref{table:idf-stats} toont dat idf-normalisatie het doel wel bereikt. De 
     \end{table}
     
 Met een manuele kwalitatieve evaluatie van de gegenereerde zinnen brengen we in kaart of deze creativiteit sterk ten koste gaat van de zinskwaliteit zoals de Bleu- en Meteorscores suggereren. 
-De meeste afbeeldingen in de testverzameling genereren zowel correcte grammaticaal als inhoudelijk correcte zinnen.
+De meeste afbeeldingen in de testverzameling genereren zowel correcte grammaticaal als inhoudelijk juiste zinnen.
 Daarnaast is het woordgebruik duidelijk veel gevarieerder en vloeiender.
 Figuur~\ref{fig:betteridf} toont een aantal voorbeelden waarbij idf-normalisatie voor verbetering zorgt.
-Helaas gaat het systeem bij het genereren van veel zinnen duidelijk in de mist. Een vaak voorkomend probleem zijn woordherhalingen. Ook de woorden \texttt{African American} komen te vaak voor bij beschrijvingen waar mensen in voorkomen. Dit kan deels verklaard worden door dat de woorden \texttt{African} en \texttt{American} in hetzelfde onderwerp voorkomen als \texttt{white}, maar nu de voorkeur krijgen omdat ze weinig voorkomen in de trainingsverzameling. Voorbeelden van foutief gegenereerde zinnen zijn:\\
+Helaas gaat het systeem bij het genereren van veel zinnen duidelijk in de mist. Een vaak voorkomend probleem zijn woordherhalingen. Ook de woorden \texttt{African American} komen te vaak voor bij beschrijvingen waar mensen in voorkomen. Dit kan deels verklaard worden doordat de woorden \texttt{African} en \texttt{American} in hetzelfde onderwerp voorkomen als \texttt{white}, maar nu de voorkeur krijgen omdat ze weinig voorkomen in de trainingsverzameling. Voorbeelden van foutief gegenereerde zinnen zijn:\\
 \texttt{african american african american male is sitting on a rock ledge}\\
 \texttt{lone lone lone lone lone lone lone skier splashes in the water}
 
@@ -378,32 +381,33 @@ Helaas gaat het systeem bij het genereren van veel zinnen duidelijk in de mist. 
 	\label{fig:betteridf}
 \end{figure}
 
-Deze vorm van normalisatie lijkt in vele gevallen creatievere, minder vage en soms menselijkere zinnen te genereren. Toch bevat het nog een groot aantal storende fouten. Verder onderzoek naar dit type normalisatie, misschien in combinatie met bijvoorbeeld Gauss-normalisatie, lijkt nuttig. 
+Deze vorm van normalisatie lijkt in vele gevallen creatievere, minder vage en soms menselijkere zinnen te genereren. Toch bevat het nog een groot aantal storende fouten. Verder onderzoek naar dit type normalisatie, misschien in combinatie met bijvoorbeeld Gaussnormalisatie, lijkt nuttig. 
 
 \section{Vergelijking met literatuur} % (fold)
 \label{sec:vergelijking_met_literatuur}
 Na de grondige evaluatie van de eigen resultaten volgt in dit onderdeel een vergelijking met de resultaten uit de meest recente literatuur.
 Deze vergelijking bevat onder andere het werk van Vinyals et al.~\cite{Google} dat de basis vormt voor het LSTM-netwerk in deze masterproef. 
-De thesis gebruikt ook gLSTM's zoals voorgesteld in de paper van Jia et al.~\cite{Fernando2015}.
+De vergelijking bevat ook de paper van Jia et al.~\cite{Fernando2015} die als eerste gLSTM's voorstelden.
 Naast deze twee hoog scorende papers bestaan er nog twee systemen die allebei aandacht integreren in hun model~\cite{Jin2015,Xu2015}.
 Jin et al.~\cite{Jin2015} voegen bovendien een sc\`enevector op basis van LDA toe aan het gebruikte LSTM-netwerk.
 Tabel~\ref{table:sota} biedt een overzicht van de best presterende eigen modellen in vergelijking met de beste modellen uit de literatuur.
 Algemeen is duidelijk dat de best presterende modellen uit deze masterproef op de laatste paper na zeker in de buurt komen van de state-of-the-art resultaten.
 
-De experimenten van deze masterproef werken met een aantal ongewijzigde parameters.
+De experimenten van dit werk gebruikt een aantal ongewijzigde parameters.
 Deze keuze is gemaakt omdat het trainen van een netwerk met een bepaalde instelling steeds bijzonder veel tijd vraagt.
-Zo duurt het trainen van een netwerk met RNN ongeveer 5 dagen op de gebruikte hardware, terwijl een netwerk met LSTM ongeveer 8 dagen vraagt.
+Zo duurt het trainen van een netwerk met RNN ongeveer vijf dagen op de gebruikte hardware, terwijl een netwerk met LSTM ongeveer acht dagen vraagt.
 Een betere afstelling van deze parameters maakt betere resultaten van dezelfde systemen mogelijk.
-Dit is een mogelijke verklaring waarom het gLSTM-netwerk van Jia met 256 als vectorgrootte voor CCA en Gauss-normalisatie beter scoort dan onze implementatie.
+Dit is een mogelijke verklaring waarom het gLSTM-netwerk van Jia met 256 als vectorgrootte voor CCA en Gaussnormalisatie beter scoort dan onze implementatie.
 Toch komen de resultaten van de masterproef zeker in de buurt.
 
 Beide aandachtsmodellen scoren het beste in de literatuur. Het toevoegen van aandacht aan de netwerken van deze masterproef lijkt dus een veelbelovende uitbreiding.
 Het model van \cite{Jin2015} claimt de hoogste resultaten op de Flickr30k testverzameling.
-Het toevoegen van aandacht aan het netwerk maakt duidelijk het trainen van het netwerk complexer en bijgevolg ook trager.
-Het \emph{RNN+LDA}-model doet daarom zeker niet onder. De resultaten liggen immers niet veraf en door het gebruik van een RNN en weinig complexe toevoegingen traint het sneller.
-In vergelijking met ons model bestaande uit gLSTM met LDA gebruik~\cite{Jin2015} bijvoorbeeld een CNN die aparte regio's ontdekt. De ontdekte regio's en hun representatie vormen samen de voorstelling van een afbeelding in plaats van \'e\'en CNN-output zoals in deze thesis. Daarnaast maakt het gebruik van twee LSTM's met elk een andere functie. Het systeem integreert bovendien een aandachtsmodel in het netwerk.
-In hun experimenten bepalen ze hun vocabularium door enkel woorden te selecteren die meer dan 20 keer voorkomen, wat hoger is dan de 5 in dit werk waardoor het systeem wel minder woorden moet leren begrijpen.
-Het is opvallend dat de best scorende paper werd gepubliceerd in juni 2015, maar tot op het schrijven van deze masterproef geen publicatie heeft.
+Het toevoegen van aandacht aan het netwerk maakt wel duidelijk het trainen van het netwerk complexer en bijgevolg ook trager.
+Het \emph{RNN+LDA}-model doet daarom zeker niet onder. De resultaten liggen immers niet veraf en door het gebruik van een RNN en weinig complexe toevoegingen traint en voorspelt het sneller.
+In vergelijking met ons model bestaande uit gLSTM met LDA gebruiken Jin et al.~\cite{Jin2015} bijvoorbeeld een complexere CNN die aparte regio's ontdekt. De ontdekte regio's en hun representatie vormen samen de voorstelling van een afbeelding in plaats van \'e\'en CNN-output zoals in deze thesis. Daarnaast maakt hun werk gebruik van twee LSTM's met elk een andere functie. Het systeem integreert bovendien een aandachtsmodel in het netwerk.
+Het is wel opvallend dat deze best scorende paper werd gepubliceerd in juni 2015, maar tot op het schrijven van deze masterproef geen publicatie heeft.
+
+In de experimenten van Jin et al.~\cite{Jin2015} bepalen ze hun vocabularium door enkel woorden te selecteren die meer dan 20 keer voorkomen, wat hoger is dan de 5 in dit werk waardoor het systeem wel minder woorden moet leren begrijpen. Het effect van dit aantal woorden vormt dus ook een interessante te bestuderen parameter.
 
 \begin{table}
 	\centering
@@ -463,21 +467,23 @@ Hierdoor leert het mogelijk foutieve verbanden tussen elementen in de LDA-vector
 	
 Bij het leren van meer ongesuperviseerde afbeeldingsbeschrijvingssystemen, lijkt CCA dan ook de beste kandidaat als gids omwille van de aanwezige ruis en onzekerheid.
 Dit ongesuperviseerd leren kan bijvoorbeeld bij een systeem dat afbeeldingen op het web automatisch koppelt met de meest waarschijnlijke zin uit de omgeving.
+
+Het is wel zo dat deze experimenten slechts toetsen op \'e\'en specifiek type ruis. Verder onderzoek hiernaar lijkt dan ook nuttig.
 % section ruisgevoeligheid_van_cca_en_lda (end)
 
 \section{Besluit} % (fold)
 \label{sec:besluit}
-Uit dit hoofdstuk blijkt dat onze modellen zeker voldoen aan de vooropgestelde doelstelling om verbeteringen te brengen aan de startimplementatie. Het RNN-model verbetert door het toevoegen van LDA. Gauss-normalisatie zorgt voor nog betere en langere zinnen.
-Ook het LSTM-model verbetert na toevoeging van zowel LDA als CCA. Het LSTM-netwerk leert een groter vocabularium in vergelijking met RNN. Ook hier zorgt Gauss-normalisatie voor nog verdere verbetering bij LDA en enkel voor de Meteor-score bij CCA.
+Uit dit hoofdstuk blijkt dat de modellen uit deze thesis zeker voldoen aan de vooropgestelde doelstelling om verbeteringen te brengen aan de startimplementatie. Het RNN-model verbetert door het toevoegen van LDA. Gaussnormalisatie zorgt voor nog betere en langere zinnen.
+Ook het LSTM-model verbetert na toevoeging van zowel LDA als CCA. Het LSTM-netwerk leert een groter vocabularium in vergelijking met RNN. Ook hier zorgt Gaussnormalisatie voor nog verdere verbetering bij LDA en voor verbetering op de Meteor-score bij CCA.
 Ondanks de verbeteringen vertonen beide types van systemen nog steeds enkele problemen bij het genereren van zinnen.
-Vervolgens toont dit hoofdstuk aan dat de ideale beam-lengte afhangt van het al dan niet gebruiken van Gauss-normalisatie. Als compromis tussen de twee nemen we een grootte van 50.
-Gauss-normalisatie speelt ook een rol bij de keuze van het aantal onderwerpen bij LDA. Wanneer Gauss-normalisatie aanwezig is lijkt een groter aantal onderwerpen voordeliger. Bij CCA is dit effect van de normalisatie niet aanwezig. De experimenten reiken 256 aan als ideale grootte voor de projectievector.
 
-De experimenten tonen aan dat Gauss-normalisatie vrijwel steeds verbeteringen oplevert voor de hogere Bleu-scores en Meteor. Daarnaast cre\"eert het langere en iets creatievere zinnen. Min-Hinge-normalisatie daarentegen zorgt niet voor de verwachte verbeteringen.
-
+Vervolgens toont dit hoofdstuk de invloed aan van enkele parameters. Zo hangt de ideale beam-lengte af van het al dan niet gebruiken van Gaussnormalisatie. Als compromis tussen kiezen we een grootte van 50.
+Gaussnormalisatie speelt ook een rol bij de keuze van het aantal onderwerpen bij LDA. Met Gaussnormalisatie lijkt een groter aantal onderwerpen voordeliger.
+Bij CCA is dit effect van de normalisatie niet aanwezig. De experimenten reiken 256 aan als ideale grootte voor de projectievector van CCA.
+De experimenten tonen aan dat Gaussnormalisatie vrijwel steeds verbeteringen oplevert voor de hogere Bleu-scores en Meteor. Daarnaast cre\"eert het langere en iets creatievere zinnen. Min-Hinge-normalisatie daarentegen zorgt niet voor de verwachte verbeteringen.
 De resultaten van idf-normalisatie zijn dubbel. Enerzijds genereert het soms foutieve zinnen, anderzijds zijn er ook vele afbeeldingen die een creatievere en minder vage beschrijving krijgen. Meer onderzoek hiernaar lijkt nuttig.
 
-Wanneer we de bekomen resultaten vergelijken met de literatuur, blijkt dat we niet veraf zitten. Meer tijd om parameters af te stellen zorgt misschien voor deze verbetering. De best scorende systemen integreren een aandachtsmodel in hun netwerk. Aandacht lijkt dan ook zeker voor de toekomst een interessant extra onderdeel.
+Na een vergelijking van de bekomen resultaten met de literatuur, blijkt dat we niet veraf zitten. Meer tijd om parameters af te stellen zorgt misschien voor dit laatste verschil. De best scorende systemen integreren een aandachtsmodel in hun netwerk. Aandacht lijkt dan ook zeker voor de toekomst een interessant extra onderdeel.
 
 Een laatste conclusie volgt uit de experimenten met extra ruis in de trainingsverzameling. Van de twee geteste gidsen voor het gLSTM-netwerk presteert CCA veruit het beste.
 
