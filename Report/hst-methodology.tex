@@ -144,9 +144,9 @@ Het genereren van nieuwe beschrijvingen voor ongeziene foto's gebeurt op exact d
 \section{Latent Dirichlet Analysis}
 \label{sec:LDAglobal}
 Zoals al kort aangehaald, is het nuttig om tijdens het genereren van zinnen extra semantische informatie aan het netwerk toe te voegen.
-Zo biedt het gebruik van Latent Dirichlet Analysis een groot voordeel in de taak van het genereren van nieuwe beschrijvingen. De onderwerpsverdelingen bevatten extra semantische informatie die zeer bruikbaar kan zijn voor het genereren van beschrijvingen. Zo is het bijvoorbeeld in staat om geslacht en concrete sc\`enetypes te ontdekken, waar de startimplementatie problemen mee heeft.
+Zo biedt het gebruik van Latent Dirichlet Analysis een groot voordeel in de taak van het genereren van nieuwe beschrijvingen. De onderwerpverdelingen bevatten extra semantische informatie die zeer bruikbaar kan zijn voor het genereren van beschrijvingen. Zo is het bijvoorbeeld in staat om geslacht en concrete sc\`enetypes te ontdekken, waar de startimplementatie problemen mee heeft.
 
-Deze sectie beschrijft hoe LDA zorgt voor extra semantische informatie. Dit gebeurt door eerst een model te trainen op de zinnen uit de trainingsset. Vervolgens leert een netwerk LDA-onderwerpsverdelingen te voorspellen op basis van afbeeldingsrepresentaties.
+Deze sectie beschrijft hoe LDA zorgt voor extra semantische informatie. Dit gebeurt door eerst een model te trainen op de zinnen uit de trainingsset. Vervolgens leert een netwerk LDA-onderwerpverdelingen te voorspellen op basis van afbeeldingsrepresentaties.
 
 \subsubsection{Berekening van LDA-model}
 \label{subs:Berekening van onderwerpverdeling}
@@ -220,7 +220,7 @@ Wanneer het systeem een ongeziene afbeelding krijgt, gebeurt het volgende: VGGNe
     \label{fig:learningLDA}
 \end{figure}
 
-Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor ongeziene afbeeldingen de bijhorende onderwerpsverdeling te voorspellen. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. In uitzonderlijke gevallen zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen onderwerp is met een grote kans. Bij de correcte voorspelling is er meestal een onderwerp dat een veel grotere waarschijnlijkheid heeft dan de andere onderwerpen. Appendix \ref{app:LDApredictions} bevat meer voorbeelden van correcte en incorrecte voorspellingen. \todo{informatie over slechte foto's toevoegen}
+Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor ongeziene afbeeldingen de bijhorende onderwerpverdeling te voorspellen. Dit voorspelde resultaat komt meestal zeer goed overeen met de inhoud van de foto, figuur \ref{fig:ldalearningexample}. In uitzonderlijke gevallen zijn de voorspellingen allesbehalve correct, zoals in figuur \ref{fig:wrongldalearning}. Bij dit voorbeeld is wel duidelijk te zien dat er geen onderwerp is met een grote kans. Bij de correcte voorspelling is er meestal een onderwerp dat een veel grotere waarschijnlijkheid heeft dan de andere onderwerpen. Appendix \ref{app:LDApredictions} bevat meer voorbeelden van correcte en incorrecte voorspellingen. \todo{informatie over slechte foto's toevoegen}
 
 \begin{figure}[h]
     \centering
@@ -337,7 +337,7 @@ Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Een eerste
 
 Na het berekenen van de representaties van afbeeldingen en zinnen volgt een berekening van de correlatiecomponenten. Dit gebeurt met de \texttt{MATLAB}-implementatie van het algoritme voor \emph{canonical correlation}. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en beschrijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. De experimenten maken enkel gebruik van de projectie voor afbeeldingen, aangezien Jia et al.~\cite{Fernando2015} aantonen dat het gebruik van enkel de afbeeldingsprojectie de beste resultaten oplevert.
 
-Belangrijk is dat de berekening alle zinnen apart beschouwt. Waar de LDA-implementatie de vijf zinnen per afbeelding aaneensluit tot \'e\'en zin, blijven ze hier apart. Een afbeelding kan heel uiteenlopende beschrijvingen hebben waardoor het mogelijk is dat er informatie verloren gaat als het systeem de vijf beschrijvingen als geheel ziet. Meer concreet houdt dit in dat elke foto maximaal moet correleren met elk van de vijf overeenkomstige zinnen uit de trainingsset. Bij het gebruik van LDA zoals in sectie~\ref{sec:LDAglobal} is het aangeraden om de vijf zinnen als geheel te beschouwen. Het doel van het LDA-model is om op basis van een afbeelding \'e\'en onderwerpsverdeling te bepalen. Alle vijf zinnen horen bij dezelfde afbeeling en moeten dus samen tot dezelfde onderwerpsverdeling leiden.
+Belangrijk is dat de berekening alle zinnen apart beschouwt. Waar de LDA-implementatie de vijf zinnen per afbeelding aaneensluit tot \'e\'en zin, blijven ze hier apart. Een afbeelding kan heel uiteenlopende beschrijvingen hebben waardoor het mogelijk is dat er informatie verloren gaat als het systeem de vijf beschrijvingen als geheel ziet. Meer concreet houdt dit in dat elke foto maximaal moet correleren met elk van de vijf overeenkomstige zinnen uit de trainingsset. Bij het gebruik van LDA zoals in sectie~\ref{sec:LDAglobal} is het aangeraden om de vijf zinnen als geheel te beschouwen. Het doel van het LDA-model is om op basis van een afbeelding \'e\'en onderwerpverdeling te bepalen. Alle vijf zinnen horen bij dezelfde afbeeling en moeten dus samen tot dezelfde onderwerpverdeling leiden.
 
 \section{Toevoeging van LDA onderwerpverdeling aan RNN}
 De eerder berekende LDA-onderwerpverdelingen kunnen dienen als extra semantische informatie om het generatieproces in de juiste richting te sturen. Het integreren van de onderwerpverdeling $L$ in het RNN gebeurt volgens formule~\eqref{eq:rnnldaonce} die~\eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met~\eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de onderwerpverdeling.
@@ -396,7 +396,7 @@ Jia et al. bekomen zeer goede resultaten. De eerste drie gidsen zorgen voor verb
 \subsection{gLSTM met LDA en CCA}
 Net als Jia implementeren we de gLSTM als een uitbreiding van LSTM overeenstemmend met formules~\eqref{glstm-memory-start}-\eqref{glstm-memory}.
 Om te kunnen vergelijken met hun paper kan de implementatie ook de CCA-projectie van afbeeldingen als gids gebruiken.
-Daarnaast veronderstellen we dat LDA-onderwerpsverdelingen een goede bron van semantische informatie vormen. Daarom bevat het gecre\"eerde systeem een uitbreiding waarbij LDA de gids vormt van het gLSTM-netwerk.
+Daarnaast veronderstellen we dat LDA-onderwerpverdelingen een goede bron van semantische informatie vormen. Daarom bevat het gecre\"eerde systeem een uitbreiding waarbij LDA de gids vormt van het gLSTM-netwerk.
 De experimenten beschouwen zo twee modellen, zodat het mogelijk is om na te gaan welke gids beter presteert in deze configuratie van het gLSTM-netwerk.
 
 \section{Normalisatie van beam search}
@@ -472,6 +472,6 @@ Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, ver
 \end{figure}
 
 \section{Besluit}
-Op basis van de theorie uit hoofdstuk~\ref{hst-theorie} bouwt dit hoofdstuk een systeem dat kan bestaan uit verschillende componenten.  Eerst is er een neuraal netwerk dat steeds het startpunt vormt. Dit netwerk kan een RNN of een LSTM zijn. Vervolgens zijn er verschillende manieren om de prestatie van deze basisnetwerken te verbeteren.  Een vector met een onderwerpsverdeling (LDA) of een projectie van de afbeelding (CCA) kunnen zorgen voor extra semantische informatie. Om verbetering aan te brengen in de gegenereerde zinnen implementeren we een normalisatie van het beam-search algoritme dat de zinnen vormt. Een aantal onderzochte technieken zijn door computationele complexiteit of gebrek aan verbetering niet opgenomen in de experimenten. 
+Op basis van de theorie uit hoofdstuk~\ref{hst-theorie} bouwt dit hoofdstuk een systeem dat kan bestaan uit verschillende componenten. De basis hiervoor ligt bij een bestaande implementatie. Deze implementatie gebruikt een CNN om afbeeldingen om te vormen tot een vectorvoorstelling. Deze voorstellingn dient als invoer voor een neuraal netwerk dat als taalmodel dienst doet. Dit netwerk kan een RNN of een LSTM zijn. Vervolgens zijn er verschillende manieren om de prestatie van deze basisnetwerken te verbeteren.  Een vector met een onderwerpverdeling (LDA) of een projectie van de afbeelding (CCA) kunnen zorgen voor extra semantische informatie. Om verbetering aan te brengen in de gegenereerde zinnen implementeren we drie types van normalisatie van het beam-search algoritme dat de zinnen vormt. Een aantal onderzochte technieken zijn door computationele complexiteit of gebrek aan verbetering niet opgenomen in de experimenten. 
 
 Om deze systemen te kunnen vergelijken zijn er methodes nodig die op een objectieve manier evalueren hoe modellen presteren. Het volgende hoofdstuk biedt een overzicht van de verschillende mogelijkheden op vlak van evaluatie.
