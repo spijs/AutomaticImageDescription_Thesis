@@ -29,7 +29,7 @@ Figuur~\ref{fig:methodology_overview} toont een overzicht van deze verschillende
 Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python implementatie van het recurrente neurale netwerk beschreven in een van zijn papers~\cite{Karpathy2015}. Daarnaast bevat het ook een implementatie gebaseerd op het werk van Vinyals et al.~\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
 
 \subsection{Algemeen systeem}
-Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijk systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiden van de data, het maken van tussentijdse back-ups en het aansturen van een ``oplosser''. Deze ``oplosser'' beheert de netwerken en controleert het trainingsproces.
+Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijk systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiden van de data, het maken van tussentijdse back-ups en het aansturen van een \emph{oplosser}. Deze oplosser beheert de netwerken en controleert het trainingsproces.
 
 De netwerken traint hij in batches. Hierbij traint het netwerk niet met steeds \'e\'en voorbeeld, maar met meerdere tegelijk, wat de trainingssnelheid verbetert. 
 Hij voorziet verschillende opties om dit gemeenschappelijk systeem te configureren. Hieronder volgt een overzicht van de belangrijkste parameters voor het trainen van het netwerk.
@@ -72,22 +72,22 @@ De berekende vectorrepresentatie van de afbeelding dient als input voor een recu
 \begin{figure}[tb]
     \centering
     \includegraphics[width=0.5\linewidth]{Images/karpathy.PNG}
-    \caption{Generatie van caption met recurrent neuraal netwerk~\cite{Karpathy2015}}
+    \caption[Generatie van beschrijving met recurrent neuraal netwerk]{Generatie van beschrijving met recurrent neuraal netwerk~\cite{Karpathy2015}}
 \label{fig:rnntraining}
 \end{figure}
 
 Het trainen van het RNN gebeurt op basis van de Flickr30k dataset. 
 Op basis van een willekeurig gekozen afbeelding uit de trainingsset berekent het netwerk de beste zin. Het verschil tussen deze voorspelling en de correcte zin propageert terug door het netwerk en leidt tot de juiste aanpassing van de gewichten.
 
-Evaluatie vindt plaats wanneer de trainingsset volledig is doorlopen. De perplexiteit berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Deze perplexiteit is een functie van de kans die het taalmodel geeft aan een zin in de validatieset. Voor een zin $X=x_1x_2\dots x_N$ is dit bijvoorbeeld\cite{Jurafsky:2009:SLP:1214993}:
+Evaluatie vindt plaats wanneer de trainingsset volledig is doorlopen. De perplexiteit berekend op de resultaten voor de validatieset geeft snel aan of het netwerk nog bijleert of niet. Deze perplexiteit is een functie van de kans die het taalmodel geeft aan een zin in de validatieset. Voor een zin $X=x_1x_2\dots x_N$ is dit bijvoorbeeld~\cite{Jurafsky:2009:SLP:1214993}:
 
 \begin{equation}
 PP(X)=P(x_1x_2\dots x_N)^{-\frac{1}{N}}
 \end{equation}
 
-Het systeem slaat de tussentijdse resultaten op onder de vorm van checkpoints. Deze checkpoints bevatten alle nodige parameters om het opgeslagen model te evalueren. Het is ook mogelijk om de training van het netwerk verder te zetten vanaf een gekozen checkpoint.
+Het systeem slaat de tussentijdse resultaten op in de vorm van \emph{checkpoints}. Deze checkpoints bevatten alle nodige parameters om het opgeslagen model te evalueren. Het is ook mogelijk om de training van het netwerk verder te zetten vanaf een gekozen checkpoint.
 
-Formeel gezien berekent het netwerk op basis van input vectoren (woorden in de zin) $(x_1,x_2,...,x_T)$ een reeks van verborgen vectoren $(h_1,h_2,...,h_t)$. Deze verborgen vectoren dienen daarna als de basis voor de berekening van de outputvectoren $(y_1,y_2,...,y_t)$. Deze outputs worden verkregen door formules~\eqref{eq:rnnstart}-\eqref{eq:rnnend} te herhalen voor $t = 1$ tot $t=T$.
+Formeel gezien berekent het netwerk op basis van inputvectoren (woorden in de zin) $(x_1,x_2,...,x_T)$ een reeks van verborgen vectoren $(h_1,h_2,...,h_t)$. Deze verborgen vectoren dienen daarna als de basis voor de berekening van de outputvectoren $(y_1,y_2,...,y_t)$. Deze outputs worden verkregen door formules~\eqref{eq:rnnstart}-\eqref{eq:rnnend} te herhalen voor $t = 1$ tot $t=T$.
 
 \begin{eqnarray}
      \vspace{-3mm}
@@ -98,7 +98,7 @@ Formeel gezien berekent het netwerk op basis van input vectoren (woorden in de z
      y_t & = & sm( W_{oh} h_t + b_o)
      \label{eq:rnnend}
 \end{eqnarray}
-In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}$ en $b_h, b_o$ parameters die het netwerk leert. De $W_{xy}$ zijn gewichtsmatrices, terwijl $b_i$ bias vectoren zijn. $CNN_{\theta_c}(I)$ is de output van de voorlaatste laag van VGGNet met als input afbeelding $I$. $f$ is een activatiefunctie. $\delta_{t1}$ is de Kroneckerdelta, die waarde $1$ heeft op tijdstip $t=1$ en op andere tijdstippen gelijk is aan $0$. De output $y_t$ is een kansverdeling over de verschillende woorden uit de dataset. Deze kansverdeling bevat ook een extra dimensie voor het END-symbool dat het einde van een zin aangeeft. 
+In deze vergelijkingen zijn $W_{hi}, W_{hx}, W_{hh}, W_{oh}$ en $b_h, b_o$ parameters die het netwerk leert. De $W_{xy}$ zijn gewichtsmatrices, terwijl $b_i$ bias vectoren zijn. $CNN_{\theta_c}(I)$ is de output van de voorlaatste laag van VGGNet met als inputafbeelding $I$. $f$ is een activatiefunctie. $\delta_{t1}$ is de Kroneckerdelta, die waarde $1$ heeft op tijdstip $t=1$ en op andere tijdstippen gelijk is aan $0$. De output $y_t$ is een kansverdeling over de verschillende woorden uit de dataset. Deze kansverdeling bevat ook een extra dimensie voor het END-symbool dat het einde van een zin aangeeft. 
 
 De code van Karpathy maakt bovendien op verschillende plaatsen gebruik van Rectified Linear Units of ReLu-encodering. Deze activatiefunctie zorgt voor effici\"entere gradi\"entpropagatie.
 
@@ -122,8 +122,8 @@ Anders dan het RNN van Karpathy, beschouwt deze implementatie de afbeeldingsrepr
 
 \begin{eqnarray}
 \vspace{-3mm}
-x_{-1} & = & W_{hi}CNN(I)\\
 \label{eq:lstm1}
+x_{-1} & = & W_{hi}CNN(I)\\
 p_{t+1} & = & LSTM(x_t)
 \label{eq:lstm2}
 \end{eqnarray}
@@ -131,7 +131,7 @@ p_{t+1} & = & LSTM(x_t)
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=1\linewidth]{Images/vinyals_karpathy.PNG}
-	\caption{Ontrold LSTM-model}
+	\caption[Ontrold LSTM-model]{Ontrold LSTM-model~\cite{Google}}
 	\label{fig:vinyals:karpathy}
 \end{figure}
 
@@ -339,7 +339,7 @@ Na het berekenen van de representaties van afbeeldingen en zinnen volgt een bere
 
 Belangrijk is dat de berekening alle zinnen apart beschouwt. Waar de LDA-implementatie de vijf zinnen per afbeelding aaneensluit tot \'e\'en zin, blijven ze hier apart. Een afbeelding kan heel uiteenlopende beschrijvingen hebben waardoor het mogelijk is dat er informatie verloren gaat als het systeem de vijf beschrijvingen als geheel ziet. Meer concreet houdt dit in dat elke foto maximaal moet correleren met elk van de vijf overeenkomstige zinnen uit de trainingsset. Bij het gebruik van LDA zoals in sectie~\ref{sec:LDAglobal} is het aangeraden om de vijf zinnen als geheel te beschouwen. Het doel van het LDA-model is om op basis van een afbeelding \'e\'en onderwerpverdeling te bepalen. Alle vijf zinnen horen bij dezelfde afbeeling en moeten dus samen tot dezelfde onderwerpverdeling leiden.
 
-\section{Toevoeging van LDA onderwerpverdeling aan RNN}
+\section{Toevoeging van LDA-onderwerpverdeling aan RNN}
 De eerder berekende LDA-onderwerpverdelingen kunnen dienen als extra semantische informatie om het generatieproces in de juiste richting te sturen. Het integreren van de onderwerpverdeling $L$ in het RNN gebeurt volgens formule~\eqref{eq:rnnldaonce} die~\eqref{eq:rnn} vervangt. Het rode deel in de formule duidt de verschillen met~\eqref{eq:rnn} aan. $W_l$ is een gewichtsmatrix voor vermenigvuldiging met de onderwerpverdeling.
 
 \begin{equation}
@@ -387,7 +387,7 @@ Hierbij is de gids $g$ de vectorvoorstelling van de semantische informatie. De g
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{Images/jia}
-	\caption{LSTM-blok in het zwart. Uitbreidingen van gLSTM in het rood~\cite{Fernando2015}.}
+	\caption[Schematische weergave gLSTM-blok]{Schematische weergave gLSTM-blok. LSTM-blok in het zwart. Uitbreidingen van gLSTM in het rood~\cite{Fernando2015}.}
 	\label{fig:glstm}
 \end{figure}
 
