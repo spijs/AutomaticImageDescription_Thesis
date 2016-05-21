@@ -81,24 +81,22 @@ Moesten we iemand vergeten zijn in dit dankwoord, alvast onze excuses.
 \begin{abstract}
   Het automatisch beschrijven van afbeeldingen is een complex probleem. Het combineert componenten uit de vakgebieden van computervisie en natuurlijke taalverwerking. Voor een machine is het niet eenvoudig om deze twee domeinen te verbinden tot een kwalitatief afbeeldingsbeschrijvend systeem. De literatuur biedt een aantal mogelijke oplossingen die op basis van een dataset met afbeeldingen leren om automatisch correcte beschrijvingen te genereren. Een veel voorkomend probleem met deze systemen is dat een groot deel van de gegenereerde zinnen niet aansluit bij wat mensen als kwalitatief ervaren. De gebruikte woorden zijn te algemeen en tonen weinig verband met de foto. Vaak zijn de gegenereerde zinnen ook korter dan de beschrijvingen die een mens zou geven.
  
- Deze masterproef biedt een aantal oplossingen voor deze problemen. Dit werk vertrekt vanaf een bestaande implementatie van twee systemen. Deze systemen gebruiken een eerste neuraal netwerk om afbeeldingen om te zetten in vectorvoorstellingen. Vervolgens dient deze voorstelling als invoer in een tweede neuraal netwerk dat als taalmodel dient. Uit dit taalmodel bepaalt een algoritme dan de meest waarschijnlijke beschrijving. Deze systemen trainen en testen met vooraf samengestelde verzamelingen van afbeeldingen en bijbehorende beschrijvingen.
+ Deze masterproef biedt een aantal oplossingen voor deze problemen. Dit werk vertrekt vanaf een bestaande implementatie van twee systemen. Deze systemen gebruiken een neuraal netwerk om afbeeldingen om te zetten in vectorvoorstellingen. Vervolgens dient deze voorstelling als invoer in een tweede neuraal netwerk dat als taalmodel dient. Uit dit taalmodel bepaalt een algoritme dan de meest waarschijnlijke beschrijving. Deze systemen trainen en testen met vooraf samengestelde verzamelingen van afbeeldingen en bijbehorende beschrijvingen.
  
- Het toevoegen van semantische informatie uit de afbeelding aan de twee bestaande systemen maakt het mogelijk om zinnen te genereren die beter overeenkomen met de afbeelding en die een bredere woordenschat gebruiken. Het onderzoek focust op twee specifieke vormen van informatie. Ten eerste is er informatie die verband houdt met onderwerpen die aanwezig zijn in de afbeelding. Uit de afbeeldingen en zinnen uit de trainingsset leert het systeem een verband tussen afbeelding en onderwerp. Een projectie bepaalt dan de onderwerpen die in elke ongeziene afbeelding aanwezig zijn. Op die manier gebruikt het beschrijvingssysteem woorden die beter aansluiten bij de onderwerpen aanwezig in de afbeelding. Een tweede manier om informatie toe te voegen is het gebruik van een multimodale ruimte tussen afbeelding en tekst. Een CCA-projectie maakt het mogelijk om een ruimte te leren waarin overeenkomstige afbeeldingen en zinnen maximaal correleren. Door nieuwe afbeeldingen in deze ruimte te projecteren verkrijgt het systeem informatie over welke zinnen dicht in de buurt van de afbeelding liggen, om zo de generatie in de juiste richting te sturen. De experimenten maken duidelijk dat beide technieken zorgen voor verbeteringen.
+ Een eerste verbetering is het toevoegen van semantische informatie uit de afbeelding aan de twee bestaande systemen. Ditmaakt het mogelijk om zinnen te genereren die beter overeenkomen met de afbeelding en een bredere woordenschat gebruiken. Het onderzoek focust op twee specifieke vormen van informatie. Ten eerste is er informatie die verband houdt met onderwerpen die aanwezig zijn in de afbeelding. Uit de afbeeldingen en zinnen uit de trainingsset leert het systeem een verband tussen afbeelding en onderwerp. Een projectie bepaalt dan voor elke ongeziene afbeelding de onderwerpen die erin aanwezig zijn. Op die manier gebruikt het beschrijvingssysteem woorden die beter aansluiten bij de onderwerpen aanwezig in de afbeelding. Een tweede manier om informatie toe te voegen is het gebruik van een multimodale ruimte tussen afbeelding en tekst. Een CCA-projectie maakt het mogelijk om een ruimte te leren waarin overeenkomstige afbeeldingen en zinnen maximaal correleren. Door nieuwe afbeeldingen in deze ruimte te projecteren verkrijgt het systeem informatie over welke zinnen dicht in de buurt van de afbeelding liggen, om zo de generatie in de juiste richting te sturen. De experimenten maken duidelijk dat beide technieken zorgen voor verbeteringen.
  
- Een tweede aangebrachte verbetering focust op de lengte van de zinnen. Door een normalisatie toe te voegen aan de laatste stap van het generatieproces is het mogelijk om bepaalde zinnen te verkiezen op basis van hun lengte. Op die manier is er voorkeur voor zinnen die qua lengte beter overeen komen met de trainingszinnen. Uit de experimenten blijkt dat het toevoegen van normalisatie leidt tot een meer uniforme verdeling van de zinslengtes die beter aansluit bij die van de trainingsset. Bovendien stijgt hierdoor de kwaliteit van de beschrijvingen.
+ Een tweede aangebrachte verbetering focust op de lengte van de zinnen. Door een normalisatie toe te voegen aan de laatste stap van het generatieproces is het mogelijk om bepaalde zinnen te verkiezen op basis van hun lengte. Op die manier is er voorkeur voor zinnen die qua lengte beter overeen komen met de trainingszinnen. Uit de experimenten blijkt dat het toevoegen van normalisatie leidt tot een meer uniforme verdeling van de zinslengtes die beter aansluit bij die van de trainingsset. Bovendien stijgt hierdoor de kwaliteit van de beschrijvingen. Een tweede normalisatiemethode focust op de creativiteit van de zinnen. Door te mikken op minder vaak gebruikte woorden in de trainingsset slaagt het systeem er in om een grotere woordenschat te leren en meer unieke beschrijvingen te genereren. Helaas gaat deze creativiteit dikwijls gepaard met foutieve zinsconstructies en beschrijvingen die afwijken van de inhoud van de afbeelding.
  
- Een tweede normalisatiemethode focust op de creativiteit van de zinnen. Door te mikken op minder vaak gebruikte woorden in de trainingsset slaagt het systeem er in om een grotere woordenschat te leren en meer unieke beschrijvingen te genereren. Helaas gaat deze creativiteit dikwijls gepaard met foutieve zinsconstructies en beschrijvingen die afwijken van de inhoud van de afbeelding.
- 
- Tenslotte biedt deze masterproef een vergelijking van de twee manieren om semantische informatie toe te voegen. Een perturbatie van de dataset door het vervangen van een aantal woorden leidt tot een vergelijking op gebied van ruisgevoeligheid. Experimenten wijzen uit de de multimodale projectie beter bestand is tegen dit type van ruis.
+ Tenslotte biedt deze masterproef een vergelijking tussen de twee manieren om semantische informatie toe te voegen. Een perturbatie van de dataset door het vervangen van een aantal woorden leidt tot een vergelijking op gebied van ruisgevoeligheid. Experimenten wijzen uit de de multimodale projectie beter bestand is tegen dit type van ruis.
  
  De uiteindelijke resultaten van de beste modellen in deze masterproef presteren zeker niet ondermaats in de vergelijking met de meest recente literatuur. Bovendien was het perfect afstellen van de gebruikte modellen niet mogelijk door de hoge trainingstijd die de neurale netwerken vragen. Werken in de literatuur die aandachtsmodellen toevoegen aan hun systeem presteren wel steeds beter. Dit gaat weliswaar ten koste van extra complexiteit, maar is zeker interessant voor toekomstig onderzoek.
  \end{abstract}
 
 % Een lijst van figuren en tabellen is optioneel
-%\listoffigures
-%\listoftables
+\listoffigures
+\listoftables
 % Bij een beperkt aantal figuren en tabellen gebruik je liever het volgende:
-\listoffiguresandtables
+% \listoffiguresandtables
 % De lijst van symbolen is eveneens optioneel.
 % Deze lijst moet wel manueel aangemaakt worden, bv. als volgt:
 \chapter{Lijst van afkortingen en symbolen}
@@ -127,8 +125,8 @@ Moesten we iemand vergeten zijn in dit dankwoord, alvast onze excuses.
     RGB & Rood-Groen-Blauw\\
     RNN & Recurrent Neuraal Netwerk \\
     SWO & Singulierewaardenontbinding \\
-    tf-idf & Termfrequentie en inverse document frequentie \\
-	VDR & Visual Dependency Representation (Visuele Afhankelijkheid Representatie)\\
+    tf-idf & Termfrequentie en inverse documentfrequentie \\
+	VDR & Visual Dependency Representation (visuele afhankelijkheidsrepresentatie)\\
 	VP & Verb Phrase (werkwoordgroep)\\
 
   \end{tabularx}
@@ -174,6 +172,7 @@ Moesten we iemand vergeten zijn in dit dankwoord, alvast onze excuses.
 	$R$ & Matrix voor Random Fourier Feature \\
 	$s$ & Zin \\
 	$sd$ & Standaardafwijking zinlengtes\\
+  $sda$ & Gemiddelde afstand tot 50e dichtste buur\\
 	$sm$ & Softmaxfunctie\\
 	$tf$& Termfrequentie \\
 	$u'_t$ & Output van LSTM-cel \\
@@ -197,17 +196,17 @@ Moesten we iemand vergeten zijn in dit dankwoord, alvast onze excuses.
 	$\alpha$ & Dirichlet prior\\
 	$\beta$ & Dirichlet prior \\
 	$\gamma$ & Parameter Meteor\\
-	$\delta_{ik}$ & Kroneckerdelta functie\\
+	$\delta_{ik}$ & Kroneckerdelta-functie\\
 	$\epsilon$ & Afvlakkingsparameter\\
 	$\eta$ & Leersnelheid neuraal netwerk\\
     $\theta$ & Kansverdeling onderwerpen per document (LDA)\\
 	$\kappa$ & Parameter Meteor \\
 	$\lambda$ & Parameter Meteor \\
-	$\mu$ & Gemiddelde zinlengte\\
+	$\mu$ & Gemiddelde zinslengte\\
 	$\rho$ & Afvlakkingsparameter\\
 	$\sigma$ & Sigmo\"idefunctie \\
 	$\phi$ & Kansverdeling woorden per onderwerp (LDA)\\
-	$\psi$ & Lineaire functie Stacked CCA \\
+	$\psi$ & Lineaire functie Stacked Auxiliary Embedding \\
 	$\Omega$ & Normalisatiefactor bij beam search \\
 		
 	\end{tabularx}

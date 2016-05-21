@@ -6,7 +6,7 @@ Uit de analyse van zinnen gegenereerd door het startpunt blijkt dat, naarmate de
 
 Vervolgens staat dit hoofdstuk stil bij de manier waarop deze informatie kan bijdragen tot de twee gebruikte taalmodellen. Dit kan als vector rechtstreeks in het RNN of als een semantische gids in het LSTM-netwerk. 
 
-De laatste twee secties bespreken nog twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De startpuntimplementatie vertoont een voorkeur voor korte zinnen. Daarom beschrijft de voorlaatste sectie een normalisatiemethode voor beam-search. Deze methode is in staat langere zinnen te genereren. Het hoofdstuk sluit af met een beschrijving van Feedforward Sequential Memory Networks, een ander type neuraal netwerk, dat volgens de auteurs ervan veelbelovende eigenschappen heeft.
+De laatste twee secties bespreken twee toevoegingen die geen semantische informatie toevoegen aan het netwerk. De startpuntimplementatie vertoont een voorkeur voor korte zinnen. Daarom beschrijft de voorlaatste sectie een normalisatiemethode voor beam-search. Deze methode is in staat langere zinnen te genereren. Het hoofdstuk sluit af met een beschrijving van Feedforward Sequential Memory Networks, een ander type neuraal netwerk, dat volgens de auteurs ervan veelbelovende eigenschappen heeft.
 
 Figuur~\ref{fig:methodology_overview} toont een overzicht van deze verschillende concepten, samen met de sectie waar ze beschreven staan. Figuur~\ref{fig:system_overview} geeft een schematische weergave van hoe de verschillende beschreven componenten samen een afbeeldingsbeschrijvingssysteem vormen.
 \begin{figure}
@@ -26,7 +26,7 @@ Figuur~\ref{fig:methodology_overview} toont een overzicht van deze verschillende
 
 
 \section{Startpunt}
-Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python implementatie van het recurrente neurale netwerk beschreven in een van zijn papers~\cite{Karpathy2015}. Daarnaast bevat het ook een implementatie gebaseerd op het werk van Vinyals et al.~\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
+Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub-pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python-implementatie van het recurrente neurale netwerk beschreven in een van zijn papers~\cite{Karpathy2015}. Daarnaast bevat het ook een implementatie gebaseerd op het werk van Vinyals et al.~\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
 
 \subsection{Algemeen systeem}
 Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijk systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiden van de data, het maken van tussentijdse back-ups en het aansturen van een \emph{oplosser}. Deze oplosser beheert de netwerken en controleert het trainingsproces.
@@ -39,11 +39,11 @@ Hij voorziet verschillende opties om dit gemeenschappelijk systeem te configurer
 	\item aantal afbeeldingen per batch
 	\item type oplosser: rmsprop, Adagrad, Adadelta of gewone gradient descent
 	\item afvlakkingsparameter voor rmsprop en Adadelta
-	\item epsilon afvlakking bij rmsprop, Adagrad en Adadelta
+	\item epsilon-afvlakking bij rmsprop, Adagrad en Adadelta
 	\item al dan niet gebruiken van gradient clipping
 	\item drop-out percentage in encoder en decoder
 	\item leersnelheid
-	\item aantal keer een woord moet voorkomen in de trainingsset, vooraleer het wordt opgenomen in het vocabularium
+	\item aantal keer dat een een woord moet voorkomen in de trainingsset, vooraleer het wordt opgenomen in het vocabularium
 \end{itemize}
 Als CNN gebruikt hij het bestaande vooraf getrainde netwerk VGGNet.
 
@@ -64,7 +64,7 @@ De representatie die Karpathy gebruikt voor afbeeldingen, is de output van de vo
 Aangezien VGGNet momenteel \'e\'en van de best presterende CNN's is op het gebied van afbeeldingsrepresentatie zijn de afbeeldingsvectoren in deze thesis berekend met VGGNet. De berekeningen gebeuren met een publiek beschikbare implementatie in Caffe~\cite{Jia2014}.
 
 \subsubsection{Woordrepresentatie}
-Karpathy~\cite{Karpathy2015} stelt vast dat voorgetrainde word embeddings zoals \texttt{word2vec} geen toegevoegde waarde bieden bij het voorstellen van woorden. Om die reden gebruikt Karpathy een one-hotcodering waarbij \'e\'en specifieke code is toegewezen aan het start- en stopwoord. Karpathy kiest ervoor om in zijn model enkel woorden te gebruiken die meer dan vijf keer voorkomen in de trainingsset. Als woorden minder dan vijf keer voorkomen, heeft het systeem te weinig voorbeelden om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix $W_{hx}$ en een sommatie met een biasvector. Deze gewichtsmatrix en vector wijzigen mee tijdens het trainingsproces van het netwerk. Op deze manier zijn de semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig.
+Karpathy~\cite{Karpathy2015} stelt vast dat voorgetrainde word embeddings zoals \texttt{word2vec} geen toegevoegde waarde bieden bij het voorstellen van woorden. Om die reden gebruikt hij een one-hotcodering waarbij \'e\'en specifieke code is toegewezen aan het start- en stopwoord. Karpathy kiest ervoor om in zijn model enkel woorden te gebruiken die meer dan vijf keer voorkomen in de trainingsset. Als woorden minder dan vijf keer voorkomen, heeft het systeem te weinig voorbeelden om de betekenis en het gebruik van dit woord te leren. Vooraleer een woord als input dient voor het neurale netwerk, vindt eerst nog een vermenigvuldiging plaats met een gewichtsmatrix $W_{hx}$ en een sommatie met een biasvector. Deze matrix en vector wijzigen mee tijdens het trainingsproces van het netwerk. Op deze manier zijn de semantische verbanden tussen de woordrepresentaties, net als bij word embeddings, toch aanwezig.
 
 \subsubsection{Van afbeelding naar beschrijving}
 De berekende vectorrepresentatie van de afbeelding dient als input voor een recurrent neuraal netwerk. Tijdens de training voorspelt het netwerk het eerste woord op basis van de afbeeldingsvector en een speciale vector die de start van een zin voorstelt. Op basis van het gegenereerde woord voorspelt het model dan wat het volgende woord is. Dit proces herhaalt zich tot het einde van de zin bereikt is. Figuur~\ref{fig:rnntraining} toont een eenvoudige weergave van hoe het RNN een beschrijving genereert.

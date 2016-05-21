@@ -7,9 +7,9 @@ Dit hoofdstuk beschrijft het probleem van automatische afbeeldingsbeschrijving. 
 Voor een mens is het beschrijven van een afbeelding zeer eenvoudig. Hij ziet in een oogopslag welke objecten zich in de foto bevinden en in welke relaties ze zich verhouden. Het taalgevoel eigen aan de mens maakt het bedenken van een beschrijvende zin allesbehalve problematisch.
 Voor een computer is dit vraagstuk echter veel complexer.
 
-Automatische afbeeldingsbeschrijving bevindt zich op het snijpunt van computervisie en natuurlijke taalverwerking door de combinatie van afbeeldingen en tekst. Klassiek gezien worden deze disciplines beschouwd als losstaande vakgebieden. Voor het beschrijven van afbeeldingen is er echter nood aan een combinatie van technieken uit beide vakgebieden. Het systeem moet als eerste in staat zijn de verschillende objecten in de foto te herkennen. De computer moet ook een notie hebben van wat elk object precies is en hoe de objecten zich verhouden. Daarna pas kan het systeem een grammaticaal correcte, vloeiende zin genereren. Om dit laatste te doen is het nodig dat de computer ook een soort van ``taalgevoel'' heeft. Een ander probleem is de ambigu\"iteit die onvermijdelijk optreedt bij het gebruik van taal en beeld: woorden kunnen verschillende betekenissen hebben, afbeeldingen hebben verschillende mogelijke beschrijvingen, \ldots
+Automatische afbeeldingsbeschrijving bevindt zich op het snijpunt van computervisie (CV) en natuurlijke taalverwerking (NLP) door de combinatie van afbeeldingen en tekst. Klassiek gezien worden deze disciplines beschouwd als losstaande vakgebieden. Voor het beschrijven van afbeeldingen is er echter nood aan een combinatie van technieken uit beide vakgebieden. Het systeem moet als eerste in staat zijn de verschillende objecten in de foto te herkennen. De computer moet ook een notie hebben van wat elk object precies is en hoe de objecten zich verhouden. Daarna pas kan het systeem een grammaticaal correcte, vloeiende zin genereren. Om dit laatste te doen is het nodig dat de computer over enige vorm van ``taalgevoel'' kan beschikken. Een ander probleem is de ambigu\"iteit die onvermijdelijk optreedt bij het gebruik van taal en beeld: woorden kunnen verschillende betekenissen hebben, afbeeldingen hebben verschillende mogelijke beschrijvingen, \ldots
 
-Het genereren van beschrijvingen is nauw gerelateerd aan andere, eerder onderzochte problemen. Het opzoeken van afbeeldingen is hiervan het bekendste voorbeeld. Op basis van een aantal sleutelwoorden, of een volledige zin, zoekt een algoritme de afbeelding in een database die het beste overeenkomt met de vraag. In grote lijnen is dit het omgekeerde van wat deze masterproef beoogt. Dit werk zet afbeeldingen om in tekstfragmenten, terwijl het opzoeken van afbeeldingen een tekstfragment omzet in een afbeelding.
+Het genereren van beschrijvingen is nauw gerelateerd aan andere, eerder onderzochte problemen. Het opzoeken van afbeeldingen is hiervan het bekendste voorbeeld. Op basis van een aantal sleutelwoorden, of een volledige zin, zoekt een algoritme in een database naar de afbeelding die het beste overeenkomt met de vraag. In grote lijnen is dit het omgekeerde van wat deze masterproef beoogt. Dit werk zet afbeeldingen om in tekstfragmenten, terwijl het opzoeken van afbeeldingen een tekstfragment omzet in een afbeelding.
 
 Aan de NLP-kant zijn veel aspecten van de automatische afbeeldingsbeschrijving gelijkaardig aan de automatische machinevertaling. Hierbij probeert een systeem zinnen of volledige teksten automatisch te vertalen van een brontaal naar een doeltaal. Voor dit probleem bestaan verschillende types van systemen. Wanneer een systeem concreet de vertaling van een zin woord per woord maakt, werkt het dikwijls met een geleerd taalmodel. Dit taalmodel probeert het taalgevoel van de mens te simuleren. Naar analogie met machinevertaling beschouwt de literatuur afbeeldingsbeschrijving dikwijls als automatische vertaling van afbeeldingen naar het Engels.
 
@@ -28,7 +28,7 @@ Meer specifiek legt dit proefschrift de focus op het ontwikkelen van een taalmod
 
 
 \section{Toepassingen}
-Het oplossen van dit probleem heeft naast academische ook praktische toepassingen. Zo maakt een afbeeldingsbeschrijvend systeem het mogelijk om voor slechtzienden te beschrijven wat er op de afbeeldingen van een webpagina staat. Indien een browser voor slechtzienden bovendien in staat is om geschreven tekst uit te spreken, krijgen slechtzienden hierdoor betere toegang tot het internet. Ook internetgigant Facebook ziet het nut van zulke systemen. Daarom hebben hun ontwikkelaars tijdens het schrijven van deze masterproef een nieuwe functie toegevoegd aan Facebook, die in staat is afbeeldingen op hun website te beschrijven voor slechtzienden~\cite{facebook}.
+Het oplossen van dit probleem heeft naast academische ook praktische toepassingen. Zo maakt een afbeeldingsbeschrijvend systeem het mogelijk om voor slechtzienden te beschrijven wat er op de afbeeldingen van een webpagina staat. Indien een browser voor slechtzienden bovendien in staat is om geschreven tekst uit te spreken, krijgen zij hierdoor betere toegang tot het internet. Ook internetgigant Facebook ziet het nut van zulke systemen. Daarom hebben hun ontwikkelaars tijdens het schrijven van deze masterproef een nieuwe functie toegevoegd aan Facebook, die in staat is afbeeldingen op hun website te beschrijven voor slechtzienden~\cite{facebook}.
 
 Daarnaast zijn ook toepassingen denkbaar voor het automatisch ordenen van foto's op basis van dezelfde woorden in de gegenereerde beschrijvingen. Denk bijvoorbeeld concreet aan een filter die afbeeldingen filtert met het woord \texttt{sneeuw} in de beschrijving. 
 
@@ -40,29 +40,29 @@ Een andere mogelijke oplossing is het integreren van een afbeeldingsbeschrijvend
 \label{sec:Datasets}
 Deze sectie beschrijft de drie meest gebruikte datasets voor training en evaluatie van modellen voor afbeeldingsbeschrijving: Flickr8k, Flickr30k en MS COCO.
 
-\paragraph{Flickr8k}
+\subsection{Flickr8k}
 \label{par:Flickr8k}
 De Flickr8k dataset~\cite{Hodosh2013} bevat 8.092 foto's die focussen op mensen en dieren (vooral honden) die een actie uitvoeren. De foto's zijn manueel geselecteerd om de grootst mogelijke vari\"eteit te garanderen. De selectie gebeurde vanuit Flickr\footnote{\url{https://flickr.com}}, een online portaal voor het hosten van afbeeldingen.
 
-Mensen met Engels als moedertaal stelden de bijhorende beschrijvingen manueel op. De onderzoekers maakten gebruik van~\emph{Amazon Mechanical Turk workers}\footnote{\url{https://www.mturk.com}}, een online platform om ``Human Intelligence Tasks'' te laten uitvoeren door mensen. Voor een kleine vergoeding kan iedereen die dat wenst de taken oplossen. 
+Mensen met Engels als moedertaal stellen de bijhorende beschrijvingen manueel op. De onderzoekers maken gebruik van~\emph{Amazon Mechanical Turk workers}\footnote{\url{https://www.mturk.com}}, een online platform om ``Human Intelligence Tasks'' te laten uitvoeren door mensen. Voor een kleine vergoeding kan iedereen die dat wenst de taken oplossen. 
 
 Een voorafgaande test van de personen die de zinnen schrijven moet de correctheid van de beschrijvingen garanderen. Op basis van een aantal eenvoudige richtlijnen moeten de proefpersonen beschrijvingen voor de afbeeldingen opstellen. De vraag is om objecten en acties te beschrijven in een simpele maar volledige zin met voldoende adjectieven. Er is geen harde restrictie op het aantal woorden in de beschrijvingen~\cite{Hockenmaier2014}.
 
-Eenzelfde afbeelding kan tot verschillende beschrijvingen leiden: sommige mensen focussen op de actie, anderen leggen de nadruk op de persoon die de actie uitvoert, \ldots  De zinnen \texttt{A man is skiing down a hill} en \texttt{A man is going down a hill on his skis} beschrijven dezelfde foto, maar doen dit op een verschillende manier. Om deze rijkdom in de taal te kunnen weergeven zijn er meerdere zinnen per afbeelding opgenomen in de dataset.
+Eenzelfde afbeelding kan tot verschillende beschrijvingen leiden: sommige mensen focussen op de actie, anderen leggen de nadruk op de persoon die de actie uitvoert, \ldots\  De zinnen \texttt{A man is skiing down a hill} en \texttt{A man is going down a hill on his skis} beschrijven dezelfde foto, maar doen dit op een verschillende manier. Om deze rijkdom in de taal te kunnen weergeven zijn er vijf zinnen per afbeelding opgenomen in de dataset.
 
-De dataset is verdeeld in drie delen, voor training, validatie en testen. De validatie- en testset bevatten elk 1000 foto's, de trainingsset bevat de overige 6.092.
+De dataset is verdeeld in drie delen voor training, validatie en testen. De validatie- en testset bevatten elk 1.000 foto's, de trainingsset bevat de overige 6.092.
 
 
-\subsubsection{Flickr30k}
+\subsection{Flickr30k}
 \label{par:Flickr30k}
-De Flickr30k dataset~\cite{Young2014} is een uitbreiding van Flickr8k. Deze uitbreiding is ontstaan vanuit \'e\'en van de basisprincipes in het machinaal leren: ``Hoe groter de trainingsset, hoe beter het getrainde systeem kan zijn''. In totaal zijn er 31.783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k. Ook hier bestaan de test- en validatieset uit 1000 foto's, met de resterende 29.783 afbeeldingen in de trainingsset.
+De Flickr30k dataset~\cite{Young2014} is een uitbreiding van Flickr8k. Deze uitbreiding is ontstaan vanuit \'e\'en van de basisprincipes in het machinaal leren: \emph{``Hoe groter de trainingsset, hoe beter het getrainde systeem kan zijn''}. In totaal zijn er 31.783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k. Ook hier bestaan de test- en validatieset uit 1.000 foto's, met de resterende 29.783 afbeeldingen in de trainingsset.
 
 
-\subsubsection{MS COCO}
+\subsection{MS COCO}
 \label{par:MS COCO}
 De Microsoft Common Objects in COntext dataset (MS COCO)~\cite{Lin2014} staat los van de Flickr datasets en probeert een ander type van afbeelding te brengen. Ze bevat meer dan 330.000 afbeeldingen die elk vijf beschrijvingen hebben. 
 
-MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en niet-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische objectafbeeldingen bevatten een centraal geplaatst object. Iconische sc\`eneafbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonisch aanzicht. Bij canonische aanzichten staat de camera quasi loodrecht op de gefotografeerde sc\`ene, zij het in boven-, onder-, voor- of zijaanzicht. Hoewel iconische afbeeldingen kunnen leiden tot zeer goede objectdetecties, is er weinig tot geen contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van dit type minder interessant.  Niet-iconische afbeeldingen brengen algemeen gezien een compositie van verschillende objecten en personen, gefotografeerd vanuit een niet-canonische hoek. Figuur~\ref{fig:cocotypes} toont duidelijk het verschil tussen iconische en niet-iconische afbeeldingen.
+MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een onderscheid tussen afbeeldingen van iconische objecten en iconische sc\`enes, en niet-iconische afbeeldingen. Iconische afbeeldingen vormen typisch de eerste zoekresultaten bij een Google Image Search, maar ze bevatten te weinig informatie. Iconische objectafbeeldingen bevatten een centraal geplaatst object. Iconische sc\`eneafbeeldingen bevatten een sc\`ene, meestal zonder aanwezigheid van mensen, vanuit een canonisch aanzicht. Bij canonische aanzichten staat de camera quasi loodrecht op de gefotografeerde sc\`ene, zij het in boven-, onder-, voor- of zijaanzicht. Hoewel iconische afbeeldingen kunnen leiden tot zeer goede objectdetecties, is er weinig tot geen contextuele informatie aanwezig. Hierdoor zijn beschrijvingen van dit type afbeelding minder interessant.  Niet-iconische afbeeldingen brengen algemeen gezien een compositie van verschillende objecten en personen, gefotografeerd vanuit een niet-canonische hoek. Figuur~\ref{fig:cocotypes} toont duidelijk het verschil tussen iconische en niet-iconische afbeeldingen.
 
 \begin{figure}[tb]
 	\centering
@@ -71,7 +71,7 @@ MS COCO probeert meer te bieden dan ``standaard'' foto's. De auteurs maken een o
 	\label{fig:cocotypes}
 \end{figure}
 
-Een ander belangrijk deel van de COCO-dataset zijn annotaties. Oudere datasets legden de focus op classificatie, omgevende rechthoeken en segmentatie, terwijl \mbox{MS COCO} probeert om elk belangrijk object op de foto te annoteren. De afbeeldingen zijn gebaseerd op een lijst van objectcategorie\"en en zijn specifiek geselecteerd om niet-iconische sc\`enes te bevatten. De Flickr-datasets focussen niet expliciet op niet-iconische afbeeldingen, dus bevatten meer variatie in het type afbeeldingen.
+Een ander belangrijk deel van de COCO-dataset zijn annotaties. Oudere datasets leggen de focus op classificatie, omgevende rechthoeken en segmentatie, terwijl \mbox{MS COCO} probeert om elk belangrijk object op de foto te annoteren. De afbeeldingen zijn gebaseerd op een lijst van objectcategorie\"en en zijn specifiek geselecteerd om niet-iconische sc\`enes te bevatten. De Flickr-datasets focussen niet expliciet op niet-iconische afbeeldingen en bevatten bijgevolg meer variatie in het type afbeeldingen.
 
 Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mechanical Turk workers}, net zoals bij de Flickr-datasets. Uitgebreide instructies voor de workers garanderen dat elk belangrijk deel van de afbeelding voorkomt in de beschrijving~\cite{Rampf2015}. Figuur~\ref{fig:coco_ui} toont op welke wijze de proefpersonen een beschrijving moeten ingeven.
 
@@ -81,7 +81,7 @@ Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mec
 	\caption[User interface voor het ingeven van afbeeldingsbeschrijvingen \mbox{MS COCO}]{User interface voor het ingeven van afbeeldingsbeschrijvingen \mbox{MS COCO}~\cite{Rampf2015}}
 	\label{fig:coco_ui}
 \end{figure}
-\subsubsection{Gekozen dataset}
+\subsection{Gekozen dataset}
 Dit werk gebruikt Flickr30k als dataset voor de training en evaluatie. Hoewel \mbox{MS COCO} groter is en meer complexe afbeeldingen bevat, maakt de grootte van Flickr30k snellere training van het systeem mogelijk. Daarnaast is deze dataset ook de meest gebruikte in de literatuur wat de vergelijking met bestaande systemen mogelijk maakt. 
 
 \section{Besluit}
