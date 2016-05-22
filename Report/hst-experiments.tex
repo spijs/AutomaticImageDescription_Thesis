@@ -1,17 +1,17 @@
 \chapter{Experimenten} % (fold)
 \label{cha:experimenten}
-Dit hoofdstuk bevat een overzicht van de uitgevoerde experimenten. Alle experimenten gebeuren met een aantal ongewijzigde instellingen, die de eerste sectie bespreekt. De tweede sectie beschrijft experimenten die de modellen trainen en evalueren met als doel absoluut betere resultaten te halen dan een referentiemodel. Een tweede type van experimenten bekijkt het effect van wijzigingen in een aantal parameters. De laatste sectie behandelt het effect van ruis op twee gLSTM implementaties.
+Dit hoofdstuk bevat een overzicht van de uitgevoerde experimenten. Alle experimenten gebeuren met een aantal ongewijzigde instellingen, besproken in de eerste sectie. De tweede sectie beschrijft experimenten die de modellen trainen en evalueren met als doel absoluut betere resultaten te halen dan een referentiemodel. Een tweede type van experimenten bekijkt het effect van wijzigingen in een aantal parameters. De laatste sectie behandelt het effect van ruis op twee gLSTM-implementaties.
 
 \section{Algemene instellingen} % (fold)
 \label{sec:eigen_implementaties_exp}
-Het doel van deze masterproef is om de basisresultaten van de paper en bijbehorende implementatie van Karpathy\cite{Karpathy2015} te verbeteren. Om die reden volgen we nauwgezet de experimenten die beschreven zijn in de paper. Daarom doet VGGNet met 16 lagen dienst als convolutioneel netwerk. Daarnaast vormt de Flickr30k dataset de basis voor de experimenten met dezelfde test-, train- en validatiedeelverzameling als deze in de paper van Karpathy. Trainen van de netwerken en toegevoegde uitbreidingen gebeurt met behulp van de trainingsset. Het afstellen van de parameters van deze modellen gebeurt op basis van scores op de validatieset. De uiteindelijke evaluatie gebeurt op de testset. Op deze manier traint elk model onafhankelijk van de testverzameling en kan een correcte vergelijking gebeuren met de rest van de literatuur.
+Het doel van deze masterproef is om de basisresultaten van de paper en bijbehorende implementatie van Karpathy~\cite{Karpathy2015} te verbeteren. Om die reden volgen we nauwgezet de experimenten die beschreven zijn in de paper. Daarom doet VGGNet met 16 lagen dienst als convolutioneel netwerk. Daarnaast vormt de Flickr30k dataset de basis voor de experimenten met dezelfde test-, train- en validatiedeelverzameling als deze in de paper van Karpathy. Het trainen van de netwerken en toegevoegde uitbreidingen gebeurt met behulp van de trainingsset. Het afstellen van de parameters van deze modellen gebeurt op basis van scores op de validatieset. De uiteindelijke evaluatie gebeurt op de testset. Op deze manier traint elk model onafhankelijk van de testverzameling en kan een correcte vergelijking gebeuren met de rest van de literatuur.
 
 De verschillende modellen trainen met de volgende standaardinstellingen: 
 \begin{itemize}
 	\item grootte van de verborgen laag van de netwerken: 256
 	\item grootte van afbeeldings- en woordcodering: 256
 	\item aantal afbeeldingen in een batch: 100
-	\item type solver: \texttt{rmsprop}
+	\item type solver: rmsprop
 	\item decay rate voor rmsprop: 0.999
 	\item epsilon smoothing bij rmsprop: 1e-8
 	\item gradient clipping: drempelwaarde 5
@@ -20,16 +20,16 @@ De verschillende modellen trainen met de volgende standaardinstellingen:
 	\item vocabularium bevat enkel woorden die meer dan 5 keer voorkomen in de trainingsverzameling
 \end{itemize}Hierbij is de afbeeldingscodering en woordcodering de vector verkregen na de vermenigvuldiging van de representatie met een gewichtsmatrix.
 
-Tijdens het trainen van de modellen slaat het systeem op vaste momenten het huidige netwerk op, samen met de perplexiteit van de validatieset. Karpathy kiest als finaal model voor het netwerk met de beste perplexiteit. Uit enkele eenvoudige testen blijkt dat de perplexiteit slechts beperkt overeenkomt met de BLEU-score. Om die reden kiest ons systeem het netwerk dat de beste BLEU-4 score op de validatieset heeft als finaal model voor elke configuratie.
+Tijdens het trainen van de modellen slaat het systeem op vaste momenten het huidige netwerk op, samen met de perplexiteit van de validatieset. Karpathy kiest als finaal model voor het netwerk met de beste perplexiteit. Uit enkele eenvoudige tests blijkt dat de perplexiteit slechts beperkt overeenkomt met de BLEU-score. Om die reden kiest ons systeem het netwerk dat de beste BLEU-4 score op de validatieset heeft als finaal model voor elke configuratie.
 
 Het genereren van de zinnen gebeurt met het beam-search algoritme. In de algemene experimenten is de beam-grootte steeds $50$.
 De gebruikte evaluatiemetrieken zijn: BLEU-scores (1-4), METEOR-scores en enkele statistieken. Deze scores zijn berekend met behulp van de vijf referentiezinnen uit Flickr30k.
 
 \section{Verbeteringen op startpunt}
-Karpathy gebruikte een Brevity Penalty bij de evaluatie van zijn resultaten in de originele paper. In dit werk gebeurt dit niet. Daarnaast is Karpathy's implementatie van het LSTM-netwerk van Vinyals geen exacte kopie. Om die redenen is het niet mogelijk om een correcte vergelijking te maken met de resultaten in beide papers. Daarom is er een noodzaak aan eigen referentiewaarden. Zonder wijzigingen aan te brengen aan de originele code, zorgt een uitvoering met de algemene instellingen voor zowel RNN als LSTM voor deze referentiewaarden. Die waarden vormen dan de richtpunten waarvoor verbetering wordt gezocht.
+Karpathy gebruikte een Brevity Penalty bij de evaluatie van zijn resultaten in de originele paper~\cite{Karpathy2015}. In dit werk gebeurt dit niet. Daarnaast is Karpathy's implementatie van het LSTM-netwerk van Vinyals geen exacte kopie. Om die redenen is het niet mogelijk om een correcte vergelijking te maken met de resultaten in beide papers. Daarom is er een noodzaak aan eigen referentiewaarden. Zonder wijzigingen aan te brengen aan de originele code, zorgt een uitvoering met de algemene instellingen voor zowel RNN als LSTM voor deze referentiewaarden. Die waarden vormen dan de richtpunten waarvoor verbetering wordt gezocht.
 
 Daarna volgen experimenten met de zelf geschreven uitbreidingen. RNN bevat een uitbreiding met LDA. LSTM bevat uitbreidingen met als gids LDA en CCA.
-Na het trainen en evalueren van deze modellen, wordt ook het effect van Gaussiaanse normalisatie, min-hinge normalisatie en idf-normalisatie getest.
+Na het trainen en evalueren van deze modellen, wordt ook het effect van Gaussiaanse normalisatie, min-hinge-normalisatie en idf-normalisatie getest.
 Een vergelijking met de referentiewaarden bepaalt of een uitbreiding al dan niet een verbetering inhoudt.
 
 \section{Wijzigen van parameters}
@@ -37,12 +37,12 @@ Naast het toevoegen van uitbreidingen aan het startpunt, loont het de moeite om 
 
 \section{Ruisgevoeligheid van CCA en LDA} % (fold)
 \label{sec:ruisgevoeligheid_van_cca_en_lda_exp}
-gLSTMs maken het mogelijk om extra semantische informatie aan het taalmodel toe te voegen. Deze informatie kan uit verschillende bronnen komen. In deze masterproef bekijken we CCA en LDA. Naast de absolute scores die de twee modellen halen, is het ook interessant om te kijken naar welk van de modellen het meest robuust is tegen ruis in de referentiezinnen.
+gLSTM's maken het mogelijk om extra semantische informatie aan het taalmodel toe te voegen. Deze informatie kan uit verschillende bronnen komen. In deze masterproef bekijken we CCA en LDA. Naast de absolute scores die de twee modellen halen, is het ook interessant om te kijken naar welk van de modellen het meest bestand is tegen ruis in de referentiezinnen.
 
 Om deze eigenschap te evalueren cre\"eren we een nieuwe dataset waarbij de referentiezinnen van de trainingsset kleine wijzigingen bevatten.
 Concreet wordt elk woord met 10\% kans vervangen door een willekeurig woord uit het vocabularium. Hierna traint het netwerk op dezelfde manier als hierboven beschreven. Na deze training en generatie van resultaten op de testverzameling is een vergelijking mogelijk. Dit toont dan aan welke gids het meeste last ondervindt van deze extra ruis in de dataset.
 
 \section{Besluit}
-Deze thesis voert drie soorten experimenten uit. Als eerste bekijken we welke uitbreidingen verbeteringen brengen ten opzichte van vooraf berekende referenties. Daarnaast volgen er experimenten die de invloed van de waardes van een aantal parameters nagaan. Als laatste wordt onderzocht welk van de twee gebruikte semantische gidsen het meest robuust is tegen ruis.
+Deze thesis voert drie soorten experimenten uit. Als eerste bekijken we welke uitbreidingen verbeteringen brengen ten opzichte van vooraf berekende referenties. Daarnaast volgen er experimenten die de invloed van de waardes van een aantal parameters nagaan. Als laatste wordt onderzocht welk van de twee gebruikte semantische gidsen het minste invloed ondervinden van ruis.
 Het volgende hoofdstuk bevat alle resultaten van deze experimenten samen met een grondige analyse.
 
