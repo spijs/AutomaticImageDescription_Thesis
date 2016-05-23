@@ -1,4 +1,4 @@
-__author__ = 'spijs'
+__author__ = 'Wout & Thijs'
 
 import numpy as np
 
@@ -8,6 +8,11 @@ def main():
     evaluate(d,topics)
 
 def evaluate(dict,topics):
+    '''
+    Write the five most probable topic names and their probabilities to a file.
+    :param dict: dictionary containing image names and probability distributions over all topics
+    :param topics: names of the topics
+    '''
     file = open('models/highest_topics_test_120_pert.txt','w')
     for key in dict.keys():
         dist = dict[key]
@@ -18,17 +23,25 @@ def evaluate(dict,topics):
     file.close()
 
 def get_n_highest_indices(list,n):
+    '''
+    :param list: The list to take the highest values from
+    :param n: number of values to return
+    :return: The indices of the n highest values in the given list
+    '''
     arr = np.array(list)
     arr = arr.argsort()[-n:][::-1]
     return np.asarray(arr)
 
 def create_dist_dict(filename):
+    '''
+    :param filename: file to read
+    :return: a dictionary mapping imagenames to topic distributions, read from the given file
+    '''
     dict = {}
     f = open(filename)
     rawDist = []
     line = f.readline()
     while(line != ''):
-        # print 'LINE', line
         split = line.split()
         if '[' in split and len(rawDist)!= 0:
             img, distribution = preprocess(rawDist)
@@ -42,11 +55,15 @@ def create_dist_dict(filename):
     return dict
 
 def preprocess(rawDistribution):
+    '''
+    Given a list, containing both image name and topic distribution, extract the name and distribution and return
+    :param rawDistribution: list to process
+    :return: extracted image name and distribution
+    '''
     imgname = rawDistribution[0]
     distribution = []
     for i in range(2,len(rawDistribution)):
         modifiedNumber = str(rawDistribution[i]).replace(']', '')
-        # print modifiedNumber
         if modifiedNumber!= '':
             m = float(modifiedNumber)
             distribution.extend([m])
@@ -54,7 +71,13 @@ def preprocess(rawDistribution):
 
 
 def createTopicList(nbOfTopics=120):
-    file = open('models/topic_word_distribution_flickr30ktop120_pert_.txt', 'r')
+    '''
+    create a list containing the 10 most probable words for the given number of topics. For now, the parameter is not
+    used and the filename is hardcoded.
+    :param nbOfTopics: the number of topics to use
+    :return: list containing the 10 most probable topics for LDA model with given number of topics
+    '''
+    file = open('models/topic_word_distribution_flickr30ktop120.txt', 'r') # hardcoded. change for different topic model
     list = []
     l = file.readline()
     l = file.readline()
