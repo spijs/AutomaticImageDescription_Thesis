@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - Modifications by Wout & Thijs'
 
 import numpy as np
 
@@ -8,9 +8,9 @@ from imagernn.Hlayer import HLayer
 
 class FSMNGenerator:
     """
-  An RNN generator.
-  This class is as stupid as possible. It gets some conditioning vector,
-  a sequence of input vectors, and produces a sequence of output vectors
+  An FSMN generator.
+  This class is as stupid as possible. Basic implementation.
+  Implemented backpropagation M arbitrarily to check for speed-up.
   """
 
     @staticmethod
@@ -32,7 +32,7 @@ class FSMNGenerator:
         update = ['Wxh', 'bxh', 'Wd', 'bd','bhh'] #,'bhh','Whh
         regularize = ['Wxh', 'Wd']
 
-        N = 8  # TODO wijzigen zodat niet gehardcodeded
+        N = 8  # TODO change so it is no longer hardcoded
         for l in range(layers):
             model['Whh'+str(l)] = initw(hidden_size, hidden_size)
             model['bhh'+str(l)] = np.zeros((1, hidden_size))
@@ -142,6 +142,10 @@ class FSMNGenerator:
 
     @staticmethod
     def backward(dY, cache):
+        '''
+        Backwardpropagate the difference dY through the network which is 'saved' in the cache.
+        :return: propagated differences
+        '''
         Wd = cache['Wd']
         H = cache['H']
         Xs = cache['Xs']
@@ -200,6 +204,9 @@ class FSMNGenerator:
 
     @staticmethod
     def predict(Xi, model, Ws, params, **kwargs):
+        '''
+        Predicts a sentence based on an image vector Xi and the learned model and other parameters
+        '''
 
         beam_size = kwargs.get('beam_size', 1)
         relu_encoders = params.get('rnn_relu_encoders', 0)
@@ -296,9 +303,6 @@ class FSMNGenerator:
                     break
             predictions = [(predlogprob, predix)]
         return predictions
-
-
-
 
 
 
