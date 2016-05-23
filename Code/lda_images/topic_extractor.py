@@ -1,10 +1,9 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Wout & Thijs'
 
 import lda
 from imagernn.data_provider import getDataProvider
 import numpy as np
 from nltk.stem.porter import *
-from nltk.corpus import stopwords
 
 '''This class uses lda to extract topics from images based on their description'''
 class TopicExtractor:
@@ -13,19 +12,26 @@ class TopicExtractor:
         self.nbOfTopics=nbOfTopics
         self.iterations=iterations
         self.dataprovider = getDataProvider(dataset, pert)
-        self.nbOfWordOccurences = 5 #TODO niet langer hardcoden?
+        self.nbOfWordOccurences = 5
 
-    ''' Returns a list containing all the considered english stopwords'''
+
     def stopwords(self):
+        '''
+        Returns a list containing all the considered english stopwords
+        '''
         stopwords = set()
         file=open('lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords
 
-    ''' Concatenates the sentences for each image in each split to one string. Returns the resulting image string pairs for each
-        split'''
     def concatenate_sentences(self):
+        '''
+        Concatenates the sentences for each image in each split to one string. Returns the resulting image string pairs for each
+        split
+        :return: dictionary mapping split name to another dictionary. These three dictionaries map image names to
+        the concatenation of the corresponding sentences
+        '''
         current_image=''
         current_sentence=''
         s=self.stopwords()
@@ -50,9 +56,13 @@ class TopicExtractor:
         return outputsplit
 
 
-    ''' Removes the stopwords and words with length =< 2 from a given sentence'''
     def remove_common_words(self,sentence,stopwords):
-        #s = set(stopwords.words('english'))
+        '''
+        Removes the stopwords and words with length <3 from a given sentence
+        :param sentence: sentence to process
+        :param stopwords: list of stopwords to remove
+        :return: given sentence, without stopwords and words shorter than 3 characters
+        '''
         stopwords.add(' ') #add spaces to stopwords
         result = []
         for word in sentence:
@@ -60,20 +70,29 @@ class TopicExtractor:
                 result.append(word.lower())
         return result
 
-    ''' Creates and returns an lda model for the given document term matrix'''
     def model(self, document_term_matrix):
+        '''
+        :param document_term_matrix: the document term matrix to use
+        :return: LDA model based on the given document term matrix
+        '''
         model = lda.LDA(self.nbOfTopics, n_iter=self.iterations, random_state=1)
         model.fit(document_term_matrix)
         return model
 
-    ''' stems a word by using the porter algorithm'''
     def stem(self, word):
+        '''
+        :return: given word, stemmed using Porter stemming algorithm
+        '''
         stemmer = PorterStemmer()
         return stemmer.stem(word)
 
-    ''' Creates splits, creates vocabulary for the training set, creates the document term matrix for training set
-        and finally creates a model with this information.'''
     def extract_model(self):
+        '''
+        Creates splits, creates vocabulary for the training set, creates the document term matrix for training set
+        and finally creates a model with this information
+        :return: the LDA model, the training vocabulary and dictionaries mapping image names to the concatenation
+        of the corresponding sentences
+        '''
         print('Concatening sentences')
         splitPairs = self.concatenate_sentences()
         train_pairs = splitPairs['train']
@@ -90,21 +109,16 @@ class TopicExtractor:
         print('Creating term document matrix')
         #Create term document matrix using only the train data
         matrix = self.create_document_term_matrix(train_pairs.values(),vocabulary)
-        #self.printMatrix(matrix) #Prints the document-term matrix
         print('Creating model')
         model = self.model(matrix)
         return model,vocabulary,splitPairs
 
-    ''' Pretty print for a matrix into a new file'''
-    def printMatrix(self, matrix):
-        f = open('matrixFile.txt','w') # Output file
-        for row in matrix:
-            for number in row:
-                f.write(str(number)+' ')
-            f.write('\n')
-
-    ''' Creates a term document matrix using a given vocabulary and provided documents'''
     def create_document_term_matrix(self, documents, vocabulary):
+        '''
+        :param documents
+        :param vocabulary
+        :return: document term matrix based on the given documents and vocabulary
+        '''
         result = np.zeros([len(documents),len(vocabulary)])
         j=0
         for document in documents:
@@ -118,8 +132,12 @@ class TopicExtractor:
         print('type' +str(result.dtype))
         return result.astype(np.int32) #convert to 32bit
 
-    ''' Creates a vocabulary given a list of documents'''
     def get_vocabulary(self,documents):
+        '''
+        stem all the words in the given documents and return the used vocabulary
+        :param documents: list of documents
+        :return: vocabulary based on the stemmed version of the given documents
+        '''
         # count up all word counts so that we can threshold
         # this shouldnt be too expensive of an operation
         dict = {}

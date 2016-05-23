@@ -148,7 +148,7 @@ De formule om de gewichten te updaten ziet er in het algemene geval uit als volg
 \begin{equation}
   w'_{ji} = w'_{ji} + \eta(y_j-\hat{y}_j)df_i\hat{h}_i
 \end{equation}
-\todo{Fix de formules G}
+
 Hierbij stelt $\eta$ de leersnelheid (\emph{learning rate}) voor. Deze leersnelheid bepaalt hoe zwaar de aanpassing aan de gewichten doorweegt.
 Indien het netwerk met een logistische transferfunctie werkt, geeft dit het volgende resultaat:
 \begin{equation}
@@ -219,7 +219,7 @@ De laatste laag in elk niveau is een \emph{feature-pooling-laag} die de dimensio
 \begin{figure}[tb]
     \centering
     \includegraphics[width=0.6\linewidth]{Images/maxpool.png}
-    \caption{Max pooling met 2x2 filter en stapgrootte 2}
+    \caption{Max pooling met 2x2 filter en stapgrootte 2~\cite{maxpool}}
     \label{fig:maxpool}
 \end{figure}
 
