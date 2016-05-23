@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Wout & Thijs'
 
 import argparse
 import json
@@ -9,20 +9,29 @@ from Uniqueness import Uniqueness
 
 
 def main(params):
-
-  # load the result struct
-  struct_path = "../Results/"+params['struct']
-  ngrams = params['ngrams']
-  with open(struct_path) as data_file:
-      data = json.load(data_file)
-      images = data['imgblobs']
-  estrategy = getStrategy(params['metric'])
-  if(params['individual']==1):
-      print_sorted(calculate_individual_score(images,struct_path,ngrams,estrategy))
-  else:
-      calculate_total_score(images,struct_path,ngrams,estrategy)
+    '''
+    Evaluates the test set with the given parameters.
+    :param params: parameters for evaluating
+    :return: None (prints the results)
+    '''
+    # load the result struct
+    struct_path = "../Results/"+params['struct']
+    ngrams = params['ngrams']
+    with open(struct_path) as data_file:
+        data = json.load(data_file)
+        images = data['imgblobs']
+    estrategy = getStrategy(params['metric'])
+    if(params['individual']==1):
+        print_sorted(calculate_individual_score(images,struct_path,ngrams,estrategy))
+    else:
+        calculate_total_score(images,struct_path,ngrams,estrategy)
 
 def getStrategy(metric):
+    '''
+    Returns a strategy for evaluating based on the given parameter
+    :param metric: metric to be used as a string
+    :return: EvaluationStrategy
+    '''
     if(metric == "bleu"):
         return BleuScore("bleu")
     elif(metric == "meteor"):
@@ -36,6 +45,14 @@ def getStrategy(metric):
 
 
 def calculate_individual_score(images,struct_path,n,evalStrategy):
+    '''
+    Calculates the score of individual sentences
+    :param images: dictionary of images that need to be evaluated
+    :param struct_path: path containing the json-file that needs to be evaluated
+    :param n: number of n-grams
+    :param evalStrategy: Evaluation strategy to be used.
+    :return: results on each individual sentence
+    '''
     results = {}
     bleu = 0
     for image in images:
@@ -51,8 +68,16 @@ def calculate_individual_score(images,struct_path,n,evalStrategy):
     print "Total average bleu : " + str(1.0*bleu/(len(images)))
     return results
 
-''' Calculates and prints the total corpus bleu score, note that this isn't just the average'''
 def calculate_total_score(images,struct_path,ngrams,evalStrategy):
+    '''
+    Calculates the score for an entire corpus.
+    (Note that this is not necessarily equal to the average of individual scores)
+    :param images: dictionary of images that need to be evaluated
+    :param struct_path: path containing the json-file that needs to be evaluated
+    :param n: number of n-grams
+    :param evalStrategy: Evaluation strategy to be used.
+    :return: None (prints the results of entire corpus.)
+    '''
     all_candidates = []
     all_references = []
     for image in images:
@@ -67,8 +92,12 @@ def calculate_total_score(images,struct_path,ngrams,evalStrategy):
     print 'corpus score: ' + str(score)
 
 
-''' Saves the list of generated sentences sorted on their bleu score together with their reference sentences.'''
 def print_sorted(dict):
+    '''
+    Saves the list of generated sentences sorted on their individual score together with their reference sentences.
+    :param dict: dictionary of sentences and scores
+    :return:None (writes sorted generated sentences to individual_evaluation.txt)
+    '''
     new_list = {}
     for entry in dict.keys():
         new_list.update({entry: dict[entry]['score']})
@@ -83,8 +112,8 @@ def print_sorted(dict):
         f.write('---------------------------------\n')
     f.close()
 
-''' Returns the image ids sorted by score'''
 def sort(dict):
+    ''' Returns the image ids sorted by score'''
     return sorted(dict, key=dict.get)
 
 if __name__ == "__main__":

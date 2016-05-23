@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - Modifications by Wout & Thijs'
 
 from argparse import _ActionsContainer
 import numpy as np
@@ -15,6 +15,7 @@ def decodeGenerator(generator):
     return LSTMGenerator
   if generator == 'rnn':
     return RNNGenerator
+  #Our additions
   if generator == 'fsmn':
     return FSMNGenerator
   if generator == 'glstm':
@@ -38,7 +39,7 @@ class GenericBatchGenerator:
     hidden_size = params.get('hidden_size', 128)
     generator = params.get('generator', 'lstm')
     vocabulary_size = len(misc['wordtoix'])
-    lda = params.get('lda',0)
+    lda = params.get('lda',0) # LDA size used (0 if no LDA used)
     output_size = len(misc['ixtoword']) # these should match though
     image_size = 4096 # size of CNN vectors hardcoded here
     guide_input = params.get('guide',"image")
@@ -64,7 +65,7 @@ class GenericBatchGenerator:
 
     # descend into the specific Generator and initialize it
     Generator = decodeGenerator(generator)
-    #ADDED
+    #ADDED for gLSTM
     if(generator != 'glstm'):
         generator_init_struct = Generator.init(word_encoding_size, hidden_size, output_size)
     else:

@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - Modifications by Wout & Thijs'
 
 import json
 import os
@@ -9,7 +9,13 @@ import codecs
 from collections import defaultdict
 
 class BasicDataProvider:
+    ''' This class is used for reading image and sentence data'''
+
     def __init__(self, dataset, pert):
+        '''
+        dataset: which dataset to use e.g. flickr8k, flickr30k
+        pert: 0 if use regular dataset, other value if noisy dataset
+        '''
         print 'Initializing data provider for dataset %s...' % (dataset, )
         self.topics = None
         self.pert= pert
@@ -54,10 +60,10 @@ class BasicDataProvider:
             img['topics'] = self.topics[img['filename']]
         return img
 
-    '''
-    Returns a dictionary mapping image names to  image features
-    '''
     def getImageDict(self, split):
+        '''
+        Returns a dictionary mapping image names to  image features
+        '''
         imagedict = {}
         for i,img in enumerate(self.split[split]):
             imagedict[img['filename']] = self._getImage(img)['feat']
@@ -84,12 +90,23 @@ class BasicDataProvider:
         print 'amount of topics', len(self.topics)
 
     def load_cca_weights(self,nb_components, pert = None):
+        '''
+        Loads the cca weights.
+        :param nb_components: vector size of cca
+        :param pert: if not equal to 0 -> use cca learned on perturbed dataset
+        :return:
+        '''
         pert_str = ''
         if pert:
             pert_str = '_pert'
         return np.loadtxt('cca/imageprojection_'+str(nb_components)+pert_str+'.txt', delimiter = ',')
 
+
     def create_dist_dict(self, filename, dict):
+        '''
+        :param filename: file to read
+        :return: a dictionary mapping imagenames to topic distributions, read from the given file
++       '''
         if os.path.isfile(filename):
             f = open(filename)
             rawDist = []
@@ -136,6 +153,11 @@ class BasicDataProvider:
         return out
 
     def iterImageSentencePair(self, split = 'train', max_images = -1):
+        '''
+        :param split: split to be used
+        :param max_images:
+        :return: iterator over image sentence pairs
+        '''
         for i,img in enumerate(self.split[split]):
             if max_images >= 0 and i >= max_images: break
             for sent in img['sentences']:
@@ -163,11 +185,17 @@ class BasicDataProvider:
             yield batch
 
     def iterSentences(self, split = 'train'):
+        '''
+        :return: iterator over all sentences
+        '''
         for img in self.split[split]:
             for sent in img['sentences']:
                 yield self._getSentence(sent)
 
     def iterImages(self, split = 'train', shuffle = False, max_images = -1):
+        '''
+        :return: iterator over all images
+        '''
         imglist = self.split[split]
         ix = range(len(imglist))
         if shuffle:
@@ -177,17 +205,13 @@ class BasicDataProvider:
         for i in ix:
             yield self._getImage(imglist[i])
 
-    def testfunction(self, split):
-        for i,img in enumerate(self.split[split]):
-            for sent in img['sentences']:
-                out = {}
-                out['image'] = self._getImage(img)
-                out['sentence'] = self._getSentence(sent)
-                if self.topics:
-                    #print 'setting topic dist', self.topics[img['filename']]
-                    out['topics'] = self.topics[img['filename']]
 
     def preprocess(self, rawDistribution):
+        '''
+         Given a list, containing both image name and topic distribution, extract the name and distribution and return
+         :param rawDistribution: list to process
+         :return: extracted image name and distribution
+        '''
         imgname = rawDistribution[0]
         distribution = []
         for i in range(2,len(rawDistribution)):
@@ -198,8 +222,15 @@ class BasicDataProvider:
                 distribution.extend([m])
         return imgname, distribution
 
+
     def getTopic(self, imgName):
+        '''
+        :param imgName: name of the image
+        :return: topic distribution for the given image.
+        '''
         return self.topics[imgName]
+
+
 def getDataProvider(dataset,pert=None):
     """ we could intercept a special dataset and return different data providers """
     assert dataset in ['flickr8k', 'flickr30k', 'coco'], 'dataset %s unknown' % (dataset, )
