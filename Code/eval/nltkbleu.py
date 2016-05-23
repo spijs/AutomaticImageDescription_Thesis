@@ -65,8 +65,8 @@ def sentence_bleu(references, hypothesis, weights=(0.25, 0.25, 0.25, 0.25),
     hyp_len = len(hypothesis)
     # *closest_ref_len* is referred to as *r* variable in Papineni et. al. (2002)
     closest_ref_len = _closest_ref_length(references, hyp_len)
-    bp = _brevity_penalty(closest_ref_len, hyp_len)
-
+    #bp = _brevity_penalty(closest_ref_len, hyp_len)
+    bp = 1
     # Calculates the modified precision *p_n* for each order of ngram.
     p_n = [_modified_precision(references, hypothesis, i)
             for i, _ in enumerate(weights, start=1)]
