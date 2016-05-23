@@ -1,3 +1,4 @@
+% read two hardcoded matrices from disk and perform canonical correlation on them
 function trainingCCA()
 
 disp('reading data from files')

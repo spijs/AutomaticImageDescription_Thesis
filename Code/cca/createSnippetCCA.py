@@ -1,3 +1,5 @@
+__author__ = "Wout & Thijs"
+
 import os
 import numpy as np
 from nltk.stem.porter import *
@@ -9,23 +11,28 @@ from PIL import Image
 from Code.imagernn.data_provider import getDataProvider
 
 
-''' stems a word by using the porter algorithm'''
 def stem(word):
+    '''
+    :param word
+    :return: given word, stemmed using a Porter algorithm
+    '''
     stemmer = PorterStemmer()
     return stemmer.stem(word)
 
-'''Returns a list containing the most frequent english words'''
 def getStopwords():
-        stopwords = set()
-        file=open('../lda_images/english')
-        for line in file.readlines():
-            stopwords.add(line[:-1])
-        return stopwords
+    '''
+    :return: a list containing the most frequent english words
+    '''
+    stopwords = set()
+    file=open('../lda_images/english')
+    for line in file.readlines():
+        stopwords.add(line[:-1])
+    return stopwords
 
-'''
-Creates a vocabulary based on a folder. Returns a list of words
-'''
 def readVocabulary():
+    '''
+    Reads a vocabulary from an hardcoded file
+    '''
     result = []
     voc = open('dictionary.txt')
     line = voc.readline()
@@ -34,18 +41,19 @@ def readVocabulary():
         line = voc.readline()
     return result
 
-'''
-Reads a set of documents, returns a dictionary containing the filename of the corresponding picture, and the
-unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
-'''
 def createOccurrenceVectors(vocabulary):
-    print vocabulary
+    '''
+    Reads a set of documents, returns a dictionary containing the filename of the corresponding picture, and the
+    unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
+    :param vocabulary
+    :return: dictionary mapping filenames to unweighted bag-of-word representation, together with the idf weights
+    for the given vocabulary
+    '''
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
     for dirname, dirnames, filenames in os.walk('../Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
-         # if current < 1000:
             current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
@@ -56,47 +64,50 @@ def createOccurrenceVectors(vocabulary):
                 wordcount = 0
                 if isLargeEnough(filename[0:-4]+"_"+str(sentenceID)):
                     row = np.zeros(len(vocabulary))
-                    for word in line.split():
+                    for word in line.split(): # loop over all words in the read sentence
                         stemmed = stem(word.decode('utf-8')).lower()
                         if stemmed in vocabulary:
                             wordcount += 1
                             i = vocabulary.index(stemmed.lower())
-                            row[i] += 1
-                    if wordcount:
+                            row[i] += 1 # add one to the value corresponding to the stemmed word
+                    if wordcount: # if there are any used words in the sentence
                         row = row / wordcount
                     for w in range(len(row)):
                         if row[w] > 0:
-                            idf[w] += 1
+                            idf[w] += 1 # add one to the corresponding idf weight
                     result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
-                #print "ROW: " + str(row)
-    for item in idf:
-      if item <= 0:
-        print "Idf item: " + str(item)
-    idf = len(result.keys()) / idf
+    idf = len(result.keys()) / idf # calculate idf weights
     return result, idf
 
 '''
-Given a set of document vectors, and an inverse document frequency vector, returns the multiplication
-of each document with the idf vector
+
 '''
 def weight_tfidf(documents, inv_freq):
+    '''
+    :param documents
+    :param inv_freq: inverse document frequencies for the set of documents
+    :return: weighted version of each document with the given idf vector
+    '''
     result = {}
     for i in documents.keys():
         doc = documents[i]
         result[i] = doc * inv_freq
-        #print "Is NaN"+np.any(np.isnan(result[i]))
-        #print "infinity "+np.any(np.isinf(result[i]))
     return result
 
 def mainExec(name_file, features):
+    '''
+    Based on a list of image names and image features, learn a CCA model based on Stacked Auxiliary Embedding and
+    save this model to disk.
+    :param name_file
+    :param features
+    :return:
+    '''
     print "Creating vocabulary"
     voc = readVocabulary()
     print "Generating document vectors"
     occurrenceVectors, idf = createOccurrenceVectors(voc)
-    # print "Generating idf weights"
-    # idf = get_idf(occurrenceVectors, voc)
     print "Weighing vectors"
     weightedVectors = weight_tfidf(occurrenceVectors, idf)
 
@@ -105,10 +116,9 @@ def mainExec(name_file, features):
     print "Creating matrices"
     currentSentence = 0
     for i in weightedVectors.keys():
-	# print sentenceMatrix
         if isLargeEnough(i):
             currentSentence += 1
-	    print "current Sentence: " + str(currentSentence)
+            print "current Sentence: " + str(currentSentence)
             for j in range(len(weightedVectors[i])):
                 weightedVectors[i][j] = float(weightedVectors[i][j])
             if currentSentence == 1:
@@ -120,15 +130,7 @@ def mainExec(name_file, features):
             else:
                 sentenceMatrix = np.concatenate((sentenceMatrix, [weightedVectors[i]]), axis = 0)
                 imagematrix = np.concatenate((imagematrix, [getImage(i,name_file, features)]), axis = 0)
-            # imagematrix.append(getImage(i,name_file, features))
-#	else: 
-	    #print "FALSE"
-    # if (sentenceMatrix.dtype.char in np.typecodes['AllFloat']):
-    #     print "Type Code is in AllFloat"
-    # if not np.isfinite(sentenceMatrix.sum()):
-    #     print "Sum of matrix is not finite"
-    # if not np.isfinite(sentenceMatrix).all():
-    #     print "Not all items are finite"
+
     print "Modelling cca"
     cca = CCA(n_components=128)
     cca.fit(sentenceMatrix, imagematrix)
@@ -145,12 +147,12 @@ def mainExec(name_file, features):
             print "Current pair: " + str(currentPair)
         img = pair['image']['feat']
         trainingimages.append(img)
-        sentence = getFullSentence(pair, voc)
+        sentence = getFullSentence(pair)
         for i in range(len(sentence)):
             if sentence[i] > 0:
                 idf[i] += 1
         trainingsentences.append(sentence)
-    for i in range(trainingsentences):
+    for i in range(len(trainingsentences)):
         trainingsentences[i] = trainingsentences[i]*idf
 
     trans_img, trans_sent = cca.transform(trainingimages, trainingsentences)
@@ -168,23 +170,27 @@ def mainExec(name_file, features):
         augmented_sentences.append(augm_sent)
 
     augmentedcca = CCA(n_components= 96)
-    augmentedcca.fit(augm_img, augm_sent)
+    augmentedcca.fit(augmented_sentences, augmented_imgs)
 
     pickle.dump(cca, open("augmentedcca.p",'w+'))
 
-
-'''
-Returns the RFF function of the given vector, based on the given sigma and wanted dimension
-'''
 def phi(wantedDimension, sigma, x):
+    '''
+    :param wantedDimension
+    :param sigma
+    :param x:  vector to apply the function to
+    :return: RFF function of the given vector, based on the given sigma and wanted dimension
+    '''
     b = np.random.rand(wantedDimension)
     R = np.random.normal(scale = sigma*sigma, size = (len(x), wantedDimension))
     return np.dot(x,R) + b
 
-'''
-Given a matrix with each row an observation, returns the average distance to the 50th nearest neighbor
-'''
+
 def nearest_neighbor(matrix):
+    '''
+    :param matrix: matrix with an observation on each row
+    :return: the average distance to the 50th nearest neighbor
+    '''
     avg_dist = 0
     for i in range(len(matrix)):
         distances = np.zeros(len(matrix)-1)
@@ -197,52 +203,54 @@ def nearest_neighbor(matrix):
     return avg_dist
 
 
-'''
-given an image sentence pair, return an array containing the concatenation of the 5 sentences in the pair
-'''
 def getFullSentence(imagesentencepair):
+    '''
+    :param imagesentencepair: pair of an image with 5 sentences
+    :return: array containing the concatenation of the 5 sentences in the pair
+    '''
     sentences = imagesentencepair['image']['sentences']
     s = getStopwords()
     full = []
     for sentence in sentences:
         result = remove_common_words(sentence['tokens'], s)
         full.extend(result)
+    return full
 
-
-'''
-Given a sentence, return a copy of that sentence, stripped of words that are in the provided stopwords
-'''
 def remove_common_words(sentence,stopwords):
-        #s = set(stopwords.words('english'))
-        stopwords.add(' ') #add spaces to stopwords
-        result = []
-        for word in sentence:
-            if not word.lower() in stopwords and len(word)>2:
-                result.append(word.lower())
-        return result
+    '''
+    Remove the stopwords and words shorter than 3 characters from the given sentence
+    :param sentence
+    :param stopwords
+    :return: sentence with stopwords and words shorter than 3 characters removed
+    '''
+    stopwords.add(' ') #add spaces to stopwords
+    result = []
+    for word in sentence:
+        if not word.lower() in stopwords and len(word)>2:
+            result.append(word.lower())
+    return result
 
-
-'''
-Given a filename, checks if the image behind that filename is bigger than 64x64
-'''
 def isLargeEnough(filename):
+    '''
+    Given a filename, checks if the image behind that filename is bigger than 64x64
+    :param filename:
+    :return: True if the file is larger than 64x64 pixels
+    '''
     file = filename+".jpg"
-    #print file
     try:
         image = Image.open("../Flickr30kEntities/image_snippets/"+file)
     except IOError:
-        
-	#print "IMG NOT FOUND"
-	return False
+        return False
     width, height = image.size
- #   print width,height
     return (width >= 64) and (height >= 64)
 
-
-'''
-Returns the image features corresponding to the provided image name
-'''
 def getImage(filename, file_with_names, features):
+    '''
+    :param filename: filename of the wanted feature
+    :param file_with_names: file with image names
+    :param features: list of image features
+    :return: image feature corresponding to the provided image name
+    '''
     line = file_with_names.readline()
     linenumber = 0
     while(not line == ""):

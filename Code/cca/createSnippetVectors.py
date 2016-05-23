@@ -306,7 +306,6 @@ if __name__ == "__main__":
     names2 = "../Flickr30kEntities/image_snippets/images2.txt"
     feats1 = scipy.io.loadmat("../Flickr30kEntities/snippets_features/vgg_feats.mat")['feats'].transpose()
     feats2 = scipy.io.loadmat("../Flickr30kEntities/snippets_features/vgg_feats2.mat")['feats'].transpose()
-    # print "SHAPE FEAT: " + str(feats.shape)
     mainExec(names1, names2 , feats1, feats2)
 
 
