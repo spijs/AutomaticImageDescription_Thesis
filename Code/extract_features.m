@@ -1,3 +1,7 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Not sure if this works.                                   %
+% All paths are still hardcoded, some of them absolute      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 path(path,'/export/home2/NoCsBack/hci/wout/caffe/')
 path(path,'/export/home2/NoCsBack/hci/wout/caffe/matlab')

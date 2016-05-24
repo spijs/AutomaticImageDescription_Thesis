@@ -4,9 +4,9 @@ import argparse
 from lda_images.topic_extractor import TopicExtractor
 import numpy
 
-''' This class is used to create topic distributions for each split in a given dataset based on a model
-    learned with only the training split. '''
 def main(params):
+    ''' This class is used to create topic distributions for each split in a given dataset based on a model
+    learned with only the training split. '''
     iterations = params['iterations']
     dataset = params['dataset']
     pert = params['pert']
@@ -23,8 +23,8 @@ def main(params):
         predict_image_topic_distribtution(model, splitPairs, dataset, topics, split, matrix, pert)
     print('finished')
 
-''' Learn and output the topic distribution of a given split in a given lda model'''
 def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topics, split, matrix, pert = None):
+    ''' Learn and output the topic distribution of a given split in a given lda model'''
     pert_string = ''
     if pert:
         pert_string = "_pert_"
@@ -35,16 +35,16 @@ def predict_image_topic_distribtution(model, image_sentence_pairs, dataset, topi
     numpy.set_printoptions(suppress=True)
     save_distribtutions(doc_topic, f, imagenames)
 
-''' Write a topic distribution matrix to the given file, with the given file names'''
 def save_distribtutions(distribution_matrix, file, imagenames):
+    ''' Write a topic distribution matrix to the given file, with the given file names'''
     for n in range(len(distribution_matrix)):
         dist = distribution_matrix[n, :]
         im = imagenames[n]
         file.write(im + ' ' + str(dist) + '\n')
 
 
-''' This method is used to write the learned topic distribution to a file'''
 def save_image_topic_distribution(model,images,dataset,topics, pert = None):
+    ''' This method is used to write the learned topic distribution to a file'''
     pert_string = ''
     if pert:
         pert_string = "_pert_"
@@ -53,8 +53,8 @@ def save_image_topic_distribution(model,images,dataset,topics, pert = None):
     numpy.set_printoptions(suppress=True)
     save_distribtutions(doc_topic, f, images)
 
-''' This method is used to output the learned topic and for each topic the most important words'''
 def test_topic(model,vocabulary,dataset,topics, pert = None):
+    ''' This method is used to output the learned topic and for each topic the most important words'''
     pert_string = ''
     if pert:
         pert_string = "_pert_"
@@ -69,7 +69,6 @@ def test_topic(model,vocabulary,dataset,topics, pert = None):
 
 
 
-''' Parses the given arguments'''
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default=0, help='Number of iterations to learn lda model')

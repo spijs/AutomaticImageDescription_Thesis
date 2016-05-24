@@ -2,20 +2,15 @@ __author__ = 'Wout & thijs'
 
 import argparse
 import json
-import time
-import datetime
 import numpy as np
-import code
-import socket
 import os
 import cPickle as pickle
-import math
 import subprocess as sp
 
 from imagernn.data_provider import getDataProvider
-from imagernn.solver import Solver
-from imagernn.imagernn_utils import decodeGenerator, eval_split
+from imagernn.imagernn_utils import decodeGenerator
 
+''' This method is used to find the best scoring checkpoint on the validation set in a chosen folder on the BLEU-4 score.'''
 def main(params):
 
   # load the checkpoint
@@ -48,7 +43,7 @@ def main(params):
           all_references = []
           all_candidates = []
 
-          if params['cca']:
+          if params['cca']: # Load cca weights if necessary
             ccaweights = np.loadtxt('cca/imageprojection_'+str(params['cca'])+'.txt', delimiter = ',')
             misc['ccaweights'] = ccaweights
           else:
@@ -89,7 +84,8 @@ def main(params):
           print 'invoking eval/multi-bleu.perl script...'
           owd = os.getcwd()
           os.chdir('eval')
-          process = sp.Popen('./multi-bleu.perl reference < output',stdin=sp.PIPE, stdout=sp.PIPE, shell=True)
+          process = sp.Popen('./multi-bleu.perl reference < output',stdin=sp.PIPE, stdout=sp.PIPE, shell=True) #use multi-bleu.perl to evaluate
+          # Read standard output and select BLEU-4 score.
           lines_iterator = iter(process.stdout.readline, b"")
           for line in lines_iterator:
                 fourth = line.split("/")[3]
@@ -107,7 +103,6 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--checkpoint_path', type=str, help='the input checkpoint')
   parser.add_argument('-b', '--beam_size', type=int, default=1, help='beam size in inference. 1 indicates greedy per-word max procedure. Good value is approx 20 or so, and more = better.')
-  parser.add_argument('--result_struct_filename', type=str, default='result_struct.json', help='filename of the result struct to save')
   parser.add_argument('-m', '--max_images', type=int, default=-1, help='max images to use')
   parser.add_argument('-d', '--dump_folder', type=str, default="", help='dump the relevant images to a separate folder with this name?')
   parser.add_argument('--lda', type=int, default = 0, help = 'number of topics to be used')

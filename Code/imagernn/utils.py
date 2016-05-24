@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - extended by Wout & thijs'
 
 from random import uniform
 import numpy as np

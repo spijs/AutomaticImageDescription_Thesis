@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - extended by Wout & thijs'
 
 from imagernn.generic_batch_generator import GenericBatchGenerator
 import numpy as np

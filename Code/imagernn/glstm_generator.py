@@ -14,7 +14,6 @@ class gLSTMGenerator:
 
   @staticmethod
   def init(input_size, hidden_size, guide_size, output_size):
-
     model = {}
     # Recurrent weights: take x_t, h_{t-1}, and bias unit
     # and produce the 3 gates and the input to cell signal
@@ -38,6 +37,7 @@ class gLSTMGenerator:
     Xs is N x D (N time steps, rows are data containng word representations), and
     it is assumed that the first row is already filled in as the start token. So a
     sentence with 10 words will be of size 11xD in Xs.
+    guide is a guide vector for the gLSTM model.
     """
     predict_mode = kwargs.get('predict_mode', False)
 
@@ -115,8 +115,8 @@ class gLSTMGenerator:
       cache['WLSTM'] = WLSTM
       cache['Hout'] = Hout
       cache['Wd'] = Wd
-      cache['IFOGf'] = IFOGf
-      cache['IFOG'] = IFOG
+      cache['IFOGf'] = IFOGf # New for gLSTM
+      cache['IFOG'] = IFOG # New for gLSTM
       cache['C'] = C
       cache['X'] = X
       cache['Hin'] = Hin
@@ -314,16 +314,37 @@ def ymax(y):
 # Mean: 12.315055172413793
 # Std.Dev : 5.188878248688354
 def gaussianNorm(length, mean=12.315 , dev=5.18887):
+  '''
+  Returns the value of the gaussian function given the mean and standard deviation of the training sentence lengths.
+  :param length: length for which the function needs to be evaluated
+  :param mean: mean of the training sentence lengths
+  :param dev: standard deviation of the training sentence lengths
+  :return: value of the gaussian
+  '''
   var = pow(dev,2)
   norm = 1/(dev*math.sqrt(2*math.pi*var))
   return norm*math.exp(-pow(length-mean,2)/(2*var))
 
 def minhinge(length, mean=12.315):
-    if length==0:
-      return mean
-    return min(mean,length*1.0)
+  '''
+  :param length: length for which function needs to be evaluated
+  :param mean: mean of the training sentence lengths
+  :return: value of the minhinge function
+  '''
+  if length==0:
+    return mean
+  return min(mean,length*1.0)
 
 def combined(length,words,idf,nb_to_words, mean=12.315, dev=5.1887):
+  '''
+  First attempt of combining gaussian normalization with idf normalization.
+  :param length: length of the sentence to be evaluated
+  :param words: words in the current sentence
+  :param idf: dictionary of word-idf pairs
+  :param nb_to_words: dictionary of word id to number
+  :param mean: mean of the training sentence lengths
+  :param dev: standard deviation of the training sentence lengths
+  '''
   gauss = gaussianNorm(length)
   sum = 1
   l = len(words)
@@ -339,6 +360,13 @@ def combined(length,words,idf,nb_to_words, mean=12.315, dev=5.1887):
   return gauss*sum
 
 def idf_normalize(words,idf,nb_to_words,mean=12.315):
+  '''
+  Idf normalization function
+  :param words: words in the current sentence
+  :param idf: dictionary of word-idf pairs
+  :param nb_to_words: dictionary of word id to number
+  :param mean: mean of the training sentence lengths
+  '''
   sum = 1
   l = len(words)
   if l > mean:
@@ -353,19 +381,26 @@ def idf_normalize(words,idf,nb_to_words,mean=12.315):
   return sum
 
 def normalize(form,words,idf,ixtoword):
-    length = len(words)
-    if form=="gauss":
-        return gaussianNorm(length)
-    elif form == "minhinge":
-        return minhinge(length)
-    elif form == "idf":
-        return idf_normalize(words,idf,ixtoword)
-    elif form == "combined":
-        return combined(length,words,idf,ixtoword)
-    else:
-        return 1
+  '''
+  :param form: type of normalization to be used
+  :param words: words in the current sentence
+  :param idf: dictionary containing word idf pairs
+  :param ixtoword: dictionary of word to number
+  :return: the normalization value
+  '''
+  length = len(words)
+  if form=="gauss":
+      return gaussianNorm(length)
+  elif form == "minhinge":
+      return minhinge(length)
+  elif form == "idf":
+      return idf_normalize(words,idf,ixtoword)
+  elif form == "combined":
+      return combined(length,words,idf,ixtoword)
+  else:
+      return 1
 
-''' stems a word by using the porter algorithm'''
 def stem(word):
-    stemmer = PorterStemmer()
-    return stemmer.stem(word)
+  ''' stems a word by using the porter algorithm'''
+  stemmer = PorterStemmer()
+  return stemmer.stem(word)

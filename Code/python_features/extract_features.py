@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - extended Wout & thijs'
 
 import sys
 import os.path

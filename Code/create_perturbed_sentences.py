@@ -1,5 +1,3 @@
-__author__ = 'spijs'
-
 __author__ = 'Wout & thijs'
 
 
@@ -8,6 +6,9 @@ import json
 import random
 
 def create_perturbed_json(thresh):
+    '''
+    Copies the json file of the dataset, but replaces words in the test split with a probability of thresh.
+    '''
     dataset = json.load(open('data/flickr30k/dataset.json', 'r'))
     new_images = []
     # group images by their train/val/test split into a dictionary -> list structure
@@ -27,6 +28,9 @@ def create_perturbed_json(thresh):
 
 
 def _perturb_tokens(tokens, thresh):
+    '''
+    Returns a list of tokens where each token is replaced with a random token with probability thresh.
+    '''
     new_tokens =[]
     for token in tokens:
         r = random.randint(0,99)
@@ -37,11 +41,17 @@ def _perturb_tokens(tokens, thresh):
     return new_tokens
 
 def _pick_random_word():
+    '''
+    returns a random word out of the test vocabulary
+    '''
     r = random.randint(0,len(vocabulary)-1)
     return vocabulary[r]
 
 
 def create_vocabulary(params):
+    '''
+    Creates the vocabulary of the training set and saves it as vocabulary.txt
+    '''
     dataset = 'flickr30k'
     dataprovider = getDataProvider(dataset)
     img_sentence_pair_generator = dataprovider.iterImageSentencePair()
@@ -64,6 +74,9 @@ def create_vocabulary(params):
     print('created vocabulary')
 
 def read_vocabulary(filename='vocabulary.txt'):
+    '''
+    Reads the given filename and returns the entries as a list.
+    '''
     result = []
     voc = open(filename)
     line = voc.readline()
@@ -72,7 +85,5 @@ def read_vocabulary(filename='vocabulary.txt'):
         line = voc.readline()
     return result
 
-
-
 vocabulary = read_vocabulary()
-create_perturbed_json(15)
+create_perturbed_json(10)
