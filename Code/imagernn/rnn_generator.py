@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - extended by Wout & thijs'
 
 import numpy as np
 import math
@@ -45,6 +45,7 @@ class RNNGenerator:
     drop_prob_decoder = params.get('drop_prob_decoder', 0.0)
     relu_encoders = params.get('rnn_relu_encoders', 0)
     rnn_feed_once = params.get('rnn_feed_once', 0)
+    # New for LDA
     lda_feed_once = params.get('lda_feed_once',0)
     lda = params.get('lda',0)
 
@@ -70,6 +71,7 @@ class RNNGenerator:
     if relu_encoders:
       Xsh = np.maximum(Xsh, 0)
       Xi = np.maximum(Xi, 0)
+      # New for LDA
       Li = np.maximum(Li,0)
 
     # recurrence iteration for the Multimodal RNN similar to one described in Karpathy et al.
@@ -82,6 +84,7 @@ class RNNGenerator:
       
       prev = np.zeros(d) if t == 0 else H[t-1]
 
+      # Added for LDA
       if lda and (not lda_feed_once or t==0):
           temp = Xi+Li
       else:
@@ -122,6 +125,7 @@ class RNNGenerator:
       cache['drop_prob_encoder'] = drop_prob_encoder
       cache['drop_prob_decoder'] = drop_prob_decoder
       cache['rnn_feed_once'] = rnn_feed_once
+      # Added for LDA
       cache['lda'] = lda
       cache['lda_feed_once']= lda_feed_once
 
@@ -332,11 +336,23 @@ def ymax(y):
 # Mean: 12.315055172413793
 # Std.Dev : 5.188878248688354
 def gaussianNorm(length, mean=12.315 , dev=5.18887):
+  '''
+  Returns the value of the gaussian function given the mean and standard deviation of the training sentence lengths.
+  :param length: length for which the function needs to be evaluated
+  :param mean: mean of the training sentence lengths
+  :param dev: standard deviation of the training sentence lengths
+  :return: value of the gaussian
+  '''
   var = pow(dev,2)
   norm = 1/(dev*math.sqrt(2*math.pi*var))
   return norm*math.exp(-pow(length-mean,2)/(2*var))
 
 def normalize(form,length):
+    '''
+    :param form: type of normalization to be used
+    :param length: length of the sentence that should be normalized
+    :return: the normalization value
+    '''
     if form=="gauss":
         return gaussianNorm(length)
     else:

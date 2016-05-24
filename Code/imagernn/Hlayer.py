@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Wout & Thijs'
 import numpy as np
 
 from imagernn.utils import initw
@@ -6,8 +6,8 @@ from imagernn.utils import initw
 
 class HLayer:
     """
-  A hidden layer with a memory cell attached.
-  """
+    A hidden layer with a memory cell attached.
+    """
 
     def __init__(self, hidden_size,drop_prob_decoder,predict_mode, id):
         self.id = id
@@ -17,6 +17,7 @@ class HLayer:
         self.N = 8  # TODO wijzigen zodat niet gehardcodeded
 
     def forward(self,H,n,model,cache):
+        ''' Produces one forward step of the given model based on the given hidden layers H '''
         H2 = initw(n, self.d)
         A = model['A'+str(self.id)]
        # print(A)
@@ -50,6 +51,9 @@ class HLayer:
         return H2,cache,M
 
     def backward(self,cache,D):
+        '''
+            Backpropagates this hidden layer
+        '''
         # backprop H2
         Hid = str(self.id-1) if self.id-1>=0 else ''
         H = cache['H'+Hid]
@@ -78,6 +82,10 @@ class HLayer:
 
 
 def fromMtoA(M,N,n):
+    '''
+    Computes a new A vector based on the given M.
+    '''
+    # Not clear how they do this in the paper. This is a simple implementation.
     A = np.zeros((1,N))
     for i in range(0,min(N,n)):
         d = np.diag(M,i)

@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - extended by Wout & thijs'
 
 import numpy as np
 import math
@@ -313,14 +313,31 @@ def getIDF(word):
 # Mean: 12.315055172413793
 # Std.Dev : 5.188878248688354
 def gaussianNorm(length, mean=12.315 , dev=5.18887):
+  '''
+  Returns the value of the gaussian function given the mean and standard deviation of the training sentence lengths.
+  :param length: length for which the function needs to be evaluated
+  :param mean: mean of the training sentence lengths
+  :param dev: standard deviation of the training sentence lengths
+  :return: value of the gaussian
+  '''
   var = pow(dev,2)
   norm = 1/(dev*math.sqrt(2*math.pi*var))
   return norm*math.exp(-pow(length-mean,2)/(2*var))
 
 def minhinge(length, mean=12.315):
-    return math.min(mean,length);
+    '''
+    :param length: length for which function needs to be evaluated
+    :param mean: mean of the training sentence lengths
+    :return: value of the minhinge function
+    '''
+    return math.min(mean,length) # Not used in experiments
 
 def normalize(form,length):
+    '''
+    :param form: type of normalization to be used
+    :param length: length of the sentence that should be normalized
+    :return: the normalization value
+    '''
     if form=="gauss":
         return gaussianNorm(length)
     elif form == "minhinge":
