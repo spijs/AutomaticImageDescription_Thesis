@@ -20,13 +20,15 @@ Experimenten met het gebruik van de Flickr30k Entities wijzen uit dat het niet h
 
 \emph{Hoe kan semantische informatie worden toegevoegd aan de twee bestudeerde systemen?}
 
-Het toevoegen van een vector met semantische informatie aan het bestudeerde RNN gebeurt door de informatie bij de input op te tellen. Bij het uitbreiden van het LSTM-netwerk volgen we de aanpak van Jia et al.~\cite{Fernando2015}. De vector dient dan als gids voor het netwerk.
+Een eigen toevoeging aan het RNN-systeem gebeurt door een vector met semantische informatie bij de input op te tellen. Bij het uitbreiden van het LSTM-netwerk volgen we de aanpak van Jia et al.~\cite{Fernando2015}. De vector dient dan als gids voor het netwerk.
 
 \emph{Hoe presteren verschillende types van semantische informatie ten opzichte van elkaar?}
 
 Het gebruik van extra semantische informatie leidt tot verbeteringen in de kwaliteit van de gegenereerde zinnen. 
 Bij RNN zorgt het gebruik van de onderwerpen afgeleid uit de afbeeldingen voor een hogere score ten opzichte van het referentiemodel. 
 De veronderstelling dat de onderwerpen de gegenereerde zinnen beter doet aansluiten bij de afbeelding is dus correct.
+Bij LSTM leidt multimodale projectie tot een hogere score ten opzichte van het referentiemodel, zoals de originele paper voorspelt~\cite{Fernando2015}. Onze eigen toevoeging gebruikt de eerder vermelde onderwerpverdelingen als gidsvector. Ook deze toevoeging leidt tot een verbetering.
+
 Bij LSTM geven zowel de afgeleide onderwerpen als de multimodale projectie een hogere score dan het referentiemodel. 
 De scores van beide technieken om extra informatie toe te voegen liggen bij LSTM zeer dicht bij elkaar, maar het gebruik van onderwerpen scoort lichtjes beter op de metrieken die het dichtst aanleunen bij menselijke evaluatie.
 
@@ -36,7 +38,7 @@ De scores van beide technieken om extra informatie toe te voegen liggen bij LSTM
 Om de lengte van de gegenereerde zinnen beter te doen aansluiten bij die van de trainingsverzameling implementeert deze masterproef een Gaussfunctie. Hierdoor krijgen zinnen die te veel afwijken van de lengteverdeling uit de trainingsset een lagere score. 
 Deze methode heeft een zeer grote invloed op de gegenereerde zinnen. De gemiddelde lengte stijgt bij RNN van 7 naar 10 en bij LSTM van 8 naar 10. Voor de belangrijkste evaluatiemethodes verbetert deze normalisatie ook de kwaliteit.
 
-Een tweede vorm van normalisatie probeert de gegenereerde zinnen informatiever te maken. Alle woorden uit de woordenschat krijgen een score op basis van de frequentie van voorkomen in de trainingsverzameling. Woorden die minder voorkomen zijn specifieker en krijgen een hogere score. Op basis van deze scores krijgen de woorden in de gegenereerde zinnen een aangepast gewicht. Deze normalisatie leidt effectief tot zinnen die een groter aantal veelzeggende woorden bevatten. Dikwijls leidt dit ook tot een zin van hogere kwaliteit, maar in een aantal gevallen voegt het systeem schijnbaar willekeurig een aantal woorden met een hoge score toe die weinig met de afbeelding te maken hebben. De evaluatiemetrieken oordelen ook dat de zinnen met deze normalisatie in zijn geheel slechter presteren, maar voor een mens zijn een groot aantal van de zinnen wel van betere kwaliteit.
+We introduceren ook een tweede vorm van normalisatie probeert de gegenereerde zinnen informatiever te maken. Alle woorden uit de woordenschat krijgen een score op basis van de frequentie van voorkomen in de trainingsverzameling. Woorden die minder voorkomen zijn specifieker en krijgen een hogere score. Op basis van deze scores krijgen de woorden in de gegenereerde zinnen een aangepast gewicht. Deze normalisatie leidt effectief tot zinnen die een groter aantal veelzeggende woorden bevatten. Dikwijls leidt dit ook tot een zin van hogere kwaliteit, maar in een aantal gevallen voegt het systeem schijnbaar willekeurig een aantal woorden met een hoge score toe die weinig met de afbeelding te maken hebben. De evaluatiemetrieken oordelen ook dat de zinnen met deze normalisatie in zijn geheel slechter presteren, maar voor een mens zijn een groot aantal van de zinnen wel van betere kwaliteit.
 
 \subsection{Invloed van parameters}
 \emph{Wat is de invloed van het aanpassen van systeemspecifieke parameters?}

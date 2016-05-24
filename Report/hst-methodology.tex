@@ -26,7 +26,7 @@ Figuur~\ref{fig:methodology_overview} toont een overzicht van deze verschillende
 
 
 \section{Startpunt}
-Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub-pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python-implementatie van het recurrente neurale netwerk beschreven in een van zijn papers~\cite{Karpathy2015}. Daarnaast bevat het ook een implementatie gebaseerd op het werk van Vinyals et al.~\cite{Google}. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
+Het startpunt van onze implementatie is de code aangereikt door Karpathy op zijn GitHub-pagina\footnote{\url{https://github.com/karpathy/neuraltalk}}. Die bevat een Python-implementatie van het recurrente neurale netwerk beschreven in een van zijn papers~\cite{Karpathy2015}. Daarnaast bevat het ook een implementatie gebaseerd op het werk van Vinyals et al.~\cite{Google}. Het was een complex proces om de samenhang tussen alle aangeboden scripts, klasses en evaluatiemethodes te vinden. Ook het vinden van effici\"ente methodes om de code uit te breiden was niet eenvoudig. De idee\"en aangebracht in deze masterproef zijn ge\"implementeerd als extensies van dit startpunt.
 
 \subsection{Algemeen systeem}
 Karpathy implementeert beide taalnetwerken zelf en voorziet daarrond een gemeenschappelijk systeem. Dit systeem is verantwoordelijk voor het laden en voorbereiden van de data, het maken van tussentijdse back-ups en het aansturen van een \emph{oplosser}. Deze oplosser beheert de netwerken en controleert het trainingsproces.
@@ -229,10 +229,10 @@ Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor o
     \vspace{0pt}
     \includegraphics[width=\textwidth]{Images/LDA/2282260240.jpg}
     \end{minipage}\hfill
-    \begin{minipage}[t]{.5\textwidth}
+    \begin{minipage}[]{.5\textwidth}
     \centering
     \vspace{0pt}
-    \begin{tabular}{cl}
+    \begin{tabular}{ll}
             Onderwerp                           & Waarschijnlijkheid\\
             \hline
             \texttt{girl}             & 0,235 \\
@@ -260,8 +260,8 @@ Na de afronding van het trainingsproces moet het netwerk in staat zijn om voor o
     \begin{minipage}[t]{.5\textwidth}
     \centering
     \vspace{0pt}
-    \begin{tabular}{cl}
-            onderwerp                           & waarschijnlijkheid\\
+    \begin{tabular}{ll}
+            Onderwerp                           & Waarschijnlijkheid\\
             \hline
             \texttt{musicians}             & 0,039 \\
             \texttt{work}                   & 0,037 \\
@@ -338,7 +338,7 @@ Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de pr
 Een derde model gebruikt de CCA-projectie van de afbeelding in de gemeenschappelijke ruimte rechtstreeks als gids.
 Als laatste model gebruiken ze de afbeeldingsrepresentatie zelf als gids.
 
-Om dit te implementeren starten ze net als in deze masterproef met de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de formules~\eqref{glstm-memory-start}-\eqref{glstm-memory}. Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM uit formules~\eqref{lstm-memory-start}-\eqref{lstm-memory}.
+Om dit te implementeren starten ze net als in deze masterproef met de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de formules~\eqref{glstm-memory-start}-\eqref{glstm-memory}. Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM uit formules~\eqref{lstm-memory-start}-\eqref{lstm-memory}. Het implementeren van de gidsvector was niet zo eenvoudig. De implementatie van Karpathy komt niet exact overeen met de formules die Vinyals voorstelt~\cite{Google}. 
 
 %
 \begin{eqnarray}
@@ -395,6 +395,8 @@ Hierbij stelt $N$ het aantal afbeeldingen voor en staat $n_i$ voor het aantal af
 
 Deze gewichten vertonen een verband met de hoeveelheid informatie die het woord bevat. De woorden met laagste en hoogste $idf$-score staan respectievelijk in tabel \ref{tbl:idf-laag} en tabel \ref{tbl:idf-hoog}. Om een normalisatie te verkrijgen, telt het algoritme de gewichten voor alle afzonderlijke woorden op. Op deze manier is er een afstraffing voor zinnen die veel frequente woorden bevatten en dus minder veelzeggend zijn. Anderzijds zorgt dit er ook voor dat er niet langer een voorkeur is voor korte zinnen.
 
+Het implementeren van de normalisatiefuncties bracht geen grote moeilijkheden mee. Eens we voldoende inzicht hadden in de aanpak van Karpathy was het eenvoudig om de verschillende normalisaties te implementeren.
+
 
 \begin{table}[!htb]
 	\begin{minipage}{.5\linewidth}
@@ -431,6 +433,8 @@ E\'en van de eerste wijzigingen die we in deze thesis probeerden te implementere
 Volgens de paper zijn deze netwerken in staat om betere en vooral snellere resultaten te leveren dan de huidige RNN-modellen. De snellere resultaten zijn mogelijk omdat gebruik kan worden gemaakt van standaard terugpropagatie zonder dat er zich problemen voordoen bij de recurrente verbindingen. Figuur~\ref{fig:fsmn} toont de  algemene structuur van dit netwerk. Hierbij dient de output van een verborgen laag als input voor een geheugenblok. Dit geheugenblok is in staat om informatie bij te houden van meerdere vorige inputs. Het geheugenblok dient ook als extra invoer voor een volgende laag.
 
 Vooral de snellere resultaten leken zeker een goede uitbreiding voor het model van Karpathy. Trainen van een RNN-batch duurt ongeveer 4 seconden en een LSTM-batch duurt 7 seconden. Hierdoor duurt het volledig trainen van het neuraal netwerk gemiddeld meer dan zeven dagen.
+
+Het implementeren van FSMN was vrij complex. De paper was vaag over de details van bepaalde functies, waardoor er giswerk aan te pas kwam om uiteindelijk tot een werkende implementatie te komen. 
 Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, vertonen de resultaten zowel op vlak van kwaliteit als snelheid geen verbetering. De oorzaak van het kwaliteitsverlies ligt in het gebruik van het aantal lagen. Aangezien het gebruikte RNN van Karpathy slechts \'e\'en verborgen laag heeft, is de verbetering door het omzetten naar een FSMN miniem. FSMN's werken slechts beter als er meerdere verborgen lagen zijn. Het aantal verborgen lagen heeft ook een invloed op de verbetering op vlak van snelheid. Bij een klassiek RNN zorgt een toename van het aantal lagen voor meer terugkoppelingen en dus langere rekentijden. Een FSMN heeft dit probleem niet, en presteert dus sneller in verhouding tot een RNN met evenveel verborgen lagen, maar enkel bij het gebruik van meerdere verborgen lagen. Bij het gebruikte RNN is de verbetering dus niet zichtbaar, aangezien er slechts \'e\'en verborgen laag is. Om deze redenen waren er geen verdere experimenten met FSMN's.
 
 \begin{figure}[tb]
