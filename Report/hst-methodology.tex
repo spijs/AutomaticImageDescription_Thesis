@@ -204,7 +204,7 @@ De trainingsverzameling in combinatie met de geleerde onderwerpverdeling vormt d
 Het geleerde LDA-model bepaalt vervolgens de onderwerpverdeling voor de zinnen in de validatieset. Deze onderwerpverdelingen vormen de testverzameling voor het LDA-netwerk. Het doel van het trainen van het netwerk is het verkleinen van de fout tussen de voorspelde verdeling en de berekende verdeling van de validatieverzameling. De fout van het finale netwerk maakt het mogelijk om verschillende configuraties te vergelijken.
 
 Het gebruikte netwerk bestaat uit een inputlaag, een verborgen laag met 256 knopen en een outputlaag. De verborgen laag gebruikt de sigmo\"idefunctie \eqref{eq:sigmoid} als transferfunctie, terwijl de outputlaag een softmaxfunctie gebruikt, zoals besproken in sectie \ref{par:softmax}. Uit experimenten blijkt dat de leersnelheid 0.001 het beste compromis vormt tussen resultaat en snelheid van het leren.
-Door middel van terugpropagatie leert het netwerk langzaamaan de juiste gewichten. Dit netwerk kan op het moment van testen zeer snel een onderwerpverdeling bepalen voor een ongeziene afbeelding. Implementatie van het netwerk gebeurde met de Python-bibliotheek \texttt{scikit-neuralnetwork}\footnote{\url{https://scikit-neuralnetwork.readthedocs.org/en/latest/}}.
+Door middel van terugpropagatie leert het netwerk langzaamaan de juiste gewichten. Dit netwerk kan op het moment van testen zeer snel een onderwerpverdeling bepalen voor een ongeziene afbeelding. Implementatie van het netwerk gebeurde, na een eerste poging om het volledig zelf te schrijven, met de Python-bibliotheek \texttt{scikit-neuralnetwork}\footnote{\url{https://scikit-neuralnetwork.readthedocs.org/en/latest/}}.
 \begin{equation}
 \sigma(t) = \frac{1}{1 + e^{-t}}
 \label{eq:sigmoid}
@@ -338,7 +338,7 @@ Als tweede model leren ze eerst een CCA-model. Vervolgens nemen de auteurs de pr
 Een derde model gebruikt de CCA-projectie van de afbeelding in de gemeenschappelijke ruimte rechtstreeks als gids.
 Als laatste model gebruiken ze de afbeeldingsrepresentatie zelf als gids.
 
-Om dit te implementeren starten ze net als in deze masterproef met de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de formules~\eqref{glstm-memory-start}-\eqref{glstm-memory}. Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM uit formules~\eqref{lstm-memory-start}-\eqref{lstm-memory}. Het implementeren van de gidsvector was niet zo eenvoudig. De implementatie van Karpathy komt niet exact overeen met de formules die Vinyals voorstelt~\cite{Google}. 
+Om dit te implementeren starten ze net als in deze masterproef met de LSTM-implementatie van Karpathy. Ze defin\"ieren de geheugencellen en poorten zoals in de formules~\eqref{glstm-memory-start}-\eqref{glstm-memory}. Hierbij zijn de rode delen toevoegingen ten opzichte van de standaard LSTM uit formules~\eqref{lstm-memory-start}-\eqref{lstm-memory}. Het integreren van de gidsvector was niet zo eenvoudig. De implementatie van Karpathy komt niet exact overeen met de formules die Vinyals voorstelt~\cite{Google}. 
 
 %
 \begin{eqnarray}
@@ -434,7 +434,7 @@ Volgens de paper zijn deze netwerken in staat om betere en vooral snellere resul
 
 Vooral de snellere resultaten leken zeker een goede uitbreiding voor het model van Karpathy. Trainen van een RNN-batch duurt ongeveer 4 seconden en een LSTM-batch duurt 7 seconden. Hierdoor duurt het volledig trainen van het neuraal netwerk gemiddeld meer dan zeven dagen.
 
-Het implementeren van FSMN was vrij complex. De paper was vaag over de details van bepaalde functies, waardoor er giswerk aan te pas kwam om uiteindelijk tot een werkende implementatie te komen. 
+Het implementeren van FSMN was vrij complex. De paper is vaag over de details van bepaalde functies, waardoor er giswerk aan te pas kwam om uiteindelijk tot een werkende implementatie te komen. 
 Hoewel de implementatie van dit netwerk op basis van de paper succesvol was, vertonen de resultaten zowel op vlak van kwaliteit als snelheid geen verbetering. De oorzaak van het kwaliteitsverlies ligt in het gebruik van het aantal lagen. Aangezien het gebruikte RNN van Karpathy slechts \'e\'en verborgen laag heeft, is de verbetering door het omzetten naar een FSMN miniem. FSMN's werken slechts beter als er meerdere verborgen lagen zijn. Het aantal verborgen lagen heeft ook een invloed op de verbetering op vlak van snelheid. Bij een klassiek RNN zorgt een toename van het aantal lagen voor meer terugkoppelingen en dus langere rekentijden. Een FSMN heeft dit probleem niet, en presteert dus sneller in verhouding tot een RNN met evenveel verborgen lagen, maar enkel bij het gebruik van meerdere verborgen lagen. Bij het gebruikte RNN is de verbetering dus niet zichtbaar, aangezien er slechts \'e\'en verborgen laag is. Om deze redenen waren er geen verdere experimenten met FSMN's.
 
 \begin{figure}[tb]
