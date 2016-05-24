@@ -57,6 +57,36 @@ De dataset is verdeeld in drie delen voor training, validatie en testen. De vali
 \label{par:Flickr30k}
 De Flickr30k dataset~\cite{Young2014} is een uitbreiding van Flickr8k. Deze uitbreiding is ontstaan vanuit \'e\'en van de basisprincipes in het machinaal leren: \emph{``Hoe groter de trainingsset, hoe beter het getrainde systeem kan zijn''}. In totaal zijn er 31.783 foto's, met elk 5 beschrijvingen. Het proces dat gebruikt is om de dataset op te stellen is hetzelfde als bij Flickr8k. Ook hier bestaan de test- en validatieset uit 1.000 foto's, met de resterende 29.783 afbeeldingen in de trainingsset.
 
+\subsection{Flickr30k Entities}
+\label{sec:entities}
+De dataset Flickr30k Entities~\cite{Plummer2015} is gebaseerd op de Flickr30k dataset. Ze bevat een groot aantal annotaties en omspannende rechthoeken, alsook verbanden tussen beide. Deze verbanden kunnen een bron zijn van extra informatie.
+
+De dataset is ontstaan op basis van een eenvoudig idee. De makers zien in dat een ``standaard'' afbeeldingsbeschrijvend systeem een globaal verband leert tussen een foto en een zin, zonder echt rekening te houden met de overeenkomsten tussen entiteiten op de foto en in de zin. Er zijn vrij recent wel een aantal systemen ontwikkeld die een projectie maken van afbeeldingsregio's naar beschrijvingen. Deze systemen veronderstellen echter dat deze verbanden latent zijn. Hier probeert de nieuwe Entities dataset verandering in te brengen, door de verbanden tussen beschrijving en foto te expliciteren.
+
+De dataset is gebaseerd op de meer dan 30.000 afbeeldingen uit de Flickr30k dataset~\cite{Young2014} met de bijhorende beschrijvingen. De makers brengen een uitbreiding hiervan, met een set van bijna 250.000 \emph{coreference chains}, die verbanden aangeven tussen regio's uit de afbeeldingen en zinsdelen uit de beschrijvingen. Deze aanpak lijkt op wat de MS COCO~\cite{Lin2014} dataset biedt, maar de objecten in de COCO dataset zijn onafhankelijk van de beschrijvingen gedetecteerd. Figuur~\ref{fig:entities} toont een aantal voorbeelden van annotaties en referenties uit de Entities dataset, terwijl figuur~\ref{fig:cocoexamples} toont hoe de verschillende objecten in de COCO dataset worden opgeslagen. Het is duidelijk dat er bij de COCO dataset geen rechtstreeks verband is met de beschrijvingen. Dit verband is net wat Flickr30k Entities zo interessant maakt voor het extraheren van extra semantische informatie. Het netwerk leert dan niet enkel een relatie tussen een gegeven afbeelding en de uiteindelijke zin, maar ook het verband tussen de encodering van alle links die in de afbeelding zitten en de uiteindelijk gegenereerde zin.
+
+\begin{figure}[!tb]
+	\centering
+	\begin{tabular}[t]{cc}
+		\includegraphics[height=3.0in]{Images/example_hat.png} \vspace{-3mm}&
+		\includegraphics[height=3.0in]{Images/example_parade.png}\\
+		\includegraphics[valign = T,width=.4\columnwidth]{Images/example_hat_text.pdf}&
+		\includegraphics[valign = T,width=.4\columnwidth]{Images/example_parade_text.pdf}
+		\end{tabular}
+		\caption[Voorbeelden van Flickr30k Entities annotaties]{Voorbeelden van Flickr30k Entities annotaties. De kleur van de zinsdelen komt overeen met de kleur van de omspannende rechthoeken op de afbeelding~\cite{Plummer2015}.}
+		\label{fig:entities}
+		\end{figure}
+		
+		\begin{figure}
+			\centering
+			\subfloat{
+				\includegraphics[width=0.47\linewidth]{Images/coco_example1.png}}\hfill
+				\subfloat{
+					\includegraphics[width=0.47\linewidth]{Images/coco_example2.png}}
+					\caption[Voorbeelden van geannoteerde afbeeldingen uit de \mbox{MS COCO dataset}]{Voorbeelden van geannoteerde afbeeldingen uit de \mbox{MS COCO dataset}. Elk gekleurd object behoort tot \'e\'en van de objectcategorie\"en gedefinieerd door de makers~\cite{Lin2014}.}
+					\label{fig:cocoexamples}
+					\end{figure}
+
 
 \subsection{MS COCO}
 \label{par:MS COCO}
