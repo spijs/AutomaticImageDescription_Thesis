@@ -1,6 +1,6 @@
 \chapter{Probleembeschrijving}
 \label{chap:Probleembeschrijving}
-Dit hoofdstuk beschrijft het probleem van automatische afbeeldingsbeschrijving. Een eerste sectie gaat over het concrete vraagstuk en de situering binnen de computerwetenschappen. Een tweede sectie beschrijft de praktische toepassingen van een systeem dat in staat is om automatisch afbeeldingen te beschrijven. De laatste sectie biedt toelichting bij de meest gebruikte datasets voor het trainen en evalueren van systemen die een oplossing bieden voor dit probleem.
+Dit hoofdstuk beschrijft het probleem van automatische afbeeldingsbeschrijving. Een eerste sectie gaat over het concrete vraagstuk en de situering binnen de computerwetenschappen. Een tweede sectie beschrijft de praktische toepassingen van een systeem dat in staat is om automatisch afbeeldingen te beschrijven. Een volgende sectie biedt toelichting bij de meest gebruikte datasets voor het trainen en evalueren van systemen die een oplossing bieden voor dit probleem. Tot slot geeft een laatste sectie een overzicht van de concrete onderzoeksvragen.
 
 \section{Omschrijving en situering binnen computerwetenschappen}
 \label{sec:Omschrijving en situering}
@@ -113,6 +113,17 @@ Het genereren van de beschrijvingen bij de foto's gebeurt met \texttt{Amazon Mec
 \end{figure}
 \subsection{Gekozen dataset}
 Dit werk gebruikt Flickr30k als dataset voor de training en evaluatie. Hoewel \mbox{MS COCO} groter is en meer complexe afbeeldingen bevat, maakt de grootte van Flickr30k snellere training van het systeem mogelijk. Daarnaast is deze dataset ook de meest gebruikte in de literatuur wat de vergelijking met bestaande systemen mogelijk maakt. 
+
+\section{Onderzoeksvragen}
+Deze sectie bevat een overzicht van de concrete onderzoeksvragen van deze masterproef.
+\begin{enumerate}
+	\item Welke vormen van semantische informatie kunnen op een haalbare manier verbetering bieden voor bestaande systemen? 
+	\item Hoe kan semantische informatie worden toegevoegd aan de twee bestudeerde systemen?
+	\item Wat is de invloed van het aanpassen van systeemspecifieke parameters? 
+	\item Hoe presteren verschillende types van semantische informatie ten opzichte van elkaar? 
+	\item Welke invloed ondervinden de beschouwde types semantische informatie van trainingsdata die ruis bevat?
+	\item Hoe kunnen we langere, minder algemene zinnen genereren? 
+\end{enumerate}
 
 \section{Besluit}
 Deze masterproef focust op het verbeteren van een bestaand systeem dat in staat is om afbeeldingen te beschrijven. Deze beschrijvingen moeten grammaticaal correcte, vloeiende Engelstalige zinnen zijn. Dit probleem bevindt zich op het snijpunt van CV en NLP en is nauw verbonden met andere problemen binnen deze domeinen. Naast het academisch nut van het oplossen van dit complexe probleem heeft de oplossing ook praktische toepassingen. Zo dient het al in toepassingen die slechtzienden helpen met het bekijken van afbeeldingen op het internet. Om dit probleem op te lossen zijn er drie frequent gebruikte datasets waarvan \mbox{MS COCO} de grootste en wellicht beste is. Flickr30k vormt een uitbreiding op Flickr8k en bevat minder en eenvoudigere afbeeldingen dan MS COCO. Omwille van de kleinere grootte en het frequentere gebruik in de literatuur traint en evalueert het systeem van deze masterproef met Flickr30k. 

@@ -10,9 +10,19 @@ De automatische evaluatiemethodes BLEU en Meteor uit de machinevertaling maken e
 
 Deze thesis experimenteert ook met de robuustheid van de twee manieren om semantische informatie toe te voegen. Een aantal experimenten bepaalt de invloed van ruis op deze informatie.
 
-Dit hoofdstuk biedt eerst een overzicht van de belangrijkste resultaten en de bekomen verbeteringen. Daarna volgt een overzicht van de mogelijke uitbreidingen.
+Dit hoofdstuk biedt eerst een overzicht van de belangrijkste resultaten en verbeteringen, en hoe die een antwoord geven op de geponeerde onderzoeksvragen. Daarna volgt een overzicht van de mogelijke uitbreidingen.
 \section{Resultaten}
 \subsection{Toevoegen van semantische informatie}
+\emph{Welke vormen van semantische informatie kunnen op een haalbare manier verbetering bieden voor bestaande systemen?}
+
+Experimenten met het gebruik van de Flickr30k Entities wijzen uit dat het niet haalbaar is om deze dataset om te zetten naar bruikbare informatie. Het gebruik van zowel afgeleide onderwerpverdelingen en multimodale projecties is computationeel minder complex en biedt mogelijkheden tot integratie.
+
+\emph{Hoe kan semantische informatie worden toegevoegd aan de twee bestudeerde systemen?}
+
+Het toevoegen van een vector met semantische informatie aan het bestudeerde RNN gebeurt door de informatie bij de input op te tellen. Bij het uitbreiden van het LSTM-netwerk volgen we de aanpak van Jia et al.~\cite{Fernando2015}. De vector dient dan als gids voor het netwerk.
+
+\emph{Hoe presteren verschillende types van semantische informatie ten opzichte van elkaar?}
+
 Het gebruik van extra semantische informatie leidt tot verbeteringen in de kwaliteit van de gegenereerde zinnen. 
 Bij RNN zorgt het gebruik van de onderwerpen afgeleid uit de afbeeldingen voor een hogere score ten opzichte van het referentiemodel. 
 De veronderstelling dat de onderwerpen de gegenereerde zinnen beter doet aansluiten bij de afbeelding is dus correct.
@@ -20,16 +30,25 @@ Bij LSTM geven zowel de afgeleide onderwerpen als de multimodale projectie een h
 De scores van beide technieken om extra informatie toe te voegen liggen bij LSTM zeer dicht bij elkaar, maar het gebruik van onderwerpen scoort lichtjes beter op de metrieken die het dichtst aanleunen bij menselijke evaluatie.
 
 \subsection{Normalisatie}
+\emph{Hoe kunnen we langere, minder algemene zinnen genereren?}
+
 Om de lengte van de gegenereerde zinnen beter te doen aansluiten bij die van de trainingsverzameling implementeert deze masterproef een Gaussfunctie. Hierdoor krijgen zinnen die te veel afwijken van de lengteverdeling uit de trainingsset een lagere score. 
 Deze methode heeft een zeer grote invloed op de gegenereerde zinnen. De gemiddelde lengte stijgt bij RNN van 7 naar 10 en bij LSTM van 8 naar 10. Voor de belangrijkste evaluatiemethodes verbetert deze normalisatie ook de kwaliteit.
 
 Een tweede vorm van normalisatie probeert de gegenereerde zinnen informatiever te maken. Alle woorden uit de woordenschat krijgen een score op basis van de frequentie van voorkomen in de trainingsverzameling. Woorden die minder voorkomen zijn specifieker en krijgen een hogere score. Op basis van deze scores krijgen de woorden in de gegenereerde zinnen een aangepast gewicht. Deze normalisatie leidt effectief tot zinnen die een groter aantal veelzeggende woorden bevatten. Dikwijls leidt dit ook tot een zin van hogere kwaliteit, maar in een aantal gevallen voegt het systeem schijnbaar willekeurig een aantal woorden met een hoge score toe die weinig met de afbeelding te maken hebben. De evaluatiemetrieken oordelen ook dat de zinnen met deze normalisatie in zijn geheel slechter presteren, maar voor een mens zijn een groot aantal van de zinnen wel van betere kwaliteit.
 
 \subsection{Invloed van parameters}
+\emph{Wat is de invloed van het aanpassen van systeemspecifieke parameters?}
+
 Verschillende parameters van het systeem hebben een invloed op de resultaten. Ten eerste is er de grootte van de beam-search bij het zoeken van de beste beschrijvingen. Naarmate de grootte stijgt zijn de scores beter, tot aan een plafond. Afhankelijk van het gebruikte systeem ligt de optimale grootte tussen 25 en 75. Ook de dimensionaliteit van de vector met extra semantische informatie heeft een invloed. Bij het gebruik van onderwerpverdelingen is de invloed variabel. Bij langere zinnen, bijvoorbeeld door Gauss-normalisatie, is het beter om een groter aantal onderwerpen te kiezen. Voor kortere zinnen verzwakt dit effect. Bij multimodale projectie is dit fenomeen niet zichtbaar. De modellen die gebruik maken van 256 dimensies scoren wel beter dan die met 128 en 512 dimensies. Bij 128 dimensies is de informatie wellicht te beperkt. Bij 512 daarentegen komen veel onbelangrijke elementen in de vector die doorwegen in het uiteindelijke resultaat.
 
 \subsection{Robuustheid van semantische informatie}
-Beide methodes om semantische informatie toe te voegen aan de bestudeerde systemen ondervinden nadeel van ruis op de trainingsdata. De absolute en relatieve achteruitgang is kleiner bij het gebruik van een multimodale projectie. Dit komt vermoedelijk omdat het netwerk dan slechter in staat is om het verband te leren tussen de trainingszinnen en de vector met extra informatie.
+\emph{Welke invloed ondervinden de beschouwde types semantische informatie van trainingsdata die ruis bevat?}
+
+Beide methodes om semantische informatie toe te voegen aan de bestudeerde systemen ondervinden nadeel van ruis op de trainingsdata. Deze ruis bestaat erin elk woord met een kans van 10\% te vervangen door een willekeurig ander woord. De absolute en relatieve achteruitgang is kleiner bij het gebruik van een multimodale projectie. Dit komt vermoedelijk omdat het netwerk dan slechter in staat is om het verband te leren tussen de trainingszinnen en de vector met extra informatie.
+
+\subsection{Beste resultaten}
+Wij beschouwen LSTM met een zelf ge\"introduceerde gidsvector op basis van onderwerpverdelingen met 120 onderwerpen als het best presterende systeem. Gaussnormalisatie en een beam-search met grootte 50 leiden tot de hoogste scores.  De prestatie van de systemen is bepaald op de hogere BLEU-scores en Meteor, aangezien die het meest correleren met menselijke beoordelingen. Ons systeem presteert zeer gelijkaardig in vergelijking met de meest recente literatuur. Het moet voornamelijk onderdoen voor aandachtsgebaseerde systemen. Het gebruik van ons RNN met onderwerpverdelingen van lengte 120 en Gaussnormalisatie presteert iets slechter, maar is veel sneller te trainen.
 
 \section{Toekomstig werk}
 Deze sectie geeft een korte samenvatting van een aantal punten waar in de toekomst verbeteringen mogelijk zijn.
