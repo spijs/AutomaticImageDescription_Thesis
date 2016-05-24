@@ -15,7 +15,7 @@ def main(params):
     :return: None (prints the results)
     '''
     # load the result struct
-    struct_path = "../Results/"+params['struct']
+    struct_path = "../"+params['struct']
     ngrams = params['ngrams']
     with open(struct_path) as data_file:
         data = json.load(data_file)
