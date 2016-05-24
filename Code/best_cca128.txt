@@ -1,1 +1,0 @@
-Best bleu score for model_checkpoint_flickr30k_paris_baseline_24.82.p : 19.8

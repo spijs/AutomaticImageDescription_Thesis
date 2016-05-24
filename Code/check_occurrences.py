@@ -4,6 +4,7 @@ file = json.load(open('Results/lstm30k_struct.json'))
 
 imgblobs = file['imgblobs']
 
+''' This script checks how many times occur right after eachother in the test set.'''
 for img in imgblobs:
     candidate = img['candidate']['text']
     words = candidate.split()

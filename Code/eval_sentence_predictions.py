@@ -1,4 +1,4 @@
-__author__ = 'Wout & thijs'
+__author__ = 'Karpathy - extended by Wout & thijs'
 
 import argparse
 import json
@@ -15,6 +15,7 @@ from imagernn.data_provider import getDataProvider
 from imagernn.solver import Solver
 from imagernn.imagernn_utils import decodeGenerator, eval_split
 
+''' This code is used to generate sentences from the test set and evaluate the Bleu scores of a learned model.'''
 def main(params):
 
   # load the checkpoint
@@ -51,6 +52,7 @@ def main(params):
   all_references = []
   all_candidates = []
 
+  # Added for CCA and perturbed dataset
   if params['cca']:
     pert_str = ''
     if params['pert']:
@@ -59,11 +61,13 @@ def main(params):
     misc['ccaweights'] = ccaweights
   else:
     ccaweights = None
+
   for img in dp.iterImages(split = 'test', max_images = max_images):
     n+=1
     print 'image %d/%d:' % (n, max_images)
     references = [' '.join(x['tokens']) for x in img['sentences']] # as list of lists of tokens
     kwparams = { 'beam_size' : params['beam_size'], 'normalization': params['normalization'], 'ccaweights' : ccaweights }
+    # Added for idf normalization
     if params['normalization']=='idf' or params['normalization']=='combined':
         idf = load_idf()
         kwparams['idf']=idf
@@ -71,6 +75,7 @@ def main(params):
     else:
         kwparams['idf']=None
         kwparams['words']=None
+    # Added for LDA
     if not params['lda'] == 0:
       Ys = BatchGenerator.predict_test([{'image':img}], model, checkpoint_params, **kwparams)
     else:
@@ -129,6 +134,9 @@ def main(params):
   json.dump(blob, open(params['result_struct_filename'], 'w'))
 
 def load_idf():
+    '''
+    :return: Opens a file containing saved idf-word combinations
+    '''
     input = open('idf.p','rb')
     idf = pickle.load(input)
     return idf

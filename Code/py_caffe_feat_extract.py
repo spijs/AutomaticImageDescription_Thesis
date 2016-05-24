@@ -4,7 +4,7 @@ edited by: wout & thijs
 email : ahmed.osman99 AT GMAIL
 '''
 import sys
-sys.path.append('/export/home2/NoCsBack/hci/wout/caffe/python/')
+sys.path.append('/export/home2/NoCsBack/hci/wout/caffe/python/') #Todo this path is hardcoded - change at will
 import caffe
 import numpy as np
 import argparse
