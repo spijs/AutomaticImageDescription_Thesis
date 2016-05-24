@@ -3,4 +3,5 @@ This folder contains several scripts to create a perturbed version of training d
 
 ##### How to run? 
 To train a neural network, run __driver.py__. To evaluate the results of training, run __eval_sentence_predictions.py__.
+__visualize_result_struct.html__ is used to visualize the results.
 Each runnable file contains a help function and extensive comments explaining how it works.
