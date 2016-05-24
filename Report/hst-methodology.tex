@@ -37,13 +37,13 @@ Hij voorziet verschillende opties om dit gemeenschappelijk systeem te configurer
 	\item grootte van de verborgen laag van de netwerken
 	\item grootte van afbeeldings- en woordcodering
 	\item aantal afbeeldingen per batch
-	\item type oplosser: rmsprop, Adagrad, Adadelta of gewone gradient descent
+	\item type oplosser~\ref{subsec:solvers}: rmsprop, Adagrad, Adadelta of stochastic gradient descent 
 	\item afvlakkingsparameter voor rmsprop en Adadelta
 	\item epsilon-afvlakking bij rmsprop, Adagrad en Adadelta
 	\item al dan niet gebruiken van gradient clipping
 	\item drop-out percentage in encoder en decoder
 	\item leersnelheid
-	\item aantal keer dat een een woord moet voorkomen in de trainingsset, vooraleer het wordt opgenomen in het vocabularium
+	\item aantal keer dat een woord moet voorkomen in de trainingsset, vooraleer het wordt opgenomen in het vocabularium
 \end{itemize}
 Als CNN gebruikt hij het bestaande vooraf getrainde netwerk VGGNet.
 
@@ -150,11 +150,11 @@ Deze sectie beschrijft hoe LDA zorgt voor extra semantische informatie. Dit gebe
 
 \subsubsection{Berekening van LDA-model}
 \label{subs:Berekening van onderwerpverdeling}
-Het leren van het LDA-model gebeurt op de Flickr30k dataset. Het algoritme om het LDA-model te bepalen beschouwt alle vijf beschrijvingen van een afbeelding na elkaar als \'e\'en document. Net als in het voorbereiden van de data voor het taalmodel, houdt het enkel woorden over die meer dan vijf keer in de trainingsdata voorkomen. Vervolgens verwijdert het bovendien stopwoorden en stemt de woorden met behulp van een \emph{Porter stemmer}. \emph{Stemming} is het reduceren van een woord tot zijn stam. De implementaties van deze voorbereidingstechnieken zijn geschreven met hulpmiddelen uit NLTK\footnote{\url{http://www.nltk.org/}}.
+Het leren van het LDA-model gebeurt op de Flickr30k dataset. Het algoritme om het LDA-model te bepalen beschouwt alle vijf beschrijvingen van een afbeelding na elkaar als \'e\'en document. Net als in het voorbereiden van de data voor het taalmodel, houdt het enkel woorden over die meer dan vijf keer in de trainingsdata voorkomen. Vervolgens verwijdert het bovendien stopwoorden en stemt de woorden met behulp van een \emph{Porter stemmer}. \emph{Stemming} is het reduceren van een woord tot zijn stam. De implementaties van deze voorbereidingstechnieken zijn geschreven met hulpmiddelen uit NLTK~\cite{bird2009natural}.
 
 Het doel van dit LDA-model is om op basis van een document te bepalen welke onderwerpen het sterkst aanwezig zijn. Het idee hierachter is dat een onderwerpverdeling ervoor kan zorgen dat het systeem woorden genereert die binnen het juiste onderwerp passen. Het leren van dit model gebeurt met de Python-bibliotheek \texttt{lda}\footnote{\url{https://pypi.python.org/pypi/lda}} en werkt intern met Gibbs sampling.
 
-Het aantal onderwerpen is de belangrijkste parameter van LDA. Het evalueren van een LDA-model is een niet-triviale en moeilijk te automatiseren taak. Om die reden is het bepalen van het beste aantal onderwerpen niet eenvoudig. Enkel indirecte evaluatie biedt de mogelijkheid om de prestatie van LDA te bepalen. Jin et al.\cite{Jin2015} gebruiken ook LDA op dezelfde dataset en gebruiken 80 onderwerpen. Daarom beschouwen de experimenten in hoofdstuk \ref{cha:experimenten} aantallen van onderwerpen rond dit getal. 
+Het aantal onderwerpen is de belangrijkste parameter van LDA. Het evalueren van een LDA-model is een niet-triviale en moeilijk te automatiseren taak. Om die reden is het bepalen van het beste aantal onderwerpen niet eenvoudig. Enkel indirecte evaluatie biedt de mogelijkheid om de prestatie van LDA te bepalen. Jin et al.~\cite{Jin2015} gebruiken ook LDA op dezelfde dataset en gebruiken 80 onderwerpen. Daarom beschouwen de experimenten in hoofdstuk~\ref{cha:experimenten} aantallen van onderwerpen rond dit getal. 
 
 Om toch een idee te krijgen over de prestatie van het model gaan we als volgt te werk. Eerst bepaalt een script per onderwerp de tien belangrijkste woorden. Op basis van deze woorden krijgt elk onderwerp een manueel gekozen onderwerpnaam, die een overkoepelend concept voorstelt. Tabel \ref{tbl:woorden-naar-topic} geeft hiervan twee voorbeelden. 
 Hierdoor is het enerzijds mogelijk om te kijken of de belangrijkste woorden in een onderwerp een duidelijke link hebben. Anderzijds is het nu ook mogelijk voor elke afbeelding in de trainingsset de vijf meest waarschijnlijke onderwerpnamen op te vragen. Een manuele evaluatie van de onderwerpen per afbeelding geeft opnieuw een idee over de prestatie van het LDA-model. Figuur \ref{fig:ldatopics} toont een voorbeeld van een trainingsafbeelding met de vijf meest waarschijnlijke onderwerpen. Appendix \ref{app:LDA} bevat extra voorbeelden.
@@ -291,7 +291,7 @@ Deze reductie gebeurt op basis van de grootte van de rechthoek. Een deel van de 
 
 De dataset is beschikbaar als tekstbestanden die weergeven welke omspannende rechthoeken op welke afbeelding te zien zijn en met welke delen van de beschrijving elke rechthoek overeenkomt. Er zijn een aantal rechthoeken die wel zijn opgenomen in de dataset, maar geen overeenkomstig zinsdeel hebben. De semantische meerwaarde van dergelijke rechthoeken is miniem, dus behoren deze ook niet tot de bekeken verzameling. 
 
-Om de data bruikbaar te maken voor verwerking leest een script de tekstbestanden uit en slaat alle rechthoeken op als aparte afbeelding. Op basis van die afbeeldingen berekent de Caffe-implementatie van VGGNet een vectorrepresentatie. Een tweede script zet de overeenkomstige zinsdelen om naar een tf-idf gewogen vectorweergave. Deze voorstelling baseert zich op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met het aantal keer dat het woord $i$ voorkomt in die zin $j$ (term frequentie of $tf_{i,j}$). Ten tweede is het gewicht invers gerelateerd aan het aantal zinnen $n_i$ waar het in voorkomt (inverse document frequentie of $idf_i$). Een woord dat in alle zinnen voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de zinnen voorkomt. Formule~\eqref{formule:tfidf} toont de volledige berekening. Het totaal aantal documenten is hier $N$~\cite{Jurafsky:2009:SLP:1214993}. 
+Om de data bruikbaar te maken voor verwerking leest een script de tekstbestanden uit en slaat alle rechthoeken op als aparte afbeelding. Op basis van die afbeeldingen berekent de Caffe-implementatie van VGGNet een vectorrepresentatie. Een tweede script zet de overeenkomstige zinsdelen om naar een \emph{tf-idf}-gewogen vectorweergave. Deze voorstelling baseert zich op twee belangrijke principes. Ten eerste is het gewicht van een woord in een zin proportioneel met het aantal keer dat het woord $i$ voorkomt in die zin $j$ (term frequentie of $tf_{i,j}$). Ten tweede is het gewicht invers gerelateerd aan het aantal zinnen $n_i$ waar het in voorkomt (inverse document frequentie of $idf_i$). Een woord dat in alle zinnen voorkomt dient een lager gewicht te krijgen dan een woord dat slechts in een fractie van de zinnen voorkomt. Formule~\eqref{formule:tfidf} toont de volledige berekening. Het totaal aantal documenten is hier $N$~\cite{Jurafsky:2009:SLP:1214993}. 
 
 \begin{equation}
 \label{formule:tfidf}
@@ -305,7 +305,7 @@ Het berekenen van de CCA projectie tussen de rechthoeken en de frasen uit de Ent
 \section{Canonical Correlation Analysis}
 Het toevoegen van extra semantische informatie kan gebeuren op verschillende manieren. Een eerste optie is LDA. CCA biedt een tweede mogelijkheid. Waar LDA focust op het blootleggen van verbanden tussen de woorden uit de beschrijvingen, berekent CCA een ruimte die tussen de afbeelding en de zin ligt.
 
-Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Een eerste stap is het omzetten van de data naar een bruikbaar formaat. Het eerder vernoemde VGGNet berekent de afbeeldingsvectoren voor de trainingsset. Een tf-idf gewogen vector stelt de bijhorende zinnen voor, zoals eerder beschreven. 
+Het berekenen van deze tussenliggende ruimte gebeurt in twee stappen. Een eerste stap is het omzetten van de data naar een bruikbaar formaat. Het eerder vernoemde VGGNet berekent de afbeeldingsvectoren voor de trainingsset. Een \emph{tf-idf}-gewogen vector stelt de bijhorende zinnen voor, zoals eerder beschreven. 
 
 Na het berekenen van de representaties van afbeeldingen en zinnen volgt een berekening van de correlatiecomponenten. Dit gebeurt met de \texttt{MATLAB}-implementatie van het algoritme voor \emph{canonical correlation}\footnote{\url{http://nl.mathworks.com/help/stats/canoncorr.html}}. Het resultaat bestaat uit twee projectiematrices, die dienen om afbeeldings- en beschrijvingsvectoren te projecteren op de tussenliggende ruimte die de correlatie maximaliseert. De experimenten maken enkel gebruik van de projectie voor afbeeldingen, aangezien Jia et al.~\cite{Fernando2015} aantonen dat het gebruik van enkel de afbeeldingsprojectie de beste resultaten oplevert.
 
