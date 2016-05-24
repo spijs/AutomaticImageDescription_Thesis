@@ -2,20 +2,19 @@ __author__ = 'Wout & thijs'
 
 import os
 import argparse
-import numpy as np
 from nltk.stem.porter import *
 import sys
 sys.path.append("../imagernn")
 
-from sklearn.cross_decomposition import CCA
-import scipy.io
-from scipy import spatial
-import pickle
-from PIL import Image
 from data_provider import getDataProvider
 
 
 def main(params):
+    '''
+    iterate over all image sentence pairs in the dataset, and write a dictionary containing all words used more
+    than 5 times
+    :param params
+    '''
     dataset = params['dataset']
     os.chdir("..")
     dataprovider = getDataProvider(dataset, pert = 1)
@@ -41,34 +40,38 @@ def main(params):
         f.writelines(w+'\n')
     print('finished')
 
-'''Returns a list containing the most frequent english words'''
 def getStopwords():
-        stopwords = set()
-        file=open('../lda_images/english')
-        for line in file.readlines():
-            stopwords.add(line[:-1])
-        return stopwords
+    '''
+    :return: a list containing the most frequent english words
+    '''
+    stopwords = set()
+    file=open('../lda_images/english')
+    for line in file.readlines():
+        stopwords.add(line[:-1])
+    return stopwords
 
-''' stems a word by using the porter algorithm'''
 def stem(word):
+    '''
+    :param word
+    :return: the given word, stemmed using the porter algorithm
+    '''
     stemmer = PorterStemmer()
     return stemmer.stem(word)
 
-'''
-Given a sentence, return a copy of that sentence, stripped of words that are in the provided stopwords
-'''
 def remove_common_words(sentence,stopwords):
-        #s = set(stopwords.words('english'))
-        stopwords.add(' ') #add spaces to stopwords
-        result = []
-        for word in sentence:
-            if not word.lower() in stopwords and len(word)>2:
-                result.append(word.lower())
-        return result
+    '''
+    :param sentence
+    :param stopwords
+    :return: copy of the given sentence stripped of stopwords and words with length <3
+    '''
+    stopwords.add(' ') #add spaces to stopwords
+    result = []
+    for word in sentence:
+        if not word.lower() in stopwords and len(word)>2:
+            result.append(word.lower())
+    return result
 
 
-
-''' Parses the given arguments'''
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dataset', dest='dataset', default='flickr8k', help='dataset: flickr8k/flickr30k')

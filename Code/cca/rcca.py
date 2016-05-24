@@ -1,3 +1,5 @@
+__author__ = "https://github.com/gallantlab/pyrcca"
+
 import numpy as np
 from scipy.linalg import eigh
 import h5py

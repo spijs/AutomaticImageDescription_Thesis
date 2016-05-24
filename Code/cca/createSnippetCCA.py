@@ -81,9 +81,6 @@ def createOccurrenceVectors(vocabulary):
     idf = len(result.keys()) / idf # calculate idf weights
     return result, idf
 
-'''
-
-'''
 def weight_tfidf(documents, inv_freq):
     '''
     :param documents

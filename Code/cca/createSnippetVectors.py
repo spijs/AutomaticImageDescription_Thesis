@@ -1,3 +1,5 @@
+__author__ = "Wout & Thijs"
+
 import os
 import scipy.io
 from scipy import spatial
@@ -10,23 +12,28 @@ from PIL import Image
 from Code.imagernn.data_provider import getDataProvider
 from Code.cca.stackedCCAModel import *
 
-''' stems a word by using the porter algorithm'''
 def stem(word):
+    '''
+    :param word
+    :return: the given word, stemmed using the porter algorithm
+    '''
     stemmer = PorterStemmer()
     return stemmer.stem(word)
 
-'''Returns a list containing the most frequent english words'''
 def getStopwords():
+    '''
+    :return: a list containing the most frequent english words
+    '''
         stopwords = set()
         file=open('../lda_images/english')
         for line in file.readlines():
             stopwords.add(line[:-1])
         return stopwords
 
-'''
-Creates a vocabulary based on a folder. Returns a list of words
-'''
 def readVocabulary():
+    '''
+    :return: a list containing all the words in a hardcoded file
+    '''
     result = []
     voc = open('complete_dictionary.txt')
     line = voc.readline()
@@ -35,18 +42,20 @@ def readVocabulary():
         line = voc.readline()
     return result
 
-'''
-Reads a set of documents, returns a dictionary containing the filename of the corresponding picture, and the
-unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
-'''
 def createOccurrenceVectors(vocabulary):
+    '''
+    Reads a set of documents, returns a dictionary containing the filename of the corresponding picture, and the
+    unweighted bag of words representation of the sentences in the documents, based on the given vocabulary
+    :param vocabulary
+    :return: dictionary mapping filenames to unweighted bag-of-word representation, together with the idf weights
+    for the given vocabulary
+    '''
     print "amount of words: " + str(len(vocabulary))
     idf = np.zeros(len(vocabulary))
     result = {}
     current = 0
     for dirname, dirnames, filenames in os.walk('Flickr30kEntities/sentence_snippets'):
         for filename in filenames:
-          #if current < 1000:
             current += 1
             if current % 1000 == 0:
                 print "current sentence : " + str(current)
@@ -72,18 +81,15 @@ def createOccurrenceVectors(vocabulary):
                         result[filename[0:-4]+"_"+str(sentenceID)] = row
                 line = f.readline()
                 sentenceID += 1
-                #print "ROW: " + str(row)
-    for item in idf:
-      if item <= 0:
-        print "Idf item: " + str(item)
     idf = len(result.keys()) / idf
     return result, idf
 
-'''
-Given a set of document vectors, and an inverse document frequency vector, returns the multiplication
-of each document with the idf vector
-'''
 def weight_tfidf(documents, inv_freq):
+    '''
+    :param documents
+    :param inv_freq: inverse document frequencies for the set of documents
+    :return: weighted version of each document with the given idf vector
+    '''
     result = {}
     for i in documents.keys():
         doc = documents[i]
@@ -91,6 +97,16 @@ def weight_tfidf(documents, inv_freq):
     return result
 
 def mainExec(name_file1, name_file2, features1, features2):
+    '''
+    Given two files with names, and two files with features, perform the Stacked Auxiliary Embedding method
+    on two matrices. The first one is the concatenation of both feature lists, the second matrix contains tf-idf weighted
+    representations of the training sentences of Flickr30kEntities. The intermediate CCA model is written to disk,
+    as well as the final model
+    :param name_file1
+    :param name_file2
+    :param features1
+    :param features2
+    '''
     print "Creating vocabulary"
     voc = readVocabulary()
     print "Generating document vectors"
@@ -100,8 +116,7 @@ def mainExec(name_file1, name_file2, features1, features2):
     print "creating feature dictionary"
     featuresDict = createFeatDict(weightedVectors.keys(), name_file1, name_file2, features1, features2 )
     imagematrix, sentenceMatrix = createSnippetMatrices(featuresDict, weightedVectors)
-    print "Sentences: " + str(sentenceMatrix.shape)
-    print "Images: " + str(imagematrix.shape)
+
     print "Modelling cca"
     cca = CCA(n_components = 128)
     cca = fitCCA(cca, imagematrix, sentenceMatrix, "ccasnippetmodel.p")
@@ -126,6 +141,15 @@ def mainExec(name_file1, name_file2, features1, features2):
 
 
 def augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_img, trans_sent):
+    '''
+    :param nn_img: average distance to 50th nearest neighbor of the images
+    :param nn_sent: average distance to 50th nearest neighbor of the sentences
+    :param trainingimages: matrix containing the training images
+    :param trainingsentences: matrix containing the training sentences
+    :param trans_img: cca transformation of the training images
+    :param trans_sent: cca transformation of the training sentences
+    :return: augmented representations of the training images and sentences based on a Random Fourier Feature function.
+    '''
     augmented_imgs = []
     augmented_sentences = []
     i = 0
@@ -145,6 +169,14 @@ def augmentMatrices(nn_img, nn_sent, trainingimages, trainingsentences, trans_im
 
 
 def createSnippetMatrices(featuresDict, weightedVectors):
+    '''
+    Given a dictionary mapping image names to image features and a dictionary mapping image names to sentence vectors,
+    create two matrices containing respectively image features and sentences, in the same order with respect to the
+    image name
+    :param featuresDict: dictionary containing mapping from image names to image features
+    :param weightedVectors: dictionary containing mapping from image names to sentence vectors
+    :return: image feature matrix and sentence matrix, in corresponding order
+    '''
     sentenceMatrix = []
     imagematrix = []
     print "Creating matrices"
@@ -195,45 +227,62 @@ def createTrainMatrices(voc):
 
 
 def fitCCA(model, x, y, file):
+    '''
+    fit the given model on the given date, write it to disk and return it
+    :param model
+    :param x: first part of dataset
+    :param y: second part of dataset, corresponding to x
+    :param file: file to write to
+    :return: fitted model
+    '''
     model.fit(x, y)
     pickle.dump(model, open(file, 'w+'))
     return model
 
 
 def createFeatDict(names, namesfile1, namesfile2, features1, features2):
+    '''
+    Given a list of names, two files containing names and two lists of features, return a dictionary
+    containing all the names in the given list, mapping them to the correct features
+    :param names: list of names
+    :param namesfile1: first file containing names
+    :param namesfile2: second file containing names
+    :param features1: first list of features
+    :param features2: second list of features
+    :return: dictionary containing all the names in the given list, mapping them to the correct features
+    '''
     result = {}
     current = 0
     for name in names:
-    current += 1
-    if current % 1000 == 0:
-        print "current image: "+ str(current)
-    #print "trying to add feature to dict for: "+name
-        img1 = getImage(name, namesfile1, features1)
-        if not len(img1) == 0:
-            result[name] = img1
-        else:
-            result[name] = getImage(name, namesfile2, features2)
+        current += 1
+        if current % 1000 == 0:
+            print "current image: "+ str(current)
+            img1 = getImage(name, namesfile1, features1)
+            if not len(img1) == 0:
+                result[name] = img1
+            else:
+                result[name] = getImage(name, namesfile2, features2)
     return result
 
-'''
-Returns the RFF function of the given vector, based on the given sigma and wanted dimension
-'''
 def phi(wantedDimension, sigma, x):
+    '''
+    :param wantedDimension
+    :param sigma: parameter of the RFF
+    :param x: vector to modify
+    :return: RFF function applied to the given vector, based on the given sigma and wanted dimension
+    '''
     b = np.random.rand(wantedDimension)
     R = np.random.normal(scale = sigma*sigma, size = (len(x), wantedDimension))
     return np.dot(x,R) + b
 
-'''
-Given a matrix with each row an observation, returns the average distance to the 50th nearest neighbor
-'''
 def nearest_neighbor(matrix):
-    print "Matrix dimensions : " + str(matrix.shape)
+    '''
+    :param matrix
+    :return: average distance to the 50th nearest neighbor of all observations in the given matrix
+    '''
     avg_dist = 0
     for i in range(len(matrix)):
         x = np.linalg.norm(matrix[i])
-        if not x > 0:
-            print "THE NORM OF THE SENTENCE: " + str(x)
-            print "THE SENTENCE: " + str(matrix[i])
         distances = np.zeros(len(matrix))
         for j in range(len(matrix)):
             if not i == j:
@@ -246,11 +295,13 @@ def nearest_neighbor(matrix):
     return avg_dist
 
 
-'''
-given an image sentence pair, return an array containing the concatenation of the 5 sentences in the pair
-'''
 def getFullSentence(sentence, vocabulary, stopwords):
-
+    '''
+    :param sentence: sentence to count the words of
+    :param vocabulary: vocabulary to use
+    :param stopwords: stopwords to remove from the sentence
+    :return: array containing the counts of each word in the vocabulary
+    '''
     vector =  np.zeros(len(vocabulary))
     result = remove_common_words(sentence, stopwords)
     for word in result :
@@ -258,50 +309,52 @@ def getFullSentence(sentence, vocabulary, stopwords):
             vector[vocabulary.index(word.lower())] += 1
     return vector
 
-
-'''
-Given a sentence, return a copy of that sentence, stripped of words that are in the provided stopwords
-'''
 def remove_common_words(sentence,stopwords):
-        stopwords.add(' ') #add spaces to stopwords
-        result = []
-        for word in sentence:
-            if not word.lower() in stopwords and len(word)>2:
-                result.append(word.lower())
-        return result
+    '''
+    :param sentence
+    :param stopwords
+    :return: copy of the sentence, stripped of words that are in the provided stopwords and words with length <3
+    '''
+    stopwords.add(' ') #add spaces to stopwords
+    result = []
+    for word in sentence:
+        if not word.lower() in stopwords and len(word)>2:
+            result.append(word.lower())
+    return result
 
-
-'''
-Given a filename, checks if the image behind that filename is bigger than 64x64
-'''
 def isLargeEnough(filename):
+    '''
+    :param filename: image to check
+    :return: True if the image behind the filename is bigger than 64x64
+    '''
     file = filename+".jpg"
-    #print file
     try:
         image = Image.open("../Flickr30kEntities/image_snippets/"+file)
     except IOError:
-    # image not found. Is ok, many snippets dont have a corresponding image
-	return False
+        # image not found. Is ok, many snippets dont have a corresponding image
+        return False
     width, height = image.size
     return (width >=64 ) and (height >= 64)
 
-
-'''
-Returns the image features corresponding to the provided image name
-'''
 def getImage(filename, file_with_names, features):
-    #print filename
+    '''
+    :param filename: like 123456789_1_1
+    :param file_with_names: file with image names
+    :param features: list of image features
+    :return: the feature corresponding to the given filename
+    '''
     file_with_names = open(file_with_names)
     line = file_with_names.readline()
     linenumber = 0
     while(not line == ""):
-        if line[0:-5] == filename:
+        if line[0:-5] == filename: # remove last 4 characters of the name (_x_x)
             return features[linenumber]
         line = file_with_names.readline()
         linenumber+=1
     return []
 
 if __name__ == "__main__":
+    # image features are split into two matrices, because they were too large to compute
     names1 = "../Flickr30kEntities/image_snippets/images.txt"
     names2 = "../Flickr30kEntities/image_snippets/images2.txt"
     feats1 = scipy.io.loadmat("../Flickr30kEntities/snippets_features/vgg_feats.mat")['feats'].transpose()

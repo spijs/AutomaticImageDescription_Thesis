@@ -5,18 +5,17 @@ import sys
 import argparse
 import numpy as np
 from nltk.stem.porter import *
-# from sklearn.cross_decomposition import CCA
 sys.path.append("..")
 import rcca
-import scipy.io
-from scipy import spatial
 import pickle
-from PIL import Image
 from imagernn.data_provider import getDataProvider
-import sys
 
 def preprocess():
-    dataset = "flickr30k"
+    '''
+    generate the image and sentence matrices of the given dataset and write it to disk
+    :return:
+    '''
+    dataset = "flickr30k" # hardcoded
     os.chdir("..")
     dataprovider = getDataProvider(dataset, pert=1)
     os.chdir("cca")
@@ -35,8 +34,12 @@ def preprocess():
     pair_file.close()
 
 def create_mat_files():
+    '''
+    Load a image and sentence matrix into memory and write them to disk in two separate files.
+    :return:
+    '''
     print "Loading data into memory"
-    load_from = open("imagesentencematrix_pert.p", 'rb')
+    load_from = open("imagesentencematrix_pert.p", 'rb') # filename is hardcoded
     matrixpair = pickle.load(load_from)
     load_from.close()
     images = np.array(matrixpair.images)
@@ -45,16 +48,21 @@ def create_mat_files():
     print "Sentence dimensions " + str(sentences.shape)
     np.savetxt("sentences_pert.txt", sentences)
     np.savetxt("images_pert.txt", images)
-    # scipy.io.savemat('images.mat', {"images":images})
-    # scipy.io.savemat('sentences.mat', {"sentences":sentences})
 
 class image_sentence_matrix_pair:
+    '''
+    Class containing an image matrix and a sentence matrix
+    '''
     def __init__(self, images, sentences):
         self.images = images
         self.sentences = sentences
 
 
 def main(params):
+    '''
+    Load an image and sentence matrix into memory, learn a CCA model on them and write this model to disk
+    :param params
+    '''
     print "Loading data into memory"
     load_from = open("imagesentencematrix.p", 'rb')
     matrixpair = pickle.load(load_from)
@@ -65,29 +73,29 @@ def main(params):
     print "Sentence dimensions " + str(sentences.shape)
     print "Done"
     print "Learning CCA"
-    # print str(len(images))
     cca = rcca.CCA(kernelcca=False, numCC=256, reg=0.)
     cca.train([images, sentences])
-    # cca = CCA(n_components= 256, max_iter=700)
-    # cca.fit(images, weightedVectors)
-    # print "SIZE OF CCA:" + str(sys.getsizeof(cca))
     print "writing results to pickle"
     pickle_dump_file = open("../data/trainingCCA.p",'w+')
     pickle.dump(cca, pickle_dump_file)
     pickle_dump_file.close()
     print('finished')
 
-
-'''Returns a list containing the most frequent english words'''
 def getStopwords():
-        stopwords = set()
-        file=open('../lda_images/english')
-        for line in file.readlines():
-            stopwords.add(line[:-1])
-        return stopwords
+    '''
+    :return: a list containing the most frequent english words
+    '''
+    stopwords = set()
+    file=open('../lda_images/english')
+    for line in file.readlines():
+        stopwords.add(line[:-1])
+    return stopwords
 
-''' stems a word by using the porter algorithm'''
 def stem(word):
+    '''
+    :param word:
+    :return: the word, stemmed by the porter algorithm
+    '''
     stemmer = PorterStemmer()
     return stemmer.stem(word)
 
@@ -98,23 +106,27 @@ def weight_tfidf(documents, inv_freq):
         result.append(doc * inv_freq)
     return result
 
-'''
-Given a sentence, return a copy of that sentence, stripped of words that are in the provided stopwords
-'''
 def remove_common_words(sentence,stopwords):
-        #s = set(stopwords.words('english'))
-        stopwords.add(' ') #add spaces to stopwords
-        result = []
-        for word in sentence:
-            if not word.lower() in stopwords and len(word)>2:
-                result.append(word.lower())
-        return result
+    '''
+    :param sentence:
+    :param stopwords:
+    :return: the given sentence, stripped of stopwords and words with length <3
+    '''
+    stopwords.add(' ') #add spaces to stopwords
+    result = []
+    for word in sentence:
+        if not word.lower() in stopwords and len(word)>2:
+            result.append(word.lower())
+    return result
 
-'''
-Given a image-sentence pair generator and a vocabulary, this function returns TF vectors
-for each sentence, the IDF for each word and a matrix containing all image representations.
-'''
 def getOccurenceVectorsAndImages(vocabulary, pairGenerator):
+    '''
+
+    :param vocabulary
+    :param pairGenerator: generator of image sentence pairs
+    :return: term frequency vectors for each sentence, the idf weight for each word and a matrix containing all image
+    representations
+    '''
     stopwords = getStopwords()
     images = []
     idf = np.zeros(len(vocabulary))
@@ -143,10 +155,11 @@ def getOccurenceVectorsAndImages(vocabulary, pairGenerator):
     idf = len(result) / idf
     return result, idf, images
 
-'''
-Creates a vocabulary based on a folder. Returns a list of words
-'''
 def readVocabulary(filename):
+    '''
+    :param filename: file to read from
+    :return: the vocabulary stored in the given file
+    '''
     result = []
     voc = open(filename)
     line = voc.readline()
@@ -155,7 +168,6 @@ def readVocabulary(filename):
         line = voc.readline()
     return result
 
-''' Parses the given arguments'''
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dataset', dest='dataset', default='flickr8k', help='dataset: flickr8k/flickr30k')

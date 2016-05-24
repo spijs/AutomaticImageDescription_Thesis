@@ -4,7 +4,6 @@ import numpy as np
 class StackedCCAModel:
     def __init__(self, nn_img, nn_sent, cca, augmentedcca):
         '''
-
         :param nn_img: average distance to 50th nearest neighbor of the images
         :param nn_sent: average distance to 50th nearest neighbor of the sentences
         :param cca: cca model used for the first projection
