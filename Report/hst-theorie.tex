@@ -225,7 +225,7 @@ De laatste laag in elk niveau is een \emph{feature-pooling-laag} die de dimensio
 
 Na \'e\'en of meerdere opeenvolgingen van filters, niet-lineaire en pooling-lagen volgt in een traditionele convolutionele architectuur de laatste fase. Deze bestaat uit een aantal volledig verbonden lagen, gevolgd door een classificatielaag.
 
-Trainen van dit netwerk kan op twee manieren. Een eerste manier is gesuperviseerd in combinatie met terugpropagatie. Hierbij heeft het netwerk ook kennis over het correcte antwoord. Een tweede mogelijkheid is ongesuperviseerde training, waarbij geen kennis van het correcte antwoord nodig is. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
+Trainen van dit netwerk kan op twee manieren. Een eerste manier is gesuperviseerd in combinatie met terugpropagatie. Hierbij heeft het netwerk ook kennis over het correcte antwoord. Een tweede mogelijkheid is ongesuperviseerde training, waarbij geen kennis van het correcte antwoord nodig is tijdens de training en het netwerk geen feedback krijgt over zijn voorspelling. Deze laatste methode werkt veel sneller en heeft geen nood aan zeer grote gelabelde datasets. 
 
 In vergelijking met gewone feedforward netwerken zijn CNN's in staat om veel sneller visuele concepten te leren, terwijl ze theoretisch slechts iets minder goede resultaten kunnen bekomen.
 Bovendien is een CNN translatie-invariant omdat het op elk niveau gebruik maakt van rechthoekige regio's uit de vorige laag van het netwerk. De verschillende regio's overlappen, wat leidt tot deze zeer interessante eigenschap.
@@ -273,7 +273,7 @@ Het voorspellen van een zin met een RNN gebeurt woord per woord. Op basis van de
 Tijdens de trainingsfase bestaat de input van het netwerk uit woorden, voorgesteld als een vector. Deze vectoren kunnen gebaseerd zijn op one-hot codering, ze kunnen willekeurig zijn, of het kunnen vooraf getrainde \emph{word embeddings} zijn zoals bijvoorbeeld \texttt{word2vec}~\cite{Mikolov2013}. Deze codering van woorden tot vectoren zelf kan ook deel uitmaken van het netwerk. Als dit het geval is, kan de codering verbeteren tijdens de training met behulp van terugpropagatie.
 
 \subsubsection{Problemen en oplossingen met RNN}
-
+\label{subsec:solvers}
 Een frequent probleem bij het trainen van recurrente netwerken is de complexiteit van het netwerk. Hoe complexer het netwerk, hoe groter de kans op overfitting. Om dit probleem aan te pakken biedt Srivastava~\cite{Srivastava2014} een oplossing. Hij introduceert \emph{dropout} om dit fenomeen tegen te gaan. Bij het gebruik van dropout laat het netwerk tijdens het trainen een aantal neuronen vallen. Bij elk trainingsvoorbeeld zijn er een aantal gewichten die waarde 0 krijgen, waardoor ze niet bijdragen aan de training. Een willekeurig proces bepaalt welke neuronen nul zijn in elke stap. Dit proces is aangestuurd door een parameter die de kans op dropout aangeeft per neuron. Deze  kans kan verschillend zijn voor elke laag. Deze kans is typisch kleiner voor inputwaarden dan voor verborgen waarden.
 
 Een tweede probleem is het gebrek aan aanpassing van de leersnelheid voor verschillende parameters. Hiervoor zijn een aantal oplossingen te vinden in de literatuur. Een eerste is het gebruik van \emph{Adagrad}~\cite{Duchi2011}. Hierbij maakt het algoritme gebruik van formule~\eqref{formule:adagrad} om de gewichten aan te passen. Hierdoor hebben parameters met een zeer grote gradi\"ent een lagere effectieve leersnelheid dan parameters met een kleinere gradi\"ent. In de formule staat $w_t$ voor de gewichtsvector op tijdstip $t$, $dw$ is de gradi\"entvector, $\eta$ is de leersnelheid en $\epsilon$ is een afvlakkingsparameter die deling door nul voorkomt. Een probleem dat kan voorkomen bij het gebruik van Adagrad is dat het leerproces te vroeg stopt, omdat de aanpassingen aan de leersnelheid te agressief zijn.
@@ -386,7 +386,7 @@ Het generatieve aspect van LDA is te zien in algoritme~\ref{algo:lda} en is ook 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=\linewidth]{Images/lda.png}
-    \caption[Grafische weergave van LDA]{Grafische weergave van LDA~\cite{LDAsien}}
+    \caption[Grafische weergave van LDA]{Grafische weergave van LDA~\cite{LDAsien}. Hierbij is $D$ de verzameling documenten en $M$ de verzameling woordposities in een document.}
     \label{fig:lda}
 \end{figure}
 
@@ -423,16 +423,17 @@ Het meest interessante voor deze masterproef zijn de onderwerpverdelingen per do
 \subsection{Canonical Correlation Analysis}
        
 Canonical Correlation Analysis (CCA) is een methode die basisvectoren probeert te vinden voor twee gerelateerde datasets. De bedoeling is om, bij projectie van overeenkomstige elementen uit beide datasets, een maximale lineaire correlatie te bekomen tussen de twee projecties. 
-Op basis van de singulierewaardenontbinding (SWO) van de twee datasets is het mogelijk om deze ruimte te benaderen. Door het gebruik van singuliere waarden is het mogelijk om projecties in de tussenliggende ruimte te reduceren tot hun $n$ eerste componenten. Dit komt doordat een SWO de dimensies rangschikt van dominant naar minder dominant. Weenink~\cite{Weenink2003} beschrijft de theoretische uitwerking en oplossingsmethodes.
+Op basis van de singulierewaardenontbinding (SWO) van de twee datasets is het mogelijk om deze ruimte te benaderen. Door het gebruik van singuliere waarden is het mogelijk om projecties in de tussenliggende ruimte te reduceren tot hun $k$ eerste componenten. Dit komt doordat een SWO de dimensies rangschikt van dominant naar minder dominant. Weenink~\cite{Weenink2003} beschrijft de theoretische uitwerking en oplossingsmethodes.
 
 In het onderzoek naar afbeeldingsbeschrijving kan dit bijvoorbeeld leiden tot een multimodale projectie van afbeeldings- en beschrijvingsrepresentatie. Voor deze masterproef is de geprojecteerde matrix van de afbeelding een bron van semantische informatie dat de afbeeldingsgeneratie kan helpen.
 
 \subsubsection{Stacked auxiliary embeddings}
 \label{sub:stackedcca}  
-Stacked Auxiliary Embedding~\cite{Gong2014} kan op basis van extra informatie een verbeterde projectie maken ten opzichte van gewone CCA. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met voor elke foto een set van stukjes van de foto met een bijbehorende beschrijving. De representaties van de foto's en annotaties uit de dataset kunnen verbeteren door gebruik te maken van de informatie uit de extra dataset.
+Stacked Auxiliary Embedding~\cite{Gong2014} kan op basis van extra informatie een verbeterde projectie maken ten opzichte van gewone CCA. Een voorbeeld hiervan is een dataset van geannoteerde foto's, versterkt met voor elke foto een set van stukjes van de foto met een bijbehorende beschrijving zoals Flickr30kEntities~\ref{sec:entities}. De representaties van de foto's en annotaties uit de dataset kunnen verbeteren door gebruik te maken van de informatie uit de extra dataset.
 
-Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Uit de extra dataset volgt een eerste set van CCA-projecties ($A$, $B$). Daarna volgt een projectie van de originele dataset ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$. Dit resulteert in projecties $AX$ en $BY$. Vervolgens transformeert een lineaire functie $\psi(x)$ de waarden $AX$ en $BY$ zoals de originele paper voorstelt.
+Om de uiteindelijke augmentatie te bereiken, zijn er een aantal stappen nodig. Het CCA-algoritme leert snippets en stukjes zin op de tussenliggende ruimte te projecteren. Uit de extra dataset volgt op die manier een eerste set van CCA-projectiematrices ($A$, $B$). Daarna volgt een projectie van de originele dataset met afbeeldingen en beschrijvingen ($X$, $Y$) naar de multimodale ruimte, door vermenigvuldiging met $A$ en $B$. Dit resulteert in projecties $AX$ en $BY$. 
 
+Vervolgens transformeert een lineaire functie $\psi(x)$ de waarden $AX$ en $BY$ zoals de originele paper voorstelt.
 Om de dimensionaliteit van de projectie te verhogen gebruikt de paper voor $\psi(x)$ een Random Fourier Feature (RFF). Deze RFF is een functie die de gemiddelde afstand tot de vijftigste dichtste buur van de inputvector gebruikt. Voor elke foto en beschrijving kijkt het algoritme welke andere foto of beschrijving de vijftigste dichtste buur is, om vervolgens het gemiddelde te nemen van alle afstanden. De exacte berekening is $\psi(\mathbf{x})=\sqrt{2}cos(\mathbf{x}R+\mathbf{j})$. Hierin is $R$ een matrix verkregen door sampling van een normaalverdeling met gemiddelde 0, en standaardafwijking $sda$, waarbij $\sqrt{sda}$ overeen komt met de eerder berekende gemiddelde afstand. Vector \myvector{j} is resultaat van sampling uit een uniforme verdeling [0,1].
 
 Aaneensluiting van de originele dataset met het resultaat van de niet-lineaire transformatie leidt tot $\hat{X} = [X, \psi(XA)], \hat{Y} = [Y, \psi(YB)]$. Een laatste stap in het proces berekent een CCA-projectie die gebaseerd is op $\hat{X}$ en $\hat{Y}$, wat resulteert in $U_1$ en $U_2$.
