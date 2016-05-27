@@ -243,10 +243,10 @@
 		\centering
 		\begin{tabular}{lllllll}
 			& B1 & B2 & B3 & B4 & M \\ \hline
-			Karpathy$^*$~\cite{Karpathy2015}    & 57,3   & 36,9   & 24     & 15,7   & ~           \\    
-			ref-RNN$^*$     & 55,2   & 36,6   & 23,9   & 15,1   & 14,3          \\
-			ref-RNN          & 64,9  & 43,1     & 28,1   & 17,8   & 14,3          \\
-			RNN + LDA         & \textbf{65,4}   & \textbf{44}     & \textbf{29,1}   & \textbf{19}     & \textbf{14,4}          \\\hline
+			Karpathy$^*$~\cite{Karpathy2015}    & 57.3   & 36.9   & 24     & 15.7   & ~           \\    
+			ref-RNN$^*$     & 55.2   & 36.6   & 23.9   & 15.1   & 14.3          \\
+			ref-RNN          & 64.9  & 43.1     & 28.1   & 17.8   & 14.3          \\
+			RNN + LDA         & \textbf{65.4}   & \textbf{44}     & \textbf{29.1}   & \textbf{19}     & \textbf{14.4}          \\\hline
 		\end{tabular}
 		\caption{Comparison of results of adding LDA to RNN with reference and original paper~\cite{Karpathy2015} on Flickr30k. $^{*}$ indicates results with brevity penalty. B$n$ is the BLEU-$n$ score. M is the Meteor score.}
 		\label{table:results_rnn}
@@ -258,10 +258,10 @@
 		\centering
 		\begin{tabular}{lllllll}
 			& B1 & B2 & B3 & B4 & M \\ \hline
-			Vinyals~\cite{Google}      & \textbf{66,3}   & 42,3   & 27,7   & 18,3   & ~     \\ 
-			ref-LSTM         & 62,1   & 41,4   & 27,1   & 17,6   & 15,1  \\
-			gLSTM+LDA         & 64,4   & \textbf{43,2}   & 28,1   & 17,8   & \textbf{16}  \\
-			gLSTM+CCA         & 63,7   & 43,4   & \textbf{29,2}   &\textbf{19,3}   & 15,8  \\ \hline
+			Vinyals~\cite{Google}      & \textbf{66.3}   & 42.3   & 27.7   & 18.3   & ~     \\ 
+			ref-LSTM         & 62.1   & 41.4   & 27.1   & 17.6   & 15.1  \\
+			gLSTM+LDA         & 64.4   & \textbf{43.2}   & 28.1   & 17.8   & \textbf{16}  \\
+			gLSTM+CCA         & 63.7   & 43.4   & \textbf{29.2}   &\textbf{19.3}   & 15.8  \\ \hline
 		\end{tabular}
 		\caption{Comparison of results of adding LDA and CCA to LSTM with reference and original paper on Flickr30k. B$n$ is the BLEU-$n$ score. M is the Meteor score.}
 		\label{table:results_lstm}
@@ -275,16 +275,16 @@
 		\centering
 		\begin{tabular}{lllllll}
 			& B1 & B2 & B3 & B4 & M \\ \hline
-			ref-RNN          & \textbf{64,9}  & \textbf{43,1}     & 28,1   & 17,8   & 14,3          \\
-			RNN$^+$       & 62,4   & 42     & \textbf{28,2}   & \textbf{18,6}   & \textbf{16,6}          \\ \hline
-			RNN+LDA         & \textbf{65,4}   & \textbf{44}     & \textbf{29,1}   &19     & 14,4 \\
-			RNN+LDA$^+$ & 62,7   & 42,6   & 28,8   & \textbf{19,5}   & \textbf{16,6}           \\ \hline 
-			ref-LSTM         & \textbf{62,1}   & \textbf{41,4}   & 27,1   & 17,6   & 15,1  \\
-			LSTM$^+$        & 61,2   & 41,1   & \textbf{27,3}   & \textbf{18,2}   & \textbf{16,9}  \\ \hline
-			gLSTM+LDA         & \textbf{64,4}   & \textbf{43,2}   & 28,1   & 17,8   & 16  \\
-			gLSTM+LDA$^+$ & 62,7   & 42,5   & \textbf{28,8}   & \textbf{19,4}   & \textbf{17,4}  \\\hline
-			gLSTM+CCA         & \textbf{63,7}   & \textbf{43,4}   & \textbf{29,2}   &\textbf{19,3}   & 15,8  \\
-			gLSTM+CCA$^+$ & 62,1   & 41,9   & 28,2   & 18,7   & \textbf{17,2}  \\\hline
+			ref-RNN          & \textbf{64.9}  & \textbf{43.1}     & 28.1   & 17.8   & 14.3          \\
+			RNN$^+$       & 62.4   & 42     & \textbf{28.2}   & \textbf{18.6}   & \textbf{16.6}          \\ \hline
+			RNN+LDA         & \textbf{65.4}   & \textbf{44}     & \textbf{29.1}   &19     & 14.4 \\
+			RNN+LDA$^+$ & 62.7   & 42.6   & 28.8   & \textbf{19.5}   & \textbf{16.6}           \\ \hline 
+			ref-LSTM         & \textbf{62.1}   & \textbf{41.4}   & 27.1   & 17.6   & 15.1  \\
+			LSTM$^+$        & 61.2   & 41.1   & \textbf{27.3}   & \textbf{18.2}   & \textbf{16.9}  \\ \hline
+			gLSTM+LDA         & \textbf{64.4}   & \textbf{43.2}   & 28.1   & 17.8   & 16  \\
+			gLSTM+LDA$^+$ & 62.7   & 42.5   & \textbf{28.8}   & \textbf{19.4}   & \textbf{17.4}  \\\hline
+			gLSTM+CCA         & \textbf{63.7}   & \textbf{43.4}   & \textbf{29.2}   &\textbf{19.3}   & 15.8  \\
+			gLSTM+CCA$^+$ & 62.1   & 41.9   & 28.2   & 18.7   & \textbf{17.2}  \\\hline
 		\end{tabular}
 		\caption{Effect of adding Gauss normalization evaluated on Flickr30k. $^+$ indicates the use of Gauss normalization. B$n$ is the BLEU-$n$ score. M is the Meteor score.}
 		\label{table:results_gauss}
@@ -319,8 +319,8 @@
 		\centering
 		\begin{tabular}{llllll}
 			~                  & B1 & B2 & B3 & B4 & M \\ \hline
-			gLSTM        & 64,4   & 43,2            & 28,1   & 17,8   & 16 \\
-			gLSTM+idf   & 40,7   & 23,2   & 13,4   & 7,6 & 12,82 \\ \hline
+			gLSTM        & 64.4   & 43.2            & 28.1   & 17.8   & 16 \\
+			gLSTM+idf   & 40.7   & 23.2   & 13.4   & 7.6 & 12.82 \\ \hline
 			
 		\end{tabular}
 		
@@ -369,9 +369,9 @@
 		\centering
 		\begin{tabular}{llllll}
 			~                   & Unique words& Avg Sentence Length & Unique1 & Unique2 \\ \hline
-			gLSTM                         & 296   & 8,33   & 775   & 490  \\
+			gLSTM                         & 296   & 8.33   & 775   & 490  \\
 			
-			gLSTM+idf                 & \textbf{721}   & \textbf{10,54}   & \textbf{991}   & \textbf{927}    \\\hline
+			gLSTM+idf                 & \textbf{721}   & \textbf{10.54}   & \textbf{991}   & \textbf{927}    \\\hline
 		\end{tabular}
 		\caption{Effects of adding idf-normalization to gLSTM with LDA on the sentence statistics. \emph{Unique1} is the number of sentences not occurring in the training set. \emph{Unique2} is the amount of sentences that are only generated once and do not occur in the training set.}
 		\label{table:idf-stats}
@@ -385,10 +385,10 @@
 		\centering
 		\begin{tabular}{lllllll}
 			~                  & B1 & B2 & B3 & B4 & M \\ \hline
-			LDA   & 64,4   & 43,2   & 28,1   & 17,8 & 16 \\
-			LDA+noise   & 55,3   & 33,6   & 20,2   & 12,7 & 12,7 \\ \hline
-			CCA   & 63,7   & 43,4   & 29,2   & 19,3 & 15,8 \\
-			CCA+noise   & x  & x   & x   & x & x \\ \hline			
+			LDA   & 64.4   & 43.2   & 28.1   & 17.8 & 16 \\
+			LDA+noise   & 63.8   & 42.6   & 27.9   & 18.2 & x\\ \hline
+			CCA   & 63.7   & 43.4   & 29.2   & 19.3 & 15.8 \\
+			CCA+noise   & 63.4  & 42.7   & 28.6   & 18.8 & 15.3 \\ \hline			
 		\end{tabular}
 		\caption{Effect of noise on the automatic evaluation criteria for LDA and CCA as guide for gLSTM. B$n$ is the BLEU-$n$ score. M is the Meteor score.}
 		\label{table:noisy}
@@ -409,14 +409,14 @@
 		\centering
 		\begin{tabular}{llllll}
 			~                  & B1 & B2 & B3 & B4 & M \\ \hline
-			RNN+LDA            & \textbf{65,4}   & \textbf{44}     & 29,1   & 19     & 14,38  \\
-			RNN+LDA$^+$      & 62,7   & 42,6   & 28,8   & \textbf{19,5}   & 16,62  \\
-			gLSTM+LDA$^+$    & 62,7   & 42,5   & 28,8   & 19,4   & \textbf{17,4}   \\
-			gLSTM+CCA          & 63,7   & 43,4   & \textbf{29,2}   & 19,3   & 15,76  \\ \hline
-			Vinyals~\cite{Google}           & 66,3   & 42,3   & 27,7   & 18,3   & ~      \\
-			Jia~\cite{Fernando2015}  & 64,6   & 44,6   & 30,5   & 20,6   & 17,91  \\
-			Xu~\cite{Xu2015}     & 66,9   & 43,9   & 29,6   & 19,9   & 18,46  \\
-			Jin~\cite{Jin2015}      & \textbf{67}    & \textbf{47,5}   & \textbf{33}     & \textbf{24,3}   & \textbf{19,4}   \\ \hline
+			RNN+LDA            & \textbf{65.4}   & \textbf{44}     & 29.1   & 19     & 14.38  \\
+			RNN+LDA$^+$      & 62.7   & 42.6   & 28.8   & \textbf{19.5}   & 16.62  \\
+			gLSTM+LDA$^+$    & 62.7   & 42.5   & 28.8   & 19.4   & \textbf{17.4}   \\
+			gLSTM+CCA          & 63.7   & 43.4   & \textbf{29.2}   & 19.3   & 15.76  \\ \hline
+			Vinyals~\cite{Google}           & 66.3   & 42.3   & 27.7   & 18.3   & ~      \\
+			Jia~\cite{Fernando2015}  & 64.6   & 44.6   & 30.5   & 20.6   & 17.91  \\
+			Xu~\cite{Xu2015}     & 66.9   & 43.9   & 29.6   & 19.9   & 18.46  \\
+			Jin~\cite{Jin2015}      & \textbf{67}    & \textbf{47.5}   & \textbf{33}     & \textbf{24.3}   & \textbf{19.4}   \\ \hline
 		\end{tabular}
 		\caption{Comparison of our best results with the current state of the art. $^+$ indicates the use of Gauss normalization. B$n$ is the BLEU-$n$ score. M is the Meteor score.}
 		\label{tab:sota}
