@@ -441,34 +441,28 @@ Tabel~\ref{table:ruis} toont de numerieke resultaten van het toevoegen van ruis 
 	\begin{tabular}{lllllll}
 		~                  & BLEU-1 & BLEU-2 & BLEU-3 & BLEU-4 & Meteor \\ \hline
 		LDA 80        & 61,4   & 40,4 			& 26   & 16,7  & 14,7 \\
-		LDA 80+ruis & 43,7  &25,5    &14,6   & 9   & 12,5 \\ \hline
+		LDA 80+ruis & x  &x    &x   & x   & x \\ \hline
 		LDA 120   & 64,4   & 43,2   & 28,1   & 17,8 & 16 \\
-		LDA 120+ruis   & 55,3   & 33,6   & 20,2   & 12,7 & 12,7 \\ \hline
+		LDA 120+ruis   & 63,8   & 42,6   & 27,9   & 18,2 & x \\ \hline
 		CCA 128   & 63,5   & 42,5   & 27,9   & 18 & 15,5 \\
-		CCA 128+ruis   & 57,4   & 36,2   & 22,6   & 14,3 & 13,5 \\ \hline
+		CCA 128+ruis   & 63,1   & 42,4   & 27,9   & 17,9 & 15,5 \\ \hline
 		CCA 256   & 63,7   & 43,4   & 29,2   & 19,3 & 15,8 \\
-		CCA 256+ruis   & x  & x   & x   & x & x \\ \hline			
+		CCA 256+ruis   & 63,4  & 42,7   & 28,6   & 18,8 & 15,3 \\ \hline			
 	\end{tabular}
 	\caption{Effect van ruis op automatische evaluatieresultaten voor LDA en CCA als gids van een gLSTM-netwerk}
 	\label{table:ruis}
 \end{table}
 
-Het is duidelijk dat CCA absoluut en relatief beter presteert dan LDA op de gewijzigde dataset.
-De gegenereerde zinnen van alle systemen zijn nog steeds grammaticaal correct.
-Het gLSTM-netwerk is dus nog steeds in staat een correct taalmodel te leren.
-Het verschil tussen beide systemen kan liggen in de geleerde projectie van afbeelding naar gidsvector.
-Een manuele inspectie van de woordverdeling bij elk onderwerp lijkt dit uit te sluiten.
-Voor elk onderwerp hebben de woorden met hoogste waarschijnlijkheid nog steeds een duidelijk verband.
-Het is wel zo dat de kansen waarmee het LDA-netwerk een onderwerp aan een afbeelding toekent verkleinen.
+Het is duidelijk dat beide systemen redelijk robuust zijn tegen ruis. Er is steeds slechts een kleine daling te merken bij alle automatische evaluatiemethodes. De BLEU-4-score van LDA met 120 onderwerpen toont zelfs een lichte stijging.
+Het gLSTM-netwerk is dus nog steeds in staat een correct taalmodel te leren. Ook manuele inspectie van de gegenereerde zinnen toont aan dat de beschrijvingen grammaticaal correct blijven. Wel bevatten de zinnen iets meer afwijkingen ten opzichte van de inhoud van de afbeelding.
 
-De meest waarschijnlijke verklaring bevindt zich in het trainen van het gLSTM-netwerk.
-Vermoedelijk is het netwerk slechter in staat de koppeling te maken tussen de LDA-vector en ``correcte'' zin. 
-Hierdoor leert het mogelijk foutieve verbanden tussen elementen in de LDA-vector en specifieke woorden.
-	
-Bij het leren van meer ongesuperviseerde afbeeldingsbeschrijvingssystemen lijkt CCA dan ook de beste kandidaat als gids omwille van de aanwezige ruis en onzekerheid.
-Dit ongesuperviseerd leren kan bijvoorbeeld bij een systeem dat afbeeldingen op het web automatisch koppelt met de meest waarschijnlijke zin uit de omgeving.
+Een mogelijke verklaring voor dit goede gedrag ligt in het aantal referentiezinnen. Doordat het systeem steeds leert met vijf referentiezinnen is de kans klein dat steeds hetzelfde woord is gewijzigd. Hierdoor ondervinden bijvoorbeeld de onderwerpen van LDA weinig wijzigingen. Een manuele inspectie van de belangrijkste woorden per onderwerp toont ook nog steeds een overlappend thema.
+Het lijkt interessant om experimenten uit te voeren met hogere percentages dan de huidige 15\% kans op het vervangen van een woord. Ook andere types van ruis zoals het toevoegen van referentiezinnen die bij andere afbeeldingen horen, zijn het bestuderen waard.
 
-Het is wel zo dat deze experimenten slechts toetsen op \'e\'en specifiek type ruis. Verder onderzoek hiernaar lijkt dan ook nuttig.
+Bij het leren van meer ongesuperviseerde afbeeldingsbeschrijvingssystemen lijken zowel CCA als LDA voorlopig geschikte kandidaten als gids omwille van de aanwezige ruis en onzekerheid in dit probleem. Ongesuperviseerd leren kan bijvoorbeeld bij een systeem dat afbeeldingen op het web automatisch koppelt met de meest waarschijnlijke zin uit de omgeving van de afbeelding.
+
+
+
 % section ruisgevoeligheid_van_cca_en_lda (end)
 
 \section{Besluit} % (fold)
@@ -485,7 +479,7 @@ De resultaten van \emph{idf}-normalisatie zijn dubbel. Enerzijds genereert het s
 
 Na een vergelijking van de bekomen resultaten met de literatuur, blijkt dat we niet veraf zitten. Meer tijd om parameters af te stellen zorgt misschien voor dit laatste verschil. De best scorende systemen integreren een aandachtsmodel in hun netwerk. Aandacht lijkt dan ook zeker voor de toekomst een interessant extra onderdeel.
 
-Een laatste conclusie volgt uit de experimenten met extra ruis in de trainingsverzameling. Van de twee geteste gidsen voor het gLSTM-netwerk presteert CCA veruit het beste.
+Een laatste conclusie volgt uit de experimenten met extra ruis in de trainingsverzameling. Beide bronnen van informatie presteren slechts lichtjes slechter na vervanging van willekeurige woorden met een bepaalde kans in de beschrijvingen van de trainingsset.
 
 % section besluit (end)
 
