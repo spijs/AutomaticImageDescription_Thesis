@@ -81,7 +81,7 @@
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
 		\noindent 
-		We present a model that generates novel, fluent and grammatically correct image descriptions. Most of the current systems based on recurrent neural networks show the same flaws. The used words are too general and are not related to the picture. The generated sentences are often way shorter than the descriptions a human would provide. The most recent literature tries to solve this first problem by adding additional information into the recurrent neural network. This contribution compares two sources of semantic information: LDA and CCA. We compare their effect on both RNN and LSTM. Both techniques improve the results. A comparison of these models on noisy training data shows that CCA outperforms LDA. Adding normalization to the search algorithm used to generate the sentences solves the second problem. A first form of normalization is able to improve results and creates longer sentences. A second normalization function leads to more creative sentences but makes more mistakes. The results of this paper are comparable to the literature, but do not outperform current attention based systems.
+		We present a model that generates novel, fluent and grammatically correct image descriptions. Most of the current systems based on recurrent neural networks show the same flaws. The used words are too general and are not related to the picture. The generated sentences are often way shorter than the descriptions a human would provide. The most recent literature tries to solve this first problem by adding additional information into the recurrent neural network. This contribution compares two sources of semantic information: LDA and CCA. We compare their effect on both RNN and LSTM. Both techniques improve the results. Experiments show that both of these models are able to deal with noisy training data. Adding normalization to the search algorithm used to generate the sentences solves the second problem. A first form of normalization is able to improve results and creates longer sentences. A second normalization function leads to more creative sentences but makes more mistakes. The results of this paper are comparable to the literature, but do not outperform current attention based systems.
 	\end{abstract}
 }
 
@@ -205,10 +205,10 @@
 	For evaluation and training we use \emph{Flickr30k}~\cite{Young2014}. Flickr30k is a widely adopted dataset containing images together with five reference captions. We use the publicly available splits~\cite{Karpathy2014} that divide the set into 28,000 images for training, 1,000 for testing and 1,000 for validating. 
 	
 	To evaluate the ability of the gLSTM to deal with noisy training data, we add noise to the training set in the following way.
-	Each word is replaced with a random word of the vocabulary with a probability of 0.1.
+	Each word is replaced with a random word of the vocabulary with a probability of 0.15.
 	
 	\subsection{Evaluation Metrics}
-	To evaluate the models we follow the current literature and document the two most popular automatic evaluation metrics: BLEU~\cite{Papineni2001} and Meteor~\cite{Denkowski2007a}. BLEU is a form of precision of word $n$-grams between generated and reference sentences. Unlike the original paper we follow Jin et al.~\cite{Jin2015} and drop the brevity penalty to be able to compare. BLEU has some obvious drawbacks such as the requirement of exact word matches. Elliott et al.~\cite{Elliott2014} show that the lower BLEU scores correlate weakly with human evaluation. Meteor and the higher BLEU scores achieve moderate correlation. Meteor tries to solve some of the drawbacks of BLEU by including recall, synonyms, stemming and phrase table matches.
+	To evaluate the models we follow the current literature and document the two most popular automatic evaluation metrics: BLEU~\cite{Papineni2002} and Meteor~\cite{Denkowski2007a}. BLEU is a form of precision of word $n$-grams between generated and reference sentences. Unlike the original paper we follow Jin et al.~\cite{Jin2015} and drop the brevity penalty to be able to compare. BLEU has some obvious drawbacks such as the requirement of exact word matches. Elliott et al.~\cite{Elliott2014} show that the lower BLEU scores correlate weakly with human evaluation. Meteor and the higher BLEU scores achieve moderate correlation. Meteor tries to solve some of the drawbacks of BLEU by including recall, synonyms, stemming and phrase table matches.
 	
 	In addition to the automatic evaluation measures we also look at some other statistics of the generated systems to evaluate the creativity and quality of the generated sentences.
 	Interesting metrics include the sentence length, vocabulary size, word usage and the number of unique sentences.
@@ -379,7 +379,7 @@
 	
 	\paragraph{Noise Resistance}
 	As a last experiment we evaluate gLSTM on the noisy training set with both LDA and CCA as guide.
-	Table~\ref{table:noisy} shows the results. CCA outperforms LDA on each metric. CCA seems the best candidate in the presence of noise in the training set. A manual inspection of the most important words in each topic of LDA shows that they still are logically connected. A possible explanation of the decrease thus lies in the training of the language model. It seems that the network is less able to connect the training data with the topic distribution.
+	Table~\ref{table:noisy} shows the results. Both LDA and CCA only show a small drop in the evaluation results. They are still able to generate gramatically correct sentences. A manual inspection of the most important words in each topic of LDA shows that they still are logically connected. A possible explanation of this ability to deal with noise is the way both of the models train. They both use data from 5 training sentences. The probability that all these 5 sentences show the same errors is small. Further experiments with more word changes in the sentences and other types of noise seem necessary to understand the full extent of their robustness.
 	
 	\begin{table}
 		\centering
@@ -431,7 +431,7 @@
 	
 	Using Gauss normalization improves BLEU-3, BLEU-4 and Meteor scores. It also leads to longer sentences. The number of generated sentences that are not in the training set increases drastically. A gLSTM model with LDA as guide and Gauss normalization achieves the best results on the scores that correlate best with human evaluation. Idf normalization does not lead to better BLEU and Meteor scores, since it focuses on words that are not used frequently. It does however lead to more creative sentences. Apart from a lot of improved sentences it sometimes forces the model to diverge from the image content or add word repetitions. Investigating possible ways to tune the idf normalization function may lead to sentences that are both creative and correct descriptions of the image.
 	
-	A comparison of the two semantic guides on their noise resistance shows that CCA is the most resistant. Both the BLEU and Meteor scores decrease less, both absolutely and relatively. This is probably because the network fails to learn the correct link between the image and the semantic information vector.
+	A comparison of the two semantic guides on their noise resistance shows that they are both very resistant. Both the BLEU and Meteor scores decrease only slightly This is probably caused by the training with 5 reference sentences. Other experiments with more changed words and other types of noise are necessary to understand the full extent of this robustness.
 	
 	This contribution produces results comparable to the literature. Attention based models still outperform our models so adding attention can perhaps further improve our results.
 	
